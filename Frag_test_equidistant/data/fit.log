@@ -1,0 +1,802 @@
+
+
+*******************************************************************************
+Mon Jun 26 02:47:48 2017
+
+
+FIT:    data read from "deltar_0010au_1000/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 26
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 3.2221199035e+00   0.00e+00  1.83e-01    1.000000e+00
+   6 7.2852350561e-04  -4.60e-01  1.83e-07    8.716325e+00
+
+After 6 iterations the fit converged.
+final sum of squares of residuals : 0.000728524
+rel. change during last iteration : -4.60187e-06
+
+degrees of freedom    (FIT_NDF)                        : 25
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00539823
+variance of residuals (reduced chisquare) = WSSR/ndf   : 2.91409e-05
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 8.71633          +/- 0.06969      (0.7995%)
+
+
+*******************************************************************************
+Mon Jun 26 02:48:02 2017
+
+
+FIT:    data read from "deltar_0010au_1000/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 26
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 7.2852350561e-04   0.00e+00  1.32e-01    8.716325e+00
+   1 7.2852350561e-04  -6.10e-10  1.32e+03    8.716325e+00
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 0.000728524
+rel. change during last iteration : -6.1017e-15
+
+degrees of freedom    (FIT_NDF)                        : 25
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00539823
+variance of residuals (reduced chisquare) = WSSR/ndf   : 2.91409e-05
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 8.71633          +/- 0.06969      (0.7995%)
+
+
+*******************************************************************************
+Mon Jun 26 02:48:43 2017
+
+
+FIT:    data read from "deltar_0010au_1000/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 27
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 9.0921989162e-04   0.00e+00  1.39e-01    8.716325e+00
+   3 8.8736260379e-04   0.00e+00  1.39e+04    8.773417e+00
+
+After 3 iterations the fit converged.
+final sum of squares of residuals : 0.000887363
+rel. change during last iteration : 0
+
+degrees of freedom    (FIT_NDF)                        : 26
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00584203
+variance of residuals (reduced chisquare) = WSSR/ndf   : 3.41293e-05
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 8.77342          +/- 0.07136      (0.8134%)
+
+
+*******************************************************************************
+Mon Jun 26 02:49:33 2017
+
+
+FIT:    data read from "deltar_0010au_1000/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 27
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 8.8736260379e-04   0.00e+00  1.38e-01    8.773417e+00
+   1 8.8736260379e-04   0.00e+00  1.38e+04    8.773417e+00
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 0.000887363
+rel. change during last iteration : 0
+
+degrees of freedom    (FIT_NDF)                        : 26
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00584203
+variance of residuals (reduced chisquare) = WSSR/ndf   : 3.41293e-05
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 8.77342          +/- 0.07136      (0.8134%)
+
+
+*******************************************************************************
+Mon Jun 26 02:54:14 2017
+
+
+FIT:    data read from "deltar_0010au_1000/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 28
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 9.9868051040e-04   0.00e+00  1.43e-01    8.773417e+00
+   3 9.8693171790e-04  -5.71e-10  1.43e+02    8.813346e+00
+
+After 3 iterations the fit converged.
+final sum of squares of residuals : 0.000986932
+rel. change during last iteration : -5.7125e-15
+
+degrees of freedom    (FIT_NDF)                        : 27
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00604591
+variance of residuals (reduced chisquare) = WSSR/ndf   : 3.6553e-05
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 8.81335          +/- 0.07029      (0.7976%)
+
+
+*******************************************************************************
+Mon Jun 26 19:11:47 2017
+
+
+FIT:    data read from "deltar_0010au_1000_xi001_cutting_edge/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 32
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+BREAK: Need via and either parameter list or file
+
+*******************************************************************************
+Mon Jun 26 19:11:52 2017
+
+
+FIT:    data read from "deltar_0010au_1000_xi001_cutting_edge/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 32
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 1.0334229327e-01   0.00e+00  1.55e-01    8.813346e+00
+   4 4.7032397155e-03  -2.36e-04  1.55e-01    1.267689e+01
+
+After 4 iterations the fit converged.
+final sum of squares of residuals : 0.00470324
+rel. change during last iteration : -2.36366e-09
+
+degrees of freedom    (FIT_NDF)                        : 31
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.0123174
+variance of residuals (reduced chisquare) = WSSR/ndf   : 0.000151717
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 12.6769          +/- 0.1889       (1.49%)
+
+
+*******************************************************************************
+Mon Jun 26 19:12:04 2017
+
+
+FIT:    data read from "deltar_0010au_1000_xi001_cutting_edge/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 32
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 4.7032397155e-03   0.00e+00  1.46e-01    1.267689e+01
+   1 4.7032397121e-03  -7.18e-05  1.46e-01    1.267684e+01
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 0.00470324
+rel. change during last iteration : -7.17697e-10
+
+degrees of freedom    (FIT_NDF)                        : 31
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.0123174
+variance of residuals (reduced chisquare) = WSSR/ndf   : 0.000151717
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 12.6768          +/- 0.1889       (1.49%)
+
+
+*******************************************************************************
+Mon Jun 26 19:13:28 2017
+
+
+FIT:    data read from "deltar_0010au_1000_xi001_cutting_edge/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 32
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 4.7032397121e-03   0.00e+00  1.46e-01    1.267684e+01
+   1 4.7032397121e-03  -2.40e-10  1.46e+02    1.267684e+01
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 0.00470324
+rel. change during last iteration : -2.39743e-15
+
+degrees of freedom    (FIT_NDF)                        : 31
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.0123174
+variance of residuals (reduced chisquare) = WSSR/ndf   : 0.000151717
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 12.6768          +/- 0.1889       (1.49%)
+
+
+*******************************************************************************
+Mon Jun 26 19:15:16 2017
+
+
+FIT:    data read from "deltar_0010au_1000_xi001_cutting_edge/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 33
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 5.5684510441e-03   0.00e+00  1.49e-01    1.267684e+01
+   2 5.5161291845e-03  -3.48e-02  1.49e-03    1.257137e+01
+
+After 2 iterations the fit converged.
+final sum of squares of residuals : 0.00551613
+rel. change during last iteration : -3.47706e-07
+
+degrees of freedom    (FIT_NDF)                        : 32
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.0131293
+variance of residuals (reduced chisquare) = WSSR/ndf   : 0.000172379
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 12.5714          +/- 0.1931       (1.536%)
+
+
+*******************************************************************************
+Mon Jun 26 19:18:13 2017
+
+
+FIT:    data read from "deltar_0010au_1000_xi001_cutting_edge/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 34
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 6.7374539196e-03   0.00e+00  1.50e-01    1.257137e+01
+   2 6.6782993998e-03  -1.06e-01  1.50e-03    1.246333e+01
+
+After 2 iterations the fit converged.
+final sum of squares of residuals : 0.0066783
+rel. change during last iteration : -1.05759e-06
+
+degrees of freedom    (FIT_NDF)                        : 33
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.0142258
+variance of residuals (reduced chisquare) = WSSR/ndf   : 0.000202373
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 12.4633          +/- 0.2019       (1.62%)
+
+
+*******************************************************************************
+Mon Jun 26 19:23:57 2017
+
+
+FIT:    data read from "deltar_0010au_1000_xi001_cutting_edge/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 35
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 8.0195627053e-03   0.00e+00  1.51e-01    1.246333e+01
+   2 7.9683212797e-03  -1.53e-01  1.51e-03    1.236585e+01
+
+After 2 iterations the fit converged.
+final sum of squares of residuals : 0.00796832
+rel. change during last iteration : -1.52685e-06
+
+degrees of freedom    (FIT_NDF)                        : 34
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.0153089
+variance of residuals (reduced chisquare) = WSSR/ndf   : 0.000234362
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 12.3658          +/- 0.2111       (1.707%)
+
+
+*******************************************************************************
+Mon Jun 26 19:31:30 2017
+
+
+FIT:    data read from "deltar_0010au_1000_xi001_cutting_edge/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 36
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 9.2334515971e-03   0.00e+00  1.52e-01    1.236585e+01
+   2 9.1959149444e-03  -1.55e-01  1.52e-03    1.228446e+01
+
+After 2 iterations the fit converged.
+final sum of squares of residuals : 0.00919591
+rel. change during last iteration : -1.55311e-06
+
+degrees of freedom    (FIT_NDF)                        : 35
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.0162093
+variance of residuals (reduced chisquare) = WSSR/ndf   : 0.00026274
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 12.2845          +/- 0.2185       (1.779%)
+
+
+*******************************************************************************
+Mon Jun 26 19:53:40 2017
+
+
+FIT:    data read from "deltar_0010au_1000_xi001_cutting_edge/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 39
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 1.1876313713e-02   0.00e+00  1.50e-01    1.228446e+01
+   3 1.1736293038e-02  -1.63e-10  1.50e+03    1.213395e+01
+
+After 3 iterations the fit converged.
+final sum of squares of residuals : 0.0117363
+rel. change during last iteration : -1.62589e-15
+
+degrees of freedom    (FIT_NDF)                        : 38
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.0175741
+variance of residuals (reduced chisquare) = WSSR/ndf   : 0.00030885
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 12.1339          +/- 0.2274       (1.874%)
+
+
+*******************************************************************************
+Mon Jun 26 23:57:16 2017
+
+
+FIT:    data read from "deltar_0010au_1000_xi001_cutting_edge_2/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 24
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+BREAK: Need via and either parameter list or file
+
+*******************************************************************************
+Mon Jun 26 23:57:20 2017
+
+
+FIT:    data read from "deltar_0010au_1000_xi001_cutting_edge_2/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 24
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 7.2541266812e-03   0.00e+00  1.10e-01    1.000000e+01
+   4 1.5502485315e-04  -1.92e-07  1.10e-05    8.604570e+00
+
+After 4 iterations the fit converged.
+final sum of squares of residuals : 0.000155025
+rel. change during last iteration : -1.92328e-12
+
+degrees of freedom    (FIT_NDF)                        : 23
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00259619
+variance of residuals (reduced chisquare) = WSSR/ndf   : 6.74021e-06
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 8.60457          +/- 0.03844      (0.4468%)
+
+
+*******************************************************************************
+Mon Jun 26 23:57:44 2017
+
+
+FIT:    data read from "deltar_0010au_1000_xi001_cutting_edge/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 48
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 1.2155775383e-01   0.00e+00  1.38e-01    8.604570e+00
+   4 1.3826841016e-02  -6.03e-02  1.38e-05    1.202952e+01
+
+After 4 iterations the fit converged.
+final sum of squares of residuals : 0.0138268
+rel. change during last iteration : -6.03274e-07
+
+degrees of freedom    (FIT_NDF)                        : 47
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.0171519
+variance of residuals (reduced chisquare) = WSSR/ndf   : 0.000294188
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 12.0295          +/- 0.2161       (1.797%)
+
+
+*******************************************************************************
+Mon Jun 26 23:58:00 2017
+
+
+FIT:    data read from "deltar_0010au_1000_xi001_cutting_edge_2/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 25
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 3.7752530066e-02   0.00e+00  1.08e-01    1.202952e+01
+   4 1.8270548391e-04  -1.22e-01  1.08e-05    8.634988e+00
+
+After 4 iterations the fit converged.
+final sum of squares of residuals : 0.000182705
+rel. change during last iteration : -1.21592e-06
+
+degrees of freedom    (FIT_NDF)                        : 24
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00275912
+variance of residuals (reduced chisquare) = WSSR/ndf   : 7.61273e-06
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 8.63499          +/- 0.03782      (0.438%)
+
+
+*******************************************************************************
+Mon Jun 26 23:59:53 2017
+
+
+FIT:    data read from "deltar_0010au_1000_xi001_cutting_edge_2/TotalMass.dat" u 1:(2.0*(($5)+($6))/($3))
+        format = x:z
+        #datapoints = 26
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 3.4121131793e-03   0.00e+00  1.33e-01    8.634988e+00
+   3 2.4770835317e-04  -5.77e-01  1.33e-04    9.395658e+00
+
+After 3 iterations the fit converged.
+final sum of squares of residuals : 0.000247708
+rel. change during last iteration : -5.77169e-06
+
+degrees of freedom    (FIT_NDF)                        : 25
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00314775
+variance of residuals (reduced chisquare) = WSSR/ndf   : 9.90833e-06
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 9.39566          +/- 0.04509      (0.4799%)
+
+
+*******************************************************************************
+Tue Jun 27 00:00:39 2017
+
+
+FIT:    data read from "deltar_0010au_1000_xi001_cutting_edge_2/TotalMass.dat" u 1:(2.0*(($5)+($6))/($3))
+        format = x:z
+        #datapoints = 27
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 2.9642811312e-04   0.00e+00  1.35e-01    9.395658e+00
+   3 2.9023714959e-04  -1.16e-09  1.35e+02    9.429096e+00
+
+After 3 iterations the fit converged.
+final sum of squares of residuals : 0.000290237
+rel. change during last iteration : -1.15803e-14
+
+degrees of freedom    (FIT_NDF)                        : 26
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.0033411
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.1163e-05
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 9.4291           +/- 0.04494      (0.4766%)
+
+
+*******************************************************************************
+Tue Jun 27 00:02:11 2017
+
+
+FIT:    data read from "deltar_0010au_1000_xi001_cutting_edge_2/TotalMass.dat" u 1:(2.0*(($5)+($6))/($3))
+        format = x:z
+        #datapoints = 28
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 3.4746793448e-04   0.00e+00  1.40e-01    9.429096e+00
+   3 3.4110003467e-04  -1.91e-10  1.40e+02    9.461242e+00
+
+After 3 iterations the fit converged.
+final sum of squares of residuals : 0.0003411
+rel. change during last iteration : -1.90713e-15
+
+degrees of freedom    (FIT_NDF)                        : 27
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00355434
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.26333e-05
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 9.46124          +/- 0.04528      (0.4786%)
+
+
+*******************************************************************************
+Tue Jun 27 00:43:06 2017
+
+
+FIT:    data read from "deltar_0010au_1000_xi001_cutting_edge/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 49
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 6.9232170491e-02   0.00e+00  1.36e-01    9.461242e+00
+   4 1.3858181492e-02  -3.12e-02  1.36e-05    1.202797e+01
+
+After 4 iterations the fit converged.
+final sum of squares of residuals : 0.0138582
+rel. change during last iteration : -3.12467e-07
+
+degrees of freedom    (FIT_NDF)                        : 48
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.0169915
+variance of residuals (reduced chisquare) = WSSR/ndf   : 0.000288712
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 12.028           +/- 0.214        (1.779%)
+
+
+*******************************************************************************
+Tue Jun 27 00:43:18 2017
+
+
+FIT:    data read from "deltar_0010au_1000_xi001_cutting_edge_2/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 25
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 3.7725721138e-02   0.00e+00  1.08e-01    1.202797e+01
+   4 1.8270548391e-04  -1.21e-01  1.08e-05    8.634988e+00
+
+After 4 iterations the fit converged.
+final sum of squares of residuals : 0.000182705
+rel. change during last iteration : -1.20653e-06
+
+degrees of freedom    (FIT_NDF)                        : 24
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00275912
+variance of residuals (reduced chisquare) = WSSR/ndf   : 7.61273e-06
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 8.63499          +/- 0.03782      (0.438%)
+
+
+*******************************************************************************
+Tue Jun 27 00:45:10 2017
+
+
+FIT:    data read from "deltar_0010au_1000_xi001_cutting_edge/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 49
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 1.1930581497e-01   0.00e+00  1.36e-01    8.634988e+00
+   4 1.3858181435e-02  -5.98e-02  1.36e-05    1.202799e+01
+
+After 4 iterations the fit converged.
+final sum of squares of residuals : 0.0138582
+rel. change during last iteration : -5.98284e-07
+
+degrees of freedom    (FIT_NDF)                        : 48
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.0169915
+variance of residuals (reduced chisquare) = WSSR/ndf   : 0.000288712
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 12.028           +/- 0.214        (1.779%)
+
+
+*******************************************************************************
+Thu Jun 29 02:26:37 2017
+
+
+FIT:    data read from "deltar_0010au_0990_xi0005/TotalMass.dat" u 1:((($5)+($6))/(($9)+($10)))
+        format = x:z
+        #datapoints = 33
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 1.2023071865e-01   0.00e+00  1.54e-01    1.000000e+01
+   4 1.1573139961e-04  -6.32e-03  1.54e-05    6.804494e+00
+
+After 4 iterations the fit converged.
+final sum of squares of residuals : 0.000115731
+rel. change during last iteration : -6.31793e-08
+
+degrees of freedom    (FIT_NDF)                        : 32
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00190174
+variance of residuals (reduced chisquare) = WSSR/ndf   : 3.61661e-06
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 6.80449          +/- 0.01416      (0.208%)
+
+
+*******************************************************************************
+Thu Jun 29 02:40:12 2017
+
+
+FIT:    data read from "deltar_0010au_0990_xi0005/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 35
+        residuals are weighted equally (unit weight)
+
+function used for fitting: g(x)
+	g(x) = 1.0/(1.0+x/b)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   b            
+   0 9.3196639082e-02   0.00e+00  1.54e-01    1.000000e+01
+   4 8.1418668593e-05  -2.66e-03  1.54e-05    7.181793e+00
+
+After 4 iterations the fit converged.
+final sum of squares of residuals : 8.14187e-05
+rel. change during last iteration : -2.6565e-08
+
+degrees of freedom    (FIT_NDF)                        : 34
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00154747
+variance of residuals (reduced chisquare) = WSSR/ndf   : 2.39467e-06
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+b               = 7.18179          +/- 0.01194      (0.1663%)
+
+
+*******************************************************************************
+Thu Jun 29 20:27:39 2017
+
+
+FIT:    data read from "deltar_0010au_0990_xi0005_cutting_edge_2/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 21
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+BREAK: Need via and either parameter list or file
+
+*******************************************************************************
+Thu Jun 29 20:27:54 2017
+
+
+FIT:    data read from "deltar_0010au_0990_xi0005_cutting_edge_2/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 22
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+BREAK: Need via and either parameter list or file
+
+*******************************************************************************
+Thu Jun 29 20:28:01 2017
+
+
+FIT:    data read from "deltar_0010au_0990_xi0005_cutting_edge_2/TotalMass.dat" u 1:(($2)/($3))
+        format = x:z
+        #datapoints = 22
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = 1.0/(1.0+x/a)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 6.9249098160e-05   0.00e+00  1.16e-01    6.804494e+00
+   3 6.8137016845e-05  -1.54e-04  1.16e-04    6.791356e+00
+
+After 3 iterations the fit converged.
+final sum of squares of residuals : 6.8137e-05
+rel. change during last iteration : -1.54304e-09
+
+degrees of freedom    (FIT_NDF)                        : 21
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00180128
+variance of residuals (reduced chisquare) = WSSR/ndf   : 3.24462e-06
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 6.79136          +/- 0.02244      (0.3304%)
