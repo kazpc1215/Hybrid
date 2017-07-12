@@ -36,7 +36,8 @@ int Calculate_OrbitalElements(int i,double x_c[][4],double v_c[][4],struct orbit
   if(isnan(ele[i].axis)){
     printf("i=%d\taxis is nan.\n",i);
   }
-     
+
+  
   ele[i].ecc = sqrt((1.0-r_c[i]/ele[i].axis)*(1.0-r_c[i]/ele[i].axis) + r_dot_v[i]*r_dot_v[i]/(G*M_0*ele[i].axis));
 
   //printf("i=%d\tecc=%f\n",i,ele[i].ecc);
@@ -61,6 +62,7 @@ int Calculate_OrbitalElements(int i,double x_c[][4],double v_c[][4],struct orbit
     printf("i=%d\tu is nan.\n",i);
   }
 
+  
   if(isnan(P[i][1])||isnan(P[i][2])||isnan(P[i][3])){
     printf("i=%d\tpre P is nan.\t[1]=%f\t[2]=%f\t[3]=%f\n",i,P[i][1],P[i][2],P[i][3]);
   }

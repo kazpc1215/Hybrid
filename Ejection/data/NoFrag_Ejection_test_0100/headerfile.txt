@@ -28,13 +28,13 @@
 #define PLANET_NO 1
 #define PLANET_MASS 3.0E-6  //5.9723E27 [g] / 1.989E33 [g]
 #define PLANET_RADIUS 4.0E-5  //6000 [km] / 1 [AU] 
+//#define PLANET_RADIUS 5.0E-1
 #define PLANET_AXIS 1.0
 #define PLANET_ECC 0.01
 #define PLANET_INC 0.001
 #define PLANET_U 0.0
 #define PLANET_omega 0.0
 #define PLANET_Omega 0.0
-
 /*
 Earth Mean Orbital Elements (J2000)
 
@@ -48,10 +48,15 @@ Mean Longitude (deg)               100.46435
 //////////////////////////////////////////////////
 
 
-
 //////////////////////////////////////////////////
 #define M_TOT 3.0E-7  //0.1M_E  //破片の総質量
+#define EJECTION_VELOCITY 0.9*sqrt(2.0*G*PLANET_MASS/PLANET_RADIUS)  //脱出速度の0.9倍
+#define EJECTION_CONE_ANGLE M_PI/180.0*30.0  //30度
 //////////////////////////////////////////////////
+
+
+
+
 
 
 //////////////////////////////////////////////////
@@ -85,11 +90,11 @@ Mean Longitude (deg)               100.46435
 
 
 //////////////////////////////////////////////////
-#define INNER_AXIS 0.95  //トレーサーの長軸半径　下限
-#define OUTER_AXIS 1.05  //トレーサーの長軸半径　上限
-#define ECC_RMS 0.01  //トレーサーの離心率の二乗平均平方根  //Rayleigh分布
+//#define INNER_AXIS 0.95  //トレーサーの長軸半径　下限
+//#define OUTER_AXIS 1.05  //トレーサーの長軸半径　上限
+//#define ECC_RMS 0.01  //トレーサーの離心率の二乗平均平方根  //Rayleigh分布
 //#define ECC_RMS 0.001  //トレーサーの離心率の二乗平均平方根  //Rayleigh分布
-#define INC_RMS 0.005  //トレーサーの軌道傾斜角の二乗平均平方根  //Rayleigh分布
+//#define INC_RMS 0.005  //トレーサーの軌道傾斜角の二乗平均平方根  //Rayleigh分布
 //#define INC_RMS 0.0005  //トレーサーの軌道傾斜角の二乗平均平方根  //Rayleigh分布
 //////////////////////////////////////////////////
 
@@ -124,7 +129,7 @@ Mean Longitude (deg)               100.46435
 
 //////////////////////////////////////////////////
 #define INTERACTION 1  //トレーサー間の相互作用
-#define FRAGMENTATION 1  //近傍粒子探索と質量フラックス計算
+#define FRAGMENTATION 0  //近傍粒子探索と質量フラックス計算
 //////////////////////////////////////////////////
 
 

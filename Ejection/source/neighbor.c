@@ -25,25 +25,9 @@ void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation fra
   frag[i].delta_r_out = DELTA_R;  //固定
   frag[i].delta_r_in = DELTA_R;  //固定
 
-  if(i>=1 && i<=66){
-    frag[i].delta_r_in = 0.01/3.0;
-  }
-  if(i>=925 && i<=990){
-    frag[i].delta_r_out = 0.01/3.0;
-  }
 
   
-  /*
-  if(radius[i]+frag[i].delta_r_out>=OUTER_AXIS){
-    frag[i].delta_r_out = radius[i] + 0.01/3.0;
-  }
-  if(radius[i]-frag[i].delta_r_in<=INNER_AXIS){
-    frag[i].delta_r_in = radius[i] - 0.01/3.0;
-  }
-  */
   S = 2.0*(frag[i].delta_r_out + frag[i].delta_r_in)*radius[i]*delta_theta;
-  //S = (2.0*(frag[i].delta_r_out + frag[i].delta_r_in)*radius[i] + M_PI*frag[i].delta_r_out*frag[i].delta_r_out - M_PI*frag[i].delta_r_in*frag[i].delta_r_in)*delta_theta;
-  
   
   
   
@@ -107,40 +91,40 @@ double RandomVelocity(int i,int j,struct orbital_elements ele[]){
   iij2 = fabs(ele[i].inc*ele[i].inc + ele[j].inc*ele[j].inc - 2.0*ele[i].inc*ele[j].inc*cos(ele[i].Omega - ele[j].Omega));
   
   if(isnan(ele[i].ecc)){
-    printf("i=%d\tecc is nan.\n",i);
+    printf("i=%d\tecc is nan. (in RandomVelocity)\n",i);
   }
   if(isnan(ele[j].ecc)){
-    printf("j=%d\tecc is nan.\n",j);
+    printf("j=%d\tecc is nan. (in RandomVelocity)\n",j);
   }
   if(isnan(ele[i].inc)){
-    printf("i=%d\tinc is nan.\n",i);
+    printf("i=%d\tinc is nan. (in RandomVelocity).\n",i);
   }
   if(isnan(ele[j].inc)){
-    printf("j=%d\tinc is nan.\n",j);
+    printf("j=%d\tinc is nan. (in RandomVelocity)\n",j);
   }
   if(isnan(ele[i].omega)){
-    printf("i=%d\tomega is nan.\n",i);
+    printf("i=%d\tomega is nan. (in RandomVelocity)\n",i);
   }
   if(isnan(ele[j].omega)){
-    printf("j=%d\tomega is nan.\n",j);
+    printf("j=%d\tomega is nan. (in RandomVelocity)\n",j);
   }
   if(isnan(ele[i].Omega)){
-    printf("i=%d\tOmega is nan.\n",i);
+    printf("i=%d\tOmega is nan. (in RandomVelocity)\n",i);
   }
   if(isnan(ele[j].Omega)){
-    printf("j=%d\tOmega is nan.\n",j);
+    printf("j=%d\tOmega is nan. (in RandomVelocity)\n",j);
   }
   
   if(isnan(eij2)){
-    printf("i=%d,j=%d\teij2 is nan.\n",i,j);
+    printf("i=%d,j=%d\teij2 is nan. (in RandomVelocity)\n",i,j);
     return -1;
   }
   if(isnan(iij2)){
-    printf("i=%d,j=%d\tiij2 is nan.\n",i,j);
+    printf("i=%d,j=%d\tiij2 is nan. (in RandomVelocity)\n",i,j);
     return -1;
   }
   if(isnan(ele[i].axis)){
-    printf("i=%d\taxis is nan.\taxis=%f\n",i,ele[i].axis);
+    printf("i=%d\taxis is nan. (in RandomVelocity)\taxis=%f\n",i,ele[i].axis);
   }
 
   if(isnan(sqrt((eij2 + iij2)*G*M_0/ele[i].axis))){
