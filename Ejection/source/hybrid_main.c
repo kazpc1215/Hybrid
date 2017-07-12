@@ -8,25 +8,27 @@ int main(void){
   double t_sys;
   double t_ene[TIME_INTERVAL_MAX]={TIME_INTERVAL};
 
-  double t_[N_tr+1]={},dt_[N_tr+1]={},Dt[N_tr+1]={};
+  double t_[N_p+N_tr+1]={},dt_[N_p+N_tr+1]={},Dt[N_p+N_tr+1]={};
   double step=0.0;
   
-  double x_0[N_tr+1][4]={},r_0[N_tr+1]={},v_0[N_tr+1][4]={},v2_0[N_tr+1]={};
-  double x_p[N_tr+1][4]={},r_p[N_tr+1]={},v_p[N_tr+1][4]={},v2_p[N_tr+1]={};
-  double x_c[N_tr+1][4]={},r_c[N_tr+1]={},v_c[N_tr+1][4]={},v2_c[N_tr+1]={};
+  double x_0[N_p+N_tr+1][4]={},r_0[N_p+N_tr+1]={},v_0[N_p+N_tr+1][4]={},v2_0[N_p+N_tr+1]={};
+  double x_p[N_p+N_tr+1][4]={},r_p[N_p+N_tr+1]={},v_p[N_p+N_tr+1][4]={},v2_p[N_p+N_tr+1]={};
+  double x_c[N_p+N_tr+1][4]={},r_c[N_p+N_tr+1]={},v_c[N_p+N_tr+1][4]={},v2_c[N_p+N_tr+1]={};
   
-  double abs_r[N_tr+1]={},abs_r2[N_tr+1]={},abs_v[N_tr+1]={},abs_v2[N_tr+1]={},r_dot_v_ij[N_tr+1]={},r_dot_v[N_tr+1]={};
+  double abs_r[N_p+N_tr+1]={},abs_r2[N_p+N_tr+1]={},abs_v[N_p+N_tr+1]={},abs_v2[N_p+N_tr+1]={},r_dot_v_ij[N_p+N_tr+1]={},r_dot_v[N_p+N_tr+1]={};
   
-  double a_0[N_tr+1][4]={},adot_0[N_tr+1][4]={};
-  double a[N_tr+1][4]={},adot[N_tr+1][4]={},adot2_dt2[N_tr+1][4]={},adot3_dt3[N_tr+1][4]={};
+  double a_0[N_p+N_tr+1][4]={},adot_0[N_p+N_tr+1][4]={};
+  double a[N_p+N_tr+1][4]={},adot[N_p+N_tr+1][4]={},adot2_dt2[N_p+N_tr+1][4]={},adot3_dt3[N_p+N_tr+1][4]={};
 
-  double abs_a[N_tr+1]={},abs_adot[N_tr+1]={},abs_adot2[N_tr+1]={},abs_adot3[N_tr+1]={};
+  double abs_a[N_p+N_tr+1]={},abs_adot[N_p+N_tr+1]={},abs_adot2[N_p+N_tr+1]={},abs_adot3[N_p+N_tr+1]={};
   
-  double E[N_tr+1]={};
+  double E[N_p+N_tr+1]={};
   double E_tot,E_tot_0;
   double abs_L,abs_L_0;
 
-  double P[N_tr+1][4]={},Q[N_tr+1][4]={};
+  double P[N_p+N_tr+1][4]={},Q[N_p+N_tr+1][4]={};
+
+  double x_eject[N_p+N_tr+1][4]={};
 
   //clock_t start,end;
 
@@ -35,9 +37,9 @@ int main(void){
   double mass_tot_all,mass_tot_1,mass_tot_2,mass_tot_3,mass_tot_4;
   
 
-  struct orbital_elements ele[N_tr+1]={};
+  struct orbital_elements ele[N_p+N_tr+1]={};
 
-  struct fragmentation frag[N_tr+1]={};
+  struct fragmentation frag[N_p+N_tr+1]={};
 
   struct parameter para;
   
@@ -54,6 +56,7 @@ int main(void){
 
   //初期値
 
+#if FRAGMENTATION
   para.alpha = (11.0 + 3.0*P_FRAG)/(6.0 + 3.0*P_FRAG);
   para.s_1 = s_1_FRAG(para);
   para.s_2 = s_2_FRAG(para);
@@ -62,159 +65,78 @@ int main(void){
   para.Q_D = Q_0_FRAG*1.13E-13*pow(RHO/3.0,0.55)*pow(M_MAX*1.989E12,P_FRAG);  //erg/g = 1.13E-13 AU^2/(yr/2pi)^2 として
 
   printf("alpha=%f\ts_1=%f\ts_2=%f\ts_3=%f\n",para.alpha,para.s_1,para.s_2,para.s_3);
+#endif
 
 
 
+  
 
-
-  for(i=1;i<=N_tr;++i){
-    sprintf(ele[i].name,"tracer%04d",i);
-    ele[i].mass = M_TOT/(double)N_tr;
-    ele[i].ecc = ECC_RMS;
-    ele[i].inc = INC_RMS;
+  for(i=1;i<=N_p;++i){  //惑星
+    sprintf(ele[i].name,"Planet%01d",i);
+    ele[i].mass = PLANET_MASS;
+    ele[i].axis = PLANET_AXIS;
+    ele[i].ecc = PLANET_ECC;
+    ele[i].inc = PLANET_INC;
+    ele[i].u = PLANET_U;
+    ele[i].omega = PLANET_omega;
+    ele[i].Omega = PLANET_Omega;
     ele[i].orinum = i;
   }
 
+  InitialCondition(PLANET_NO,P,Q,x_0,v_0,r_0,ele);  //初期位置、速度計算 //惑星のみ
 
-  for(i=1;i<=N_tr;i++){
-    ele[i].axis = INNER_AXIS + 0.01/3.0*(2.0*(int)((i-1)/66)+1);
 
-    ele[i].u = 2.0*M_PI/66.0*(double)(i-1);
-    ele[i].omega = 2.0*M_PI/66.0*(double)(i-1);
-    ele[i].Omega = 2.0*M_PI/66.0*(double)(i-1);
-    //ele[i].u = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
-    //ele[i].omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
-    //ele[i].Omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
-  }
+
   
-  
-  /*
-  //円盤を5つに分割
-  for(i=1;i<=(int)(N_tr/5.0);i++){
-    ele[i].axis = (1.0-10.0*ECC_RMS)*(1.0-10.0*ECC_RMS)/(1.0+10.0*ECC_RMS)/(1.0+10.0*ECC_RMS)*(OUTER_AXIS+INNER_AXIS)/2.0;
-    ele[i].u = 2.0*M_PI/(N_tr/5.0)*(double)(i-1);
-    ele[i].omega = 2.0*M_PI/(N_tr/5.0)*(double)(i-1);
-    ele[i].Omega = 2.0*M_PI/(N_tr/5.0)*(double)(i-1);
-  }
-  for(i=(int)(N_tr/5.0)+1;i<=(int)(N_tr*2.0/5.0);i++){
-    ele[i].axis = (1.0-10.0*ECC_RMS)/(1.0+10.0*ECC_RMS)*(OUTER_AXIS+INNER_AXIS)/2.0;
-    ele[i].u = 2.0*M_PI/(N_tr/5.0)*(double)(i-1);
-    ele[i].omega = 2.0*M_PI/(N_tr/5.0)*(double)(i-1);
-    ele[i].Omega = 2.0*M_PI/(N_tr/5.0)*(double)(i-1);
-  }
-  for(i=(int)(N_tr*2.0/5.0)+1;i<=(int)(N_tr*3.0/5.0);i++){
-    ele[i].axis = (OUTER_AXIS+INNER_AXIS)/2.0;
-    ele[i].u = 2.0*M_PI/(N_tr/5.0)*(double)(i-1);
-    ele[i].omega = 2.0*M_PI/(N_tr/5.0)*(double)(i-1);
-    ele[i].Omega = 2.0*M_PI/(N_tr/5.0)*(double)(i-1);
-  }
-  for(i=(int)(N_tr*3.0/5.0)+1;i<=(int)(N_tr*4.0/5.0);i++){
-    ele[i].axis = (1.0+10.0*ECC_RMS)/(1.0-10.0*ECC_RMS)*(OUTER_AXIS+INNER_AXIS)/2.0;
-    ele[i].u = 2.0*M_PI/(N_tr/5.0)*(double)(i-1);
-    ele[i].omega = 2.0*M_PI/(N_tr/5.0)*(double)(i-1);
-    ele[i].Omega = 2.0*M_PI/(N_tr/5.0)*(double)(i-1);
-  }
-  for(i=(int)(N_tr*4.0/5.0)+1;i<=N_tr;i++){
-    ele[i].axis = (1.0+10.0*ECC_RMS)*(1.0+10.0*ECC_RMS)/(1.0-10.0*ECC_RMS)/(1.0-10.0*ECC_RMS)*(OUTER_AXIS+INNER_AXIS)/2.0;
-    ele[i].u = 2.0*M_PI/(N_tr/5.0)*(double)(i-1);
-    ele[i].omega = 2.0*M_PI/(N_tr/5.0)*(double)(i-1);
-    ele[i].Omega = 2.0*M_PI/(N_tr/5.0)*(double)(i-1);
-  }
-  */
-
-  for(i=1;i<=N_tr;++i){
-    ele[i].r_h = ele[i].axis*cbrt(ele[i].mass/((double)M_0)/3.0);
-  }
-  
-
-  /*
-  for(i=1;i<=N_tr;++i){
-    sprintf(ele[i].name,"tracer%04d",i);
-    ele[i].mass = M_TOT/(double)N_tr;  //トレーサー質量
+  for(i=N_p+1;i<=N_p+N_tr;++i){
+    sprintf(ele[i].name,"tracer%04d",i-N_p);
     
-    //ele[i].ecc = sqrt(-log(((double)rand())/((double)RAND_MAX+1.0)))*ECC_RMS;  //離心率  //Rayleigh分布
+    for(k=1;k<=3;++k){
+      x_eject[i][1] = PLANET_RADIUS*(1.1 + 0.9*(double)(i-N_p-1)/(double)N_tr);  //破片のx座標
+      x_eject[i][2] = cos(2.0*M_PI*(double)(i-N_p-1)/10.0)*x_eject[i][1];  //破片のy座標
+      x_eject[i][3] = sin(2.0*M_PI*(double)(i-N_p-1)/10.0)*x_eject[i][1];  //破片のz座標
+    }
+    //////////////////ここまでで、惑星中心、xyは軌道面上、x軸は太陽から惑星の方向/////////////////////
+
     
-    ele[i].ecc = ECC_RMS;
+    x_eject[i][1] = x_eject[i][1] + ele[PLANET_NO].axis*(1.0-ele[PLANET_NO].ecc*cos(ele[PLANET_NO].u));
+    //////////////////ここまでで、太陽中心、xyは軌道面上、x軸は太陽から惑星の方向/////////////////////
+
+
+    x_eject[i][1] = cos((ele[PLANET_NO].u-ele[PLANET_NO].ecc)/(1.0-ele[PLANET_NO].ecc*cos(ele[PLANET_NO].u)))*x_eject[i][1] + sin((sqrt(1.0-ele[PLANET_NO].ecc*ele[PLANET_NO].ecc)*sin(ele[PLANET_NO].u))/(1.0-ele[PLANET_NO].ecc*cos(ele[PLANET_NO].u)))*x_eject[i][2];
+
+    x_eject[i][2] = - sin((sqrt(1.0-ele[PLANET_NO].ecc*ele[PLANET_NO].ecc)*sin(ele[PLANET_NO].u))/(1.0-ele[PLANET_NO].ecc*cos(ele[PLANET_NO].u)))*x_eject[i][1] + cos((ele[PLANET_NO].u-ele[PLANET_NO].ecc)/(1.0-ele[PLANET_NO].ecc*cos(ele[PLANET_NO].u)))*x_eject[i][2];
+    //////////////////ここまでで、太陽中心、xyは軌道面上、x軸は惑星の近日点の方向/////////////////////
+
     
-    //ele[i].axis = ((double)rand())/((double)RAND_MAX+1.0)*(OUTER_AXIS-INNER_AXIS)+INNER_AXIS ;  //長半径
-
-    //ele[i].u = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;  //離心近点離角
-
-    ele[i].u = 0.0;
+    Rotation_3D_zaxis(i,x_eject,ele[PLANET_NO].omega);
+    Rotation_3D_xaxis(i,x_eject,ele[PLANET_NO].inc);
+    Rotation_3D_zaxis(i,x_eject,ele[PLANET_NO].Omega);  
+    //////////////////ここまでで、基準系/////////////////////
     
-    //ele[i].inc = sqrt(-log(((double)rand())/((double)RAND_MAX+1.0)))*INC_RMS;  //軌道傾斜角  //Rayleigh分布
-
-    ele[i].inc = INC_RMS;
     
-    ele[i].Omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;  //昇交点経度
-    ele[i].omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;  //近点引数
+    for(i=N_p+1;i<=N_p+N_tr;++i){
+      for(k=1;k<=3;++k){
+	x_0[i][k] = x_0[PLANET_NO][k] + x_eject[i][k];  //基準系での破片の座標を代入
+      }
+    }
 
-    ele[i].r_h = ele[i].axis*cbrt(ele[i].mass/((double)M_0)/3.0);
-
-    ele[i].orinum = i;
-  }
-  */
-  
-  /*
-  ////////////////////////////////0-500番 近日点スタート/////////////////////////////////////////////////
-  double bunkatsu;
-  double theta;
-  for(i=1;i<=(int)(N_tr/2);i++){
-    sprintf(ele[i].name,"tracer%04d",i);
-    ele[i].mass = M_TOT/(double)N_tr;  //トレーサー質量
-    ele[i].ecc = ECC_RMS;
-    ele[i].inc = INC_RMS;
-
-    bunkatsu=11.0;
-    theta=2.0*M_PI/bunkatsu*(i-1) - 2.0*M_PI/19.0*(int)((i-1)/bunkatsu);
-    //theta=2.0*M_PI/bunkatsu*(i-1);
     
-    x_0[i][1] = (INNER_AXIS*(1.0-ECC_RMS)+(int)((i-1)/(int)bunkatsu)*(OUTER_AXIS*(1.0-ECC_RMS)-INNER_AXIS)*bunkatsu/(double)(N_tr/2))*cos(theta);
-    x_0[i][2] = (INNER_AXIS*(1.0-ECC_RMS)+(int)((i-1)/bunkatsu)*(OUTER_AXIS*(1.0-ECC_RMS)-INNER_AXIS)*bunkatsu/(double)(N_tr/2))*sin(theta);
-    x_0[i][3] = (INNER_AXIS*(1.0-ECC_RMS)+(int)((i-1)/bunkatsu)*(OUTER_AXIS*(1.0-ECC_RMS)-INNER_AXIS)*bunkatsu/(double)(N_tr/2))*tan(ele[i].inc);
-
     r_0[i] = RadiusFromCenter(i,x_0,r_0);  //中心星からの距離
-    
-    v_0[i][1] = -sqrt(G*M_0/r_0[i]*(1.0+ele[i].ecc))*sin(theta);
-    v_0[i][2] = sqrt(G*M_0/r_0[i]*(1.0+ele[i].ecc))*cos(theta);
-    v_0[i][3] = 0.0;
+
+    v_0[i][1] = 0.1;
+    v_0[i][2] = 0.1;
+    v_0[i][3] = 0.1;
 
     r_dot_v[i] = InnerProduct(i,x_0,v_0,r_dot_v);  //r_i,v_iの内積
     v2_0[i] = SquareOfVelocity(i,v_0,v2_0);  //速度の2乗
   }
-  /////////////////////////////////////////////////////////////////////////////////
 
   
 
-  ///////////////////////////////501-1000番 遠日点スタート//////////////////////////////////////////////////
-  for(i=(int)(N_tr/2)+1;i<=N_tr;i++){
-    sprintf(ele[i].name,"tracer%04d",i);
-    ele[i].mass = M_TOT/(double)N_tr;  //トレーサー質量
-    ele[i].ecc = ECC_RMS;
-    ele[i].inc = INC_RMS;
-
-    bunkatsu=11.0;
-    theta=2.0*M_PI/bunkatsu*(i-(int)(N_tr/2)-1) - 2.0*M_PI/19.0*(int)((i-(int)(N_tr/2)-1)/bunkatsu);
-    //theta=2.0*M_PI/bunkatsu*(i-1);
-    
-    x_0[i][1] = (OUTER_AXIS*(1.0+ECC_RMS)-(int)((i-(int)(N_tr/2)-1)/(int)bunkatsu)*(OUTER_AXIS-INNER_AXIS*(1.0+ECC_RMS))*bunkatsu/(double)(N_tr/2))*cos(theta);
-    x_0[i][2] = (OUTER_AXIS*(1.0+ECC_RMS)-(int)((i-(int)(N_tr/2)-1)/bunkatsu)*(OUTER_AXIS-INNER_AXIS*(1.0+ECC_RMS))*bunkatsu/(double)(N_tr/2))*sin(theta);
-    x_0[i][3] = (OUTER_AXIS*(1.0+ECC_RMS)-(int)((i-(int)(N_tr/2)-1)/bunkatsu)*(OUTER_AXIS-INNER_AXIS*(1.0+ECC_RMS))*bunkatsu/(double)(N_tr/2))*tan(ele[i].inc);
-
-    r_0[i] = RadiusFromCenter(i,x_0,r_0);  //中心星からの距離
-    
-    v_0[i][1] = -sqrt(G*M_0/r_0[i]*(1.0-ele[i].ecc))*sin(theta);
-    v_0[i][2] = sqrt(G*M_0/r_0[i]*(1.0-ele[i].ecc))*cos(theta);
-    v_0[i][3] = 0.0;
-
-    r_dot_v[i] = InnerProduct(i,x_0,v_0,r_dot_v);  //r_i,v_iの内積
-    v2_0[i] = SquareOfVelocity(i,v_0,v2_0);  //速度の2乗
-  }
-  //////////////////////////////////////////////////////////////////////////////////
-  */
-
-  for(i=1;i<=N_tr;++i){  
-    InitialCondition(i,P,Q,x_0,v_0,r_0,ele);  //初期位置、速度計算
+  
+  for(i=1;i<=N_p+N_tr;++i){  
+    //InitialCondition(i,P,Q,x_0,v_0,r_0,ele);  //初期位置、速度計算
          
     printf("%s\tx_0[%d][1]=%f\tx_0[%d][2]=%f\tx_0[%d][3]=%f\n",ele[i].name,i,x_0[i][1],i,x_0[i][2],i,x_0[i][3]);
     printf("%s\tv_0[%d][1]=%f\tv_0[%d][2]=%f\tv_0[%d][3]=%f\n",ele[i].name,i,v_0[i][1],i,v_0[i][2],i,v_0[i][3]);
@@ -222,10 +144,15 @@ int main(void){
 
 
   
+  for(i=1;i<=N_p+N_tr;++i){
+    ele[i].r_h = ele[i].axis*cbrt(ele[i].mass/((double)M_0)/3.0);
+  }
+  
+  
 #if ORBITALELEMENTS_FILE
   FILE *fporbit;   //初期の軌道要素をファイルへ書き出し
   char orbit[200];
-  for(i=1;i<=N_tr;++i){
+  for(i=1;i<=N_p+N_tr;++i){
     sprintf(orbit,"%s%s.dat",STR(DIRECTORY),ele[i].name);
     fporbit = fopen(orbit,"w");
     if(fporbit==NULL){
@@ -241,11 +168,11 @@ int main(void){
 #endif
 
 
-  
-  for(i=1;i<=N_tr;i++){
+  /*
+  for(i=1;i<=N_p+N_tr;i++){
     v2_0[i] = SquareOfVelocity(i,v_0,v2_0);  //速度の2乗
   }  
-
+  */
     
 
   E_tot_0 = 0.0;  
@@ -271,13 +198,13 @@ int main(void){
       
  
 
-  for(i=1;i<=N_tr;i++){
+  for(i=1;i<=N_p+N_tr;i++){
     r_dot_v[i] = InnerProduct(i,x_0,v_0,r_dot_v);  //r_i,v_iの内積
   }
       
   
   
-  for(i=1;i<=N_tr;++i){  //test particle の加速度
+  for(i=1;i<=N_p+N_tr;++i){  //test particle の加速度
     for(k=1;k<=3;++k){
       a_0[i][k] = All_Acceleration(i,j,k,ele,x_0,r_0,abs_r2,a_0);  //初期の加速度
       adot_0[i][k] = All_dAcceleration(i,j,k,ele,x_0,v_0,r_dot_v,r_dot_v_ij,r_0,abs_r2,adot_0);
@@ -286,14 +213,14 @@ int main(void){
   }
   
 
-  for(i=1;i<=N_tr;++i){ 
+  for(i=1;i<=N_p+N_tr;++i){ 
     dt_[i] = Timestep_i_0(i,a_0,adot_0,abs_a,abs_adot,dt_);  //初期のタイムステップ計算
     //printf("initial dt_[%d]=%e\n",i,dt_[i]);
   }
     
 
 
-  for(i=1;i<=N_tr;++i){  
+  for(i=1;i<=N_p+N_tr;++i){  
     if(i==1){
       t_sys = dt_[1];
       i_sys = 1;
@@ -304,7 +231,7 @@ int main(void){
   }
 
 
-  for(i=1;i<=N_tr;++i){
+  for(i=1;i<=N_p+N_tr;++i){
     t_[i] = 0.0;
   }
 
@@ -315,7 +242,7 @@ int main(void){
   //start = clock();
 
   mass_tot_all = 0.0;
-  for(i=1;i<=N_tr;++i){
+  for(i=1;i<=N_p+N_tr;++i){
 
     frag[i].fragtimes = 0;
     
@@ -364,7 +291,7 @@ int main(void){
   }
   */
 
-  double radius[N_tr+1];
+  double radius[N_p+N_tr+1];
   mass_tot_1 = 0.0;
   mass_tot_2 = 0.0;
   mass_tot_3 = 0.0;
