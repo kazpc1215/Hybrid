@@ -5,7 +5,7 @@ void Iteration_sys(int i_sys,int j,struct orbital_elements ele[],double x_p[][4]
 
   int k;
 
-  for(j=1;j<=N_tr;++j){
+  for(j=1;j<=N_p+N_tr;++j){
     if(i_sys!=j){	 
       abs_r2[j] = SquareOfRelativeDistance(i_sys,j,x_c); //絶対値2乗
       abs_v2[j] = SquareOfRelativeVelocity(i_sys,j,v_c);

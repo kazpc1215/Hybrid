@@ -33,16 +33,19 @@ int main(void){
 
   //clock_t start,end;
 
-  double t_check=2.0*M_PI*0.1;
-
-  double mass_tot_all;
-  
 
   struct orbital_elements ele[N_p+N_tr+1]={};
 
   struct fragmentation frag[N_p+N_tr+1]={};
 
+
+#if FRAGMENTATION
+  double t_check=2.0*M_PI*0.1;
+  double mass_tot_all;
   struct parameter para;
+#endif
+
+
   
   mkdir(STR(DIRECTORY), 0755);  //ディレクトリを作成  755 = rwxr-xr-x
 
@@ -99,14 +102,14 @@ int main(void){
     
     tmp_random = ((double)rand())/((double)RAND_MAX+1.0);
     
-    x_eject[i][2] = sin(2.0*M_PI*tmp_random)*tan(M_PI/180.0*30.0)*x_eject[i][1];  //破片のy座標
-    x_eject[i][3] = cos(2.0*M_PI*tmp_random)*tan(M_PI/180.0*30.0)*x_eject[i][1];  //破片のz座標
+    x_eject[i][2] = x_eject[i][1]*tan(EJECTION_CONE_ANGLE)*cos(2.0*M_PI*tmp_random);  //破片のy座標
+    x_eject[i][3] = x_eject[i][1]*tan(EJECTION_CONE_ANGLE)*sin(2.0*M_PI*tmp_random);  //破片のz座標
     printf("%s\tx_eject[%d][1]=%f\tx_eject[%d][2]=%f\tx_eject[%d][3]=%f\n",ele[i].name,i,x_eject[i][1],i,x_eject[i][2],i,x_eject[i][3]);
 
 
     v_eject[i][1] = EJECTION_VELOCITY*cos(EJECTION_CONE_ANGLE);  //破片の速度x成分
-    v_eject[i][2] = EJECTION_VELOCITY*sin(EJECTION_CONE_ANGLE);  //破片の速度y成分
-    v_eject[i][3] = EJECTION_VELOCITY*sin(EJECTION_CONE_ANGLE);  //破片の速度z成分
+    v_eject[i][2] = EJECTION_VELOCITY*sin(EJECTION_CONE_ANGLE)*cos(2.0*M_PI*tmp_random);  //破片の速度y成分
+    v_eject[i][3] = EJECTION_VELOCITY*sin(EJECTION_CONE_ANGLE)*sin(2.0*M_PI*tmp_random);  //破片の速度z成分
     printf("%s\tv_eject[%d][1]=%f\tv_eject[%d][2]=%f\tv_eject[%d][3]=%f\n",ele[i].name,i,v_eject[i][1],i,v_eject[i][2],i,v_eject[i][3]);
     //////////////////ここまでで、惑星中心、xyは軌道面上、x軸は太陽から惑星の方向/////////////////////
 
@@ -187,7 +190,7 @@ int main(void){
   fclose(fpposivelo);
   
 
-  
+
   for(i=N_p+1;i<=N_p+N_tr;++i){
     Calculate_OrbitalElements(i,x_0,v_0,ele,P,Q,r_0,v2_0,r_dot_v);
     ele[i].r_h = ele[i].axis*cbrt(ele[i].mass/((double)M_0)/3.0);
@@ -391,7 +394,7 @@ int main(void){
 	
       for(i=1;i<=N_p+N_tr;++i){
 	if(i==i_sys){  
-	  Corrector_sys(i_sys,j,ele,x_p,v_p,r_p,v2_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,t_sys,dt_);  //修正子 i_sys のみ
+	  Corrector_sys(i_sys,j,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);  //修正子 i_sys のみ
 	}else{
 	  for(k=1;k<=3;++k){  //i_sys 以外の粒子は予測子を使う
 	    x_c[i][k] = x_p[i][k];
@@ -427,7 +430,7 @@ int main(void){
       }
 	
       for(i=1;i<=N_p+N_tr;++i){
-	Corrector_sys(i,j,ele,x_p,v_p,r_p,v2_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,t_sys,dt_);
+	Corrector_sys(i,j,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);
       }
 
       for(ite=1;ite<=ITE_MAX;++ite){  //iteration 3回 
@@ -445,7 +448,7 @@ int main(void){
 	return -1;
       }
       for(i=1;i<=N_p+N_tr;i++){
-	fprintf(fpposivelo,"%e\t%4d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%d\n",t_sys/2.0/M_PI,i,x_0[i][1],x_0[i][2],x_0[i][3],r_0[i],sqrt(x_0[i][1]*x_0[i][1]+x_0[i][2]*x_0[i][2]),ele[i].mass,frag[i].delta_r_out,frag[i].delta_r_in,frag[i].sigma,frag[i].n_s,frag[i].neighbornumber);
+	fprintf(fpposivelo,"%e\t%4d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\n",t_sys/2.0/M_PI,i,x_c[i][1],x_c[i][2],x_c[i][3],r_c[i],sqrt(x_c[i][1]*x_c[i][1]+x_c[i][2]*x_c[i][2]),v_c[i][1],v_c[i][2],v_c[i][3],sqrt(v_c[i][1]*v_c[i][1]+v_c[i][2]*v_c[i][2]+v_c[i][3]*v_c[i][3]));
       }
       fprintf(fpposivelo,"\n\n");
   

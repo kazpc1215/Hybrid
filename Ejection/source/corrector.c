@@ -3,11 +3,11 @@
 
 
 /*i_sys のみの修正子*/
-void Corrector_sys(int i_sys,int j,struct orbital_elements ele[],double x_p[][4],double v_p[][4],double r_p[],double v2_p[],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double a_0[][4],double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],double abs_r[],double abs_r2[],double abs_v[],double abs_v2[],double r_dot_v_ij[],double r_dot_v[],double t_sys,double dt_[]){
-  
+void Corrector_sys(int i_sys,int j,struct orbital_elements ele[],double x_p[][4],double v_p[][4],double r_p[],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double a_0[][4],double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],double abs_r[],double abs_r2[],double abs_v[],double abs_v2[],double r_dot_v_ij[],double r_dot_v[],double dt_[]){
+
   int k;
   
-  for(j=1;j<=N_tr;++j){
+  for(j=1;j<=N_p+N_tr;++j){
     if(i_sys!=j){
       abs_r2[j] = SquareOfRelativeDistance(i_sys,j,x_p); //i,j 絶対値2乗
       abs_v2[j] = SquareOfRelativeVelocity(i_sys,j,v_p);

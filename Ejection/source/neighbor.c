@@ -3,54 +3,57 @@
 
 void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation frag[],double x_0[][4]){
 
-  int j,l;
-  double radius[N_tr+1];
-  double theta[N_tr+1];
+  int j,l,m;
+  double radius[N_p+N_tr+1];
+  double theta[N_p+N_tr+1];
   double S;
   double M;
   double v;
   double delta_theta=DELTA_THETA;
 
-  for(l=1;l<=NEIGHBOR_MAX;l++){
-    frag[i].neighborlist[l] = 0;
-  }
-  frag[i].neighbornumber = 0;
-
-
+  
   radius[i] = sqrt(x_0[i][1]*x_0[i][1] + x_0[i][2]*x_0[i][2]);
   theta[i] = atan2(x_0[i][2],x_0[i][1]);  //[-pi:pi]
 
+  
+  m=1;
+  do{
 
+    for(l=1;l<=NEIGHBOR_MAX;l++){
+      frag[i].neighborlist[l] = 0;
+    }
+    frag[i].neighbornumber = 0;
+    
+    frag[i].delta_r_out = (double)m*DELTA_R;  //外側
+    frag[i].delta_r_in = (double)m*DELTA_R;  //内側
+  
+    S = 2.0*(frag[i].delta_r_out + frag[i].delta_r_in)*radius[i]*delta_theta;
 
-  frag[i].delta_r_out = DELTA_R;  //固定
-  frag[i].delta_r_in = DELTA_R;  //固定
-
-
+    //printf("delta_r[%d]=%f\n",i,frag[i].delta_r);
   
-  S = 2.0*(frag[i].delta_r_out + frag[i].delta_r_in)*radius[i]*delta_theta;
-  
-  
-  
-  //printf("delta_r[%d]=%f\n",i,frag[i].delta_r);
-  
-  
-  l = 1;
-  for(j=1;j<=N_tr;j++){
-    if(j!=i){
-      radius[j] = sqrt(x_0[j][1]*x_0[j][1] + x_0[j][2]*x_0[j][2]);
-      theta[j] = atan2(x_0[j][2],x_0[j][1]);  //[-pi:pi]
-      if((radius[j]-radius[i]>=0.0 && radius[j]-radius[i]<=frag[i].delta_r_out) || (radius[i]-radius[j]>=0.0 && radius[i]-radius[j]<=frag[i].delta_r_in)){  //動径方向
-	if(fabs(theta[j] - theta[i])<=delta_theta || 2.0*M_PI - fabs(theta[j] - theta[i])<=delta_theta){  //角度方向
-	  frag[i].neighborlist[l] = j;
-	  l++;
+    l = 1;
+    for(j=N_p+1;j<=N_p+N_tr;j++){  //惑星抜き
+      if(j!=i){
+	radius[j] = sqrt(x_0[j][1]*x_0[j][1] + x_0[j][2]*x_0[j][2]);
+	theta[j] = atan2(x_0[j][2],x_0[j][1]);  //[-pi:pi]
+	if((radius[j]-radius[i]>=0.0 && radius[j]-radius[i]<=frag[i].delta_r_out) || (radius[i]-radius[j]>=0.0 && radius[i]-radius[j]<=frag[i].delta_r_in)){  //動径方向
+	  if(fabs(theta[j] - theta[i])<=delta_theta || 2.0*M_PI - fabs(theta[j] - theta[i])<=delta_theta){  //角度方向
+	    frag[i].neighborlist[l] = j;
+	    l++;
+	  }
 	}
       }
     }
-  }
   
-  frag[i].neighbornumber = l-1;
+    frag[i].neighbornumber = l-1;
+
+    m++;
+    
+  }while(frag[i].neighbornumber<10);  //近傍粒子が10個未満なら、10個以上になるまでdelta_rをm倍に広げる
+  
 
 
+  
 
   v=0.0;
   M=ele[i].mass;  //ターゲットiの質量も含める

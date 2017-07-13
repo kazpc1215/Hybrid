@@ -5,9 +5,9 @@
 double Calculate_Energy(int i,int j,struct orbital_elements ele[],double x_c[][4],double v_c[][4],double v2_c[],double r_c[],double abs_r[],double abs_r2[],double abs_v[],double abs_v2[],double r_dot_v_ij[],double E[],double E_tot){
   double rij1;
   double r1;
-  for(i=1;i<=N_tr;++i){
+  for(i=1;i<=N_p+N_tr;++i){
     E[i] = 0.5*ele[i].mass*v2_c[i];
-    for(j=1;j<=N_tr;++j){
+    for(j=1;j<=N_p+N_tr;++j){
       if(i!=j){
 	abs_r2[j] = SquareOfRelativeDistance(i,j,x_c); //絶対値2乗
 	abs_v2[j] = SquareOfRelativeVelocity(i,j,v_c);
