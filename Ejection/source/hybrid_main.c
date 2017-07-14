@@ -91,11 +91,13 @@ int main(void){
 
   double tmp_x,tmp_y;
   double tmp_random;
+  double tmp_v;
   
   for(i=N_p+1;i<=N_p+N_tr;++i){
     sprintf(ele[i].name,"tracer%04d",i-N_p);
+    ele[i].mass = M_TOT/(double)N_tr;
     ele[i].orinum = i;
-
+    
     
     
     x_eject[i][1] = PLANET_RADIUS*(1.1 + 0.9*((double)rand())/((double)RAND_MAX+1.0));  //破片のx座標
@@ -107,9 +109,11 @@ int main(void){
     printf("%s\tx_eject[%d][1]=%f\tx_eject[%d][2]=%f\tx_eject[%d][3]=%f\n",ele[i].name,i,x_eject[i][1],i,x_eject[i][2],i,x_eject[i][3]);
 
 
-    v_eject[i][1] = EJECTION_VELOCITY*cos(EJECTION_CONE_ANGLE);  //破片の速度x成分
-    v_eject[i][2] = EJECTION_VELOCITY*sin(EJECTION_CONE_ANGLE)*cos(2.0*M_PI*tmp_random);  //破片の速度y成分
-    v_eject[i][3] = EJECTION_VELOCITY*sin(EJECTION_CONE_ANGLE)*sin(2.0*M_PI*tmp_random);  //破片の速度z成分
+    tmp_v = EJECTION_VELOCITY*x_eject[i][1]/PLANET_RADIUS;
+
+    v_eject[i][1] = tmp_v*cos(EJECTION_CONE_ANGLE);  //破片の速度x成分
+    v_eject[i][2] = tmp_v*sin(EJECTION_CONE_ANGLE)*cos(2.0*M_PI*tmp_random);  //破片の速度y成分
+    v_eject[i][3] = tmp_v*sin(EJECTION_CONE_ANGLE)*sin(2.0*M_PI*tmp_random);  //破片の速度z成分
     printf("%s\tv_eject[%d][1]=%f\tv_eject[%d][2]=%f\tv_eject[%d][3]=%f\n",ele[i].name,i,v_eject[i][1],i,v_eject[i][2],i,v_eject[i][3]);
     //////////////////ここまでで、惑星中心、xyは軌道面上、x軸は太陽から惑星の方向/////////////////////
 
@@ -292,7 +296,7 @@ int main(void){
   //start = clock();
 
   mass_tot_all = 0.0;
-  for(i=1;i<=N_p+N_tr;++i){
+  for(i=N_p+1;i<=N_p+N_tr;++i){
 
     frag[i].fragtimes = 0;
     
@@ -513,7 +517,7 @@ int main(void){
     
     
     mass_tot_all = 0.0;
-    for(i=1;i<=N_p+N_tr;++i){    
+    for(i=N_p+1;i<=N_p+N_tr;++i){    
       
       //if(t_sys>frag[i].t_frag){
       if(t_[i]>frag[i].t_frag){
@@ -527,13 +531,12 @@ int main(void){
 	
 	//printf("i=%d\tneighbornumber=%d\n",i,frag[i].neighbornumber);
 	/*
-	for(j=1;j<=frag[i].neighbornumber;j++){
+	  for(j=1;j<=frag[i].neighbornumber;j++){
 	  printf("\tneighborlist[%d]=%d\n",j,frag[i].neighborlist[j]);
-	}
+	  }
 	*/
 	//printf("i=%d\tv_ave=%f\tsigma=%f\tecc=%f\tr_c=%f\tdelta_r=%f\n",i,frag[i].v_ave,frag[i].sigma,ele[i].ecc,r_c[i],frag[i].delta_r);
 
-	
 	MassFlux(i,ele,frag,para);  //質量フラックス計算
 	frag[i].dt_frag = Depletion_Time(i,frag);  //統計的計算のタイムスケール
 

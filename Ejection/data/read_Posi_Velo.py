@@ -10,12 +10,12 @@ from mpl_toolkits.mplot3d import Axes3D
 #from matplotlib.font_manager import FontProperties
 #fp = FontProperties(fname='/Users/isoya.kazuhide/Library/Fonts/ipag.ttf');
 
-fig = plt.figure(figsize=(8,6),dpi=100)
-ax = fig.add_subplot(111, projection='3d')
 
 
-filename = "/Users/isoya.kazuhide/Master1/Hybrid/Ejection/data/NoFrag_Ejection_test_OnlyPlanet_1000_100yr/Posi_Velo.dat"
 
+#filename = "/Users/isoya.kazuhide/Master1/Hybrid/Ejection/data/NoFrag_Ejection_test_OnlyPlanet_1000_100yr/Posi_Velo.dat"
+
+filename = "/Users/isoya.kazuhide/Master1/Hybrid/Ejection/data/Frag_Ejection_test_OnlyPlanet_xi001_n1000_100yr/Posi_Velo.dat"
 
 
 f = open(filename,mode='r')#file read
@@ -46,6 +46,8 @@ relative_v_y = np.zeros((nblock,nline))# time, space
 relative_v_z = np.zeros((nblock,nline))# time, space
 
 for nb in range(nblock):
+    fig = plt.figure(figsize=(8,6),dpi=100)
+    ax = fig.add_subplot(111, projection='3d')
     print nb    
     n1 = ntotalline*nb
     n2 = ntotalline*(nb+1) - 1
@@ -82,10 +84,10 @@ for nb in range(nblock):
     sphere_y = 0.00004 * np.sin(theta) * np.sin(phi) + y[nb,0]
     sphere_z = 0.00004 * np.cos(theta) + z[nb,0]
 
-    ax.plot_surface(sphere_x,sphere_y,sphere_z,color='orange')
-    ax.scatter(x[nb,1:],y[nb,1:],z[nb,1:],color='b',s=5)
-    ax.quiver(x[nb,:],y[nb,:],z[nb,:],relative_v_x[nb,:],relative_v_y[nb,:],relative_v_z[nb,:],length=0.00002,color='b',alpha=0.5)
-    
+    ax.plot_wireframe(sphere_x,sphere_y,sphere_z,color='orange',label='Planet')
+    ax.scatter(x[nb,1:],y[nb,1:],z[nb,1:],color='b',s=5,label='Ejecta')
+    ax.quiver3D(x[nb,:],y[nb,:],z[nb,:],relative_v_x[nb,:],relative_v_y[nb,:],relative_v_z[nb,:],length=0.00001,color='b',alpha=0.5,label='Ejection velocity')
+    plt.legend()
     plt.gca().set_aspect('equal', adjustable='box')
     
     

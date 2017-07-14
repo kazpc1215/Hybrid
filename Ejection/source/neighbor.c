@@ -29,6 +29,7 @@ void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation fra
   
     S = 2.0*(frag[i].delta_r_out + frag[i].delta_r_in)*radius[i]*delta_theta;
 
+    //printf("i=%d\tS=%e\n",i,S);
     //printf("delta_r[%d]=%f\n",i,frag[i].delta_r);
   
     l = 1;
@@ -74,6 +75,9 @@ void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation fra
     }
     frag[i].v_ave = v/(double)frag[i].neighbornumber;  //領域iの平均速度
 
+    //printf("i=%d\tmass=%e\n",i,ele[i].mass);
+    //printf("i=%d\tM=%e\n",i,M);
+      
     frag[i].sigma = M/S;  //領域iの表面密度
     frag[i].n_s = frag[i].neighbornumber/S;  //領域iの表面密度
   }else{

@@ -37,6 +37,10 @@ int Calculate_OrbitalElements(int i,double x_c[][4],double v_c[][4],struct orbit
     printf("i=%d\taxis is nan.\n",i);
   }
 
+  if(ele[i].axis<0.0){
+    printf("i=%d\taxis=%e < 0 双曲線軌道\n",i,ele[i].axis);
+  }
+
   
   ele[i].ecc = sqrt((1.0-r_c[i]/ele[i].axis)*(1.0-r_c[i]/ele[i].axis) + r_dot_v[i]*r_dot_v[i]/(G*M_0*ele[i].axis));
 
