@@ -98,16 +98,16 @@ int main(void){
     ele[i].mass = M_TOT/(double)N_tr;
     ele[i].orinum = i;
     
-    
+    /*
     //cone
     x_eject[i][1] = PLANET_RADIUS*(1.1 + 0.9*((double)rand())/((double)RAND_MAX+1.0));  //破片のx座標
     tmp_rand1 = ((double)rand())/((double)RAND_MAX+1.0);    
     x_eject[i][2] = x_eject[i][1]*tan(EJECTION_CONE_ANGLE)*cos(2.0*M_PI*tmp_rand1);  //破片のy座標
     x_eject[i][3] = x_eject[i][1]*tan(EJECTION_CONE_ANGLE)*sin(2.0*M_PI*tmp_rand1);  //破片のz座標
-    
+    */
 
        
-    /*
+    
     //isotropic
     tmp_r = PLANET_RADIUS*(1.1 + 0.9*((double)rand())/((double)RAND_MAX+1.0));
     tmp_rand1 = ((double)rand())/((double)RAND_MAX+1.0)*M_PI;
@@ -115,7 +115,7 @@ int main(void){
     x_eject[i][1] = tmp_r*sin(tmp_rand1)*cos(tmp_rand2);  //破片のx座標
     x_eject[i][2] = tmp_r*sin(tmp_rand1)*sin(tmp_rand2);  //破片のx座標
     x_eject[i][3] = tmp_r*cos(tmp_rand1);  //破片のx座標
-    */
+    
 
 
 
@@ -132,18 +132,18 @@ int main(void){
     tmp_v = EJECTION_VELOCITY;
 
     
-
+    /*
     //cone
     v_eject[i][1] = tmp_v*cos(EJECTION_CONE_ANGLE);  //破片の速度x成分
     v_eject[i][2] = tmp_v*sin(EJECTION_CONE_ANGLE)*cos(2.0*M_PI*tmp_rand1);  //破片の速度y成分
     v_eject[i][3] = tmp_v*sin(EJECTION_CONE_ANGLE)*sin(2.0*M_PI*tmp_rand1);  //破片の速度z成分
+    */
     
-    /*
     //isotropic
     v_eject[i][1] = tmp_v*sin(tmp_rand1)*cos(tmp_rand2);  //破片の速度x成分
     v_eject[i][2] = tmp_v*sin(tmp_rand1)*sin(tmp_rand2);  //破片の速度y成分
     v_eject[i][3] = tmp_v*cos(tmp_rand1);  //破片の速度z成分
-    */
+    
 
 
 
