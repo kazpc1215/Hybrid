@@ -62,20 +62,25 @@ double RotatingCoordinate_Y(struct orbital_elements ele[],double x_0[][4],double
 
 
 void Rotation_3D_xaxis(int i,double x_eject[][4],double theta){
-  x_eject[i][2] = cos(theta)*x_eject[i][2] - sin(theta)*x_eject[i][3];
-  x_eject[i][3] = sin(theta)*x_eject[i][2] + cos(theta)*x_eject[i][3];
+  double tmp_y = x_eject[i][2];
+  double tmp_z = x_eject[i][3];
+  x_eject[i][2] = cos(theta)*tmp_y - sin(theta)*tmp_z;
+  x_eject[i][3] = sin(theta)*tmp_y + cos(theta)*tmp_z;
 }
 
 void Rotation_3D_yaxis(int i,double x_eject[][4],double theta){
-  x_eject[i][1] = cos(theta)*x_eject[i][1] + sin(theta)*x_eject[i][3];
-  x_eject[i][3] = - sin(theta)*x_eject[i][1] + cos(theta)*x_eject[i][3];
+  double tmp_x = x_eject[i][1];
+  double tmp_z = x_eject[i][3];
+  x_eject[i][1] = cos(theta)*tmp_x + sin(theta)*tmp_z;
+  x_eject[i][3] = - sin(theta)*tmp_x + cos(theta)*tmp_z;
 }
 
 void Rotation_3D_zaxis(int i,double x_eject[][4],double theta){
-  x_eject[i][1] = cos(theta)*x_eject[i][1] - sin(theta)*x_eject[i][2];
-  x_eject[i][2] = sin(theta)*x_eject[i][1] + cos(theta)*x_eject[i][2];
+  double tmp_x = x_eject[i][1];
+  double tmp_y = x_eject[i][2];
+  x_eject[i][1] = cos(theta)*tmp_x - sin(theta)*tmp_y;
+  x_eject[i][2] = sin(theta)*tmp_x + cos(theta)*tmp_y;
 }
-
 
 
 

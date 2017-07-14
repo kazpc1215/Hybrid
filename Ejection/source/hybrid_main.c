@@ -89,8 +89,8 @@ int main(void){
 
   InitialCondition(PLANET_NO,P,Q,x_0,v_0,r_0,ele);  //初期位置、速度計算 //惑星のみ
 
-  double tmp_x,tmp_y;
-  double tmp_random;
+  double tmp_x,tmp_y,tmp_r;
+  double tmp_rand1,tmp_rand2;
   double tmp_v;
   
   for(i=N_p+1;i<=N_p+N_tr;++i){
@@ -99,21 +99,60 @@ int main(void){
     ele[i].orinum = i;
     
     
-    
+    //cone
     x_eject[i][1] = PLANET_RADIUS*(1.1 + 0.9*((double)rand())/((double)RAND_MAX+1.0));  //破片のx座標
+    tmp_rand1 = ((double)rand())/((double)RAND_MAX+1.0);    
+    x_eject[i][2] = x_eject[i][1]*tan(EJECTION_CONE_ANGLE)*cos(2.0*M_PI*tmp_rand1);  //破片のy座標
+    x_eject[i][3] = x_eject[i][1]*tan(EJECTION_CONE_ANGLE)*sin(2.0*M_PI*tmp_rand1);  //破片のz座標
     
-    tmp_random = ((double)rand())/((double)RAND_MAX+1.0);
+
+       
+    /*
+    //isotropic
+    tmp_r = PLANET_RADIUS*(1.1 + 0.9*((double)rand())/((double)RAND_MAX+1.0));
+    tmp_rand1 = ((double)rand())/((double)RAND_MAX+1.0)*M_PI;
+    tmp_rand2 = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
+    x_eject[i][1] = tmp_r*sin(tmp_rand1)*cos(tmp_rand2);  //破片のx座標
+    x_eject[i][2] = tmp_r*sin(tmp_rand1)*sin(tmp_rand2);  //破片のx座標
+    x_eject[i][3] = tmp_r*cos(tmp_rand1);  //破片のx座標
+    */
+
+
+
+    //Rotation_3D_zaxis(i,x_eject,M_PI);  //z軸周りに180度回転
+    //Rotation_3D_zaxis(i,x_eject,M_PI/2.0);  //z軸周りに90度回転
+    //Rotation_3D_zaxis(i,x_eject,-M_PI/2.0);  //z軸周りに-90度回転
+
+
     
-    x_eject[i][2] = x_eject[i][1]*tan(EJECTION_CONE_ANGLE)*cos(2.0*M_PI*tmp_random);  //破片のy座標
-    x_eject[i][3] = x_eject[i][1]*tan(EJECTION_CONE_ANGLE)*sin(2.0*M_PI*tmp_random);  //破片のz座標
     printf("%s\tx_eject[%d][1]=%f\tx_eject[%d][2]=%f\tx_eject[%d][3]=%f\n",ele[i].name,i,x_eject[i][1],i,x_eject[i][2],i,x_eject[i][3]);
 
 
-    tmp_v = EJECTION_VELOCITY*x_eject[i][1]/PLANET_RADIUS;
+    //tmp_v = EJECTION_VELOCITY*x_eject[i][1]/PLANET_RADIUS;
+    tmp_v = EJECTION_VELOCITY;
 
+    
+
+    //cone
     v_eject[i][1] = tmp_v*cos(EJECTION_CONE_ANGLE);  //破片の速度x成分
-    v_eject[i][2] = tmp_v*sin(EJECTION_CONE_ANGLE)*cos(2.0*M_PI*tmp_random);  //破片の速度y成分
-    v_eject[i][3] = tmp_v*sin(EJECTION_CONE_ANGLE)*sin(2.0*M_PI*tmp_random);  //破片の速度z成分
+    v_eject[i][2] = tmp_v*sin(EJECTION_CONE_ANGLE)*cos(2.0*M_PI*tmp_rand1);  //破片の速度y成分
+    v_eject[i][3] = tmp_v*sin(EJECTION_CONE_ANGLE)*sin(2.0*M_PI*tmp_rand1);  //破片の速度z成分
+    
+    /*
+    //isotropic
+    v_eject[i][1] = tmp_v*sin(tmp_rand1)*cos(tmp_rand2);  //破片の速度x成分
+    v_eject[i][2] = tmp_v*sin(tmp_rand1)*sin(tmp_rand2);  //破片の速度y成分
+    v_eject[i][3] = tmp_v*cos(tmp_rand1);  //破片の速度z成分
+    */
+
+
+
+    //Rotation_3D_zaxis(i,v_eject,M_PI);  //z軸周りに180度回転
+    //Rotation_3D_zaxis(i,v_eject,M_PI/2.0);  //z軸周りに90度回転
+    //Rotation_3D_zaxis(i,v_eject,-M_PI/2.0);  //z軸周りに-90度回転
+    
+
+    
     printf("%s\tv_eject[%d][1]=%f\tv_eject[%d][2]=%f\tv_eject[%d][3]=%f\n",ele[i].name,i,v_eject[i][1],i,v_eject[i][2],i,v_eject[i][3]);
     //////////////////ここまでで、惑星中心、xyは軌道面上、x軸は太陽から惑星の方向/////////////////////
 

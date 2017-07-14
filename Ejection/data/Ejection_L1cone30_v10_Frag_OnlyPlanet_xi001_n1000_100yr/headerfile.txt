@@ -10,7 +10,7 @@
 #include <sys/stat.h>
 #include <time.h>
 
-#define DIRECTORY ../data/Frag_Ejection_test_all_xi001_n1000_100yr/  //ファイル保存用のディレクトリ
+#define DIRECTORY ../data/Ejection_L1cone30_v10_Frag_OnlyPlanet_xi001_n1000_100yr/  //ファイル保存用のディレクトリ
 #define _STR(str) #str
 #define STR(str) _STR(str)
 
@@ -128,8 +128,8 @@ Mean Longitude (deg)               100.46435
 
 
 //////////////////////////////////////////////////
-#define INTERACTION_ALL 1  //全粒子同士の重力相互作用
-#define INTERACTION_ONLY_PLANET_TRACER 0  //惑星とトレーサー間の重力相互作用のみ
+#define INTERACTION_ALL 0  //全粒子同士の重力相互作用  //どちらか一つ
+#define INTERACTION_ONLY_PLANET_TRACER 1  //惑星とトレーサー間の重力相互作用のみ  //どちらかひとつ
 #define FRAGMENTATION 1  //近傍粒子探索と質量フラックス計算
 //////////////////////////////////////////////////
 

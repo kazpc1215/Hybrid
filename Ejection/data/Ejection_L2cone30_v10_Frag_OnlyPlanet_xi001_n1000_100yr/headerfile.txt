@@ -10,7 +10,7 @@
 #include <sys/stat.h>
 #include <time.h>
 
-#define DIRECTORY ../data/NoFrag_Ejection_test_OnlyPlanet_1000_100yr/  //ファイル保存用のディレクトリ
+#define DIRECTORY ../data/Ejection_L2cone30_v10_Frag_OnlyPlanet_xi001_n1000_100yr/  //ファイル保存用のディレクトリ
 #define _STR(str) #str
 #define STR(str) _STR(str)
 
@@ -73,8 +73,8 @@ Mean Longitude (deg)               100.46435
 
 //////////////////////////////////////////////////
 #define T_MAX (2.0*M_PI*1.0E2)  //100yr  全計算時間
-#define TIME_INTERVAL 2.0*M_PI*1.0E-2,2.0*M_PI*1.0E-1,2.0*M_PI*2.0E-1,2.0*M_PI*3.0E-1,2.0*M_PI*4.0E-1,2.0*M_PI*5.0E-1,2.0*M_PI*6.0E-1,2.0*M_PI*7.0E-1,2.0*M_PI*8.0E-1,2.0*M_PI*9.0E-1,2.0*M_PI*1.0E0,2.0*M_PI*1.1E0,2.0*M_PI*1.2E0,2.0*M_PI*1.3E0,2.0*M_PI*1.4E0,2.0*M_PI*1.5E0,2.0*M_PI*1.6E0,2.0*M_PI*1.7E0,2.0*M_PI*1.8E0,2.0*M_PI*1.9E0,2.0*M_PI*2.0E0,2.0*M_PI*1.0E1,2.0*M_PI*2.0E1,2.0*M_PI*3.0E1,2.0*M_PI*4.0E1,2.0*M_PI*5.0E1,2.0*M_PI*6.0E1,2.0*M_PI*7.0E1,2.0*M_PI*8.0E1,2.0*M_PI*9.0E1,T_MAX  //t_ene配列の中身
-#define TIME_INTERVAL_MAX 31 //t_ene配列の要素数
+#define TIME_INTERVAL 2.0*M_PI*1.0E-6,2.0*M_PI*1.0E-5,2.0*M_PI*1.0E-4,2.0*M_PI*1.0E-3,2.0*M_PI*1.0E-2,2.0*M_PI*1.0E-1,2.0*M_PI*2.0E-1,2.0*M_PI*3.0E-1,2.0*M_PI*4.0E-1,2.0*M_PI*5.0E-1,2.0*M_PI*6.0E-1,2.0*M_PI*7.0E-1,2.0*M_PI*8.0E-1,2.0*M_PI*9.0E-1,2.0*M_PI*1.0E0,2.0*M_PI*1.1E0,2.0*M_PI*1.2E0,2.0*M_PI*1.3E0,2.0*M_PI*1.4E0,2.0*M_PI*1.5E0,2.0*M_PI*1.6E0,2.0*M_PI*1.7E0,2.0*M_PI*1.8E0,2.0*M_PI*1.9E0,2.0*M_PI*2.0E0,2.0*M_PI*1.0E1,2.0*M_PI*2.0E1,2.0*M_PI*3.0E1,2.0*M_PI*4.0E1,2.0*M_PI*5.0E1,2.0*M_PI*6.0E1,2.0*M_PI*7.0E1,2.0*M_PI*8.0E1,2.0*M_PI*9.0E1,T_MAX  //t_ene配列の中身
+#define TIME_INTERVAL_MAX 35 //t_ene配列の要素数
 //////////////////////////////////////////////////
 
 
@@ -113,9 +113,9 @@ Mean Longitude (deg)               100.46435
 #define B_FRAG (5.0/3.0)
 #define Q_0_FRAG 9.5E8 // [erg/g]  Q_D = Q_0*(rho/3[g/cc])^0.55*(m/10^21[g])^p
 #define P_FRAG 0.453
-#define XI 0.005 //統計的計算のタイムステップがタイムスケールの"XI"倍
-//#define M_MAX 5.00E-15  //微惑星質量　1E19 g
-#define M_MAX 5.028E-16  //微惑星質量　1E18 g
+#define XI 0.01 //統計的計算のタイムステップがタイムスケールの"XI"倍
+#define M_MAX 5.00E-15  //微惑星質量　1E19 g
+//#define M_MAX 5.028E-16  //微惑星質量　1E18 g
 //////////////////////////////////////////////////
 
 
@@ -128,9 +128,9 @@ Mean Longitude (deg)               100.46435
 
 
 //////////////////////////////////////////////////
-#define INTERACTION_ALL 0  //全粒子同士の重力相互作用
-#define INTERACTION_ONLY_PLANET_TRACER 1  //惑星とトレーサー間の重力相互作用のみ
-#define FRAGMENTATION 0  //近傍粒子探索と質量フラックス計算
+#define INTERACTION_ALL 0  //全粒子同士の重力相互作用  //どちらか一つ
+#define INTERACTION_ONLY_PLANET_TRACER 1  //惑星とトレーサー間の重力相互作用のみ  //どちらかひとつ
+#define FRAGMENTATION 1  //近傍粒子探索と質量フラックス計算
 //////////////////////////////////////////////////
 
 
