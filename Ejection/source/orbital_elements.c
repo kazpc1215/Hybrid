@@ -38,7 +38,9 @@ int Calculate_OrbitalElements(int i,double x_c[][4],double v_c[][4],struct orbit
   }
 
   if(ele[i].axis<0.0){
-    printf("i=%d\taxis=%e < 0 双曲線軌道\n",i,ele[i].axis);
+    printf("i=%d\taxis=%e < 0 双曲線軌道. axis -> -1*axis\n",i,ele[i].axis);
+    ele[i].axis *= -1.0;
+    printf("\tr=%f[AU]\tR_planet=%f\n",sqrt((x_c[i][1]-x_c[PLANET_NO][1])*(x_c[i][1]-x_c[PLANET_NO][1])+(x_c[i][2]-x_c[PLANET_NO][2])*(x_c[i][2]-x_c[PLANET_NO][2])+(x_c[i][3]-x_c[PLANET_NO][3])*(x_c[i][3]-x_c[PLANET_NO][3])),PLANET_RADIUS);
   }
 
   
@@ -77,7 +79,7 @@ int Calculate_OrbitalElements(int i,double x_c[][4],double v_c[][4],struct orbit
   
   for(k=1;k<=3;++k){
     P[i][k] = x_c[i][k]*cos(ele[i].u)/r_c[i] - sqrt(ele[i].axis/(G*M_0))*v_c[i][k]*sin(ele[i].u);
-    Q[i][k] = (x_c[i][k]*sin(ele[i].u)/r_c[i] + sqrt(ele[i].axis/(G*M_0))*v_c[i][k]*(cos(ele[i].u)-ele[i].ecc))/sqrt(1.0-ele[i].ecc);
+    Q[i][k] = (x_c[i][k]*sin(ele[i].u)/r_c[i] + sqrt(ele[i].axis/(G*M_0))*v_c[i][k]*(cos(ele[i].u)-ele[i].ecc))/sqrt(fabs(1.0-ele[i].ecc));
   }
 
   if(isnan(P[i][1])||isnan(P[i][2])||isnan(P[i][3])){

@@ -10,7 +10,7 @@
 #include <sys/stat.h>
 #include <time.h>
 
-#define DIRECTORY ../data/Ejection_L2cone30equidistant_v1011curl_Frag_All_xi001_n1000_100yr/  //ファイル保存用のディレクトリ
+#define DIRECTORY ../data/Ejection_L2cone20equidistant_v10curl_Frag_All_xi001_n1000_100yr/  //ファイル保存用のディレクトリ
 #define _STR(str) #str
 #define STR(str) _STR(str)
 
@@ -51,7 +51,7 @@ Mean Longitude (deg)               100.46435
 //////////////////////////////////////////////////
 #define M_TOT 3.0E-7  //0.1M_E  //破片の総質量
 #define EJECTION_VELOCITY 1.0*sqrt(2.0*G*PLANET_MASS/PLANET_RADIUS)  //脱出速度の1.0倍
-#define EJECTION_CONE_ANGLE M_PI/180.0*30.0  //30度
+#define EJECTION_CONE_ANGLE M_PI/180.0*20.0  //20度
 //////////////////////////////////////////////////
 
 
