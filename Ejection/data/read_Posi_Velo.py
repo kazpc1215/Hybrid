@@ -15,7 +15,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 #filename = "/Users/isoya.kazuhide/Master1/Hybrid/Ejection/data/NoFrag_Ejection_test_OnlyPlanet_1000_100yr/Posi_Velo.dat"
 
-filename = "/Users/isoya.kazuhide/Master1/Hybrid/Ejection/data/Ejection_L2cone30equidistant_v1011curl_Frag_All_xi001_n1000_100yr/Posi_Velo.dat"
+filename = "/Users/isoya.kazuhide/Master1/Hybrid/Ejection/data/Ejection_L2cone30equidistant_v1011_Frag_All_xi001_n1000_100yr/Posi_Velo.dat"
 
 
 f = open(filename,mode='r')#file read
@@ -27,7 +27,7 @@ nline = 1001
 nspace = 2
 ntotalline = nline + nspace
 #nblock = len(lines)/ntotalline #number of output
-nblock = 5
+nblock = 6
 
 time = np.zeros((nblock,nline))# time, space
 number = np.zeros((nblock,nline))# time, space
