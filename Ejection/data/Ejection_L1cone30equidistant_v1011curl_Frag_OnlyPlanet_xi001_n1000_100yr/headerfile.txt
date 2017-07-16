@@ -10,7 +10,7 @@
 #include <sys/stat.h>
 #include <time.h>
 
-#define DIRECTORY ../data/Ejection_backcone30equidistant_v1011curl_Frag_OnlyPlanet_xi001_n1000_100yr/  //ファイル保存用のディレクトリ
+#define DIRECTORY ../data/Ejection_L1cone30equidistant_v1011curl_Frag_OnlyPlanet_xi001_n1000_100yr/  //ファイル保存用のディレクトリ
 #define _STR(str) #str
 #define STR(str) _STR(str)
 
