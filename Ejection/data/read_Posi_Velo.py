@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 import numpy as np
+from matplotlib.ticker import ScalarFormatter
 from mpl_toolkits.mplot3d import Axes3D
 #import matplotlib.animation as animation
 
@@ -15,7 +17,17 @@ from mpl_toolkits.mplot3d import Axes3D
 
 #filename = "/Users/isoya.kazuhide/Master1/Hybrid/Ejection/data/NoFrag_Ejection_test_OnlyPlanet_1000_100yr/Posi_Velo.dat"
 
-filename = "/Users/isoya.kazuhide/Master1/Hybrid/Ejection/data/Ejection_L2cone30equidistant_v1011_Frag_All_xi001_n1000_100yr/Posi_Velo.dat"
+filename = "/Users/isoya.kazuhide/Master1/Hybrid/Ejection/data/Ejection_L2cone30equidistant_v1011curl_Frag_OnlyPlanet_xi001_n1000_1000yr/Posi_Velo.dat"
+
+
+class FixedOrderFormatter(ScalarFormatter):
+    def __init__(self, order_of_mag=0, useOffset=True, useMathText=True):
+        self._order_of_mag = order_of_mag
+        ScalarFormatter.__init__(self, useOffset=useOffset, 
+                                 useMathText=useMathText)
+    def _set_orderOfMagnitude(self, range):
+        self.orderOfMagnitude = self._order_of_mag
+
 
 
 f = open(filename,mode='r')#file read
@@ -27,7 +39,7 @@ nline = 1001
 nspace = 2
 ntotalline = nline + nspace
 #nblock = len(lines)/ntotalline #number of output
-nblock = 6
+nblock = 1
 
 time = np.zeros((nblock,nline))# time, space
 number = np.zeros((nblock,nline))# time, space
@@ -84,11 +96,26 @@ for nb in range(nblock):
     sphere_y = 0.00004 * np.sin(theta) * np.sin(phi) + y[nb,0]
     sphere_z = 0.00004 * np.cos(theta) + z[nb,0]
 
-    ax.plot_wireframe(sphere_x,sphere_y,sphere_z,color='orange',label='Planet')
+    surf = ax.plot_surface(sphere_x,sphere_y,sphere_z,color='cyan')
     #ax.scatter(x[nb,1:],y[nb,1:],z[nb,1:],color='b',s=5,label='Ejecta')
-    ax.quiver3D(x[nb,:],y[nb,:],z[nb,:],relative_v_x[nb,:],relative_v_y[nb,:],relative_v_z[nb,:],length=0.00002,color='b',alpha=0.5,label='Ejection velocity')
-    plt.legend()
-    plt.gca().set_aspect('equal', adjustable='box')
+    velo = ax.quiver3D(x[nb,:],y[nb,:],z[nb,:],relative_v_x[nb,:],relative_v_y[nb,:],relative_v_z[nb,:],length=0.00001,color='b',alpha=0.5)
+
+    fake2Dline = mpl.lines.Line2D([0],[0], linestyle="none", c='cyan', marker = 'o')
+    ax.legend([fake2Dline,velo], ['Planet','Ejection velocity'], numpoints = 1)
+
+    ax.xaxis.set_major_formatter(FixedOrderFormatter(-5 ,useMathText=True))
+    ax.yaxis.set_major_formatter(FixedOrderFormatter(-5 ,useMathText=True))
+    ax.zaxis.set_major_formatter(FixedOrderFormatter(-5 ,useMathText=True))
+
+    ax.ticklabel_format(style='sci', axis='x', scilimits=(0,0))
+    ax.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+    ax.ticklabel_format(style='sci', axis='z', scilimits=(0,0))
+
     
+    
+    ax.set_xlim([0.99-4E-5,0.99+8E-5])
+    ax.set_ylim([-6E-5,6E-5])
+    ax.set_zlim([-6E-5,6E-5])
+    plt.gca().set_aspect('equal', adjustable='box')
     
     plt.show()
