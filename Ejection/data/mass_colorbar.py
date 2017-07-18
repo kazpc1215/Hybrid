@@ -12,7 +12,10 @@ import numpy as np
 
 
 
-filename = "/Users/isoya.kazuhide/Master1/Hybrid/Ejection/data/Ejection_backcone30equidistant_v1011curl_Frag_OnlyPlanet_xi001_n1000_1000yr/Posi_Mass.dat"
+filename = "/Users/isoya.kazuhide/Master1/Hybrid/Ejection/data/Ejection_L2cone30equidistant_v1011curl_Frag_OnlyPlanet_xi001_n1000_1000yr/Posi_Mass.dat"
+
+
+
 
 
 f = open(filename,mode='r')#file read
@@ -111,17 +114,16 @@ nb_list = [9, 17, 25, 33]
 cm = plt.cm.get_cmap('rainbow')
 
 for i in range(4):
-    im = ax_list[i].scatter(x[nb_list[i],1:], y[nb_list[i],1:], s=1, c=mass[nb_list[i],1:]*2E33, vmin=2E23, vmax=6E23, cmap=cm)
-    #im = ax_list[i].scatter(x[nb_list[i],1:], y[nb_list[i],1:], c=mass[nb_list[i],1:]*2E33, cmap=cm)
-
+    #im = ax_list[i].scatter(x[nb_list[i],1:], y[nb_list[i],1:], s=1, c=mass[nb_list[i],1:]*2E33, vmin=2E23, vmax=6E23, cmap=cm)
+    im = ax_list[i].scatter(x[nb_list[i],1:], y[nb_list[i],1:], s=1, c=sigma[nb_list[i],1:]*1.496E13*1.496E13/1.989E33, cmap=cm)
 
 plt.tight_layout()
 
 fig.subplots_adjust(right=0.8)
 cbar_ax = fig.add_axes([0.85, 0.15, 0.03, 0.7])
 fig.colorbar(im, cax=cbar_ax)
-cbar_ax.set_ylabel('mass [g]', fontsize=20)
-
+#cbar_ax.set_ylabel('mass [g]', fontsize=20)
+cbar_ax.set_ylabel(r'$\Sigma [{\rm g/cm^2}]$', fontsize=20)
 
 
 #plt.legend()
