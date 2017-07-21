@@ -3,6 +3,7 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 #from mpl_toolkits.mplot3d import Axes3D
 #import matplotlib.animation as animation
 
@@ -11,8 +12,9 @@ import numpy as np
 #fp = FontProperties(fname='/Users/isoya.kazuhide/Library/Fonts/ipag.ttf');
 
 
+dirname = os.path.dirname(os.path.abspath(__file__))
 
-filename = "/Users/isoya.kazuhide/Master1/Hybrid/Ejection/data/Ejection_L2cone30equidistant_v1011curl_Frag_OnlyPlanet_xi001_n1000_1000yr/Posi_Mass.dat"
+filename = os.path.normpath(os.path.join(dirname, './Ejection_L2cone30equidistant_v1011curl_Frag_OnlyPlanet_xi001_n1000_1000yr/Posi_Mass.dat'))
 
 
 
@@ -97,7 +99,11 @@ for nb in range(nblock):
     
     #plt.tight_layout()
     ax.legend()
-    plt.show()
+
+    imagename = os.path.normpath(os.path.join(dirname, '../image/L2anime/%02d.png'%nb))
+    plt.savefig(imagename)
+    plt.close()
+    #plt.show()
 
 
 
