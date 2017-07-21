@@ -69,67 +69,36 @@ for nb in range(nblock):
         step = step + 1
 
     
-fig = plt.figure(figsize=(8,6),dpi=100)
+    fig = plt.figure(figsize=(8,6),dpi=100)
+
+    ax = fig.add_subplot(1,1,1, aspect='equal')
+    ax.set_xlim([-4,4])
+    ax.set_ylim([-4,4])
+    ax.set_xlabel('x [AU]', fontsize=20)
+    ax.set_ylabel('y [AU]', fontsize=20)
+    ax.title.set_text('%.3f [yr]'%time[nb,0])
+    ax.title.set_fontsize(15)
+    
+    fig.subplots_adjust(right=0.8)
+    cbar_ax = fig.add_axes([0.85, 0.15, 0.03, 0.7])
+    
+    
+    cm = plt.cm.get_cmap('rainbow')
+    
+    cbar_ax.set_ylabel(r'mass $[10^{24} \rm g]$', fontsize=20)
+    #cbar_ax.set_ylabel(r'$\Sigma [{\rm g/cm^2}]$', fontsize=20)
+    
 
 
+    im = ax.scatter(x[nb,1:], y[nb,1:], s=1, c=mass[nb,1:]*2E10, vmin=2.0, vmax=6.0, cmap=cm, label='Ejecta')
+    ax.scatter(0, 0, c='k', marker='*', s=50, label='Star')
+    ax.scatter(x[nb,0], y[nb,0], c='k', marker='+', s=50, label='Planet')
+    fig.colorbar(im, cax=cbar_ax)
+    
+    #plt.tight_layout()
+    ax.legend()
+    plt.show()
 
-
-# サブプロットを追加
-ax_common = fig.add_subplot(1,1,1)
-ax_common.spines['top'].set_color('none')
-ax_common.spines['bottom'].set_color('none')
-ax_common.spines['left'].set_color('none')
-ax_common.spines['right'].set_color('none')
-ax_common.tick_params(labelcolor='w', top='off', bottom='off', left='off', right='off')
-
-ax_common.set_xlabel('x [AU]', fontsize=20)
-ax_common.set_ylabel('y [AU]', fontsize=20)
-#ax_common.title.set_text('The evolution of the debris ejected at (1,0).')
-#ax_common.title.set_fontsize(15)
-
-ax4 = fig.add_subplot(2,2,4, aspect='equal')
-ax1 = fig.add_subplot(2,2,1, aspect='equal', sharex=ax4, sharey=ax4)
-ax2 = fig.add_subplot(2,2,2, aspect='equal', sharex=ax4, sharey=ax4)
-ax3 = fig.add_subplot(2,2,3, aspect='equal', sharex=ax4, sharey=ax4)
-
-ax_list = [ax1, ax2 ,ax3, ax4]
-
-
-
-ax1.title.set_text('1yr')
-ax2.title.set_text('10yr')
-ax3.title.set_text('100yr')
-ax4.title.set_text('1000yr')
-
-for item in ([ax1.title, ax2.title, ax3.title, ax4.title]):
-    item.set_fontsize(15)
-
-#ax4.set_xlim([-5, 2])
-ax4.set_xticks(np.arange(-5.0, 2.0, 1.0) )
-
-
-
-nb_list = [9, 17, 25, 33]
-
-cm = plt.cm.get_cmap('rainbow')
-
-for i in range(4):
-    im = ax_list[i].scatter(x[nb_list[i],1:], y[nb_list[i],1:], s=1, c=mass[nb_list[i],1:]*2E10, vmin=2.0, vmax=6.0, cmap=cm)
-    #im = ax_list[i].scatter(x[nb_list[i],1:], y[nb_list[i],1:], s=1, c=sigma[nb_list[i],1:]*1.496E13*1.496E13/1.989E33, cmap=cm)
-
-plt.tight_layout()
-
-fig.subplots_adjust(right=0.8)
-cbar_ax = fig.add_axes([0.85, 0.15, 0.03, 0.7])
-fig.colorbar(im, cax=cbar_ax)
-cbar_ax.set_ylabel(r'mass $[10^{24} \rm g]$', fontsize=20)
-#cbar_ax.set_ylabel(r'$\Sigma [{\rm g/cm^2}]$', fontsize=20)
-
-
-#plt.legend()
-
-
-plt.show()
 
 
 
