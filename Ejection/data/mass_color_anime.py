@@ -46,7 +46,7 @@ neighbornumber = np.zeros((nblock,nline))# time, space
 
 #nblist = [5999,6000]
 
-for nb in range(454,5000):
+for nb in range(1001):
 #for nb in nblist:
     print nb    
     n1 = ntotalline*nb
@@ -94,7 +94,7 @@ for nb in range(454,5000):
     
 
 
-    im = ax.scatter(x[nb,1:], y[nb,1:], s=1, c=mass[nb,1:]*2E10, vmin=0.0, vmax=6.0, cmap=cm, label='Ejecta')
+    im = ax.scatter(x[nb,1:], y[nb,1:], s=1, c=mass[nb,1:]*2E10, vmin=2.0, vmax=6.0, cmap=cm, label='Ejecta')
     #im = ax.scatter(x[nb,1:], y[nb,1:], s=1, c=mass[nb,1:]*2E10, cmap=cm, label='Ejecta')
     ax.scatter(0, 0, c='k', marker='*', s=50, label='Star')
     ax.scatter(x[nb,0], y[nb,0], c='k', marker='+', s=50, label='Planet')
