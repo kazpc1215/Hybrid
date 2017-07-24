@@ -82,12 +82,12 @@ for nb in range(nblock):
     ax.title.set_fontsize(15)
     
     fig.subplots_adjust(right=0.8)
-    cbar_ax = fig.add_axes([0.85, 0.15, 0.03, 0.7])
+    
     
     
     cm = plt.cm.get_cmap('rainbow')
     
-    cbar_ax.set_ylabel(r'mass $[10^{24} \rm g]$', fontsize=20)
+    
     #cbar_ax.set_ylabel(r'$\Sigma [{\rm g/cm^2}]$', fontsize=20)
     
 
@@ -95,7 +95,9 @@ for nb in range(nblock):
     im = ax.scatter(x[nb,1:], y[nb,1:], s=1, c=mass[nb,1:]*2E10, vmin=2.0, vmax=6.0, cmap=cm, label='Ejecta')
     ax.scatter(0, 0, c='k', marker='*', s=50, label='Star')
     ax.scatter(x[nb,0], y[nb,0], c='k', marker='+', s=50, label='Planet')
+    cbar_ax = fig.add_axes([0.85, 0.15, 0.03, 0.7])
     fig.colorbar(im, cax=cbar_ax)
+    cbar_ax.set_ylabel(r'mass $[10^{24} \rm g]$', fontsize=20)
     
     #plt.tight_layout()
     ax.legend()
