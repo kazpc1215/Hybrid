@@ -14,7 +14,7 @@ import os
 
 dirname = os.path.dirname(os.path.abspath(__file__))
 
-filename = os.path.normpath(os.path.join(dirname, './Ejection_L2cone30equidistant_v1011curl_Frag_OnlyPlanet_xi001_n1000_1000yr/Posi_Mass.dat'))
+filename = os.path.normpath(os.path.join(dirname, './Ejection_L2cone30equidistant_v1011curl_Frag_OnlyPlanet_xi001_n1000_6000yr_dt1yr/Posi_Mass.dat'))
 
 
 
@@ -29,7 +29,7 @@ nline = 1001
 nspace = 2
 ntotalline = nline + nspace
 nblock = len(lines)/ntotalline #number of output
-#nblock = 6
+#nblock = 2
 
 time = np.zeros((nblock,nline))# time, space
 number = np.zeros((nblock,nline))# time, space
@@ -44,8 +44,10 @@ sigma = np.zeros((nblock,nline))# time, space
 n_s = np.zeros((nblock,nline))# time, space
 neighbornumber = np.zeros((nblock,nline))# time, space
 
+#nblist = [5999,6000]
 
-for nb in range(nblock):
+for nb in range(454,5000):
+#for nb in nblist:
     print nb    
     n1 = ntotalline*nb
     n2 = ntotalline*(nb+1) - 1
@@ -78,7 +80,7 @@ for nb in range(nblock):
     ax.set_ylim([-4,4])
     ax.set_xlabel('x [AU]', fontsize=20)
     ax.set_ylabel('y [AU]', fontsize=20)
-    ax.title.set_text('%.3f [yr]'%time[nb,0])
+    ax.title.set_text('%.f [yr]'%time[nb,0])
     ax.title.set_fontsize(15)
     
     fig.subplots_adjust(right=0.8)
@@ -92,7 +94,8 @@ for nb in range(nblock):
     
 
 
-    im = ax.scatter(x[nb,1:], y[nb,1:], s=1, c=mass[nb,1:]*2E10, vmin=2.0, vmax=6.0, cmap=cm, label='Ejecta')
+    im = ax.scatter(x[nb,1:], y[nb,1:], s=1, c=mass[nb,1:]*2E10, vmin=0.0, vmax=6.0, cmap=cm, label='Ejecta')
+    #im = ax.scatter(x[nb,1:], y[nb,1:], s=1, c=mass[nb,1:]*2E10, cmap=cm, label='Ejecta')
     ax.scatter(0, 0, c='k', marker='*', s=50, label='Star')
     ax.scatter(x[nb,0], y[nb,0], c='k', marker='+', s=50, label='Planet')
     cbar_ax = fig.add_axes([0.85, 0.15, 0.03, 0.7])
@@ -102,7 +105,7 @@ for nb in range(nblock):
     #plt.tight_layout()
     ax.legend()
 
-    imagename = os.path.normpath(os.path.join(dirname, '../image/L2anime/%02d.png'%nb))
+    imagename = os.path.normpath(os.path.join(dirname, '../image/L2anime_6000yr/%05d.png'%nb))
     plt.savefig(imagename)
     plt.close()
     #plt.show()
