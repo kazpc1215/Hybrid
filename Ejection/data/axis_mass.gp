@@ -2,7 +2,7 @@ reset
 set term aqua dashed
 
 set xl "semi-major axis [AU]" font "Times-Roman,30"
-set yl "mass [10^{24} g]" font "Times-Roman,30"
+set yl "mass [10^{23} g]" font "Times-Roman,30"
 set xtics font "Times-Roman,30"
 set ytics font "Times-Roman,30"
 set title font "Times-Roman,25"
