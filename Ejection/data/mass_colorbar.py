@@ -12,7 +12,7 @@ import numpy as np
 
 
 
-filename = "/Users/isoya.kazuhide/Master1/Hybrid/Ejection/data/Ejection_L2cone30equidistant_v1011curl_Frag_OnlyPlanet_xi001_n1000_1000yr/Posi_Mass.dat"
+filename = "/Users/isoya.kazuhide/Master1/Hybrid/Ejection/data/Ejection_backcone30equidistant_v1011curl_Frag_OnlyPlanet_xi001_n1000_1000yr/Posi_Mass.dat"
 
 
 
@@ -122,7 +122,7 @@ plt.tight_layout()
 fig.subplots_adjust(right=0.8)
 cbar_ax = fig.add_axes([0.85, 0.15, 0.03, 0.7])
 fig.colorbar(im, cax=cbar_ax)
-cbar_ax.set_ylabel(r'mass $[10^{24} \rm g]$', fontsize=20)
+cbar_ax.set_ylabel(r'mass $[10^{23} \rm g]$', fontsize=20)
 #cbar_ax.set_ylabel(r'$\Sigma [{\rm g/cm^2}]$', fontsize=20)
 
 

@@ -14,7 +14,7 @@ import os
 
 dirname = os.path.dirname(os.path.abspath(__file__))
 
-filename = os.path.normpath(os.path.join(dirname, './Ejection_L2cone30equidistant_v1011curl_Frag_OnlyPlanet_xi001_n1000_6000yr_dt1yr/Posi_Mass.dat'))
+filename = os.path.normpath(os.path.join(dirname, './Ejection_L2cone30equidistant_v1011curl_Frag_OnlyPlanet_xi001_n1000_1000yr/Posi_Mass.dat'))
 
 
 
@@ -80,7 +80,7 @@ for nb in range(1001):
     ax.set_ylim([-4,4])
     ax.set_xlabel('x [AU]', fontsize=20)
     ax.set_ylabel('y [AU]', fontsize=20)
-    ax.title.set_text('%.f [yr]'%time[nb,0])
+    ax.title.set_text('%.3f [yr]'%time[nb,0])
     ax.title.set_fontsize(15)
     
     fig.subplots_adjust(right=0.8)
@@ -100,12 +100,12 @@ for nb in range(1001):
     ax.scatter(x[nb,0], y[nb,0], c='k', marker='+', s=50, label='Planet')
     cbar_ax = fig.add_axes([0.85, 0.15, 0.03, 0.7])
     fig.colorbar(im, cax=cbar_ax)
-    cbar_ax.set_ylabel(r'mass $[10^{24} \rm g]$', fontsize=20)
+    cbar_ax.set_ylabel(r'mass $[10^{23} \rm g]$', fontsize=20)
     
     #plt.tight_layout()
     ax.legend()
 
-    imagename = os.path.normpath(os.path.join(dirname, '../image/L2anime_6000yr/%05d.png'%nb))
+    imagename = os.path.normpath(os.path.join(dirname, '../image/L2anime/%05d.png'%nb))
     plt.savefig(imagename)
     plt.close()
     #plt.show()
