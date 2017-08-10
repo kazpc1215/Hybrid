@@ -8,7 +8,7 @@ double Calculate_Energy(int i,struct orbital_elements ele[],double x_c[][4],doub
   int j;
   for(i=1;i<=global_n;++i){
     E[i] = 0.5*ele[i].mass*v2_c[i];
-    for(j=1;j<=N_p+N_tr;++j){
+    for(j=1;j<=global_n;++j){
       if(i!=j){
 	abs_r2[j] = SquareOfRelativeDistance(i,j,x_c); //絶対値2乗
 	abs_v2[j] = SquareOfRelativeVelocity(i,j,v_c);
