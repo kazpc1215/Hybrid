@@ -22,8 +22,10 @@ double Timestep_i_0(int i,double a_0[][4],double adot_0[][4],double abs_a[],doub
 
 /*i_sys のみのタイムステップ計算*/
 double Timestep_i_sys(int i_sys,double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],double abs_a[],double abs_adot[],double abs_adot2[],double abs_adot3[],double dt_[]){
-  int k;
 
+  int k;
+  double dt_inv = 1.0/dt_[i_sys];
+  
   abs_a[i_sys] = 0.0;
   abs_adot[i_sys] = 0.0;
   abs_adot2[i_sys] = 0.0;
@@ -31,8 +33,8 @@ double Timestep_i_sys(int i_sys,double a[][4],double adot[][4],double adot2_dt2[
   for(k=1;k<=3;++k){
     abs_a[i_sys] += a[i_sys][k]*a[i_sys][k];
     abs_adot[i_sys] += adot[i_sys][k]*adot[i_sys][k];
-    abs_adot2[i_sys] += (adot2_dt2[i_sys][k] + adot3_dt3[i_sys][k])*(adot2_dt2[i_sys][k] + adot3_dt3[i_sys][k])/dt_[i_sys]/dt_[i_sys]/dt_[i_sys]/dt_[i_sys];
-    abs_adot3[i_sys] += adot3_dt3[i_sys][k]*adot3_dt3[i_sys][k]/dt_[i_sys]/dt_[i_sys]/dt_[i_sys]/dt_[i_sys]/dt_[i_sys]/dt_[i_sys];
+    abs_adot2[i_sys] += (adot2_dt2[i_sys][k] + adot3_dt3[i_sys][k])*(adot2_dt2[i_sys][k] + adot3_dt3[i_sys][k])*dt_inv*dt_inv*dt_inv*dt_inv;
+    abs_adot3[i_sys] += adot3_dt3[i_sys][k]*adot3_dt3[i_sys][k]*dt_inv*dt_inv*dt_inv*dt_inv*dt_inv*dt_inv;
   }  //k loop	  
   abs_a[i_sys] = sqrt(abs_a[i_sys]);
   abs_adot[i_sys] = sqrt(abs_adot[i_sys]);
