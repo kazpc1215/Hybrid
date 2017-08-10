@@ -8,14 +8,15 @@
 #include <sys/stat.h>
 #include <time.h>
 
-#ifndef EXTERN
-#define EXTERN extern
-#endif
-
 
 #define DIRECTORY ../data/test/  //ファイル保存用のディレクトリ
 #define _STR(str) #str
 #define STR(str) _STR(str)
+
+
+#ifndef EXTERN
+#define EXTERN extern
+#endif
 
 
 //////////////////////////////////////////////////
