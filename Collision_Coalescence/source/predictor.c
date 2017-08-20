@@ -15,13 +15,5 @@ void Predictor(int i,double x_0[][4],double v_0[][4],double a_0[][4],double adot
 
   r_p[i] = RadiusFromCenter(i,x_p);  //中心星からの距離
   v2_p[i] = SquareOfVelocity(i,v_p); //速度の2乗
-  
+
 }
-
-
-
-
-
-
-
-

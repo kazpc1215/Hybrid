@@ -138,7 +138,6 @@ Mean Longitude (deg)               100.46435
 
 struct orbital_elements{
   char name[30];  //名前（番号）
-  double mass;  //質量
   double ecc;  //離心率
   double axis;  //軌道長半径
   double u;  //離心近点離角
@@ -147,6 +146,7 @@ struct orbital_elements{
   double omega;  //近点引数
   double r_h;  //ヒル半径
   double radius;  //物理半径
+  double mass;  //質量
   int orinum;  //初期の番号
 };
 
