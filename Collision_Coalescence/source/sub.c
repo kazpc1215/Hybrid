@@ -2,35 +2,34 @@
 
 
 /*r_i,v_iの内積*/
-double InnerProduct(int i,double x_0[][4],double v_0[][4],double r_dot_v[]){ 
+double InnerProduct(int i,double x_0[][4],double v_0[][4]){ 
   int k;
-  r_dot_v[i] = 0.0;
+  double r_dot_v = 0.0;
   for(k=1;k<=3;k++){
-    r_dot_v[i] += x_0[i][k]*v_0[i][k]; 
+    r_dot_v += x_0[i][k]*v_0[i][k]; 
   }
-  return r_dot_v[i];
+  return r_dot_v;
 }
 
 /*中心星からの距離の2乗*/
-double RadiusFromCenter(int i,double x_0[][4],double r_0[]){
+double RadiusFromCenter(int i,double x_0[][4]){
   int k;
-  r_0[i] = 0.0;
+  double r_0 = 0.0;
   for(k=1;k<=3;k++){
-    r_0[i] += x_0[i][k]*x_0[i][k];  
+    r_0 += x_0[i][k]*x_0[i][k];  
   }
-  r_0[i] = sqrt(r_0[i]);
-  //printf("r_0[%d]=%f\n",i,r_0[i]);
-  return r_0[i];
+  r_0 = sqrt(r_0);
+  return r_0;
 }
 
 /*速度の2乗*/
-double SquareOfVelocity(int i,double v_0[][4],double v2_0[]){
+double SquareOfVelocity(int i,double v_0[][4]){
   int k;
-  v2_0[i] = 0.0;
+  double v2_0 = 0.0;
   for(k=1;k<=3;k++){
-    v2_0[i] += v_0[i][k]*v_0[i][k]; 
+    v2_0 += v_0[i][k]*v_0[i][k]; 
   }
-  return v2_0[i];
+  return v2_0;
 }
 
 /*相対距離の2乗*/

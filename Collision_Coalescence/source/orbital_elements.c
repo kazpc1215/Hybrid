@@ -40,7 +40,7 @@ int Calculate_OrbitalElements(int i,double x_c[][4],double v_c[][4],struct orbit
   if(ele[i].axis<0.0){
     printf("i=%d\taxis=%e < 0 双曲線軌道. axis -> -1*axis\n",i,ele[i].axis);
     ele[i].axis *= -1.0;
-    printf("\tr=%f[AU]\tR_planet=%f\n",sqrt((x_c[i][1]-x_c[PLANET_NO][1])*(x_c[i][1]-x_c[PLANET_NO][1])+(x_c[i][2]-x_c[PLANET_NO][2])*(x_c[i][2]-x_c[PLANET_NO][2])+(x_c[i][3]-x_c[PLANET_NO][3])*(x_c[i][3]-x_c[PLANET_NO][3])),PLANET_RADIUS);
+    //printf("\tr=%f[AU]\tR_planet=%f\n",sqrt((x_c[i][1]-x_c[PLANET_NO][1])*(x_c[i][1]-x_c[PLANET_NO][1])+(x_c[i][2]-x_c[PLANET_NO][2])*(x_c[i][2]-x_c[PLANET_NO][2])+(x_c[i][3]-x_c[PLANET_NO][3])*(x_c[i][3]-x_c[PLANET_NO][3])),PLANET_RADIUS);
   }
 
   
@@ -168,7 +168,7 @@ double Calculate_Q(int i,int k,struct orbital_elements ele[]){
 
 
 /*初期位置、速度計算*/
-void InitialCondition(int i,double P[][4],double Q[][4],double x_0[][4],double v_0[][4],double r_0[],struct orbital_elements ele[]){
+void InitialCondition(int i,double P[][4],double Q[][4],double x_0[][4],double v_0[][4],double v2_0[],double r_dot_v[],double r_0[],struct orbital_elements ele[]){
   int k;
   for(k=1;k<=3;k++){
     P[i][k] = Calculate_P(i,k,ele);
@@ -178,12 +178,23 @@ void InitialCondition(int i,double P[][4],double Q[][4],double x_0[][4],double v
   }
   //printf("x=%f\ty=%f\tz=%f\n",x_0[i][1],x_0[i][2],x_0[i][3]);
            
-  r_0[i] = RadiusFromCenter(i,x_0,r_0);  //中心星からの距離
+  r_0[i] = RadiusFromCenter(i,x_0);  //中心星からの距離
 
 
       
   for(k=1;k<=3;++k){
     v_0[i][k] = sqrt(G*M_0/ele[i].axis)/r_0[i]*(-ele[i].axis*P[i][k]*sin(ele[i].u) + ele[i].axis*sqrt(1.0-ele[i].ecc*ele[i].ecc)*Q[i][k]*cos(ele[i].u));
   }
+
+  r_dot_v[i] = InnerProduct(i,x_0,v_0);  //r_i,v_iの内積
+  v2_0[i] = SquareOfVelocity(i,v_0);  //速度の2乗
   //printf("vx=%f\tvy=%f\tvz=%f\n",v_0[i][1],v_0[i][2],v_0[i][3]);
 }
+
+
+
+
+
+
+
+

@@ -16,13 +16,13 @@ void Corrector_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],doubl
     }
   }
 
-  r_dot_v[i_sys] = InnerProduct(i_sys,x_p,v_p,r_dot_v);  //r_i,v_iの内積	
+  r_dot_v[i_sys] = InnerProduct(i_sys,x_p,v_p);  //r_i,v_iの内積	
 
   
   
   for(k=1;k<=3;++k){
-    a[i_sys][k] = All_Acceleration(i_sys,k,ele,x_p,r_p,abs_r2,a);
-    adot[i_sys][k] = All_dAcceleration(i_sys,k,ele,x_p,v_p,r_dot_v,r_dot_v_ij,r_p,abs_r2,adot);
+    a[i_sys][k] = All_Acceleration(i_sys,k,ele,x_p,r_p,abs_r2);
+    adot[i_sys][k] = All_dAcceleration(i_sys,k,ele,x_p,v_p,r_dot_v,r_dot_v_ij,r_p,abs_r2);
   }
    
 
@@ -42,7 +42,7 @@ void Corrector_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],doubl
   //printf("corector\t%s\tx_c[%d][1]=%f\tx_c[%d][2]=%f\tx_c[%d][3]=%f\n",ele[i_sys].name,i_sys,x_c[i_sys][1],i_sys,x_c[i_sys][2],i_sys,x_c[i_sys][3]);
   //printf("corector\t%s\tv_c[%d][1]=%f\tv_c[%d][2]=%f\tv_c[%d][3]=%f\n",ele[i_sys].name,i_sys,v_c[i_sys][1],i_sys,v_c[i_sys][2],i_sys,v_c[i_sys][3]);
 
-  r_c[i_sys] = RadiusFromCenter(i_sys,x_c,r_c);
-  v2_c[i_sys] = SquareOfVelocity(i_sys,v_c,v2_c);
+  r_c[i_sys] = RadiusFromCenter(i_sys,x_c);
+  v2_c[i_sys] = SquareOfVelocity(i_sys,v_c);
 
 }

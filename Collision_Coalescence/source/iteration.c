@@ -15,15 +15,14 @@ void Iteration_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],doubl
     }
   }  //j loop
    	  
-  r_dot_v[i_sys] = InnerProduct(i_sys,x_c,v_c,r_dot_v);  //r_i,v_iの内積	
+  r_dot_v[i_sys] = InnerProduct(i_sys,x_c,v_c);  //r_i,v_iの内積	
 	 	 
   
   for(k=1;k<=3;++k){
-    a[i_sys][k] = All_Acceleration(i_sys,k,ele,x_c,r_c,abs_r2,a);
-    adot[i_sys][k] = All_dAcceleration(i_sys,k,ele,x_c,v_c,r_dot_v,r_dot_v_ij,r_c,abs_r2,adot);
+    a[i_sys][k] = All_Acceleration(i_sys,k,ele,x_c,r_c,abs_r2);
+    adot[i_sys][k] = All_dAcceleration(i_sys,k,ele,x_c,v_c,r_dot_v,r_dot_v_ij,r_c,abs_r2);
   }
-     
- 
+  
 
   
 
@@ -38,8 +37,8 @@ void Iteration_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],doubl
   
 
     
-  r_c[i_sys] = RadiusFromCenter(i_sys,x_c,r_c);  //中心からの距離
-  v2_c[i_sys] = SquareOfVelocity(i_sys,v_c,v2_c);  //速度の2乗
+  r_c[i_sys] = RadiusFromCenter(i_sys,x_c);  //中心からの距離
+  v2_c[i_sys] = SquareOfVelocity(i_sys,v_c);  //速度の2乗
        
 }
 

@@ -82,20 +82,23 @@ int main(void){
 
 
   for(i=1;i<=global_n_p;++i){  //惑星
-    sprintf(ele[i].name,"Planet%01d",i);
+    sprintf(ele[i].name,"Planet%02d",i);
     ele[i].mass = PLANET_MASS;
-    ele[i].axis = PLANET_AXIS;
+    ele[i].axis = 1.0 + 0.5/((double)global_n_p)*(double)i;
     ele[i].ecc = PLANET_ECC;
     ele[i].inc = PLANET_INC;
-    ele[i].u = PLANET_U;
-    ele[i].omega = PLANET_omega;
-    ele[i].Omega = PLANET_Omega;
+    ele[i].u = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
+    ele[i].omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
+    ele[i].Omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
+    ele[i].r_h = ele[i].axis*cbrt(ele[i].mass/M_0/3.0);
+    ele[i].radius = cbrt(3.0/4.0/M_PI*ele[i].mass*1.989E33/PLANET_DENSITY)/1.496E13;
     ele[i].orinum = i;
-    
-    InitialCondition(i,P,Q,x_0,v_0,r_0,ele);  //初期位置、速度計算 //惑星のみ
+
+    InitialCondition(i,P,Q,x_0,v_0,v2_0,r_dot_v,r_0,ele);  //初期位置、速度計算 //惑星のみ
   }
 
 
+#if N_tr != 0
   double tmp_x,tmp_y,tmp_r,tmp_theta;
   //double tmp_rand1;
   double tmp_rand2;
@@ -217,6 +220,11 @@ int main(void){
     v2_0[i] = SquareOfVelocity(i,v_0,v2_0);  //速度の2乗
   }
 
+  for(i=global_n_p+1;i<=global_n;++i){
+    Calculate_OrbitalElements(i,x_0,v_0,ele,P,Q,r_0,v2_0,r_dot_v);
+    //ele[i].r_h = ele[i].axis*cbrt(ele[i].mass/((double)M_0)/3.0);
+  }
+#endif
   
 
   
@@ -243,15 +251,9 @@ int main(void){
     fprintf(fpposivelo,"%e\t%4d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\n",0.0,i,x_0[i][1],x_0[i][2],x_0[i][3],r_0[i],sqrt(x_0[i][1]*x_0[i][1]+x_0[i][2]*x_0[i][2]),v_0[i][1],v_0[i][2],v_0[i][3],sqrt(v_0[i][1]*v_0[i][1]+v_0[i][2]*v_0[i][2]+v_0[i][3]*v_0[i][3]));
   }
   fprintf(fpposivelo,"\n\n");
-  
   fclose(fpposivelo);
   
 
-
-  for(i=global_n_p+1;i<=global_n;++i){
-    Calculate_OrbitalElements(i,x_0,v_0,ele,P,Q,r_0,v2_0,r_dot_v);
-    ele[i].r_h = ele[i].axis*cbrt(ele[i].mass/((double)M_0)/3.0);
-  }
 
   
   
@@ -280,11 +282,10 @@ int main(void){
     v2_0[i] = SquareOfVelocity(i,v_0,v2_0);  //速度の2乗
   }  
   */
-    
+
 
   E_tot_0 = 0.0;
-  abs_L_0 = 0.0;
-  E_tot_0 = Calculate_Energy(i,ele,x_0,v_0,v2_0,r_0,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,E,E_tot_0);  //初期エネルギー,その他  コメントアウトしちゃだめなやつ
+  E_tot_0 = Calculate_Energy(ele,x_0,v_0,v2_0,r_0,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij);  //初期エネルギー,その他  コメントアウトしちゃだめなやつ
   //printf("%e\t%.15e\n",0.0,E_tot_0);
 
 #if ENERGY_FILE
@@ -300,29 +301,31 @@ int main(void){
   fprintf(fpEne,"%e\t%.15e\t%e\n",0.0,E_tot_0,0.0);
   fclose(fpEne);
 
-  abs_L_0 = AngularMomentum(i,ele,x_0,v_0,abs_L_0);  //角運動量の大きさ
+  abs_L_0 = 0.0;
+  abs_L_0 = AngularMomentum(i,ele,x_0,v_0);  //角運動量の大きさ
   //printf("abs_L_0=%.15e\n",abs_L_0);
 #endif
       
- 
+
 
   for(i=1;i<=global_n;i++){
-    r_dot_v[i] = InnerProduct(i,x_0,v_0,r_dot_v);  //r_i,v_iの内積
+    r_dot_v[i] = InnerProduct(i,x_0,v_0);  //r_i,v_iの内積
   }
       
   
   
   for(i=1;i<=global_n;++i){  //test particle の加速度
     for(k=1;k<=3;++k){
-      a_0[i][k] = All_Acceleration(i,k,ele,x_0,r_0,abs_r2,a_0);  //初期の加速度
-      adot_0[i][k] = All_dAcceleration(i,k,ele,x_0,v_0,r_dot_v,r_dot_v_ij,r_0,abs_r2,adot_0);
+      a_0[i][k] = All_Acceleration(i,k,ele,x_0,r_0,abs_r2);  //初期の加速度
+      adot_0[i][k] = All_dAcceleration(i,k,ele,x_0,v_0,r_dot_v,r_dot_v_ij,r_0,abs_r2);
       //printf("a_0[%d][%d]=%f\tadot_0[%d][%d]=%f\n",i,k,a_0[i][k],i,k,adot_0[i][k]);
     }
   }
+
   
 
   for(i=1;i<=global_n;++i){ 
-    dt_[i] = Timestep_i_0(i,a_0,adot_0,abs_a,abs_adot,dt_);  //初期のタイムステップ計算
+    dt_[i] = Timestep_i_0(i,a_0,adot_0,abs_a,abs_adot);  //初期のタイムステップ計算
     //printf("initial dt_[%d]=%e\n",i,dt_[i]);
   }
     
@@ -458,11 +461,11 @@ int main(void){
 	    x_c[i][k] = x_p[i][k];
 	    v_c[i][k] = v_p[i][k];
 	  }
-	  r_c[i] = RadiusFromCenter(i,x_c,r_c);  //中心からの距離
-	  v2_c[i] = SquareOfVelocity(i,v_c,v2_c);  //速度の2乗
+	  r_c[i] = RadiusFromCenter(i,x_c);  //中心からの距離
+	  v2_c[i] = SquareOfVelocity(i,v_c);  //速度の2乗
 	}
       }  //i loop
-	
+
 	     
       for(ite=1;ite<=ITE_MAX;++ite){  //iteration 3回 
 	Iteration_sys(i_sys,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);  // i_sys のみ
@@ -519,7 +522,7 @@ int main(void){
 #if ENERGY_FILE
 
       E_tot = 0.0;
-      E_tot = Calculate_Energy(i,ele,x_c,v_c,v2_c,r_c,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,E,E_tot);  //エネルギー計算
+      E_tot = Calculate_Energy(ele,x_c,v_c,v2_c,r_c,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij);  //エネルギー計算
 	
       sprintf(Ene,"%sENERGY.dat",STR(DIRECTORY));
       fpEne = fopen(Ene,"a");
@@ -530,7 +533,7 @@ int main(void){
       fprintf(fpEne,"%e\t%.15e\t%.15e\n",t_sys,E_tot,(E_tot-E_tot_0)/fabs(E_tot_0));
       fclose(fpEne);
 
-      abs_L = AngularMomentum(i,ele,x_c,v_c,abs_L);
+      abs_L = AngularMomentum(i,ele,x_c,v_c);
 #endif
 	
 
@@ -658,10 +661,10 @@ int main(void){
     
     
     
-    if(fmod(step,1.0E5)==0.0){
+    if(fmod(step,1.0E6)==0.0){
     //if(fmod(step,1.0E2)==0.0){
       //printf("i_sys=%03d\tt=%.15e\tE=%.15e\tL=%.15e\tr_min=%.15e\n",i_sys,t_sys,E_tot,abs_L,r_min);  //全エネルギー,全角運動量
-      printf("step=%e\tN_tr=%d\ti_sys=%03d\tt=%.2e[yr]",step,N_tr,i_sys,t_sys/2.0/M_PI);
+      printf("step=%e\tN=%d\ti_sys=%03d\tt=%.2e[yr]",step,global_n_p,i_sys,t_sys/2.0/M_PI);
       printf("\n");
     }
     

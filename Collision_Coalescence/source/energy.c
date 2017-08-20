@@ -2,10 +2,14 @@
 
 
 /*エネルギー計算*/
-double Calculate_Energy(int i,struct orbital_elements ele[],double x_c[][4],double v_c[][4],double v2_c[],double r_c[],double abs_r[],double abs_r2[],double abs_v[],double abs_v2[],double r_dot_v_ij[],double E[],double E_tot){
+double Calculate_Energy(struct orbital_elements ele[],double x_c[][4],double v_c[][4],double v2_c[],double r_c[],double abs_r[],double abs_r2[],double abs_v[],double abs_v2[],double r_dot_v_ij[]){
+
+  int i,j;
   double rij1;
   double r1;
-  int j;
+  double E[global_n];
+  double E_tot=0.0;
+  
   for(i=1;i<=global_n;++i){
     E[i] = 0.5*ele[i].mass*v2_c[i];
     for(j=1;j<=global_n;++j){

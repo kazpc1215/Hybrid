@@ -13,7 +13,15 @@ void Predictor(int i,double x_0[][4],double v_0[][4],double a_0[][4],double adot
   //printf("predictor\tx_p[%d][1]=%f\tx_p[%d][2]=%f\tx_p[%d][3]=%f\n",i,x_p[i][1],i,x_p[i][2],i,x_p[i][3]);
   //printf("predictor\tv_p[%d][1]=%f\tv_p[%d][2]=%f\tv_p[%d][3]=%f\n",i,v_p[i][1],i,v_p[i][2],i,v_p[i][3]);
 
-  r_p[i] = RadiusFromCenter(i,x_p,r_p);  //中心星からの距離
-  v2_p[i] = SquareOfVelocity(i,v_p,v2_p); //速度の2乗
+  r_p[i] = RadiusFromCenter(i,x_p);  //中心星からの距離
+  v2_p[i] = SquareOfVelocity(i,v_p); //速度の2乗
   
 }
+
+
+
+
+
+
+
+

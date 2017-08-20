@@ -1,8 +1,9 @@
 #include "hybrid.h"
 
 /*初期 タイムステップ計算*/
-double Timestep_i_0(int i,double a_0[][4],double adot_0[][4],double abs_a[],double abs_adot[],double dt_[]){
+double Timestep_i_0(int i,double a_0[][4],double adot_0[][4],double abs_a[],double abs_adot[]){
   int k;
+  double dt_;
 
   abs_a[i] = 0.0;  
   abs_adot[i] = 0.0;
@@ -15,8 +16,8 @@ double Timestep_i_0(int i,double a_0[][4],double adot_0[][4],double abs_a[],doub
   abs_adot[i] = sqrt(abs_adot[i]);
   
   //printf("abs_a[%d]=%f\tabs_adot[%d]=%f\n",i,abs_a[i],i,abs_adot[i]);
-  dt_[i] = ETA*abs_a[i]/abs_adot[i];
-  return dt_[i];
+  dt_ = ETA*abs_a[i]/abs_adot[i];
+  return dt_;
 }
 
 
@@ -25,7 +26,7 @@ double Timestep_i_sys(int i_sys,double a[][4],double adot[][4],double adot2_dt2[
 
   int k;
   double dt_inv = 1.0/dt_[i_sys];
-  
+
   abs_a[i_sys] = 0.0;
   abs_adot[i_sys] = 0.0;
   abs_adot2[i_sys] = 0.0;
