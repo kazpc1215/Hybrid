@@ -228,6 +228,8 @@ void Corrector_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],doubl
 
 void Iteration_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],double v_p[][4],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double a_0[][4],double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],double abs_r[],double abs_r2[],double abs_v[],double abs_v2[],double r_dot_v_ij[],double r_dot_v[],double dt_[]);
 
+void Coalescence(struct orbital_elements ele[],double x_p[][4],double abs_r[],double abs_r2[]);
+
 void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation frag[],double x_0[][4]);
 
 double RandomVelocity(int i,int j,struct orbital_elements ele[]);

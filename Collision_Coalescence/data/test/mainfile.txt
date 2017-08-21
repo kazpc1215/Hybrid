@@ -452,6 +452,8 @@ int main(void){
 	Dt[i] = t_sys - t_[i]; 
 	Predictor(i,x_0,v_0,a_0,adot_0,x_p,v_p,r_p,v2_p,Dt);  //予測子 t_sysにおけるすべての粒子を計算
       }
+
+      Coalescence(ele,x_p,abs_r,abs_r2);  //衝突判定
 	
       for(i=1;i<=global_n;++i){
 	if(i==i_sys){  
