@@ -49,6 +49,8 @@ EXTERN int global_n_p;  //グローバル変数
 #define PLANET_ECC 0.01
 #define PLANET_INC 0.005
 #define PLANET_DENSITY 3.0  //[g/cc]
+#define PLANET_RADIUS cbrt(3.0/4.0/M_PI*PLANET_MASS*1.989E33/PLANET_DENSITY)/1.496E13
+#define PLANET_NO 1
 
 /*
 Earth Mean Orbital Elements (J2000)
@@ -228,7 +230,7 @@ void Corrector_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],doubl
 
 void Iteration_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],double v_p[][4],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double a_0[][4],double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],double abs_r[],double abs_r2[],double abs_v[],double abs_v2[],double r_dot_v_ij[],double r_dot_v[],double dt_[]);
 
-void Coalescence(struct orbital_elements ele[],double x_p[][4],double abs_r[],double abs_r2[]);
+int Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double abs_r[],double abs_r2[],int *i_col, int *j_col);
 
 void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation frag[],double x_0[][4]);
 
@@ -263,5 +265,7 @@ void Rotation_3D_xaxis(int i,double x_eject[][4],double theta);
 void Rotation_3D_yaxis(int i,double x_eject[][4],double theta);
 
 void Rotation_3D_zaxis(int i,double x_eject[][4],double theta);
+
+void swap(double *a, double *b);
 
 #endif //include-guard

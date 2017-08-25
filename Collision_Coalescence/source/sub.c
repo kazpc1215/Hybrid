@@ -81,7 +81,12 @@ void Rotation_3D_zaxis(int i,double x_eject[][4],double theta){
   x_eject[i][2] = sin(theta)*tmp_x + cos(theta)*tmp_y;
 }
 
-
+void swap(double *a, double *b){
+  double tmp;
+  tmp = (*a);
+  (*a) = (*b);
+  (*b) = tmp;
+}
 
 
 

@@ -7,6 +7,7 @@ int global_n_p = N_p;  //原始惑星の数
 int main(void){
 
   int i,i_sys,k,ite,interval;
+  int i_col,j_col;
   double t_sys;
   double t_ene[TIME_INTERVAL_MAX]={TIME_INTERVAL};
 
@@ -24,24 +25,20 @@ int main(void){
 
   double abs_a[N_p+N_tr+1]={},abs_adot[N_p+N_tr+1]={},abs_adot2[N_p+N_tr+1]={},abs_adot3[N_p+N_tr+1]={};
   
-  double E[N_p+N_tr+1]={};
   double E_tot,E_tot_0;
   double abs_L,abs_L_0;
 
   double P[N_p+N_tr+1][4]={},Q[N_p+N_tr+1][4]={};
 
-  double x_eject[N_p+N_tr+1][4]={};
-  double v_eject[N_p+N_tr+1][4]={};
 
   //clock_t start,end;
 
 
   struct orbital_elements ele[N_p+N_tr+1]={};
 
-  struct fragmentation frag[N_p+N_tr+1]={};
-
 
 #if FRAGMENTATION
+  struct fragmentation frag[N_p+N_tr+1]={};
   double t_check=2.0*M_PI*0.1;
   double mass_tot_all;
   struct parameter para;
@@ -99,6 +96,8 @@ int main(void){
 
 
 #if N_tr != 0
+  double x_eject[N_p+N_tr+1][4]={};
+  double v_eject[N_p+N_tr+1][4]={};
   double tmp_x,tmp_y,tmp_r,tmp_theta;
   //double tmp_rand1;
   double tmp_rand2;
@@ -213,11 +212,11 @@ int main(void){
     
 
     
-    r_0[i] = RadiusFromCenter(i,x_0,r_0);  //中心星からの距離
+    r_0[i] = RadiusFromCenter(i,x_0);  //中心星からの距離
 
 
-    r_dot_v[i] = InnerProduct(i,x_0,v_0,r_dot_v);  //r_i,v_iの内積
-    v2_0[i] = SquareOfVelocity(i,v_0,v2_0);  //速度の2乗
+    r_dot_v[i] = InnerProduct(i,x_0,v_0);  //r_i,v_iの内積
+    v2_0[i] = SquareOfVelocity(i,v_0);  //速度の2乗
   }
 
   for(i=global_n_p+1;i<=global_n;++i){
@@ -285,9 +284,10 @@ int main(void){
 
 
   E_tot_0 = 0.0;
-  E_tot_0 = Calculate_Energy(ele,x_0,v_0,v2_0,r_0,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij);  //初期エネルギー,その他  コメントアウトしちゃだめなやつ
+  E_tot_0 = Calculate_Energy(ele,x_0,v_0,v2_0,r_0,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij);  //初期エネルギー、相対距離、相対速度、相対距離と相対速度の内積  コメントアウトしちゃだめなやつ
   //printf("%e\t%.15e\n",0.0,E_tot_0);
 
+  
 #if ENERGY_FILE
   FILE *fpEne;   //初期エネルギーをファイルへ書き出し
   char Ene[100];
@@ -314,7 +314,7 @@ int main(void){
       
   
   
-  for(i=1;i<=global_n;++i){  //test particle の加速度
+  for(i=1;i<=global_n;++i){
     for(k=1;k<=3;++k){
       a_0[i][k] = All_Acceleration(i,k,ele,x_0,r_0,abs_r2);  //初期の加速度
       adot_0[i][k] = All_dAcceleration(i,k,ele,x_0,v_0,r_dot_v,r_dot_v_ij,r_0,abs_r2);
@@ -331,17 +331,17 @@ int main(void){
     
 
 
-  for(i=1;i<=global_n;++i){  
-    if(i==1){
-      t_sys = dt_[1];
-      i_sys = 1;
-    }else if(dt_[i] < t_sys){
+   
+  t_sys = dt_[1];
+  i_sys = 1;
+  for(i=2;i<=global_n;++i){
+    if(dt_[i] < t_sys){
       t_sys = dt_[i];  //dt_i が最小のものを選ぶ
       i_sys = i;  //i_sysを選ぶ
     } 
   }
 
-
+  
   for(i=1;i<=global_n;++i){
     t_[i] = 0.0;
   }
@@ -453,29 +453,126 @@ int main(void){
 	Predictor(i,x_0,v_0,a_0,adot_0,x_p,v_p,r_p,v2_p,Dt);  //予測子 t_sysにおけるすべての粒子を計算
       }
 
-      Coalescence(ele,x_p,abs_r,abs_r2);  //衝突判定
-	
-      for(i=1;i<=global_n;++i){
-	if(i==i_sys){  
-	  Corrector_sys(i_sys,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);  //修正子 i_sys のみ
-	}else{
-	  for(k=1;k<=3;++k){  //i_sys 以外の粒子は予測子を使う
-	    x_c[i][k] = x_p[i][k];
-	    v_c[i][k] = v_p[i][k];
-	  }
-	  r_c[i] = RadiusFromCenter(i,x_c);  //中心からの距離
-	  v2_c[i] = SquareOfVelocity(i,v_c);  //速度の2乗
+      
+      if(Collision_Judgement(ele,x_p,abs_r,abs_r2,&i_col,&j_col)==1){  //予測子を用いた衝突判定
+
+	/////////////////////////衝突した場合/////////////////////////
+	printf("collision\ti=%d, j=%d\n",i_col,j_col);
+	printf("r_ij=%.15e\tradius[%d]+radius[%d]=%.15e\n",abs_r[j_col],i_col,j_col,ele[i_col].radius + ele[j_col].radius);
+
+	for(i=1;i<=global_n;++i){
+	  Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,Dt);  //修正子 すべての粒子 t_sysで揃えるためDt[i]を使う
 	}
-      }  //i loop
+
+	for(ite=1;ite<=ITE_MAX;++ite){  //iteration 3回
+	  for(i=1;i<=global_n;++i){
+	    Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,Dt);  // すべての粒子 t_sysで揃えるためDt[i]を使う
+	  }
+	}
+
+
+	//新しい合体粒子を作る　0番目の要素はコピーに使うだけ
+	ele[0].mass = ele[i_col].mass + ele[j_col].mass;
+	for(k=1;k<=3;++k){
+	  x_0[0][k] = (ele[i_col].mass*x_c[i_col][k] + ele[j_col].mass*x_c[j_col][k])/ele[0].mass;
+	  v_0[0][k] = (ele[i_col].mass*v_c[i_col][k] + ele[j_col].mass*v_c[j_col][k])/ele[0].mass;
+	}
+
+	//i_colを新しい合体粒子の番号にする
+	ele[i_col].mass = ele[0].mass;
+	ele[i_col].radius = cbrt(3.0/4.0/M_PI*ele[i_col].mass*1.989E33/PLANET_DENSITY)/1.496E13;
+	for(k=1;k<=3;++k){
+	  x_0[i_col][k] = x_0[0][k];
+	  v_0[i_col][k] = v_0[0][k];
+	}
+
+	
+	
+	//j_colとglobal_n番目の粒子を入れ替え、global_nとglobal_n_pを1つ減らす
+	ele[0] = ele[j_col];  //構造体のためswap関数は使えない　0番目の要素はコピーに使うだけ
+	ele[j_col] = ele[global_n];
+	ele[global_n] = ele[0];
+	for(k=1;k<=3;++k){
+	  swap(&x_0[j_col][k],&x_0[global_n][k]);
+	  swap(&v_0[j_col][k],&v_0[global_n][k]);
+	}
+	global_n--;
+	global_n_p--;
+
+	//以下、すべての粒子の加速度などを再計算
+	for(i=1;i<=global_n;++i){
+	  r_0[i] = RadiusFromCenter(i,x_0);  //中心星からの距離
+	  r_dot_v[i] = InnerProduct(i,x_0,v_0);  //r_i,v_iの内積
+	  v2_0[i] = SquareOfVelocity(i,v_0);  //速度の2乗
+	}
+
+	for(i=1;i<=global_n;++i){
+	  Calculate_OrbitalElements(i,x_0,v_0,ele,P,Q,r_0,v2_0,r_dot_v);
+	}
+
+	E_tot = 0.0;
+	E_tot = Calculate_Energy(ele,x_0,v_0,v2_0,r_0,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij);  //エネルギー、相対距離、相対速度、相対距離と相対速度の内積  コメントアウトしちゃだめなやつ
+
+#if ENERGY_FILE
+	
+	sprintf(Ene,"%sENERGY.dat",STR(DIRECTORY));
+	fpEne = fopen(Ene,"a");
+	if(fpEne==NULL){
+	  printf("Ene error\n");
+	  return -1;
+	}
+	fprintf(fpEne,"#collision occur\t%e[yr]\n",t_sys/2.0/M_PI);
+	fprintf(fpEne,"%e\t%.15e\t%.15e\n",t_sys,E_tot,(E_tot-E_tot_0)/fabs(E_tot_0));
+	fclose(fpEne);
+
+	abs_L = AngularMomentum(i,ele,x_0,v_0);
+#endif
+	
+	
+	for(i=1;i<=global_n;++i){
+	  for(k=1;k<=3;++k){
+	    a_0[i][k] = All_Acceleration(i,k,ele,x_0,r_0,abs_r2);  //加速度
+	    adot_0[i][k] = All_dAcceleration(i,k,ele,x_0,v_0,r_dot_v,r_dot_v_ij,r_0,abs_r2);
+	    //printf("a_0[%d][%d]=%f\tadot_0[%d][%d]=%f\n",i,k,a_0[i][k],i,k,adot_0[i][k]);
+	  }
+	}
+
+	for(i=1;i<=global_n;++i){
+	  t_[i] += Dt[i];  //すべての粒子の時間はt_sysで揃っている
+	}
+	
+	
+	//exit(-1);
+
+	//////////////////////////////////////////////////////////////
+
+	
+      }else{
+
+	/////////////////////////衝突しない場合/////////////////////////
+	for(i=1;i<=global_n;++i){
+	  if(i==i_sys){  
+	    Corrector_sys(i_sys,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);  //修正子 i_sys のみ
+	  }else{
+	    for(k=1;k<=3;++k){  //i_sys 以外の粒子は予測子を使う
+	      x_c[i][k] = x_p[i][k];
+	      v_c[i][k] = v_p[i][k];
+	    }
+	    r_c[i] = RadiusFromCenter(i,x_c);  //中心からの距離
+	    v2_c[i] = SquareOfVelocity(i,v_c);  //速度の2乗
+	  }
+	}
 
 	     
-      for(ite=1;ite<=ITE_MAX;++ite){  //iteration 3回 
-	Iteration_sys(i_sys,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);  // i_sys のみ
+	for(ite=1;ite<=ITE_MAX;++ite){  //iteration 3回 
+	  Iteration_sys(i_sys,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);  // i_sys のみ
+	}
+	////////////////////////////////////////////////////////////////
+
+	
       }
+
       
-
-
-       
 	
     }else{  
       //t_ene[interval] ですべての粒子をそろえ、エネルギー、軌道要素等計算
@@ -666,37 +763,55 @@ int main(void){
     if(fmod(step,1.0E6)==0.0){
     //if(fmod(step,1.0E2)==0.0){
       //printf("i_sys=%03d\tt=%.15e\tE=%.15e\tL=%.15e\tr_min=%.15e\n",i_sys,t_sys,E_tot,abs_L,r_min);  //全エネルギー,全角運動量
-      printf("step=%e\tN=%d\ti_sys=%03d\tt=%.2e[yr]",step,global_n_p,i_sys,t_sys/2.0/M_PI);
+      printf("step=%e\tN=%d\ti_sys=%03d\tt=%.2e[yr]",step,global_n,i_sys,t_sys/2.0/M_PI);
       printf("\n");
     }
     
-    
-    t_[i_sys] += dt_[i_sys];  //i_sys のみ時間更新
-    
-    
-    
 
-    dt_[i_sys] = Timestep_i_sys(i_sys,a,adot,adot2_dt2,adot3_dt3,abs_a,abs_adot,abs_adot2,abs_adot3,dt_);  //i_sys のみタイムステップ計算
-    
 
-    
-    
-    for(k=1;k<=3;++k){  //i_sys のみ更新
-      x_0[i_sys][k] = x_c[i_sys][k];
-      v_0[i_sys][k] = v_c[i_sys][k];
-      a_0[i_sys][k] = a[i_sys][k];
-      adot_0[i_sys][k] = adot[i_sys][k];
-    }
-    
-    
-    t_sys = t_[1] + dt_[1];
-    i_sys = 1;
-    for(i=2;i<=global_n;++i){  
-      if((t_[i] + dt_[i]) < t_sys){
-	t_sys = t_[i] + dt_[i];  //dt_i が最小のものを選ぶ
-	i_sys = i;  //i_sysを選ぶ
+    if((i_col != 0) && (j_col != 0)){  //衝突した場合
+
+      for(i=1;i<=global_n;++i){ 
+	dt_[i] = Timestep_i_0(i,a_0,adot_0,abs_a,abs_adot);  //タイムステップ計算
+	//printf("initial dt_[%d]=%e\n",i,dt_[i]);
       }
+
+      t_sys = t_[1] + dt_[1];
+      i_sys = 1;
+      for(i=2;i<=global_n;++i){  
+	if((t_[i] + dt_[i]) < t_sys){
+	  t_sys = t_[i] + dt_[i];  //dt_i が最小のものを選ぶ
+	  i_sys = i;  //i_sysを選ぶ
+	}
+      }
+      
+    }else if((i_col == 0) && (j_col == 0)){  //衝突しない場合
+      
+      t_[i_sys] += dt_[i_sys];  //i_sys のみ時間更新
+    
+      dt_[i_sys] = Timestep_i_sys(i_sys,a,adot,adot2_dt2,adot3_dt3,abs_a,abs_adot,abs_adot2,abs_adot3,dt_);  //i_sys のみタイムステップ計算
+    
+      for(k=1;k<=3;++k){  //i_sys のみ更新
+	x_0[i_sys][k] = x_c[i_sys][k];
+	v_0[i_sys][k] = v_c[i_sys][k];
+	a_0[i_sys][k] = a[i_sys][k];
+	adot_0[i_sys][k] = adot[i_sys][k];
+      }
+    
+      t_sys = t_[1] + dt_[1];
+      i_sys = 1;
+      for(i=2;i<=global_n;++i){
+	if((t_[i] + dt_[i]) < t_sys){
+	  t_sys = t_[i] + dt_[i];  //dt_i が最小のものを選ぶ
+	  i_sys = i;  //i_sysを選ぶ
+	}
+      }
+      
+    }else{
+      printf("Collision Judgement error\ti_col=%d\tj_col=%d\n",i_col,j_col);
+      exit(-1);
     }
+    
     
     
     

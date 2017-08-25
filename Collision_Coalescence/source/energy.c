@@ -7,7 +7,7 @@ double Calculate_Energy(struct orbital_elements ele[],double x_c[][4],double v_c
   int i,j;
   double rij1;
   double r1;
-  double E[global_n];
+  double E[global_n+1];
   double E_tot=0.0;
   
   for(i=1;i<=global_n;++i){
