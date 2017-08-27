@@ -1,12 +1,12 @@
 #define EXTERN
 #include "hybrid.h"
 
-int global_n = N_tr + N_p;  //全粒子数
+int global_n = N_p + N_tr;  //全粒子数
 int global_n_p = N_p;  //原始惑星の数
 
 int main(void){
 
-  int i,i_sys,k,ite,interval;
+  int i,j,i_sys,k,ite,interval;
   int i_col,j_col;
   double t_sys;
   double t_ene[TIME_INTERVAL_MAX]={TIME_INTERVAL};
@@ -213,8 +213,6 @@ int main(void){
 
     
     r_0[i] = RadiusFromCenter(i,x_0);  //中心星からの距離
-
-
     r_dot_v[i] = InnerProduct(i,x_0,v_0);  //r_i,v_iの内積
     v2_0[i] = SquareOfVelocity(i,v_0);  //速度の2乗
   }
@@ -283,12 +281,14 @@ int main(void){
   */
 
 
-  E_tot_0 = 0.0;
-  E_tot_0 = Calculate_Energy(ele,x_0,v_0,v2_0,r_0,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij);  //初期エネルギー、相対距離、相対速度、相対距離と相対速度の内積  コメントアウトしちゃだめなやつ
-  //printf("%e\t%.15e\n",0.0,E_tot_0);
+  
 
   
 #if ENERGY_FILE
+  E_tot_0 = 0.0;
+  E_tot_0 = Calculate_Energy(ele,x_0,v2_0,r_0,abs_r,abs_r2);  //初期エネルギー、相対距離
+  //printf("%e\t%.15e\n",0.0,E_tot_0);
+  
   FILE *fpEne;   //初期エネルギーをファイルへ書き出し
   char Ene[100];
   sprintf(Ene,"%sENERGY.dat",STR(DIRECTORY));
@@ -305,12 +305,23 @@ int main(void){
   abs_L_0 = AngularMomentum(i,ele,x_0,v_0);  //角運動量の大きさ
   //printf("abs_L_0=%.15e\n",abs_L_0);
 #endif
-      
 
+  
 
-  for(i=1;i<=global_n;i++){
-    r_dot_v[i] = InnerProduct(i,x_0,v_0);  //r_i,v_iの内積
-  }
+  for(i=1;i<=global_n;++i){
+    for(j=1;j<=global_n;++j){
+      if(i!=j){
+	abs_r2[j] = SquareOfRelativeDistance(i,j,x_0); //絶対値2乗
+	abs_v2[j] = SquareOfRelativeVelocity(i,j,v_0);
+	r_dot_v_ij[j] = RelativeInnerProduct(i,j,x_0,v_0);  //r_ij,v_ijの内積 
+	    
+	abs_r[j] = sqrt(abs_r2[j]); //絶対値
+	abs_v[j] = sqrt(abs_v2[j]);
+		
+      }
+    }  //j loop
+  }  //i loop
+
       
   
   
@@ -470,12 +481,18 @@ int main(void){
 	  }
 	}
 
+	for(i=1;i<=global_n;++i){  //位置と速度を更新
+	  for(k=1;k<=3;++k){
+	    x_0[i][k] = x_c[i][k];
+	    v_0[i][k] = v_c[i][k];
+	  }
+	}
 
 	//新しい合体粒子を作る　0番目の要素はコピーに使うだけ
 	ele[0].mass = ele[i_col].mass + ele[j_col].mass;
 	for(k=1;k<=3;++k){
-	  x_0[0][k] = (ele[i_col].mass*x_c[i_col][k] + ele[j_col].mass*x_c[j_col][k])/ele[0].mass;
-	  v_0[0][k] = (ele[i_col].mass*v_c[i_col][k] + ele[j_col].mass*v_c[j_col][k])/ele[0].mass;
+	  x_0[0][k] = (ele[i_col].mass*x_0[i_col][k] + ele[j_col].mass*x_0[j_col][k])/ele[0].mass;
+	  v_0[0][k] = (ele[i_col].mass*v_0[i_col][k] + ele[j_col].mass*v_0[j_col][k])/ele[0].mass;
 	}
 
 	//i_colを新しい合体粒子の番号にする
@@ -487,15 +504,25 @@ int main(void){
 	}
 
 	
-	
-	//j_colとglobal_n番目の粒子を入れ替え、global_nとglobal_n_pを1つ減らす
+	//j_colとglobal_n_pを入れ替える
 	ele[0] = ele[j_col];  //構造体のためswap関数は使えない　0番目の要素はコピーに使うだけ
-	ele[j_col] = ele[global_n];
+	ele[j_col] = ele[global_n_p];
+	ele[global_n_p] = ele[0];
+	for(k=1;k<=3;++k){
+	  swap(&x_0[j_col][k],&x_0[global_n_p][k]);
+	  swap(&v_0[j_col][k],&v_0[global_n_p][k]);
+	}
+	
+	//global_n_pとglobal_nを入れ替える
+	ele[0] = ele[global_n_p];  //構造体のためswap関数は使えない　0番目の要素はコピーに使うだけ
+	ele[global_n_p] = ele[global_n];
 	ele[global_n] = ele[0];
 	for(k=1;k<=3;++k){
-	  swap(&x_0[j_col][k],&x_0[global_n][k]);
-	  swap(&v_0[j_col][k],&v_0[global_n][k]);
+	  swap(&x_0[global_n_p][k],&x_0[global_n][k]);
+	  swap(&v_0[global_n_p][k],&v_0[global_n][k]);
 	}
+	
+	//global_nとglobal_n_pを1つ減らす
 	global_n--;
 	global_n_p--;
 
@@ -510,10 +537,12 @@ int main(void){
 	  Calculate_OrbitalElements(i,x_0,v_0,ele,P,Q,r_0,v2_0,r_dot_v);
 	}
 
-	E_tot = 0.0;
-	E_tot = Calculate_Energy(ele,x_0,v_0,v2_0,r_0,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij);  //エネルギー、相対距離、相対速度、相対距離と相対速度の内積  コメントアウトしちゃだめなやつ
+	
 
 #if ENERGY_FILE
+	E_tot = 0.0;
+	E_tot = Calculate_Energy(ele,x_0,v2_0,r_0,abs_r,abs_r2);  //エネルギー、相対距離
+	
 	
 	sprintf(Ene,"%sENERGY.dat",STR(DIRECTORY));
 	fpEne = fopen(Ene,"a");
@@ -527,6 +556,20 @@ int main(void){
 
 	abs_L = AngularMomentum(i,ele,x_0,v_0);
 #endif
+
+	for(i=1;i<=global_n;++i){
+	  for(j=1;j<=global_n;++j){
+	    if(i!=j){
+	      abs_r2[j] = SquareOfRelativeDistance(i,j,x_0); //絶対値2乗
+	      abs_v2[j] = SquareOfRelativeVelocity(i,j,v_0);
+	      r_dot_v_ij[j] = RelativeInnerProduct(i,j,x_0,v_0);  //r_ij,v_ijの内積 
+	    
+	      abs_r[j] = sqrt(abs_r2[j]); //絶対値
+	      abs_v[j] = sqrt(abs_v2[j]);
+		
+	    }
+	  }  //j loop
+	}  //i loop
 	
 	
 	for(i=1;i<=global_n;++i){
@@ -621,7 +664,7 @@ int main(void){
 #if ENERGY_FILE
 
       E_tot = 0.0;
-      E_tot = Calculate_Energy(ele,x_c,v_c,v2_c,r_c,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij);  //エネルギー計算
+      E_tot = Calculate_Energy(ele,x_c,v2_c,r_c,abs_r,abs_r2);  //エネルギー計算
 	
       sprintf(Ene,"%sENERGY.dat",STR(DIRECTORY));
       fpEne = fopen(Ene,"a");

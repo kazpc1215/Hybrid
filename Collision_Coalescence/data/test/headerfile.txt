@@ -89,9 +89,10 @@ Mean Longitude (deg)               100.46435
 
 
 //////////////////////////////////////////////////
-#define T_MAX (2.0*M_PI*1.0E8)  //1E8yr  全計算時間
-#define TIME_INTERVAL 2.0*M_PI*1.0E0,2.0*M_PI*1.0E1,2.0*M_PI*1.0E2,2.0*M_PI*1.0E3,2.0*M_PI*1.0E4,2.0*M_PI*1.0E5,2.0*M_PI*1.0E6,2.0*M_PI*1.0E7,T_MAX  //t_ene配列の中身
-#define TIME_INTERVAL_MAX 9 //t_ene配列の要素数
+#define T_MAX (2.0*M_PI*1.0E4)  //1E8yr  全計算時間
+//#define TIME_INTERVAL 2.0*M_PI*1.0E0,2.0*M_PI*1.0E1,2.0*M_PI*1.0E2,2.0*M_PI*1.0E3,2.0*M_PI*1.0E4,2.0*M_PI*1.0E5,2.0*M_PI*1.0E6,2.0*M_PI*1.0E7,T_MAX  //t_ene配列の中身
+#define TIME_INTERVAL 2.0*M_PI*1.0E0,2.0*M_PI*1.0E1,2.0*M_PI*1.0E2,2.0*M_PI*1.0E3,T_MAX  //t_ene配列の中身
+#define TIME_INTERVAL_MAX 5 //t_ene配列の要素数
 //////////////////////////////////////////////////
 
 
@@ -220,7 +221,7 @@ double Calculate_P(int i,int k,struct orbital_elements ele[]);
 
 double Calculate_Q(int i,int k,struct orbital_elements ele[]);
 
-double Calculate_Energy(struct orbital_elements ele[],double x_c[][4],double v_c[][4],double v2_c[],double r_c[],double abs_r[],double abs_r2[],double abs_v[],double abs_v2[],double r_dot_v_ij[]);
+double Calculate_Energy(struct orbital_elements ele[],double x_c[][4],double v2_c[],double r_c[],double abs_r[],double abs_r2[]);
 
 void InitialCondition(int i,double P[][4],double Q[][4],double x_0[][4],double v_0[][4],double v2_0[],double r_dot_v[],double r_0[],struct orbital_elements ele[]);
 
