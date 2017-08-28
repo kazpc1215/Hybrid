@@ -803,8 +803,7 @@ int main(void){
     if(fmod(step,1.0E6)==0.0){
     //if(fmod(step,1.0E2)==0.0){
       //printf("i_sys=%03d\tt=%.15e\tE=%.15e\tL=%.15e\tr_min=%.15e\n",i_sys,t_sys,E_tot,abs_L,r_min);  //全エネルギー,全角運動量
-      printf("step=%e\tN=%d\ti_sys=%03d\tt=%.2e[yr]",step,global_n,i_sys,t_sys/2.0/M_PI);
-      printf("\n");
+      printf("step=%e\tN=%d\ti_sys=%03d\tdt[%03d]=%.2e[yr]\tt_sys=%.2e[yr]\n",step,global_n,i_sys,i_sys,dt_[i_sys]/2.0/M_PI,t_sys/2.0/M_PI);
     }
     
 
