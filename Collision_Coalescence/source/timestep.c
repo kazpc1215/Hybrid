@@ -3,7 +3,6 @@
 /*初期 タイムステップ計算*/
 double Timestep_i_0(int i,double a_0[][4],double adot_0[][4],double abs_a[],double abs_adot[]){
   int k;
-  double dt_;
 
   abs_a[i] = 0.0;  
   abs_adot[i] = 0.0;
@@ -16,8 +15,7 @@ double Timestep_i_0(int i,double a_0[][4],double adot_0[][4],double abs_a[],doub
   abs_adot[i] = sqrt(abs_adot[i]);
   
   //printf("abs_a[%d]=%f\tabs_adot[%d]=%f\n",i,abs_a[i],i,abs_adot[i]);
-  dt_ = ETA*abs_a[i]/abs_adot[i];
-  return dt_;
+  return ETA*abs_a[i]/abs_adot[i];
 }
 
 

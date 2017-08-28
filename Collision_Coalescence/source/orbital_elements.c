@@ -178,7 +178,7 @@ void InitialCondition(int i,double P[][4],double Q[][4],double x_0[][4],double v
   }
   //printf("x=%f\ty=%f\tz=%f\n",x_0[i][1],x_0[i][2],x_0[i][3]);
            
-  r_0[i] = RadiusFromCenter(i,x_0);  //中心星からの距離
+  r_0[i] = RadiusFromCenter(i,x_0);  //中心星からの距離.
 
 
       
@@ -186,8 +186,8 @@ void InitialCondition(int i,double P[][4],double Q[][4],double x_0[][4],double v
     v_0[i][k] = sqrt(G*M_0/ele[i].axis)/r_0[i]*(-ele[i].axis*P[i][k]*sin(ele[i].u) + ele[i].axis*sqrt(1.0-ele[i].ecc*ele[i].ecc)*Q[i][k]*cos(ele[i].u));
   }
 
-  r_dot_v[i] = InnerProduct(i,x_0,v_0);  //r_i,v_iの内積
-  v2_0[i] = SquareOfVelocity(i,v_0);  //速度の2乗
+  r_dot_v[i] = InnerProduct(i,x_0,v_0);  //r_i,v_iの内積.
+  v2_0[i] = SquareOfVelocity(i,v_0);  //速度の2乗.
   //printf("vx=%f\tvy=%f\tvz=%f\n",v_0[i][1],v_0[i][2],v_0[i][3]);
 }
 

@@ -24,8 +24,8 @@ void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation fra
     }
     frag[i].neighbornumber = 0;
     
-    frag[i].delta_r_out = (double)m*DELTA_R;  //外側
-    frag[i].delta_r_in = (double)m*DELTA_R;  //内側
+    frag[i].delta_r_out = (double)m*DELTA_R;  //外側.
+    frag[i].delta_r_in = (double)m*DELTA_R;  //内側.
   
     S = 2.0*(frag[i].delta_r_out + frag[i].delta_r_in)*radius[i]*delta_theta;
 
@@ -33,12 +33,12 @@ void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation fra
     //printf("delta_r[%d]=%f\n",i,frag[i].delta_r);
   
     l = 1;
-    for(j=global_n_p+1;j<=global_n;j++){  //惑星抜き
+    for(j=global_n_p+1;j<=global_n;j++){  //惑星抜き.
       if(j!=i){
 	radius[j] = sqrt(x_0[j][1]*x_0[j][1] + x_0[j][2]*x_0[j][2]);
 	theta[j] = atan2(x_0[j][2],x_0[j][1]);  //[-pi:pi]
-	if((radius[j]-radius[i]>=0.0 && radius[j]-radius[i]<=frag[i].delta_r_out) || (radius[i]-radius[j]>=0.0 && radius[i]-radius[j]<=frag[i].delta_r_in)){  //動径方向
-	  if(fabs(theta[j] - theta[i])<=delta_theta || 2.0*M_PI - fabs(theta[j] - theta[i])<=delta_theta){  //角度方向
+	if((radius[j]-radius[i]>=0.0 && radius[j]-radius[i]<=frag[i].delta_r_out) || (radius[i]-radius[j]>=0.0 && radius[i]-radius[j]<=frag[i].delta_r_in)){  //動径方向.
+	  if(fabs(theta[j] - theta[i])<=delta_theta || 2.0*M_PI - fabs(theta[j] - theta[i])<=delta_theta){  //角度方向.
 	    frag[i].neighborlist[l] = j;
 	    l++;
 	  }
@@ -50,18 +50,18 @@ void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation fra
 
     m++;
     
-  }while(frag[i].neighbornumber<10);  //近傍粒子が10個未満なら、10個以上になるまでdelta_rをm倍に広げる
+  }while(frag[i].neighbornumber<10);  //近傍粒子が10個未満なら、10個以上になるまでdelta_rをm倍に広げる.
   
 
 
   
 
   v=0.0;
-  M=ele[i].mass;  //ターゲットiの質量も含める
+  M=ele[i].mass;  //ターゲットiの質量も含める.
   if(frag[i].neighbornumber!=0){
     for(j=1;j<=frag[i].neighbornumber;j++){
       v += RandomVelocity(i,frag[i].neighborlist[j],ele);
-      M += ele[frag[i].neighborlist[j]].mass;  //領域iの総質量
+      M += ele[frag[i].neighborlist[j]].mass;  //領域iの総質量.
       
       if(isnan(RandomVelocity(i,frag[i].neighborlist[j],ele))){
 	printf("i=%d,j=%d\tvij is nan.\n",i,frag[i].neighborlist[j]);
@@ -73,13 +73,13 @@ void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation fra
     if(isnan(v)){
       printf("i=%d\tv_tot is nan.\n",i);
     }
-    frag[i].v_ave = v/(double)frag[i].neighbornumber;  //領域iの平均速度
+    frag[i].v_ave = v/(double)frag[i].neighbornumber;  //領域iの平均速度.
 
     //printf("i=%d\tmass=%e\n",i,ele[i].mass);
     //printf("i=%d\tM=%e\n",i,M);
       
-    frag[i].sigma = M/S;  //領域iの表面密度
-    frag[i].n_s = frag[i].neighbornumber/S;  //領域iの表面密度
+    frag[i].sigma = M/S;  //領域iの表面密度.
+    frag[i].n_s = frag[i].neighbornumber/S;  //領域iの表面密度.
   }else{
     frag[i].v_ave = 0.0;
     frag[i].sigma = 0.0;
