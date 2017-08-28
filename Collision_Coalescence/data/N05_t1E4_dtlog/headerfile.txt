@@ -9,7 +9,7 @@
 #include <time.h>
 
 
-#define DIRECTORY ../data/N100_t1E4_dtlog/  //ファイル保存用のディレクトリ.
+#define DIRECTORY ../data/N05_t1E4_dtlog/  //ファイル保存用のディレクトリ.
 #define _STR(str) #str
 #define STR(str) _STR(str)
 
@@ -21,7 +21,7 @@
 
 //////////////////////////////////////////////////
 #define N_tr 0  //初期のトレーサーの数.
-#define N_p 100  //初期の原始惑星の数.
+#define N_p 5  //初期の原始惑星の数.
 
 EXTERN int global_n;  //グローバル変数.
 EXTERN int global_n_p;  //グローバル変数.
