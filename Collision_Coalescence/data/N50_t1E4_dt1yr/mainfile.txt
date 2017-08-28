@@ -6,11 +6,17 @@ int global_n_p = N_p;  //原始惑星の数.
 
 int main(void){
 
-  int i,j,i_sys,k,ite,interval;
+  int i,j,i_sys,k,ite;
   int i_col,j_col;
   double t_sys;
-  double t_ene[TIME_INTERVAL_MAX]={TIME_INTERVAL};
 
+#if DT_LOG == 1
+  int interval;
+  double t_ene[TIME_INTERVAL_MAX]={TIME_INTERVAL};
+#else
+  double t_ene=DT_ENE;
+#endif
+  
   double t_[N_p+N_tr+1]={},dt_[N_p+N_tr+1]={},Dt[N_p+N_tr+1]={};
   double step=0.0;
   
@@ -43,6 +49,7 @@ int main(void){
   double mass_tot_all;
   struct parameter para;
 #endif
+  
 
 
   
@@ -442,19 +449,25 @@ int main(void){
 
 
 
-  
-
-
 
   printf("-----\n");
     
   ////////////////////////////////////////////////////////////////////////////////////
 
+#if DT_LOG == 1
   interval = 0;
-
+  
   while(TIME_INTERVAL_MAX>interval){
     
     if(t_sys<t_ene[interval]){  
+#else
+      
+  while(t_sys<=T_MAX){
+    
+    if(t_sys<t_ene){
+      
+#endif
+
       //individual timestep
 
      
@@ -598,12 +611,21 @@ int main(void){
 	
     }else{  
       //t_ene[interval] ですべての粒子をそろえ、エネルギー、軌道要素等計算.
-      
+
+#if DT_LOG == 1
       t_sys = t_ene[interval];
-      
+#else
+      t_sys = t_ene;
+#endif
       
       for(i=1;i<=global_n;++i){
+	
+#if DT_LOG == 1
 	Dt[i] = t_ene[interval] - t_[i];
+#else
+	Dt[i] = t_ene - t_[i];
+#endif
+	
 	dt_[i] = Dt[i];
       }
 
@@ -677,9 +699,14 @@ int main(void){
 	fclose(fporbit);
       }
 #endif
-      
-      interval++;
 
+
+#if DT_LOG == 1
+      interval++;
+#else
+      t_ene += DT_ENE;
+#endif
+      
     }
     
     /*for(i=1;i<=N;++i){
@@ -784,9 +811,76 @@ int main(void){
     
     if(fmod(step,1.0E6)==0.0){
     //if(fmod(step,1.0E2)==0.0){
-      //printf("i_sys=%03d\tt=%.15e\tE=%.15e\tL=%.15e\tr_min=%.15e\n",i_sys,t_sys,E_tot,abs_L,r_min);  //全エネルギー,全角運動量
+      //printf("i_sys=%03d\tt=%.15e\tE=%.15e\tL=%.15e\tr_min=%.15e\n",i_sys,t_sys,E_tot,abs_L,r_min);  //全エネルギー,全角運動量.
       printf("step=%e\tN=%d\ti_sys=%03d\tdt[%03d]=%.2e[yr]\tt_sys=%.2e[yr]\n",step,global_n,i_sys,i_sys,dt_[i_sys]/2.0/M_PI,t_sys/2.0/M_PI);
     }
+
+
+    
+    for(i=1;i<=global_n_p;++i){
+      //r_c[i]は計算してある
+      if(r_c[i]<SOLAR_RADIUS || r_c[i]>SOLAR_SYSTEM_LIMIT){  //太陽に飲みこまれるか系外へ出て行くか.
+	
+	printf("i=%d is eliminated\tr[%d]=%e\tt_sys=%.2e[yr]\n",i,i,r_c[i],t_sys/2.0/M_PI);
+	
+	//iとglobal_n_pを入れ替える.
+	ele[0] = ele[i];  //構造体のためswap関数は使えない. 0番目の要素はコピーに使うだけ.
+	ele[i] = ele[global_n_p];
+	ele[global_n_p] = ele[0];
+
+	swap(&t_[i],&t_[global_n_p]);
+	swap(&dt_[i],&dt_[global_n_p]);
+	
+	for(k=1;k<=3;++k){
+	  swap(&x_0[i][k],&x_0[global_n_p][k]);
+	  swap(&x_c[i][k],&x_c[global_n_p][k]);
+	  
+	  swap(&v_0[i][k],&v_0[global_n_p][k]);
+	  swap(&v_c[i][k],&v_c[global_n_p][k]);
+
+	  swap(&a_0[i][k],&a_0[global_n_p][k]);
+	  swap(&a[i][k],&a[global_n_p][k]);
+
+	  swap(&adot_0[i][k],&adot_0[global_n_p][k]);
+	  swap(&adot[i][k],&adot[global_n_p][k]);
+
+	  swap(&adot2_dt2[i][k],&adot2_dt2[global_n_p][k]);
+	  swap(&adot3_dt3[i][k],&adot3_dt3[global_n_p][k]);
+	}
+	
+	//global_n_pとglobal_nを入れ替える.
+	ele[0] = ele[global_n_p];  //構造体のためswap関数は使えない. 0番目の要素はコピーに使うだけ.
+	ele[global_n_p] = ele[global_n];
+	ele[global_n] = ele[0];
+
+	swap(&t_[global_n_p],&t_[global_n]);
+	swap(&dt_[global_n_p],&dt_[global_n]);
+	
+	for(k=1;k<=3;++k){
+	  swap(&x_0[global_n_p][k],&x_0[global_n][k]);
+	  swap(&x_c[global_n_p][k],&x_c[global_n][k]);
+
+	  swap(&v_0[global_n_p][k],&v_0[global_n][k]);
+	  swap(&v_c[global_n_p][k],&v_c[global_n][k]);
+
+	  swap(&a_0[global_n_p][k],&a_0[global_n][k]);
+	  swap(&a[global_n_p][k],&a[global_n][k]);
+
+	  swap(&adot_0[global_n_p][k],&adot_0[global_n][k]);
+	  swap(&adot[global_n_p][k],&adot[global_n][k]);
+
+	  swap(&adot2_dt2[global_n_p][k],&adot2_dt2[global_n][k]);
+	  swap(&adot3_dt3[global_n_p][k],&adot3_dt3[global_n][k]);
+	}
+	
+	//global_nとglobal_n_pを1つ減らす.
+	global_n--;
+	global_n_p--;     
+      }
+    }
+    
+
+
     
 
 
@@ -839,8 +933,13 @@ int main(void){
 #endif
   
   printf("step=%e\n",step);
-  
+
+
+#if DT_LOG == 1
   for(i=0;i<TIME_INTERVAL_MAX;i++){
-    printf("t_ene[%d]=%e\n",i,t_ene[i]);
-  } 
+    printf("t_ene[%d]=%e[yr]\n",i,t_ene[i]/2.0/M_PI);
+  }
+#else
+  printf("dt_ene=%e[yr]\n",DT_ENE/2.0/M_PI);
+#endif
 }

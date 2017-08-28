@@ -17,6 +17,8 @@ int Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double abs
 	(*j_col) = j;
 	return 1;  //衝突した場合.
       }
+
+      
     }
   }
 

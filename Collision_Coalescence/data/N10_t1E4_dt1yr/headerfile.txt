@@ -9,7 +9,7 @@
 #include <time.h>
 
 
-#define DIRECTORY ../data/N50_t1E4_dt1yr/  //ファイル保存用のディレクトリ.
+#define DIRECTORY ../data/N10_t1E4_dt1yr/  //ファイル保存用のディレクトリ.
 #define _STR(str) #str
 #define STR(str) _STR(str)
 
@@ -21,7 +21,7 @@
 
 //////////////////////////////////////////////////
 #define N_tr 0  //初期のトレーサーの数.
-#define N_p 50  //初期の原始惑星の数.
+#define N_p 10  //初期の原始惑星の数.
 
 EXTERN int global_n;  //グローバル変数.
 EXTERN int global_n_p;  //グローバル変数.
@@ -45,9 +45,6 @@ EXTERN int global_n_p;  //グローバル変数.
 
 
 //////////////////////////////////////////////////
-#define SOLAR_RADIUS (6.957E10/1.496E13)
-#define SOLAR_SYSTEM_LIMIT 100.0
-
 #define PLANET_MASS 3.0E-7  //5.9723E27 [g] / 1.989E33 [g] /10
 #define PLANET_ECC 0.01
 #define PLANET_INC 0.005
