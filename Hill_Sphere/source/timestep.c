@@ -40,7 +40,7 @@ double Timestep_i_sys(int i_sys,double a[][4],double adot[][4],double adot2_dt2[
   abs_adot2[i_sys] = sqrt(abs_adot2[i_sys]);
   abs_adot3[i_sys] = sqrt(abs_adot3[i_sys]);
   
-  dt_[i_sys] = sqrt(ETA*(abs_a[i_sys]*abs_adot2[i_sys] + abs_adot[i_sys]*abs_adot[i_sys])/(abs_adot[i_sys]*abs_adot3[i_sys] + abs_adot2[i_sys]*abs_adot2[i_sys]));
+  dt_[i_sys] = ETA*sqrt((abs_a[i_sys]*abs_adot2[i_sys] + abs_adot[i_sys]*abs_adot[i_sys])/(abs_adot[i_sys]*abs_adot3[i_sys] + abs_adot2[i_sys]*abs_adot2[i_sys]));
 
   return dt_[i_sys];
 }
