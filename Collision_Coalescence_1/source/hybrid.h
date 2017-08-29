@@ -9,7 +9,7 @@
 #include <time.h>
 
 
-#define DIRECTORY ../data/N10_t1E4_dt1yr_eta1E-4/  //ファイル保存用のディレクトリ.
+#define DIRECTORY ../data/N10_t1E4_dt1yr_eta1E-5/  //ファイル保存用のディレクトリ.
 #define _STR(str) #str
 #define STR(str) _STR(str)
 
@@ -114,7 +114,7 @@ Mean Longitude (deg)               100.46435
 #define M_0 1.0  //主星の質量.
 #define EPSILON 0.0  //ソフトニングパラメーター.
 //#define ETA 0.05  //刻み幅調整.
-#define ETA 0.0001  //刻み幅調整.
+#define ETA 0.00001  //刻み幅調整.
 #define ITE_MAX 3  //イテレーション回数.
 //////////////////////////////////////////////////
 
