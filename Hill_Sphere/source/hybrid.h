@@ -113,7 +113,7 @@ Mean Longitude (deg)               100.46435
 //#define G 1.0  //重力定数.
 //#define M_0 1.0  //主星の質量.
 #define EPSILON 0.0  //ソフトニングパラメーター.
-#define ETA 0.05  //刻み幅調整.
+#define ETA 0.01  //刻み幅調整.
 //#define ETA 0.00001  //刻み幅調整.
 #define ITE_MAX 3  //イテレーション回数.
 //////////////////////////////////////////////////
