@@ -9,7 +9,8 @@
 #include <time.h>
 
 
-#define DIRECTORY ../data/test/  //ファイル保存用のディレクトリ.
+//#define DIRECTORY ../data/test/  //ファイル保存用のディレクトリ.
+#define DIRECTORY_FILE dt1E-2yr_eta1E-3
 #define _STR(str) #str
 #define STR(str) _STR(str)
 
@@ -63,7 +64,7 @@ EXTERN int global_n_p;  //グローバル変数.
 #define PLANETESIMAL_DENSITY 3.0  //[g/cc]
 #define PLANETESIMAL_NO 2
 
-#define IMPACT_PARAMETER 0.02082  //[AU]
+//#define IMPACT_PARAMETER 0.0208  //[AU]
 
 
 /*
