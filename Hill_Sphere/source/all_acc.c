@@ -12,6 +12,8 @@ double All_Acceleration(int i,int k,struct orbital_elements ele[],double x_0[][4
 	global_n
 #elif INTERACTION_ONLY_PLANET_TRACER
 	global_n_p
+#else
+	0
 #endif
 	;++j){
 
@@ -40,6 +42,8 @@ double All_dAcceleration(int i,int k,struct orbital_elements ele[],double x_0[][
 	global_n
 #elif INTERACTION_ONLY_PLANET_TRACER
 	global_n_p
+#else
+	0
 #endif
 	;++j){
 

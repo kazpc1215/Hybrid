@@ -87,16 +87,32 @@ int main(void){
 #endif
 
 
+  
+  sprintf(ele[1].name,"Planet");
+  ele[1].mass = PLANET_MASS;
+  ele[1].axis = 1.0;
+  ele[1].ecc = PLANET_ECC;
+  ele[1].inc = PLANET_INC;
+  ele[1].u = 0.0;
+
+  sprintf(ele[2].name,"Planetesimal");
+  ele[2].mass = PLANET_MASS*1.0E-3;
+  ele[2].axis = 1.0 + IMPACT_PARAMETER;
+  ele[2].ecc = PLANETESIMAL_ECC;
+  ele[2].inc = PLANETESIMAL_INC;
+  ele[2].u = 0.5*M_PI;
+
+  sprintf(ele[3].name,"dammy");
+  ele[3].mass = 0.0;
+  ele[3].axis = 5.0;
+  ele[3].ecc = 0.0;
+  ele[3].inc = 0.0;
+  ele[3].u = 0.0;
+  
 
   for(i=1;i<=global_n_p;++i){  //惑星.
-    sprintf(ele[i].name,"Planet%02d",i);
-    ele[i].mass = PLANET_MASS;
-    ele[i].axis = 1.0 + 0.5/((double)global_n_p)*(double)i;
-    ele[i].ecc = PLANET_ECC;
-    ele[i].inc = PLANET_INC;
-    ele[i].u = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
-    ele[i].omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
-    ele[i].Omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
+    ele[i].omega = 0.0;
+    ele[i].Omega = 0.0;
 #ifndef M_0
     ele[i].r_h = ele[i].axis*cbrt(ele[i].mass/3.0);
 #else
@@ -262,7 +278,39 @@ int main(void){
   }
   fprintf(fpposivelo,"\n\n");
   fclose(fpposivelo);
+
+
   
+#if POSITION_ROT_FILE
+  double x_rot[N_p+N_tr+1][4];
+  double r_xy[N_p+N_tr+1],theta;
+
+  r_xy[PLANET_NO] = sqrt(x_0[PLANET_NO][1]*x_0[PLANET_NO][1]+x_0[PLANET_NO][2]*x_0[PLANET_NO][2]);
+  r_xy[PLANETESIMAL_NO] = sqrt(x_0[PLANETESIMAL_NO][1]*x_0[PLANETESIMAL_NO][1]+x_0[PLANETESIMAL_NO][2]*x_0[PLANETESIMAL_NO][2]);
+  theta = atan2(x_0[PLANET_NO][2],x_0[PLANET_NO][1]);
+  
+  
+  x_rot[PLANETESIMAL_NO][1] = x_0[PLANETESIMAL_NO][1];
+  x_rot[PLANETESIMAL_NO][2] = x_0[PLANETESIMAL_NO][2];
+  Rotation_3D_zaxis(PLANETESIMAL_NO,x_rot,-theta);
+
+
+  x_rot[PLANET_NO][1] = x_0[PLANET_NO][1];
+  x_rot[PLANET_NO][2] = x_0[PLANET_NO][2];
+  Rotation_3D_zaxis(PLANET_NO,x_rot,-theta);
+  
+  FILE *fpposi_rot;
+  char posi_rot[100];
+  sprintf(posi_rot,"%s%s_posi_rot.dat",STR(DIRECTORY),ele[PLANETESIMAL_NO].name);
+  fpposi_rot = fopen(posi_rot,"w");
+  if(fpposi_rot==NULL){
+    printf("posi_rot error\n");
+    return -1;
+  }
+  fprintf(fpposi_rot,"#t[yr]\tx_rot[2]\ty_rot[2]\tz[2]\tr_xy[2]\ttheta[2]\tradius[2]\tx_rot[1]\ty_rot[1]\tz[1]\tr_xy[1]\ttheta[1]\tradius[1]\tr_Hill\n");
+  fprintf(fpposi_rot,"0.0\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\n",x_rot[PLANETESIMAL_NO][1],x_rot[PLANETESIMAL_NO][2],x_0[PLANETESIMAL_NO][3],r_xy[PLANETESIMAL_NO],atan2(x_rot[PLANETESIMAL_NO][2],x_rot[PLANETESIMAL_NO][1]),ele[PLANETESIMAL_NO].radius,x_rot[PLANET_NO][1],x_rot[PLANET_NO][2],x_0[PLANET_NO][3],r_xy[PLANET_NO],atan2(x_rot[PLANET_NO][2],x_rot[PLANET_NO][1]),ele[PLANET_NO].radius,ele[PLANET_NO].r_h);
+  fclose(fpposi_rot);
+#endif
 
 
   
@@ -837,18 +885,61 @@ int main(void){
     }
 
     
-#endif 
+#endif
 
-	
+
+
+    
+#if POSITION_ROT_FILE
+    if((i_col == 0) && (j_col == 0)){  //衝突しない場合.
+      r_xy[PLANET_NO] = sqrt(x_c[PLANET_NO][1]*x_c[PLANET_NO][1]+x_c[PLANET_NO][2]*x_c[PLANET_NO][2]);
+      r_xy[PLANETESIMAL_NO] = sqrt(x_c[PLANETESIMAL_NO][1]*x_c[PLANETESIMAL_NO][1]+x_c[PLANETESIMAL_NO][2]*x_c[PLANETESIMAL_NO][2]);
+      theta = atan2(x_c[PLANET_NO][2],x_c[PLANET_NO][1]);
+      
+      x_rot[PLANETESIMAL_NO][1] = x_c[PLANETESIMAL_NO][1];
+      x_rot[PLANETESIMAL_NO][2] = x_c[PLANETESIMAL_NO][2];
+      Rotation_3D_zaxis(PLANETESIMAL_NO,x_rot,-theta);
+      
+      
+      x_rot[PLANET_NO][1] = x_c[PLANET_NO][1];
+      x_rot[PLANET_NO][2] = x_c[PLANET_NO][2];
+      Rotation_3D_zaxis(PLANET_NO,x_rot,-theta);
+      
+      
+      //sprintf(posi_rot,"%s%s_Posi.dat",STR(DIRECTORY),ele[PLANETESIMAL_NO].name);
+      fpposi_rot = fopen(posi_rot,"a");
+      if(fpposi_rot==NULL){
+	printf("posi error\n");
+	return -1;
+      }
+      fprintf(fpposi_rot,"%e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\n",t_sys/2.0/M_PI,x_rot[PLANETESIMAL_NO][1],x_rot[PLANETESIMAL_NO][2],x_c[PLANETESIMAL_NO][3],r_xy[PLANETESIMAL_NO],atan2(x_rot[PLANETESIMAL_NO][2],x_rot[PLANETESIMAL_NO][1]),ele[PLANETESIMAL_NO].radius,x_rot[PLANET_NO][1],x_rot[PLANET_NO][2],x_c[PLANET_NO][3],r_xy[PLANET_NO],atan2(x_rot[PLANET_NO][2],x_rot[PLANET_NO][1]),ele[PLANET_NO].radius,ele[PLANET_NO].r_h);
+      fclose(fpposi_rot);
+    }
+#endif
+    
+    
+
+
+    
+    if(t_sys > 1.0/IMPACT_PARAMETER){  //だいたい0度になる時間
+      if(
+	 (fabs(atan2(x_c[PLANET_NO][2],x_c[PLANET_NO][1]) - atan2(x_c[PLANETESIMAL_NO][2],x_c[PLANETESIMAL_NO][1])) > 0.5*M_PI && 2.0*M_PI - fabs(atan2(x_c[PLANET_NO][2],x_c[PLANET_NO][1]) - atan2(x_c[PLANETESIMAL_NO][2],x_c[PLANETESIMAL_NO][1])) > 0.5*M_PI)  //90度以上離れたら終了
+	 ||  //もしくは
+	 ((i_col != 0) && (j_col != 0))  //衝突したら終了
+	 ){
+	printf("t_sys=%e[yr]\ttheta=%.15e[deg]\n",t_sys/2.0/M_PI,(atan2(x_c[PLANET_NO][2],x_c[PLANET_NO][1]) - atan2(x_c[PLANETESIMAL_NO][2],x_c[PLANETESIMAL_NO][1]))*180.0/M_PI);
+	break;
+      }
+    }
     
     
     
-    if(fmod(step,1.0E6)==0.0){
+    if(fmod(step,1.0E5)==0.0){
       //if(fmod(step,1.0E2)==0.0){
       //printf("i_sys=%03d\tt=%.15e\tE=%.15e\tL=%.15e\tr_min=%.15e\n",i_sys,t_sys,E_tot,abs_L,r_min);  //全エネルギー,全角運動量.
       printf("step=%e\tN=%d\ti_sys=%03d\tdt[%03d]=%.2e[yr]\tt_sys=%.2e[yr]\n",step,global_n,i_sys,i_sys,dt_[i_sys]/2.0/M_PI,t_sys/2.0/M_PI);
     }
-
+    
 
     
     for(i=1;i<=global_n_p;++i){
@@ -956,6 +1047,10 @@ int main(void){
 	i_sys = i;  //i_sysを選ぶ.
       }
     }
+
+
+    
+ 
     
     
     step+=1.0;

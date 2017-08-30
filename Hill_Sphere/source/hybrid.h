@@ -21,7 +21,7 @@
 
 //////////////////////////////////////////////////
 #define N_tr 0  //初期のトレーサーの数.
-#define N_p 10  //初期の原始惑星の数.
+#define N_p 3  //初期の原始惑星の数.
 
 EXTERN int global_n;  //グローバル変数.
 EXTERN int global_n_p;  //グローバル変数.
@@ -32,12 +32,13 @@ EXTERN int global_n_p;  //グローバル変数.
 //////////////////////////////////////////////////
 #define ENERGY_FILE 1
 #define ORBITALELEMENTS_FILE 1
+#define POSITION_ROT_FILE 1
 //////////////////////////////////////////////////
 
 
 //////////////////////////////////////////////////
-#define INTERACTION_ALL 0  //全粒子同士の重力相互作用.  //どちらかひとつ.
-#define INTERACTION_ONLY_PLANET_TRACER 1  //惑星とトレーサー間の重力相互作用のみ.  //どちらかひとつ.
+#define INTERACTION_ALL 1//全粒子同士の重力相互作用.  //どちらかひとつ.
+#define INTERACTION_ONLY_PLANET_TRACER 0  //惑星とトレーサー間の重力相互作用のみ.  //どちらかひとつ.
 #define FRAGMENTATION 0  //近傍粒子探索と質量フラックス計算.
 //////////////////////////////////////////////////
 
@@ -48,12 +49,22 @@ EXTERN int global_n_p;  //グローバル変数.
 #define SOLAR_RADIUS (6.957E10/1.496E13)
 #define SOLAR_SYSTEM_LIMIT 100.0
 
-#define PLANET_MASS 3.0E-7  //5.9723E27 [g] / 1.989E33 [g] /10
-#define PLANET_ECC 0.01
-#define PLANET_INC 0.005
+#define PLANET_MASS 3.0E-6
+#define PLANET_ECC 0.0
+#define PLANET_INC 0.0
 #define PLANET_DENSITY 3.0  //[g/cc]
-#define PLANET_RADIUS cbrt(3.0/4.0/M_PI*PLANET_MASS*1.989E33/PLANET_DENSITY)/1.496E13
+#define PLANET_RADIUS (cbrt(3.0/4.0/M_PI*PLANET_MASS*1.989E33/PLANET_DENSITY)/1.496E13)
 #define PLANET_NO 1
+
+
+#define PLANETESIMAL_MASS 1.0E-15
+#define PLANETESIMAL_ECC 0.0
+#define PLANETESIMAL_INC 0.0
+#define PLANETESIMAL_DENSITY 3.0  //[g/cc]
+#define PLANETESIMAL_NO 2
+
+#define IMPACT_PARAMETER 0.02082  //[AU]
+
 
 /*
 Earth Mean Orbital Elements (J2000)
@@ -103,8 +114,8 @@ Mean Longitude (deg)               100.46435
 
 
 /*  liner 用 */    
-#define DT_ENE (2.0*M_PI*1.0E0)  //dt_ene = 1yr
-  
+//#define DT_ENE (2.0*M_PI*1.0E0)  //dt_ene = 1yr
+#define DT_ENE (2.0*M_PI*1.0E-2)  //dt_ene = 1E-2yr
 //////////////////////////////////////////////////
 
 
@@ -113,8 +124,8 @@ Mean Longitude (deg)               100.46435
 //#define G 1.0  //重力定数.
 //#define M_0 1.0  //主星の質量.
 #define EPSILON 0.0  //ソフトニングパラメーター.
-#define ETA 0.05  //刻み幅調整.
-//#define ETA 0.00001  //刻み幅調整.
+//#define ETA 0.05  //刻み幅調整.
+#define ETA 1E-3  //刻み幅調整.
 #define ITE_MAX 3  //イテレーション回数.
 
 #define INDIRECT_TERM 1  // 0: 中心星を動かさない場合  1: 中心星を動かす場合
