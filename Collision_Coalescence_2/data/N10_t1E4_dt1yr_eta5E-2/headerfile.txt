@@ -9,7 +9,7 @@
 #include <time.h>
 
 
-#define DIRECTORY ../data/N10_t1E4_dtlog_eta5E-2/  //ファイル保存用のディレクトリ.
+#define DIRECTORY ../data/N10_t1E4_dt1yr_eta5E-2/  //ファイル保存用のディレクトリ.
 #define _STR(str) #str
 #define STR(str) _STR(str)
 
@@ -94,7 +94,7 @@ Mean Longitude (deg)               100.46435
 //////////////////////////////////////////////////
 #define T_MAX (2.0*M_PI*1.0E4)  //1E4yr  全計算時間.
 
-#define DT_LOG 1  // 1: t_eneをlogでとる 0: t_eneをlinerでとる
+#define DT_LOG 0  // 1: t_eneをlogでとる 0: t_eneをlinerでとる
 
 /*  log 用 */
 //#define TIME_INTERVAL 2.0*M_PI*1.0E0,2.0*M_PI*1.0E1,2.0*M_PI*1.0E2,2.0*M_PI*1.0E3,2.0*M_PI*1.0E4,2.0*M_PI*1.0E5,2.0*M_PI*1.0E6,2.0*M_PI*1.0E7,T_MAX  //t_ene配列の中身.
