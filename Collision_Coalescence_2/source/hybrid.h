@@ -9,7 +9,7 @@
 #include <time.h>
 
 
-#define DIRECTORY ../data/test/  //ファイル保存用のディレクトリ.
+#define DIRECTORY ../data/N10_t1E4_dt1E-2yr_eta5E-2/  //ファイル保存用のディレクトリ.
 #define _STR(str) #str
 #define STR(str) _STR(str)
 
@@ -103,7 +103,9 @@ Mean Longitude (deg)               100.46435
 
 
 /*  liner 用 */    
-#define DT_ENE (2.0*M_PI*1.0E0)  //dt_ene = 1yr
+//#define DT_ENE (2.0*M_PI)  //dt_ene = 1yr
+#define DT_ENE (2.0*M_PI*1.0E-2)  //dt_ene = 0.01yr
+
   
 //////////////////////////////////////////////////
 

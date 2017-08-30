@@ -94,7 +94,7 @@ Mean Longitude (deg)               100.46435
 //////////////////////////////////////////////////
 #define T_MAX (2.0*M_PI*1.0E4)  //1E4yr  全計算時間.
 
-#define DT_LOG 1  // 1: t_eneをlogでとる 0: t_eneをlinerでとる
+#define DT_LOG 0  // 1: t_eneをlogでとる 0: t_eneをlinerでとる
 
 /*  log 用 */
 //#define TIME_INTERVAL 2.0*M_PI*1.0E0,2.0*M_PI*1.0E1,2.0*M_PI*1.0E2,2.0*M_PI*1.0E3,2.0*M_PI*1.0E4,2.0*M_PI*1.0E5,2.0*M_PI*1.0E6,2.0*M_PI*1.0E7,T_MAX  //t_ene配列の中身.
@@ -113,9 +113,11 @@ Mean Longitude (deg)               100.46435
 //#define G 1.0  //重力定数.
 //#define M_0 1.0  //主星の質量.
 #define EPSILON 0.0  //ソフトニングパラメーター.
-#define ETA 0.01  //刻み幅調整.
+#define ETA 0.05  //刻み幅調整.
 //#define ETA 0.00001  //刻み幅調整.
 #define ITE_MAX 3  //イテレーション回数.
+
+#define INDIRECT_TERM 1  // 0: 中心星を動かさない場合  1: 中心星を動かす場合
 //////////////////////////////////////////////////
 
 
@@ -216,6 +218,10 @@ double Acceleration_ij(int i,int j,int k,struct orbital_elements ele[],double x_
 
 double dAcceleration_ij(int i,int j,int k,struct orbital_elements ele[],double x_0[][4],double v_0[][4],double r_dot_v_ij[],double abs_r2[]);
 
+double Acceleration_indirect(int i,int k,struct orbital_elements ele[],double x_0[][4],double r_0[]);
+
+double dAcceleration_indirect(int i,int k,struct orbital_elements ele[],double x_0[][4],double v_0[][4],double r_0[],double r_dot_v[]);
+
 double External_Acceleration(int i,int k,double x_0[][4],double r_0[]);
 
 double External_dAcceleration(int i,int k,double x_0[][4],double v_0[][4],double r_0[],double r_dot_v[]);
@@ -230,7 +236,13 @@ double Calculate_P(int i,int k,struct orbital_elements ele[]);
 
 double Calculate_Q(int i,int k,struct orbital_elements ele[]);
 
-double Calculate_Energy(struct orbital_elements ele[],double x_c[][4],double v2_c[],double r_c[],double abs_r[],double abs_r2[]);
+double Calculate_Energy(struct orbital_elements ele[],double x_c[][4],
+#if INDIRECT_TERM
+			double v_c[][4],double v_G[],
+#else
+			double v2_c[],
+#endif
+			double r_c[],double abs_r[],double abs_r2[]);
 
 void InitialCondition(int i,double P[][4],double Q[][4],double x_0[][4],double v_0[][4],double v2_0[],double r_dot_v[],double r_0[],struct orbital_elements ele[]);
 
@@ -280,6 +292,7 @@ void Rotation_3D_yaxis(int i,double x_eject[][4],double theta);
 
 void Rotation_3D_zaxis(int i,double x_eject[][4],double theta);
 
-void swap(double *a, double *b);
+void Swap(double *a, double *b);
 
+void CenterOfGravity(double x_0[][4],double v_0[][4],double x_G[],double v_G[],struct orbital_elements ele[]);
 #endif //include-guard

@@ -5,7 +5,7 @@ int global_n = N_p + N_tr;  //全粒子数.
 int global_n_p = N_p;  //原始惑星の数.
 
 int main(void){
-
+  
   int i,j,i_sys,k,ite;
   int i_col,j_col;
   double t_sys;
@@ -36,6 +36,9 @@ int main(void){
 
   double P[N_p+N_tr+1][4]={},Q[N_p+N_tr+1][4]={};
 
+#if INDIRECT_TERM
+  double x_G[4],v_G[4];
+#endif
 
   //clock_t start,end;
 
@@ -121,9 +124,9 @@ int main(void){
 
 
     /*
-    tmp_r = PLANET_RADIUS*(1.0 + 1.0*((double)rand())/((double)RAND_MAX+1.0));
-    //tmp_rand1 = ((double)rand())/((double)RAND_MAX+1.0)*M_PI;  //theta
-    tmp_rand2 = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;  //phi
+      tmp_r = PLANET_RADIUS*(1.0 + 1.0*((double)rand())/((double)RAND_MAX+1.0));
+      //tmp_rand1 = ((double)rand())/((double)RAND_MAX+1.0)*M_PI;  //theta
+      tmp_rand2 = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;  //phi
     */
     tmp_r = PLANET_RADIUS*(1.0 + 0.1*(int)((double)(i-global_n_p-1)/100.0));
     tmp_rand2 = 2.0*M_PI/100.0*(double)(i-global_n_p-1);
@@ -242,6 +245,7 @@ int main(void){
   }
 
 
+  CenterOfGravity(x_0,v_0,x_G,v_G,ele);  //重心計算
   
 
   FILE *fpposivelo;   //初期位置、速度をファイルへ書き出し.
@@ -284,9 +288,9 @@ int main(void){
 
 
   /*
-  for(i=1;i<=N_p+N_tr;i++){
+    for(i=1;i<=N_p+N_tr;i++){
     v2_0[i] = SquareOfVelocity(i,v_0,v2_0);  //速度の2乗.
-  }  
+    }  
   */
 
 
@@ -295,7 +299,13 @@ int main(void){
   
 #if ENERGY_FILE
   E_tot_0 = 0.0;
-  E_tot_0 = Calculate_Energy(ele,x_0,v2_0,r_0,abs_r,abs_r2);  //初期エネルギー、相対距離.
+  E_tot_0 = Calculate_Energy(ele,x_0,
+#if INDIRECT_TERM
+			     v_0,v_G,
+#else
+			     v2_0,
+#endif
+			     r_0,abs_r,abs_r2);  //初期エネルギー、相対距離.
   //printf("%e\t%.15e\n",0.0,E_tot_0);
   
   FILE *fpEne;   //初期エネルギーをファイルへ書き出し.
@@ -387,7 +397,7 @@ int main(void){
       for(j=1;j<=frag[i].neighbornumber;j++){
       printf("\tneighborlist[%d]=%d\n",j,frag[i].neighborlist[j]);
       }
-    printf("i=%d\tv_ave=%f\tsigma=%f\n",i,frag[i].v_ave,frag[i].sigma);
+      printf("i=%d\tv_ave=%f\tsigma=%f\n",i,frag[i].v_ave,frag[i].sigma);
     */
     //printf("initial\tF[%d]=%e\tsigma[%d]=%e\tdt_frag[%d]=%e[yr]\tdt_[%d]=%e[yr]\n",i,frag[i].flux,i,frag[i].sigma,i,frag[i].dt_frag/2.0/M_PI,i,dt_[i]/2.0/M_PI);
 
@@ -481,6 +491,7 @@ int main(void){
 	Predictor(i,x_0,v_0,a_0,adot_0,x_p,v_p,r_p,v2_p,Dt);  //予測子 t_sysにおけるすべての粒子を計算.
       }
 
+      //CenterOfGravity(x_p,v_p,x_G,v_G,ele);  //重心計算
       
       if(Collision_Judgement(ele,x_p,abs_r,abs_r2,&i_col,&j_col)==1){  //予測子を用いた衝突判定.
 
@@ -502,6 +513,7 @@ int main(void){
 	  }
 	}
 
+	    
 	for(i=1;i<=global_n;++i){  //位置と速度を更新.
 	  for(k=1;k<=3;++k){
 	    x_0[i][k] = x_c[i][k];
@@ -522,8 +534,11 @@ int main(void){
 
 	//合体後の操作
 	Coalescence(i_col,j_col,x_0,v_0,ele);
-	
 
+
+	CenterOfGravity(x_0,v_0,x_G,v_G,ele);  //重心計算
+
+	    
 	//以下、すべての粒子の加速度などを再計算.
 	for(i=1;i<=global_n;++i){
 	  r_0[i] = RadiusFromCenter(i,x_0);  //中心星からの距離.
@@ -538,7 +553,13 @@ int main(void){
 	
 
 #if ENERGY_FILE
-	E_tot = Calculate_Energy(ele,x_0,v2_0,r_0,abs_r,abs_r2);  //エネルギー、相対距離.
+	E_tot = Calculate_Energy(ele,x_0,
+#if INDIRECT_TERM
+				 v_0,v_G,
+#else
+				 v2_0,
+#endif
+				 r_0,abs_r,abs_r2);  //エネルギー、相対距離.
 	E_tot += - dE_heat - dE_grav - dE_c;  //エネルギー補正
 	
 	
@@ -606,6 +627,9 @@ int main(void){
 	for(ite=1;ite<=ITE_MAX;++ite){  //iteration 3回.
 	  Iteration_sys(i_sys,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);  //i_sysのみ.
 	}
+
+
+	CenterOfGravity(x_c,v_c,x_G,v_G,ele);  //重心計算
 	////////////////////////////////////////////////////////////////
 
 	
@@ -647,7 +671,7 @@ int main(void){
 	}
       }
 
-
+      CenterOfGravity(x_c,v_c,x_G,v_G,ele);  //重心計算
 
 
       fpposivelo = fopen(posivelofile,"a");  //位置、速度をファイルへ書き出し.
@@ -669,7 +693,13 @@ int main(void){
 #if ENERGY_FILE
 
       E_tot = 0.0;
-      E_tot = Calculate_Energy(ele,x_c,v2_c,r_c,abs_r,abs_r2);  //エネルギー計算.
+      E_tot = Calculate_Energy(ele,x_c,
+#if INDIRECT_TERM
+			       v_c,v_G,
+#else
+			       v2_c,
+#endif
+			       r_c,abs_r,abs_r2);  //エネルギー計算.
 	
       sprintf(Ene,"%sENERGY.dat",STR(DIRECTORY));
       fpEne = fopen(Ene,"a");
@@ -753,9 +783,9 @@ int main(void){
 	  //frag[i].dt_frag = dt_[i]*100.0;  //NaN処理.
 	  printf("time=%e[yr]\tfrag[%d].neighbornumber=%d\n",t_sys/2.0/M_PI,i,frag[i].neighbornumber);
 	  /*
-	  for(j=1;j<=frag[i].neighbornumber;j++){
+	    for(j=1;j<=frag[i].neighbornumber;j++){
 	    printf("\tneighborlist[%d]=%d\n",j,frag[i].neighborlist[j]);
-	  }
+	    }
 	  */
 	  printf("i=%d\tv_ave=%f\tsigma=%f\tecc=%f\tr_c=%f\tdelta_r_out=%f\tdelta_r_in=%f\n",i,frag[i].v_ave,frag[i].sigma,ele[i].ecc,r_c[i],frag[i].delta_r_out,frag[i].delta_r_in);
 	  printf("axis=%e\tecc=%e\tinc=%e\tu=%e\tOmega=%e\tomega=%e\n",ele[i].axis,ele[i].ecc,ele[i].inc,ele[i].u,ele[i].Omega,ele[i].omega);
@@ -814,7 +844,7 @@ int main(void){
     
     
     if(fmod(step,1.0E6)==0.0){
-    //if(fmod(step,1.0E2)==0.0){
+      //if(fmod(step,1.0E2)==0.0){
       //printf("i_sys=%03d\tt=%.15e\tE=%.15e\tL=%.15e\tr_min=%.15e\n",i_sys,t_sys,E_tot,abs_L,r_min);  //全エネルギー,全角運動量.
       printf("step=%e\tN=%d\ti_sys=%03d\tdt[%03d]=%.2e[yr]\tt_sys=%.2e[yr]\n",step,global_n,i_sys,i_sys,dt_[i_sys]/2.0/M_PI,t_sys/2.0/M_PI);
     }
@@ -828,54 +858,56 @@ int main(void){
 	printf("i=%d is eliminated\tr[%d]=%e\tt_sys=%.2e[yr]\n",i,i,r_c[i],t_sys/2.0/M_PI);
 	
 	//iとglobal_n_pを入れ替える.
-	ele[0] = ele[i];  //構造体のためswap関数は使えない. 0番目の要素はコピーに使うだけ.
+	ele[0] = ele[i];  //構造体のためSwap関数は使えない. 0番目の要素はコピーに使うだけ.
 	ele[i] = ele[global_n_p];
 	ele[global_n_p] = ele[0];
 
-	swap(&t_[i],&t_[global_n_p]);
-	swap(&dt_[i],&dt_[global_n_p]);
+	Swap(&t_[i],&t_[global_n_p]);
+	Swap(&dt_[i],&dt_[global_n_p]);
 	
 	for(k=1;k<=3;++k){
-	  swap(&x_0[i][k],&x_0[global_n_p][k]);
-	  swap(&x_c[i][k],&x_c[global_n_p][k]);
+	  Swap(&x_0[i][k],&x_0[global_n_p][k]);
+	  Swap(&x_c[i][k],&x_c[global_n_p][k]);
 	  
-	  swap(&v_0[i][k],&v_0[global_n_p][k]);
-	  swap(&v_c[i][k],&v_c[global_n_p][k]);
+	  Swap(&v_0[i][k],&v_0[global_n_p][k]);
+	  Swap(&v_c[i][k],&v_c[global_n_p][k]);
 
-	  swap(&a_0[i][k],&a_0[global_n_p][k]);
-	  swap(&a[i][k],&a[global_n_p][k]);
+	  Swap(&a_0[i][k],&a_0[global_n_p][k]);
+	  Swap(&a[i][k],&a[global_n_p][k]);
 
-	  swap(&adot_0[i][k],&adot_0[global_n_p][k]);
-	  swap(&adot[i][k],&adot[global_n_p][k]);
+	  Swap(&adot_0[i][k],&adot_0[global_n_p][k]);
+	  Swap(&adot[i][k],&adot[global_n_p][k]);
 
-	  swap(&adot2_dt2[i][k],&adot2_dt2[global_n_p][k]);
-	  swap(&adot3_dt3[i][k],&adot3_dt3[global_n_p][k]);
+	  Swap(&adot2_dt2[i][k],&adot2_dt2[global_n_p][k]);
+	  Swap(&adot3_dt3[i][k],&adot3_dt3[global_n_p][k]);
 	}
-	
+
+#if N_tr != 0
 	//global_n_pとglobal_nを入れ替える.
 	ele[0] = ele[global_n_p];  //構造体のためswap関数は使えない. 0番目の要素はコピーに使うだけ.
 	ele[global_n_p] = ele[global_n];
 	ele[global_n] = ele[0];
 
-	swap(&t_[global_n_p],&t_[global_n]);
-	swap(&dt_[global_n_p],&dt_[global_n]);
+	Swap(&t_[global_n_p],&t_[global_n]);
+	Swap(&dt_[global_n_p],&dt_[global_n]);
 	
 	for(k=1;k<=3;++k){
-	  swap(&x_0[global_n_p][k],&x_0[global_n][k]);
-	  swap(&x_c[global_n_p][k],&x_c[global_n][k]);
+	  Swap(&x_0[global_n_p][k],&x_0[global_n][k]);
+	  Swap(&x_c[global_n_p][k],&x_c[global_n][k]);
 
-	  swap(&v_0[global_n_p][k],&v_0[global_n][k]);
-	  swap(&v_c[global_n_p][k],&v_c[global_n][k]);
+	  Swap(&v_0[global_n_p][k],&v_0[global_n][k]);
+	  Swap(&v_c[global_n_p][k],&v_c[global_n][k]);
 
-	  swap(&a_0[global_n_p][k],&a_0[global_n][k]);
-	  swap(&a[global_n_p][k],&a[global_n][k]);
+	  Swap(&a_0[global_n_p][k],&a_0[global_n][k]);
+	  Swap(&a[global_n_p][k],&a[global_n][k]);
 
-	  swap(&adot_0[global_n_p][k],&adot_0[global_n][k]);
-	  swap(&adot[global_n_p][k],&adot[global_n][k]);
+	  Swap(&adot_0[global_n_p][k],&adot_0[global_n][k]);
+	  Swap(&adot[global_n_p][k],&adot[global_n][k]);
 
-	  swap(&adot2_dt2[global_n_p][k],&adot2_dt2[global_n][k]);
-	  swap(&adot3_dt3[global_n_p][k],&adot3_dt3[global_n][k]);
+	  Swap(&adot2_dt2[global_n_p][k],&adot2_dt2[global_n][k]);
+	  Swap(&adot3_dt3[global_n_p][k],&adot3_dt3[global_n][k]);
 	}
+#endif
 	
 	//global_nとglobal_n_pを1つ減らす.
 	global_n--;
@@ -926,12 +958,11 @@ int main(void){
     }
     
     
-    
     step+=1.0;
   }  //t loop
   
 
-  
+
 #if ENERGY_FILE
   printf("dt_[i_sys]=%e\tE_error=%.15e\tL_error=%.15e\n",dt_[i_sys],(E_tot-E_tot_0)/fabs(E_tot_0),(abs_L-abs_L_0)/abs_L_0);
 #endif
@@ -947,3 +978,4 @@ int main(void){
   printf("dt_ene=%e[yr]\n",DT_ENE/2.0/M_PI);
 #endif
 }
+    
