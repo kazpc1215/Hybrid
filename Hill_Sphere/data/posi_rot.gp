@@ -11,13 +11,15 @@ set ytics font "Helvetica,20"
 set lmargin 10
 set bmargin 5
 set key right font "Helvetica,20"
+
+
 n=1700
 while (n<=2530){
 
 #set title sprintf("b=%1.3f",n/1000.0)
 set label 1 sprintf("b=%1.3f",n/1000.0) at -1,1 font "Helvetica,20"
 
-set term pngcairo size 1080,1080
+set term pngcairo size 600,600
 set out sprintf("../image/b%4d_dt1E-2yr_eta5E-2_orbit.png",n)
 
 #p sprintf("./b%4d_dt1E-2yr_eta5E-2/Planetesimal_posi_rot.dat",n) u ((($2)-($8))/($13)):((($3)-($9))/($13)) w l,\
@@ -39,4 +41,5 @@ set output
 
 n = n+1
 }
+
 set term aqua
