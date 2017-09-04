@@ -52,6 +52,7 @@ p sprintf("./b%4d_dt1E-3yr_eta1E-3/Planetesimal_posi_rot.dat",n) u ((($2)-($8))/
 sprintf("< tail -1 ./b%4d_dt1E-3yr_eta1E-3/Planetesimal_posi_rot.dat",n) u ((($2)-($8))/($13)):((($3)-($9))/($13)):(($7)/($13)) w circle t "R_{Planetesimal}",\
 sprintf("< head -2 ./b%4d_dt1E-3yr_eta1E-3/Planetesimal_posi_rot.dat",n) u ((($8)-($8))/($13)):((($9)-($9))/($13)):(($13)/($13)) w circle t "R_{Planet}"
 
+set output
 
 
 
