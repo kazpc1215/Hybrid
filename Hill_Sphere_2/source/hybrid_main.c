@@ -39,7 +39,8 @@ int main(void){
 
     double abs_a[N_p+N_tr+1]={},abs_adot[N_p+N_tr+1]={},abs_adot2[N_p+N_tr+1]={},abs_adot3[N_p+N_tr+1]={};
   
-    double E_tot=0.0,E_tot_0=0.0,dE_heat=0.0,dE_grav=0.0,dE_c=0.0;
+    double E_tot=0.0,E_tot_0=0.0;
+    double dE_heat=0.0,dE_grav=0.0,dE_c=0.0,v_imp=0.0;
     double abs_L=0.0,abs_L_0=0.0;
 
     double P[N_p+N_tr+1][4]={},Q[N_p+N_tr+1][4]={};
@@ -69,8 +70,10 @@ int main(void){
 #ifdef DIRECTORY_FILE
     char mkdir_command[200]={};
     char dirname[200]={};
-    sprintf(dirname,"../data/b%4.0f_%s/",b*1E3,STR(DIRECTORY_FILE));
-    sprintf(mkdir_command,"mkdir %s",dirname);
+    sprintf(dirname,"../data/%s/",STR(DIRECTORY_FILE));
+    mkdir(dirname, 0755);  //大きなディレクトリを作成. 755 = rwxr-xr-x.    
+    sprintf(dirname,"../data/%s/b%4.0f_%s/",STR(DIRECTORY_FILE),b*1E3,STR(DIRECTORY_FILE));
+    sprintf(mkdir_command,"mkdir %s",dirname);  //小さなディレクトリを作成.
     system(mkdir_command);
 
     printf("making directory (%s)\n",dirname);
@@ -620,215 +623,215 @@ int main(void){
       if(t_sys<t_ene[interval]){  
 #else
       
-	while(t_sys<=T_MAX){
+    while(t_sys<=T_MAX){
     
-	  if(t_sys<t_ene){
-      
+      if(t_sys<t_ene){
+	
 #endif
+	
+	//individual timestep
+	
+	
+	
+	for(i=1;i<=global_n;++i){ 
+	  Dt[i] = t_sys - t_[i]; 
+	  Predictor(i,x_0,v_0,a_0,adot_0,x_p,v_p,r_p,v2_p,Dt);  //予測子 t_sysにおけるすべての粒子を計算.
+	}
 
-	    //individual timestep
-
-     
-
-	    for(i=1;i<=global_n;++i){ 
-	      Dt[i] = t_sys - t_[i]; 
-	      Predictor(i,x_0,v_0,a_0,adot_0,x_p,v_p,r_p,v2_p,Dt);  //予測子 t_sysにおけるすべての粒子を計算.
-	    }
-
-	    //CenterOfGravity(x_p,v_p,x_G,v_G,ele);  //重心計算
+	//CenterOfGravity(x_p,v_p,x_G,v_G,ele);  //重心計算
       
-	    if(Collision_Judgement(ele,x_p,abs_r,abs_r2,&i_col,&j_col)==1){  //予測子を用いた衝突判定.
+	if(Collision_Judgement(ele,x_p,abs_r,abs_r2,&i_col,&j_col)==1){  //予測子を用いた衝突判定.
 
-	      /////////////////////////衝突した場合/////////////////////////
-	      printf("collision\ti=%d, j=%d\n",i_col,j_col);
-	      printf("r_ij=%.15e\tradius[%d]+radius[%d]=%.15e\n",abs_r[j_col],i_col,j_col,ele[i_col].radius + ele[j_col].radius);
+	  /////////////////////////衝突した場合/////////////////////////
+	  printf("collision\ti=%d, j=%d\n",i_col,j_col);
+	  printf("r_ij=%.15e\tradius[%d]+radius[%d]=%.15e\n",abs_r[j_col],i_col,j_col,ele[i_col].radius + ele[j_col].radius);
 
-	      for(i=1;i<=global_n;++i){
-		dt_[i] = Dt[i];  //t_sysで揃えるためDt[i]を使う.
-	      }
+	  for(i=1;i<=global_n;++i){
+	    dt_[i] = Dt[i];  //t_sysで揃えるためDt[i]を使う.
+	  }
 	
-	      for(i=1;i<=global_n;++i){
-		Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);  //修正子 すべての粒子.
-	      }
+	  for(i=1;i<=global_n;++i){
+	    Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);  //修正子 すべての粒子.
+	  }
 
-	      for(ite=1;ite<=ITE_MAX;++ite){  //iteration 3回.
-		for(i=1;i<=global_n;++i){
-		  Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);  //すべての粒子.
-		}
-	      }
+	  for(ite=1;ite<=ITE_MAX;++ite){  //iteration 3回.
+	    for(i=1;i<=global_n;++i){
+	      Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);  //すべての粒子.
+	    }
+	  }
 
 	    
-	      for(i=1;i<=global_n;++i){  //位置と速度を更新.
-		for(k=1;k<=3;++k){
-		  x_0[i][k] = x_c[i][k];
-		  v_0[i][k] = v_c[i][k];
-		}
-	      }
+	  for(i=1;i<=global_n;++i){  //位置と速度を更新.
+	    for(k=1;k<=3;++k){
+	      x_0[i][k] = x_c[i][k];
+	      v_0[i][k] = v_c[i][k];
+	    }
+	  }
 
-	      //新しい合体粒子を作る. 0番目の要素はコピーに使うだけ.
-	      ele[0].mass = ele[i_col].mass + ele[j_col].mass;
-	      for(k=1;k<=3;++k){
-		x_0[0][k] = (ele[i_col].mass*x_0[i_col][k] + ele[j_col].mass*x_0[j_col][k])/ele[0].mass;
-		v_0[0][k] = (ele[i_col].mass*v_0[i_col][k] + ele[j_col].mass*v_0[j_col][k])/ele[0].mass;
-	      }
+	  //新しい合体粒子を作る. 0番目の要素はコピーに使うだけ.
+	  ele[0].mass = ele[i_col].mass + ele[j_col].mass;
+	  for(k=1;k<=3;++k){
+	    x_0[0][k] = (ele[i_col].mass*x_0[i_col][k] + ele[j_col].mass*x_0[j_col][k])/ele[0].mass;
+	    v_0[0][k] = (ele[i_col].mass*v_0[i_col][k] + ele[j_col].mass*v_0[j_col][k])/ele[0].mass;
+	  }
 
-	      //衝突合体する際のエネルギーの補正量を計算
-	      Energy_Correction(i_col,j_col,x_0,v_0,ele,&dE_heat,&dE_grav,&dE_c);
+	  //衝突合体する際のエネルギーの補正量を計算
+	  Energy_Correction(i_col,j_col,x_0,v_0,ele,&dE_heat,&dE_grav,&dE_c,&v_imp);
 	
 
-	      //合体後の操作
-	      Coalescence(i_col,j_col,x_0,v_0,ele);
+	  //合体後の操作
+	  Coalescence(i_col,j_col,x_0,v_0,ele);
 
 
-	      CenterOfGravity(x_0,v_0,x_G,v_G,ele);  //重心計算
+	  CenterOfGravity(x_0,v_0,x_G,v_G,ele);  //重心計算
 
 	    
-	      //以下、すべての粒子の加速度などを再計算.
-	      for(i=1;i<=global_n;++i){
-		r_0[i] = RadiusFromCenter(i,x_0);  //中心星からの距離.
-		r_dot_v[i] = InnerProduct(i,x_0,v_0);  //r_i,v_iの内積.
-		v2_0[i] = SquareOfVelocity(i,v_0);  //速度の2乗.
-	      }
+	  //以下、すべての粒子の加速度などを再計算.
+	  for(i=1;i<=global_n;++i){
+	    r_0[i] = RadiusFromCenter(i,x_0);  //中心星からの距離.
+	    r_dot_v[i] = InnerProduct(i,x_0,v_0);  //r_i,v_iの内積.
+	    v2_0[i] = SquareOfVelocity(i,v_0);  //速度の2乗.
+	  }
 
-	      for(i=1;i<=global_n;++i){
-		Calculate_OrbitalElements(i,x_0,v_0,ele,P,Q,r_0,v2_0,r_dot_v);
-	      }
+	  for(i=1;i<=global_n;++i){
+	    Calculate_OrbitalElements(i,x_0,v_0,ele,P,Q,r_0,v2_0,r_dot_v);
+	  }
 
 	
 
 #if ENERGY_FILE
-	      E_tot = Calculate_Energy(ele,x_0,
+	  E_tot = Calculate_Energy(ele,x_0,
 #if INDIRECT_TERM
-				       v_0,v_G,
+				   v_0,v_G,
 #else
-				       v2_0,
+				   v2_0,
 #endif
-				       r_0,abs_r,abs_r2);  //エネルギー、相対距離.
-	      E_tot += - dE_heat - dE_grav - dE_c;  //エネルギー補正
+				   r_0,abs_r,abs_r2);  //エネルギー、相対距離.
+	  E_tot += - dE_heat - dE_grav - dE_c;  //エネルギー補正
 	
 	
 	
 	      
-	      fpEne = fopen(Ene,"a");
-	      if(fpEne==NULL){
-		printf("Ene error\n");
-		return -1;
-	      }
-	      fprintf(fpEne,"#collision occur\t%e[yr]\n",t_sys/2.0/M_PI);
-	      fprintf(fpEne,"#dE_heat=%e\tdE_grav=%e\tdE_c=%e\n",dE_heat,dE_grav,dE_c);
-	      fprintf(fpEne,"%e\t%.15e\t%.15e\n",t_sys,E_tot,(E_tot-E_tot_0)/fabs(E_tot_0));
-	      fclose(fpEne);
+	  fpEne = fopen(Ene,"a");
+	  if(fpEne==NULL){
+	    printf("Ene error\n");
+	    return -1;
+	  }
+	  fprintf(fpEne,"#collision occur\t%e[yr]\n",t_sys/2.0/M_PI);
+	  fprintf(fpEne,"#dE_heat=%e\tdE_grav=%e\tdE_c=%e\tv_imp=%e\n",dE_heat,dE_grav,dE_c,v_imp);
+	  fprintf(fpEne,"%e\t%.15e\t%.15e\n",t_sys,E_tot,(E_tot-E_tot_0)/fabs(E_tot_0));
+	  fclose(fpEne);
 
-	      abs_L = AngularMomentum(i,ele,x_0,v_0);
+	  abs_L = AngularMomentum(i,ele,x_0,v_0);
 #endif
 
-	      for(i=1;i<=global_n;++i){
-		for(j=1;j<=global_n;++j){
-		  if(i!=j){
-		    abs_r2[j] = SquareOfRelativeDistance(i,j,x_0); //絶対値2乗.
-		    abs_v2[j] = SquareOfRelativeVelocity(i,j,v_0);
-		    r_dot_v_ij[j] = RelativeInnerProduct(i,j,x_0,v_0);  //r_ij,v_ijの内積.
+	  for(i=1;i<=global_n;++i){
+	    for(j=1;j<=global_n;++j){
+	      if(i!=j){
+		abs_r2[j] = SquareOfRelativeDistance(i,j,x_0); //絶対値2乗.
+		abs_v2[j] = SquareOfRelativeVelocity(i,j,v_0);
+		r_dot_v_ij[j] = RelativeInnerProduct(i,j,x_0,v_0);  //r_ij,v_ijの内積.
 	    
-		    abs_r[j] = sqrt(abs_r2[j]); //絶対値.
-		    abs_v[j] = sqrt(abs_v2[j]);
+		abs_r[j] = sqrt(abs_r2[j]); //絶対値.
+		abs_v[j] = sqrt(abs_v2[j]);
 		
-		  }
-		}  //j loop
-	      }  //i loop
-	
-	
-	      for(i=1;i<=global_n;++i){
-		for(k=1;k<=3;++k){
-		  a_0[i][k] = All_Acceleration(i,k,ele,x_0,r_0,abs_r2);  //加速度.
-		  adot_0[i][k] = All_dAcceleration(i,k,ele,x_0,v_0,r_dot_v,r_dot_v_ij,r_0,abs_r2);
-		  //printf("a_0[%d][%d]=%f\tadot_0[%d][%d]=%f\n",i,k,a_0[i][k],i,k,adot_0[i][k]);
-		}
 	      }
+	    }  //j loop
+	  }  //i loop
 	
 	
-	      //exit(-1);
+	  for(i=1;i<=global_n;++i){
+	    for(k=1;k<=3;++k){
+	      a_0[i][k] = All_Acceleration(i,k,ele,x_0,r_0,abs_r2);  //加速度.
+	      adot_0[i][k] = All_dAcceleration(i,k,ele,x_0,v_0,r_dot_v,r_dot_v_ij,r_0,abs_r2);
+	      //printf("a_0[%d][%d]=%f\tadot_0[%d][%d]=%f\n",i,k,a_0[i][k],i,k,adot_0[i][k]);
+	    }
+	  }
+	
+	
+	  //exit(-1);
 
-	      //////////////////////////////////////////////////////////////
+	  //////////////////////////////////////////////////////////////
 
 	
+	}else{
+
+	  /////////////////////////衝突しない場合/////////////////////////
+	  for(i=1;i<=global_n;++i){
+	    if(i==i_sys){  
+	      Corrector_sys(i_sys,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);  //修正子. i_sys のみ.
 	    }else{
-
-	      /////////////////////////衝突しない場合/////////////////////////
-	      for(i=1;i<=global_n;++i){
-		if(i==i_sys){  
-		  Corrector_sys(i_sys,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);  //修正子. i_sys のみ.
-		}else{
-		  for(k=1;k<=3;++k){  //i_sys以外の粒子は予測子を使う.
-		    x_c[i][k] = x_p[i][k];
-		    v_c[i][k] = v_p[i][k];
-		  }
-		  r_c[i] = RadiusFromCenter(i,x_c);  //中心からの距離.
-		  v2_c[i] = SquareOfVelocity(i,v_c);  //速度の2乗.
-		}
+	      for(k=1;k<=3;++k){  //i_sys以外の粒子は予測子を使う.
+		x_c[i][k] = x_p[i][k];
+		v_c[i][k] = v_p[i][k];
 	      }
+	      r_c[i] = RadiusFromCenter(i,x_c);  //中心からの距離.
+	      v2_c[i] = SquareOfVelocity(i,v_c);  //速度の2乗.
+	    }
+	  }
 
 	     
-	      for(ite=1;ite<=ITE_MAX;++ite){  //iteration 3回.
-		Iteration_sys(i_sys,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);  //i_sysのみ.
-	      }
+	  for(ite=1;ite<=ITE_MAX;++ite){  //iteration 3回.
+	    Iteration_sys(i_sys,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);  //i_sysのみ.
+	  }
 
 
-	      CenterOfGravity(x_c,v_c,x_G,v_G,ele);  //重心計算
-	      ////////////////////////////////////////////////////////////////
+	  CenterOfGravity(x_c,v_c,x_G,v_G,ele);  //重心計算
+	  ////////////////////////////////////////////////////////////////
 
 	
-	    }
+	}
 
       
 	
-	  }else{  
-	    //t_ene[interval] ですべての粒子をそろえ、エネルギー、軌道要素等計算.
+      }else{  
+	//t_ene[interval] ですべての粒子をそろえ、エネルギー、軌道要素等計算.
 
 #if DT_LOG == 1
-	    t_sys = t_ene[interval];
+	t_sys = t_ene[interval];
 #else
-	    t_sys = t_ene;
+	t_sys = t_ene;
 #endif
       
-	    for(i=1;i<=global_n;++i){
+	for(i=1;i<=global_n;++i){
 	
 #if DT_LOG == 1
-	      Dt[i] = t_ene[interval] - t_[i];
+	  Dt[i] = t_ene[interval] - t_[i];
 #else
-	      Dt[i] = t_ene - t_[i];
+	  Dt[i] = t_ene - t_[i];
 #endif
 	
-	      dt_[i] = Dt[i];
-	    }
+	  dt_[i] = Dt[i];
+	}
 
-	    for(i=1;i<=global_n;++i){ 	  
-	      Predictor(i,x_0,v_0,a_0,adot_0,x_p,v_p,r_p,v2_p,Dt);  //予測子. t_sysにおけるすべての粒子を計算.
-	    }
+	for(i=1;i<=global_n;++i){ 	  
+	  Predictor(i,x_0,v_0,a_0,adot_0,x_p,v_p,r_p,v2_p,Dt);  //予測子. t_sysにおけるすべての粒子を計算.
+	}
 	
-	    for(i=1;i<=global_n;++i){
-	      Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);
-	    }
+	for(i=1;i<=global_n;++i){
+	  Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);
+	}
 
-	    for(ite=1;ite<=ITE_MAX;++ite){  //iteration 3回.
-	      for(i=1;i<=global_n;++i){	  
-		Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);
-	      }
-	    }
+	for(ite=1;ite<=ITE_MAX;++ite){  //iteration 3回.
+	  for(i=1;i<=global_n;++i){	  
+	    Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);
+	  }
+	}
 
-	    CenterOfGravity(x_c,v_c,x_G,v_G,ele);  //重心計算
+	CenterOfGravity(x_c,v_c,x_G,v_G,ele);  //重心計算
 
 
-	    fpposivelo = fopen(posivelofile,"a");  //位置、速度をファイルへ書き出し.
-	    if(fpposivelo==NULL){
-	      printf("posivelofile error\n");
-	      return -1;
-	    }
-	    for(i=1;i<=global_n;i++){
-	      fprintf(fpposivelo,"%e\t%4d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\n",t_sys/2.0/M_PI,i,x_c[i][1],x_c[i][2],x_c[i][3],r_c[i],sqrt(x_c[i][1]*x_c[i][1]+x_c[i][2]*x_c[i][2]),v_c[i][1],v_c[i][2],v_c[i][3],sqrt(v_c[i][1]*v_c[i][1]+v_c[i][2]*v_c[i][2]+v_c[i][3]*v_c[i][3]));
-	    }
-	    fprintf(fpposivelo,"\n\n");
+	fpposivelo = fopen(posivelofile,"a");  //位置、速度をファイルへ書き出し.
+	if(fpposivelo==NULL){
+	  printf("posivelofile error\n");
+	  return -1;
+	}
+	for(i=1;i<=global_n;i++){
+	  fprintf(fpposivelo,"%e\t%4d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\n",t_sys/2.0/M_PI,i,x_c[i][1],x_c[i][2],x_c[i][3],r_c[i],sqrt(x_c[i][1]*x_c[i][1]+x_c[i][2]*x_c[i][2]),v_c[i][1],v_c[i][2],v_c[i][3],sqrt(v_c[i][1]*v_c[i][1]+v_c[i][2]*v_c[i][2]+v_c[i][3]*v_c[i][3]));
+	}
+	fprintf(fpposivelo,"\n\n");
   
-	    fclose(fpposivelo);
+	fclose(fpposivelo);
 
 
 
@@ -836,25 +839,25 @@ int main(void){
 
 #if ENERGY_FILE
 
-	    E_tot = 0.0;
-	    E_tot = Calculate_Energy(ele,x_c,
+	E_tot = 0.0;
+	E_tot = Calculate_Energy(ele,x_c,
 #if INDIRECT_TERM
-				     v_c,v_G,
+				 v_c,v_G,
 #else
-				     v2_c,
+				 v2_c,
 #endif
-				     r_c,abs_r,abs_r2);  //エネルギー計算.
+				 r_c,abs_r,abs_r2);  //エネルギー計算.
 	
 	    
-	    fpEne = fopen(Ene,"a");
-	    if(fpEne==NULL){
-	      printf("Ene error\n");
-	      return -1;
-	    }
-	    fprintf(fpEne,"%e\t%.15e\t%.15e\n",t_sys,E_tot,(E_tot-E_tot_0)/fabs(E_tot_0));
-	    fclose(fpEne);
+	fpEne = fopen(Ene,"a");
+	if(fpEne==NULL){
+	  printf("Ene error\n");
+	  return -1;
+	}
+	fprintf(fpEne,"%e\t%.15e\t%.15e\n",t_sys,E_tot,(E_tot-E_tot_0)/fabs(E_tot_0));
+	fclose(fpEne);
 
-	    abs_L = AngularMomentum(i,ele,x_c,v_c);
+	abs_L = AngularMomentum(i,ele,x_c,v_c);
 #endif
 	
 
@@ -863,130 +866,130 @@ int main(void){
       
 #if ORBITALELEMENTS_FILE
       
-	    for(i=1;i<=global_n;++i){
-	      Calculate_OrbitalElements(i,x_c,v_c,ele,P,Q,r_c,v2_c,r_dot_v);  //軌道要素計算. ファイルへ書き出し.
-	      sprintf(orbit,"%s%s.dat",
+	for(i=1;i<=global_n;++i){
+	  Calculate_OrbitalElements(i,x_c,v_c,ele,P,Q,r_c,v2_c,r_dot_v);  //軌道要素計算. ファイルへ書き出し.
+	  sprintf(orbit,"%s%s.dat",
 #ifdef DIRECTORY
-		      STR(DIRECTORY)
+		  STR(DIRECTORY)
 #else
 #ifdef DIRECTORY_FILE
-		      dirname
+		  dirname
 #endif
 #endif
-		      ,ele[i].name);
-	      fporbit = fopen(orbit,"a");
-	      if(fporbit==NULL){
-		printf("orbit error\n");
-		return -1;
-	      }
+		  ,ele[i].name);
+	  fporbit = fopen(orbit,"a");
+	  if(fporbit==NULL){
+	    printf("orbit error\n");
+	    return -1;
+	  }
 	
-	      fprintf(fporbit,"%e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\n",t_sys,ele[i].ecc,ele[i].axis,ele[i].u,ele[i].inc,ele[i].Omega,ele[i].omega,ele[i].r_h,ele[i].radius,ele[i].mass);
+	  fprintf(fporbit,"%e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\n",t_sys,ele[i].ecc,ele[i].axis,ele[i].u,ele[i].inc,ele[i].Omega,ele[i].omega,ele[i].r_h,ele[i].radius,ele[i].mass);
 	
-	      fclose(fporbit);
-	    }
+	  fclose(fporbit);
+	}
 #endif
 
 
 #if DT_LOG == 1
-	    interval++;
+	interval++;
 #else
-	    t_ene += DT_ENE;
+	t_ene += DT_ENE;
 #endif
       
-	  }
+      }
     
-	  /*for(i=1;i<=N;++i){
-	    printf("%s\tx_c[%d][1]=%f\tx_c[%d][2]=%f\tx_c[%d][3]=%f\n",ele[i].name,i,x_c[i][1],i,x_c[i][2],i,x_c[i][3]);
-	    printf("%s\tv_c[%d][1]=%f\tv_c[%d][2]=%f\tv_c[%d][3]=%f\n",ele[i].name,i,v_c[i][1],i,v_c[i][2],i,v_c[i][3]);
-	    }*/
+      /*for(i=1;i<=N;++i){
+	printf("%s\tx_c[%d][1]=%f\tx_c[%d][2]=%f\tx_c[%d][3]=%f\n",ele[i].name,i,x_c[i][1],i,x_c[i][2],i,x_c[i][3]);
+	printf("%s\tv_c[%d][1]=%f\tv_c[%d][2]=%f\tv_c[%d][3]=%f\n",ele[i].name,i,v_c[i][1],i,v_c[i][2],i,v_c[i][3]);
+	}*/
 
 
 
     
 #if FRAGMENTATION
-	  //start = clock();
+      //start = clock();
     
     
-	  mass_tot_all = 0.0;
-	  for(i=global_n_p+1;i<=global_n;++i){    
+      mass_tot_all = 0.0;
+      for(i=global_n_p+1;i<=global_n;++i){    
       
-	    //if(t_sys>frag[i].t_frag){
-	    if(t_[i]>frag[i].t_frag){
-	      frag[i].t_frag += frag[i].dt_frag;
-	      frag[i].fragtimes++;
+	//if(t_sys>frag[i].t_frag){
+	if(t_[i]>frag[i].t_frag){
+	  frag[i].t_frag += frag[i].dt_frag;
+	  frag[i].fragtimes++;
 
-	      Calculate_OrbitalElements(i,x_c,v_c,ele,P,Q,r_c,v2_c,r_dot_v);  //軌道要素計算.
+	  Calculate_OrbitalElements(i,x_c,v_c,ele,P,Q,r_c,v2_c,r_dot_v);  //軌道要素計算.
 	
-	      NeighborSearch(i,ele,frag,x_c);  //近傍(扇形領域に入った)粒子探索.
+	  NeighborSearch(i,ele,frag,x_c);  //近傍(扇形領域に入った)粒子探索.
 	
 	
-	      //printf("i=%d\tneighbornumber=%d\n",i,frag[i].neighbornumber);
-	      /*
-		for(j=1;j<=frag[i].neighbornumber;j++){
-		printf("\tneighborlist[%d]=%d\n",j,frag[i].neighborlist[j]);
-		}
-	      */
-	      //printf("i=%d\tv_ave=%f\tsigma=%f\tecc=%f\tr_c=%f\tdelta_r=%f\n",i,frag[i].v_ave,frag[i].sigma,ele[i].ecc,r_c[i],frag[i].delta_r);
+	  //printf("i=%d\tneighbornumber=%d\n",i,frag[i].neighbornumber);
+	  /*
+	    for(j=1;j<=frag[i].neighbornumber;j++){
+	    printf("\tneighborlist[%d]=%d\n",j,frag[i].neighborlist[j]);
+	    }
+	  */
+	  //printf("i=%d\tv_ave=%f\tsigma=%f\tecc=%f\tr_c=%f\tdelta_r=%f\n",i,frag[i].v_ave,frag[i].sigma,ele[i].ecc,r_c[i],frag[i].delta_r);
 
-	      MassFlux(i,ele,frag,para);  //質量フラックス計算.
-	      frag[i].dt_frag = Depletion_Time(i,frag);  //統計的計算のタイムスケール.
+	  MassFlux(i,ele,frag,para);  //質量フラックス計算.
+	  frag[i].dt_frag = Depletion_Time(i,frag);  //統計的計算のタイムスケール.
 
-	      if(isnan(frag[i].dt_frag)){
-		//frag[i].dt_frag = dt_[i]*100.0;  //NaN処理.
-		printf("time=%e[yr]\tfrag[%d].neighbornumber=%d\n",t_sys/2.0/M_PI,i,frag[i].neighbornumber);
-		/*
-		  for(j=1;j<=frag[i].neighbornumber;j++){
-		  printf("\tneighborlist[%d]=%d\n",j,frag[i].neighborlist[j]);
-		  }
-		*/
-		printf("i=%d\tv_ave=%f\tsigma=%f\tecc=%f\tr_c=%f\tdelta_r_out=%f\tdelta_r_in=%f\n",i,frag[i].v_ave,frag[i].sigma,ele[i].ecc,r_c[i],frag[i].delta_r_out,frag[i].delta_r_in);
-		printf("axis=%e\tecc=%e\tinc=%e\tu=%e\tOmega=%e\tomega=%e\n",ele[i].axis,ele[i].ecc,ele[i].inc,ele[i].u,ele[i].Omega,ele[i].omega);
-		printf("x=%f\ty=%f\tz=%f\n",x_c[i][1],x_c[i][2],x_c[i][3]);
-		return -1;
+	  if(isnan(frag[i].dt_frag)){
+	    //frag[i].dt_frag = dt_[i]*100.0;  //NaN処理.
+	    printf("time=%e[yr]\tfrag[%d].neighbornumber=%d\n",t_sys/2.0/M_PI,i,frag[i].neighbornumber);
+	    /*
+	      for(j=1;j<=frag[i].neighbornumber;j++){
+	      printf("\tneighborlist[%d]=%d\n",j,frag[i].neighborlist[j]);
 	      }
-	      //frag[i].fragtimes = 0;
-	
-	
-	      ele[i].mass = MassDepletion(i,ele);  //トレーサー質量の減少を計算.
-	
-	      //printf("F[%d]=%e\tsigma[%d]=%e\tdt_frag[%d]=%e[yr]\tdt_[%d]=%e[yr]\tr_c[%d]=%f\n",i,frag[i].flux,i,frag[i].sigma,i,frag[i].dt_frag/2.0/M_PI,i,dt_[i]/2.0/M_PI,i,r_c[i]);
-
-	    }
-	    mass_tot_all += ele[i].mass;
+	    */
+	    printf("i=%d\tv_ave=%f\tsigma=%f\tecc=%f\tr_c=%f\tdelta_r_out=%f\tdelta_r_in=%f\n",i,frag[i].v_ave,frag[i].sigma,ele[i].ecc,r_c[i],frag[i].delta_r_out,frag[i].delta_r_in);
+	    printf("axis=%e\tecc=%e\tinc=%e\tu=%e\tOmega=%e\tomega=%e\n",ele[i].axis,ele[i].ecc,ele[i].inc,ele[i].u,ele[i].Omega,ele[i].omega);
+	    printf("x=%f\ty=%f\tz=%f\n",x_c[i][1],x_c[i][2],x_c[i][3]);
+	    return -1;
 	  }
+	  //frag[i].fragtimes = 0;
+	
+	
+	  ele[i].mass = MassDepletion(i,ele);  //トレーサー質量の減少を計算.
+	
+	  //printf("F[%d]=%e\tsigma[%d]=%e\tdt_frag[%d]=%e[yr]\tdt_[%d]=%e[yr]\tr_c[%d]=%f\n",i,frag[i].flux,i,frag[i].sigma,i,frag[i].dt_frag/2.0/M_PI,i,dt_[i]/2.0/M_PI,i,r_c[i]);
+
+	}
+	mass_tot_all += ele[i].mass;
+      }
 
 
     
-	  //printf("t=%e\tmass_tot=%.15f\tM_TOT=%.15e\n",t_sys,mass_tot,M_TOT);		
-	  //printf("t_sys=%e[yr]\tmass[1]=%e\n",t_sys/2.0/M_PI,ele[1].mass);
+      //printf("t=%e\tmass_tot=%.15f\tM_TOT=%.15e\n",t_sys,mass_tot,M_TOT);		
+      //printf("t_sys=%e[yr]\tmass[1]=%e\n",t_sys/2.0/M_PI,ele[1].mass);
 	
-	  //end = clock();
+      //end = clock();
 	
-	  //printf("t=%e[yr]\tfrag calculation time = %f [sec]\n",t_sys/2.0/M_PI,(double)(end-start)/CLOCKS_PER_SEC);
+      //printf("t=%e[yr]\tfrag calculation time = %f [sec]\n",t_sys/2.0/M_PI,(double)(end-start)/CLOCKS_PER_SEC);
 	
 
-	  if(t_sys>t_check){
-	    fpfrag = fopen(fragfile,"a");  //総質量をファイルへ書き出し.
-	    if(fpfrag==NULL){
-	      printf("fragfile error\n");
-	      return -1;
-	    }
-	    fprintf(fpfrag,"%e\t%.15f\t%.15f\n",t_sys/2.0/M_PI,mass_tot_all,M_TOT);
-	    fclose(fpfrag);
+      if(t_sys>t_check){
+	fpfrag = fopen(fragfile,"a");  //総質量をファイルへ書き出し.
+	if(fpfrag==NULL){
+	  printf("fragfile error\n");
+	  return -1;
+	}
+	fprintf(fpfrag,"%e\t%.15f\t%.15f\n",t_sys/2.0/M_PI,mass_tot_all,M_TOT);
+	fclose(fpfrag);
 
-	    fpposimass = fopen(posimassfile,"a");  //位置、質量などをファイルへ書き出し.
-	    if(fpposimass==NULL){
-	      printf("posimassfile error\n");
-	      return -1;
-	    }
-	    for(i=1;i<=global_n;i++){
-	      fprintf(fpposimass,"%e\t%04d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%d\n",t_sys/2.0/M_PI,i,x_c[i][1],x_c[i][2],x_c[i][3],r_c[i],sqrt(x_c[i][1]*x_c[i][1]+x_c[i][2]*x_c[i][2]),ele[i].mass,frag[i].delta_r_out,frag[i].delta_r_in,frag[i].sigma,frag[i].n_s,frag[i].neighbornumber);
-	    }
-	    fprintf(fpposimass,"\n\n");
-	    fclose(fpposimass);
+	fpposimass = fopen(posimassfile,"a");  //位置、質量などをファイルへ書き出し.
+	if(fpposimass==NULL){
+	  printf("posimassfile error\n");
+	  return -1;
+	}
+	for(i=1;i<=global_n;i++){
+	  fprintf(fpposimass,"%e\t%04d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%d\n",t_sys/2.0/M_PI,i,x_c[i][1],x_c[i][2],x_c[i][3],r_c[i],sqrt(x_c[i][1]*x_c[i][1]+x_c[i][2]*x_c[i][2]),ele[i].mass,frag[i].delta_r_out,frag[i].delta_r_in,frag[i].sigma,frag[i].n_s,frag[i].neighbornumber);
+	}
+	fprintf(fpposimass,"\n\n");
+	fclose(fpposimass);
       
-	    t_check *= sqrt(sqrt(sqrt(10.0)));  //logでは10を8分割.
-	  }
+	t_check *= sqrt(sqrt(sqrt(10.0)));  //logでは10を8分割.
+      }
 
     
 #endif
@@ -995,196 +998,196 @@ int main(void){
 
     
 #if POSITION_ROT_FILE
-	  if((i_col == 0) && (j_col == 0)){  //衝突しない場合.
-	    r_xy[PLANET_NO] = sqrt(x_c[PLANET_NO][1]*x_c[PLANET_NO][1]+x_c[PLANET_NO][2]*x_c[PLANET_NO][2]);
-	    r_xy[PLANETESIMAL_NO] = sqrt(x_c[PLANETESIMAL_NO][1]*x_c[PLANETESIMAL_NO][1]+x_c[PLANETESIMAL_NO][2]*x_c[PLANETESIMAL_NO][2]);
-	    theta = atan2(x_c[PLANET_NO][2],x_c[PLANET_NO][1]);
+      if((i_col == 0) && (j_col == 0)){  //衝突しない場合.
+	r_xy[PLANET_NO] = sqrt(x_c[PLANET_NO][1]*x_c[PLANET_NO][1]+x_c[PLANET_NO][2]*x_c[PLANET_NO][2]);
+	r_xy[PLANETESIMAL_NO] = sqrt(x_c[PLANETESIMAL_NO][1]*x_c[PLANETESIMAL_NO][1]+x_c[PLANETESIMAL_NO][2]*x_c[PLANETESIMAL_NO][2]);
+	theta = atan2(x_c[PLANET_NO][2],x_c[PLANET_NO][1]);
       
-	    x_rot[PLANETESIMAL_NO][1] = x_c[PLANETESIMAL_NO][1];
-	    x_rot[PLANETESIMAL_NO][2] = x_c[PLANETESIMAL_NO][2];
-	    Rotation_3D_zaxis(PLANETESIMAL_NO,x_rot,-theta);
-      
-      
-	    x_rot[PLANET_NO][1] = x_c[PLANET_NO][1];
-	    x_rot[PLANET_NO][2] = x_c[PLANET_NO][2];
-	    Rotation_3D_zaxis(PLANET_NO,x_rot,-theta);
+	x_rot[PLANETESIMAL_NO][1] = x_c[PLANETESIMAL_NO][1];
+	x_rot[PLANETESIMAL_NO][2] = x_c[PLANETESIMAL_NO][2];
+	Rotation_3D_zaxis(PLANETESIMAL_NO,x_rot,-theta);
       
       
+	x_rot[PLANET_NO][1] = x_c[PLANET_NO][1];
+	x_rot[PLANET_NO][2] = x_c[PLANET_NO][2];
+	Rotation_3D_zaxis(PLANET_NO,x_rot,-theta);
       
-	    fpposi_rot = fopen(posi_rot,"a");
-	    if(fpposi_rot==NULL){
-	      printf("posi error\n");
-	      return -1;
-	    }
-	    fprintf(fpposi_rot,"%e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\n",t_sys/2.0/M_PI,x_rot[PLANETESIMAL_NO][1],x_rot[PLANETESIMAL_NO][2],x_c[PLANETESIMAL_NO][3],r_xy[PLANETESIMAL_NO],atan2(x_rot[PLANETESIMAL_NO][2],x_rot[PLANETESIMAL_NO][1]),ele[PLANETESIMAL_NO].radius,x_rot[PLANET_NO][1],x_rot[PLANET_NO][2],x_c[PLANET_NO][3],r_xy[PLANET_NO],atan2(x_rot[PLANET_NO][2],x_rot[PLANET_NO][1]),ele[PLANET_NO].radius,ele[PLANET_NO].r_h);
-	    fclose(fpposi_rot);
-	  }
+      
+      
+	fpposi_rot = fopen(posi_rot,"a");
+	if(fpposi_rot==NULL){
+	  printf("posi error\n");
+	  return -1;
+	}
+	fprintf(fpposi_rot,"%e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\n",t_sys/2.0/M_PI,x_rot[PLANETESIMAL_NO][1],x_rot[PLANETESIMAL_NO][2],x_c[PLANETESIMAL_NO][3],r_xy[PLANETESIMAL_NO],atan2(x_rot[PLANETESIMAL_NO][2],x_rot[PLANETESIMAL_NO][1]),ele[PLANETESIMAL_NO].radius,x_rot[PLANET_NO][1],x_rot[PLANET_NO][2],x_c[PLANET_NO][3],r_xy[PLANET_NO],atan2(x_rot[PLANET_NO][2],x_rot[PLANET_NO][1]),ele[PLANET_NO].radius,ele[PLANET_NO].r_h);
+	fclose(fpposi_rot);
+      }
 #endif
     
     
 
 
     
-	  if(t_sys > 1.0/
+      if(t_sys > 1.0/
 #ifdef IMPACT_PARAMETER
-	     IMPACT_PARAMETER
+	 IMPACT_PARAMETER
 #else
-	     b
+	 b
 #endif
-	     ){  //だいたい0度になる時間
-	    if(
-	       (fabs(atan2(x_c[PLANET_NO][2],x_c[PLANET_NO][1]) - atan2(x_c[PLANETESIMAL_NO][2],x_c[PLANETESIMAL_NO][1])) > 0.5*M_PI && 2.0*M_PI - fabs(atan2(x_c[PLANET_NO][2],x_c[PLANET_NO][1]) - atan2(x_c[PLANETESIMAL_NO][2],x_c[PLANETESIMAL_NO][1])) > 0.5*M_PI)  //90度以上離れたら終了
-	       ||  //もしくは
-	       ((i_col != 0) && (j_col != 0))  //衝突したら終了
-	       ){
-	      printf("t_sys=%e[yr]\ttheta=%.15e[deg]\n",t_sys/2.0/M_PI,(atan2(x_c[PLANET_NO][2],x_c[PLANET_NO][1]) - atan2(x_c[PLANETESIMAL_NO][2],x_c[PLANETESIMAL_NO][1]))*180.0/M_PI);
-	      break;
-	    }
-	  }
+	 ){  //だいたい0度になる時間
+	if(
+	   (fabs(atan2(x_c[PLANET_NO][2],x_c[PLANET_NO][1]) - atan2(x_c[PLANETESIMAL_NO][2],x_c[PLANETESIMAL_NO][1])) > 0.5*M_PI && 2.0*M_PI - fabs(atan2(x_c[PLANET_NO][2],x_c[PLANET_NO][1]) - atan2(x_c[PLANETESIMAL_NO][2],x_c[PLANETESIMAL_NO][1])) > 0.5*M_PI)  //90度以上離れたら終了
+	   ||  //もしくは
+	   ((i_col != 0) && (j_col != 0))  //衝突したら終了
+	   ){
+	  printf("t_sys=%e[yr]\ttheta=%.15e[deg]\n",t_sys/2.0/M_PI,(atan2(x_c[PLANET_NO][2],x_c[PLANET_NO][1]) - atan2(x_c[PLANETESIMAL_NO][2],x_c[PLANETESIMAL_NO][1]))*180.0/M_PI);
+	  break;
+	}
+      }
     
     
     
-	  if(fmod(step,1.0E5)==0.0){
-	    //if(fmod(step,1.0E2)==0.0){
-	    //printf("i_sys=%03d\tt=%.15e\tE=%.15e\tL=%.15e\tr_min=%.15e\n",i_sys,t_sys,E_tot,abs_L,r_min);  //全エネルギー,全角運動量.
-	    printf("step=%e\tN=%d\ti_sys=%03d\tdt[%03d]=%.2e[yr]\tt_sys=%.2e[yr]\n",step,global_n,i_sys,i_sys,dt_[i_sys]/2.0/M_PI,t_sys/2.0/M_PI);
-	  }
+      if(fmod(step,1.0E5)==0.0){
+	//if(fmod(step,1.0E2)==0.0){
+	//printf("i_sys=%03d\tt=%.15e\tE=%.15e\tL=%.15e\tr_min=%.15e\n",i_sys,t_sys,E_tot,abs_L,r_min);  //全エネルギー,全角運動量.
+	printf("step=%e\tN=%d\ti_sys=%03d\tdt[%03d]=%.2e[yr]\tt_sys=%.2e[yr]\n",step,global_n,i_sys,i_sys,dt_[i_sys]/2.0/M_PI,t_sys/2.0/M_PI);
+      }
     
 
     
-	  for(i=1;i<=global_n_p;++i){
-	    //r_c[i]は計算してある
-	    if(r_c[i]<SOLAR_RADIUS || r_c[i]>SOLAR_SYSTEM_LIMIT){  //太陽に飲みこまれるか系外へ出て行くか.
+      for(i=1;i<=global_n_p;++i){
+	//r_c[i]は計算してある
+	if(r_c[i]<SOLAR_RADIUS || r_c[i]>SOLAR_SYSTEM_LIMIT){  //太陽に飲みこまれるか系外へ出て行くか.
 	
-	      printf("i=%d is eliminated\tr[%d]=%e\tt_sys=%.2e[yr]\n",i,i,r_c[i],t_sys/2.0/M_PI);
+	  printf("i=%d is eliminated\tr[%d]=%e\tt_sys=%.2e[yr]\n",i,i,r_c[i],t_sys/2.0/M_PI);
 	
-	      //iとglobal_n_pを入れ替える.
-	      ele[0] = ele[i];  //構造体のためSwap関数は使えない. 0番目の要素はコピーに使うだけ.
-	      ele[i] = ele[global_n_p];
-	      ele[global_n_p] = ele[0];
+	  //iとglobal_n_pを入れ替える.
+	  ele[0] = ele[i];  //構造体のためSwap関数は使えない. 0番目の要素はコピーに使うだけ.
+	  ele[i] = ele[global_n_p];
+	  ele[global_n_p] = ele[0];
 
-	      Swap(&t_[i],&t_[global_n_p]);
-	      Swap(&dt_[i],&dt_[global_n_p]);
+	  Swap(&t_[i],&t_[global_n_p]);
+	  Swap(&dt_[i],&dt_[global_n_p]);
 	
-	      for(k=1;k<=3;++k){
-		Swap(&x_0[i][k],&x_0[global_n_p][k]);
-		Swap(&x_c[i][k],&x_c[global_n_p][k]);
+	  for(k=1;k<=3;++k){
+	    Swap(&x_0[i][k],&x_0[global_n_p][k]);
+	    Swap(&x_c[i][k],&x_c[global_n_p][k]);
 	  
-		Swap(&v_0[i][k],&v_0[global_n_p][k]);
-		Swap(&v_c[i][k],&v_c[global_n_p][k]);
+	    Swap(&v_0[i][k],&v_0[global_n_p][k]);
+	    Swap(&v_c[i][k],&v_c[global_n_p][k]);
 
-		Swap(&a_0[i][k],&a_0[global_n_p][k]);
-		Swap(&a[i][k],&a[global_n_p][k]);
+	    Swap(&a_0[i][k],&a_0[global_n_p][k]);
+	    Swap(&a[i][k],&a[global_n_p][k]);
 
-		Swap(&adot_0[i][k],&adot_0[global_n_p][k]);
-		Swap(&adot[i][k],&adot[global_n_p][k]);
+	    Swap(&adot_0[i][k],&adot_0[global_n_p][k]);
+	    Swap(&adot[i][k],&adot[global_n_p][k]);
 
-		Swap(&adot2_dt2[i][k],&adot2_dt2[global_n_p][k]);
-		Swap(&adot3_dt3[i][k],&adot3_dt3[global_n_p][k]);
-	      }
+	    Swap(&adot2_dt2[i][k],&adot2_dt2[global_n_p][k]);
+	    Swap(&adot3_dt3[i][k],&adot3_dt3[global_n_p][k]);
+	  }
 
 #if N_tr != 0
-	      //global_n_pとglobal_nを入れ替える.
-	      ele[0] = ele[global_n_p];  //構造体のためswap関数は使えない. 0番目の要素はコピーに使うだけ.
-	      ele[global_n_p] = ele[global_n];
-	      ele[global_n] = ele[0];
+	  //global_n_pとglobal_nを入れ替える.
+	  ele[0] = ele[global_n_p];  //構造体のためswap関数は使えない. 0番目の要素はコピーに使うだけ.
+	  ele[global_n_p] = ele[global_n];
+	  ele[global_n] = ele[0];
 
-	      Swap(&t_[global_n_p],&t_[global_n]);
-	      Swap(&dt_[global_n_p],&dt_[global_n]);
+	  Swap(&t_[global_n_p],&t_[global_n]);
+	  Swap(&dt_[global_n_p],&dt_[global_n]);
 	
-	      for(k=1;k<=3;++k){
-		Swap(&x_0[global_n_p][k],&x_0[global_n][k]);
-		Swap(&x_c[global_n_p][k],&x_c[global_n][k]);
+	  for(k=1;k<=3;++k){
+	    Swap(&x_0[global_n_p][k],&x_0[global_n][k]);
+	    Swap(&x_c[global_n_p][k],&x_c[global_n][k]);
 
-		Swap(&v_0[global_n_p][k],&v_0[global_n][k]);
-		Swap(&v_c[global_n_p][k],&v_c[global_n][k]);
+	    Swap(&v_0[global_n_p][k],&v_0[global_n][k]);
+	    Swap(&v_c[global_n_p][k],&v_c[global_n][k]);
 
-		Swap(&a_0[global_n_p][k],&a_0[global_n][k]);
-		Swap(&a[global_n_p][k],&a[global_n][k]);
+	    Swap(&a_0[global_n_p][k],&a_0[global_n][k]);
+	    Swap(&a[global_n_p][k],&a[global_n][k]);
 
-		Swap(&adot_0[global_n_p][k],&adot_0[global_n][k]);
-		Swap(&adot[global_n_p][k],&adot[global_n][k]);
+	    Swap(&adot_0[global_n_p][k],&adot_0[global_n][k]);
+	    Swap(&adot[global_n_p][k],&adot[global_n][k]);
 
-		Swap(&adot2_dt2[global_n_p][k],&adot2_dt2[global_n][k]);
-		Swap(&adot3_dt3[global_n_p][k],&adot3_dt3[global_n][k]);
-	      }
+	    Swap(&adot2_dt2[global_n_p][k],&adot2_dt2[global_n][k]);
+	    Swap(&adot3_dt3[global_n_p][k],&adot3_dt3[global_n][k]);
+	  }
 #endif
 	
-	      //global_nとglobal_n_pを1つ減らす.
-	      global_n--;
-	      global_n_p--;     
-	    }
-	  }
+	  //global_nとglobal_n_pを1つ減らす.
+	  global_n--;
+	  global_n_p--;     
+	}
+      }
     
 
 
     
 
 
-	  if((i_col != 0) && (j_col != 0)){  //衝突した場合.
+      if((i_col != 0) && (j_col != 0)){  //衝突した場合.
 
-	    for(i=1;i<=global_n;++i){
-	      t_[i] += dt_[i];  //すべての粒子の時間はt_sysに揃う.
+	for(i=1;i<=global_n;++i){
+	  t_[i] += dt_[i];  //すべての粒子の時間はt_sysに揃う.
 	
-	      dt_[i] = Timestep_i_0(i,a_0,adot_0,abs_a,abs_adot);  //すべての粒子のタイムステップ計算.
-	      //printf("initial dt_[%d]=%e\n",i,dt_[i]);
-	    }
+	  dt_[i] = Timestep_i_0(i,a_0,adot_0,abs_a,abs_adot);  //すべての粒子のタイムステップ計算.
+	  //printf("initial dt_[%d]=%e\n",i,dt_[i]);
+	}
     
-	  }else if((i_col == 0) && (j_col == 0)){  //衝突しない場合.
+      }else if((i_col == 0) && (j_col == 0)){  //衝突しない場合.
       
-	    t_[i_sys] += dt_[i_sys];  //i_sys のみ時間更新.
+	t_[i_sys] += dt_[i_sys];  //i_sys のみ時間更新.
     
-	    dt_[i_sys] = Timestep_i_sys(i_sys,a,adot,adot2_dt2,adot3_dt3,abs_a,abs_adot,abs_adot2,abs_adot3,dt_);  //i_sys のみタイムステップ計算.
+	dt_[i_sys] = Timestep_i_sys(i_sys,a,adot,adot2_dt2,adot3_dt3,abs_a,abs_adot,abs_adot2,abs_adot3,dt_);  //i_sys のみタイムステップ計算.
     
-	    for(k=1;k<=3;++k){  //i_sys のみ更新.
-	      x_0[i_sys][k] = x_c[i_sys][k];
-	      v_0[i_sys][k] = v_c[i_sys][k];
-	      a_0[i_sys][k] = a[i_sys][k];
-	      adot_0[i_sys][k] = adot[i_sys][k];
-	    }   
+	for(k=1;k<=3;++k){  //i_sys のみ更新.
+	  x_0[i_sys][k] = x_c[i_sys][k];
+	  v_0[i_sys][k] = v_c[i_sys][k];
+	  a_0[i_sys][k] = a[i_sys][k];
+	  adot_0[i_sys][k] = adot[i_sys][k];
+	}   
       
-	  }else{
-	    printf("Collision Judgement error\ti_col=%d\tj_col=%d\n",i_col,j_col);
-	    exit(-1);
-	  }
+      }else{
+	printf("Collision Judgement error\ti_col=%d\tj_col=%d\n",i_col,j_col);
+	exit(-1);
+      }
 
 
-	  t_sys = t_[1] + dt_[1];
-	  i_sys = 1;
-	  for(i=2;i<=global_n;++i){
-	    if((t_[i] + dt_[i]) < t_sys){
-	      t_sys = t_[i] + dt_[i];  //dt_[i]が最小のものを選ぶ.
-	      i_sys = i;  //i_sysを選ぶ.
-	    }
-	  }
+      t_sys = t_[1] + dt_[1];
+      i_sys = 1;
+      for(i=2;i<=global_n;++i){
+	if((t_[i] + dt_[i]) < t_sys){
+	  t_sys = t_[i] + dt_[i];  //dt_[i]が最小のものを選ぶ.
+	  i_sys = i;  //i_sysを選ぶ.
+	}
+      }
 
 
     
  
     
     
-	  step+=1.0;
-	}  //t loop
+      step+=1.0;
+    }  //t loop
   
 
 
 #if ENERGY_FILE
-	printf("dt_[i_sys]=%e\tE_error=%.15e\tL_error=%.15e\n",dt_[i_sys],(E_tot-E_tot_0)/fabs(E_tot_0),(abs_L-abs_L_0)/abs_L_0);
+    printf("dt_[i_sys]=%e\tE_error=%.15e\tL_error=%.15e\n",dt_[i_sys],(E_tot-E_tot_0)/fabs(E_tot_0),(abs_L-abs_L_0)/abs_L_0);
 #endif
   
-	printf("step=%e\n",step);
+    printf("step=%e\n",step);
 
 
 #if DT_LOG == 1
-	for(i=0;i<TIME_INTERVAL_MAX;i++){
-	  printf("t_ene[%d]=%e[yr]\n\n\n",i,t_ene[i]/2.0/M_PI);
-	}
+    for(i=0;i<TIME_INTERVAL_MAX;i++){
+      printf("t_ene[%d]=%e[yr]\n\n\n",i,t_ene[i]/2.0/M_PI);
+    }
 #else
-	printf("dt_ene=%e[yr]\n\n\n",DT_ENE/2.0/M_PI);
+    printf("dt_ene=%e[yr]\n\n\n",DT_ENE/2.0/M_PI);
 #endif
 	
 #ifndef IMPACT_PARAMETER
-      }
+  }
 #endif
-    }
+}
     

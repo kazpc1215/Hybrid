@@ -26,12 +26,12 @@ int Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double abs
 }
 
 
-void Energy_Correction(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbital_elements ele[],double *dE_heat,double *dE_grav,double *dE_c){
+void Energy_Correction(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbital_elements ele[],double *dE_heat,double *dE_grav,double *dE_c,double *v_imp){
   
   double m_1 = ele[i_col].mass;
   double m_2 = ele[j_col].mass;
   double abs_v2 = SquareOfRelativeVelocity(i_col,j_col,v_0);  //相対速度.
-  double r_p12 = ele[i_col].radius + ele[j_col].radius;  //2粒子間の距離（物理半径の和）.
+  double r_p12 = sqrt(SquareOfRelativeDistance(i_col,j_col,x_0));  //2粒子間の距離.
   double r_g12 = RadiusFromCenter(0,x_0);  //重心と中心星との距離.
   double r_1 = RadiusFromCenter(i_col,x_0);
   double r_2 = RadiusFromCenter(j_col,x_0);
@@ -50,8 +50,10 @@ void Energy_Correction(int i_col,int j_col,double x_0[][4],double v_0[][4],struc
 #else
   (*dE_c) = G*M_0*(- (m_1+m_2)/r_g12 + m_1/r_1 + m_2/r_2);  //中心星ポテンシャルエネルギーが変わる.
 #endif
+
+  (*v_imp) = sqrt(abs_v2);
   
-  printf("dE_heat=%e\tdE_grav=%e\tdE_c=%e\n",(*dE_heat),(*dE_grav),(*dE_c));
+  printf("dE_heat=%e\tdE_grav=%e\tdE_c=%e\tv_imp=%e\n",(*dE_heat),(*dE_grav),(*dE_c),(*v_imp));
 
 }
 

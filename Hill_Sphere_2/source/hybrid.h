@@ -9,8 +9,8 @@
 #include <time.h>
 
 
-//#define DIRECTORY ../data/test/  //ファイル保存用のディレクトリ.
-#define DIRECTORY_FILE dt1E-2yr_eta1E-3
+//#define DIRECTORY ../data/b2038_dt1E-2yr_eta1E-2/  //ファイル保存用のディレクトリ.
+#define DIRECTORY_FILE dt1E-2yr_eta1E-3  //連番のディレクトリを作りたいとき. "b****_dt1E-*yr_eta*E-*"
 #define _STR(str) #str
 #define STR(str) _STR(str)
 
@@ -18,6 +18,10 @@
 #ifndef EXTERN
 #define EXTERN extern
 #endif
+
+
+//#define IMPACT_PARAMETER 0.02038  //[AU]
+
 
 
 //////////////////////////////////////////////////
@@ -33,7 +37,7 @@ EXTERN int global_n_p;  //グローバル変数.
 //////////////////////////////////////////////////
 #define ENERGY_FILE 1
 #define ORBITALELEMENTS_FILE 1
-#define POSITION_ROT_FILE 1
+#define POSITION_ROT_FILE 0
 //////////////////////////////////////////////////
 
 
@@ -64,7 +68,7 @@ EXTERN int global_n_p;  //グローバル変数.
 #define PLANETESIMAL_DENSITY 3.0  //[g/cc]
 #define PLANETESIMAL_NO 2
 
-//#define IMPACT_PARAMETER 0.0208  //[AU]
+
 
 
 /*
@@ -266,7 +270,7 @@ void Iteration_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],doubl
 
 int Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double abs_r[],double abs_r2[],int *i_col, int *j_col);
 
-void Energy_Correction(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbital_elements ele[],double *dE_heat,double *dE_grav,double *dE_c);
+void Energy_Correction(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbital_elements ele[],double *dE_heat,double *dE_grav,double *dE_c,double *v_imp);
 
 void Coalescence(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbital_elements ele[]);
 
