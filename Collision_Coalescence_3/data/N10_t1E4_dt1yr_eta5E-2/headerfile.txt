@@ -56,8 +56,10 @@ EXTERN int global_n_p;  //グローバル変数.
 
 //#define PLANET_MASS 3.0E-6
 #define PLANET_MASS 3.0E-7  //火星サイズ.
-#define PLANET_ECC 0.01
-#define PLANET_INC 0.005
+//#define PLANET_ECC 0.01
+#define PLANET_ECC 0.0
+//#define PLANET_INC 0.005
+#define PLANET_INC 0.0
 #define PLANET_DENSITY 3.0  //[g/cc]
 #define PLANET_RADIUS (cbrt(3.0/4.0/M_PI*PLANET_MASS*1.989E33/PLANET_DENSITY)/1.496E13)
 #define PLANET_NO 1
@@ -135,7 +137,7 @@ Mean Longitude (deg)               100.46435
 //#define ETA 1E-3  //刻み幅調整.
 #define ITE_MAX 3  //イテレーション回数.
 
-#define INDIRECT_TERM 1  // 0: 中心星を動かさない場合  1: 中心星を動かす場合
+#define INDIRECT_TERM 0  // 0: 中心星を動かさない場合  1: 中心星を動かす場合
 //////////////////////////////////////////////////
 
 

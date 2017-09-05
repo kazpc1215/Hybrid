@@ -162,7 +162,7 @@ int main(void){
 
     sprintf(ele[i].name,"Planet%02d",i);
     ele[i].mass = PLANET_MASS;
-    ele[i].axis = 1.0 + 0.5/((double)global_n_p)*(double)i;
+    ele[i].axis = 1.0 + 20.0*cbrt(PLANET_MASS/3.0)/((double)global_n_p)*(double)i;
     ele[i].ecc = PLANET_ECC;
     ele[i].inc = PLANET_INC;
     ele[i].u = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
@@ -478,12 +478,7 @@ int main(void){
 		
       }
     }  //j loop
-  }  //i loop
 
-      
-  
-  
-  for(i=1;i<=global_n;++i){
     for(k=1;k<=3;++k){
       a_0[i][k] = All_Acceleration(i,k,ele,x_0,r_0,abs_r2);  //初期の加速度.
       adot_0[i][k] = All_dAcceleration(i,k,ele,x_0,v_0,r_dot_v,r_dot_v_ij,r_0,abs_r2);
@@ -746,10 +741,7 @@ int main(void){
 		
 		}
 	      }  //j loop
-	    }  //i loop
-	
-	
-	    for(i=1;i<=global_n;++i){
+
 	      for(k=1;k<=3;++k){
 		a_0[i][k] = All_Acceleration(i,k,ele,x_0,r_0,abs_r2);  //加速度.
 		adot_0[i][k] = All_dAcceleration(i,k,ele,x_0,v_0,r_dot_v,r_dot_v_ij,r_0,abs_r2);

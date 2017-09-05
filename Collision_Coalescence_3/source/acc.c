@@ -40,7 +40,7 @@ double Acceleration_indirect(int i,int k,struct orbital_elements ele[],double x_
 #ifndef G
   return -1*ele[i].mass*x_0[i][k]*r3;
 #else
-  return -1*G*ele[j].mass*x_0[j][k]*r3;
+  return -1*G*ele[i].mass*x_0[i][k]*r3;
 #endif
 }
 
@@ -57,7 +57,7 @@ double dAcceleration_indirect(int i,int k,struct orbital_elements ele[],double x
 #ifndef G
   return -1*ele[i].mass*(v_0[i][k]*r3 - 3*r_dot_v[i]*x_0[i][k]*r5);
 #else
-  return -1*G*ele[j].mass*(v_0[j][k]*r3 - 3*r_dot_v[j]*x_0[i][k]*r5);
+  return -1*G*ele[i].mass*(v_0[i][k]*r3 - 3*r_dot_v[i]*x_0[i][k]*r5);
 #endif
 }
 
