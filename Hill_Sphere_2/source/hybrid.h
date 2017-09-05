@@ -110,7 +110,7 @@ Mean Longitude (deg)               100.46435
 //////////////////////////////////////////////////
 #define T_MAX (2.0*M_PI*1.0E4)  //1E4yr  全計算時間.
 
-#define DT_LOG 0  // 1: t_eneをlogでとる 0: t_eneをlinerでとる
+#define DT_LOG 0  // 1: t_eneをlogでとる 0: t_eneをlinearでとる
 
 /*  log 用 */
 //#define TIME_INTERVAL 2.0*M_PI*1.0E0,2.0*M_PI*1.0E1,2.0*M_PI*1.0E2,2.0*M_PI*1.0E3,2.0*M_PI*1.0E4,2.0*M_PI*1.0E5,2.0*M_PI*1.0E6,2.0*M_PI*1.0E7,T_MAX  //t_ene配列の中身.
@@ -118,7 +118,7 @@ Mean Longitude (deg)               100.46435
 #define TIME_INTERVAL_MAX 5 //t_ene配列の要素数.
 
 
-/*  liner 用 */    
+/*  linear 用 */    
 //#define DT_ENE (2.0*M_PI*1.0E0)  //dt_ene = 1yr
 #define DT_ENE (2.0*M_PI*1.0E-2)  //dt_ene = 1E-2yr
 //////////////////////////////////////////////////
