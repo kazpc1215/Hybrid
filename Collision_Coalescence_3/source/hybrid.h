@@ -9,7 +9,7 @@
 #include <time.h>
 
 
-#define DIRECTORY ../data/N10_t1E4_dt1yr_eta1E-3/  //ファイル保存用のディレクトリ.
+#define DIRECTORY ../data/N10_t1E4_dt1yr_eta1E-2/  //ファイル保存用のディレクトリ.
 //#define DIRECTORY_FILE dt1E-2yr_eta1E-3  //連番のディレクトリを作りたいとき. "b****_dt1E-*yr_eta*E-*"
 #define _STR(str) #str
 #define STR(str) _STR(str)
@@ -124,7 +124,7 @@ Mean Longitude (deg)               100.46435
 
 /*  linear 用 */    
 #define DT_ENE (2.0*M_PI*1.0E0)  //dt_ene = 1yr
-//#define DT_ENE (2.0*M_PI*1.0E-2)  //dt_ene = 1E-2yr
+//#define DT_ENE (2.0*M_PI*1.0E-1)  //dt_ene = 1E-1yr
 //////////////////////////////////////////////////
 
 
@@ -134,7 +134,7 @@ Mean Longitude (deg)               100.46435
 //#define M_0 1.0  //主星の質量.
 #define EPSILON 0.0  //ソフトニングパラメーター.
 //#define ETA 0.05  //刻み幅調整.
-#define ETA 1E-3  //刻み幅調整.
+#define ETA 1E-2  //刻み幅調整.
 #define ITE_MAX 3  //イテレーション回数.
 
 #define INDIRECT_TERM 1  // 0: 中心星を動かさない場合  1: 中心星を動かす場合

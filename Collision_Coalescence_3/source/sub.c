@@ -2,7 +2,7 @@
 
 
 /*r_i,v_iの内積*/
-double InnerProduct(int i,double x_0[][4],double v_0[][4]){ 
+double InnerProduct(int i,double x_0[][4],double v_0[][4]){
   int k;
   double r_dot_v = 0.0;
   for(k=1;k<=3;k++){

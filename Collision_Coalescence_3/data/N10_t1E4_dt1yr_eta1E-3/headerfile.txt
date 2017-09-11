@@ -124,7 +124,7 @@ Mean Longitude (deg)               100.46435
 
 /*  linear 用 */    
 #define DT_ENE (2.0*M_PI*1.0E0)  //dt_ene = 1yr
-//#define DT_ENE (2.0*M_PI*1.0E-2)  //dt_ene = 1E-2yr
+//#define DT_ENE (2.0*M_PI*1.0E-1)  //dt_ene = 1E-1yr
 //////////////////////////////////////////////////
 
 
