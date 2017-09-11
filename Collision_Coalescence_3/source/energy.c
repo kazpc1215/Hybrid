@@ -12,7 +12,7 @@ double Calculate_Energy(struct orbital_elements ele[],double x_c[][4],
 
   int i,j;
   double E[N_p+N_tr+1]={};
-  double E_tot=0.0;
+  double E_tot;
 
 #if INDIRECT_TERM
 #ifndef M_0
@@ -20,6 +20,9 @@ double Calculate_Energy(struct orbital_elements ele[],double x_c[][4],
 #else
   E_tot = 0.5*M_0*(v_G[1]*v_G[1] + v_G[2]*v_G[2] + v_G[3]*v_G[3]);
 #endif
+  
+#else
+  E_tot = 0.0
 #endif
   
   for(i=1;i<=global_n;++i){

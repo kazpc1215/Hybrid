@@ -24,7 +24,7 @@ set samples 1000
 
 
 #n=2000
-n=1000
+n=1700
 while (n<=3000){
 #while (n<=3000){
 
@@ -34,11 +34,11 @@ while (n<=3000){
 set label 1 sprintf("b=%1.3f",n/1000.0) at -2.7,2.7 font "Helvetica,20"
 
 
-set term pngcairo size 600,600
+#set term pngcairo size 600,600
 #set out sprintf("../image/b%4d_dt1E-2yr_eta5E-2_RHill.png",n)
 #set out sprintf("../image/b%4d_dt1E-2yr_eta5E-2_AU.png",n)
 #set out sprintf("../image/b%4d_dt1E-2yr_eta5E-2_Radius.png",n)
-set out sprintf("../image/b%4d_dt1E-2yr_eta5E-2_RHill_contour.png",n)
+#set out sprintf("../image/b%4d_dt1E-2yr_eta5E-2_RHill_contour.png",n)
 
 
 
@@ -68,7 +68,7 @@ sprintf("< head -2 ./dt1E-2yr_eta5E-2/b%4d_dt1E-2yr_eta5E-2/Planetesimal_posi_ro
 
 print n
 
-set output
+#set output
 
 n = n+1
 }

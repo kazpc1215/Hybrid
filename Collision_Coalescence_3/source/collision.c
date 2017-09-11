@@ -64,33 +64,33 @@ void Coalescence(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbi
   int k;
   
   //i_colを新しい合体粒子の番号にする.
-	ele[i_col].mass = ele[0].mass;
-	ele[i_col].radius = cbrt(3.0/4.0/M_PI*ele[i_col].mass*1.989E33/PLANET_DENSITY)/1.496E13;
-	for(k=1;k<=3;++k){
-	  x_0[i_col][k] = x_0[0][k];
-	  v_0[i_col][k] = v_0[0][k];
-	}
+  ele[i_col].mass = ele[0].mass;
+  ele[i_col].radius = cbrt(3.0/4.0/M_PI*ele[i_col].mass*1.989E33/PLANET_DENSITY)/1.496E13;
+  for(k=1;k<=3;++k){
+    x_0[i_col][k] = x_0[0][k];
+    v_0[i_col][k] = v_0[0][k];
+  }
 	
-	//j_colとglobal_n_pを入れ替える.
-	ele[0] = ele[j_col];  //構造体のためswap関数は使えない. 0番目の要素はコピーに使うだけ.
-	ele[j_col] = ele[global_n_p];
-	ele[global_n_p] = ele[0];
-	for(k=1;k<=3;++k){
-	  Swap(&x_0[j_col][k],&x_0[global_n_p][k]);
-	  Swap(&v_0[j_col][k],&v_0[global_n_p][k]);
-	}
+  //j_colとglobal_n_pを入れ替える.
+  ele[0] = ele[j_col];  //構造体のためswap関数は使えない. 0番目の要素はコピーに使うだけ.
+  ele[j_col] = ele[global_n_p];
+  ele[global_n_p] = ele[0];
+  for(k=1;k<=3;++k){
+    Swap(&x_0[j_col][k],&x_0[global_n_p][k]);
+    Swap(&v_0[j_col][k],&v_0[global_n_p][k]);
+  }
 	
-	//global_n_pとglobal_nを入れ替える.
-	ele[0] = ele[global_n_p];  //構造体のためswap関数は使えない. 0番目の要素はコピーに使うだけ.
-	ele[global_n_p] = ele[global_n];
-	ele[global_n] = ele[0];
-	for(k=1;k<=3;++k){
-	  Swap(&x_0[global_n_p][k],&x_0[global_n][k]);
-	  Swap(&v_0[global_n_p][k],&v_0[global_n][k]);
-	}
+  //global_n_pとglobal_nを入れ替える.
+  ele[0] = ele[global_n_p];  //構造体のためswap関数は使えない. 0番目の要素はコピーに使うだけ.
+  ele[global_n_p] = ele[global_n];
+  ele[global_n] = ele[0];
+  for(k=1;k<=3;++k){
+    Swap(&x_0[global_n_p][k],&x_0[global_n][k]);
+    Swap(&v_0[global_n_p][k],&v_0[global_n][k]);
+  }
 	
-	//global_nとglobal_n_pを1つ減らす.
-	global_n--;
-	global_n_p--;
+  //global_nとglobal_n_pを1つ減らす.
+  global_n--;
+  global_n_p--;
   
 }

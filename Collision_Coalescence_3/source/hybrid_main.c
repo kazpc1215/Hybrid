@@ -426,6 +426,9 @@ int main(void){
 
 
   
+#if INDIRECT_TERM
+	    CenterOfGravity(x_0,v_0,x_G,v_G,ele);  //重心計算
+#endif
 
   
 #if ENERGY_FILE
@@ -682,13 +685,17 @@ int main(void){
 	    Energy_Correction(i_col,j_col,x_0,v_0,ele,&dE_heat,&dE_grav,&dE_c,&v_imp);
 	
 
+	    
+	    printf("before\tn=%d\tx[%d]=%f\tx[%d]=%f\n",global_n,j_col,x_0[j_col][1],global_n,x_0[global_n][1]);
+
+	    
 	    //合体後の操作
 	    Coalescence(i_col,j_col,x_0,v_0,ele);
 
-#if INDIRECT_TERM
-	    CenterOfGravity(x_0,v_0,x_G,v_G,ele);  //重心計算
-#endif
-	  
+	    
+	    printf("after\tn=%d\tx[%d]=%f\tx[%d]=%f\n",global_n,j_col,x_0[j_col][1],global_n+1,x_0[global_n+1][1]);
+	    
+	     
 	    
 	    //以下、すべての粒子の加速度などを再計算.
 	    for(i=1;i<=global_n;++i){
@@ -702,7 +709,11 @@ int main(void){
 	    }
 
 	
-
+#if INDIRECT_TERM
+	    CenterOfGravity(x_0,v_0,x_G,v_G,ele);  //重心計算
+#endif
+	    
+	    
 #if ENERGY_FILE
 	    E_tot = Calculate_Energy(ele,x_0,
 #if INDIRECT_TERM
@@ -820,9 +831,6 @@ int main(void){
 	    }
 	  }
 
-#if INDIRECT_TERM
-	  CenterOfGravity(x_c,v_c,x_G,v_G,ele);  //重心計算
-#endif
 
 	  fpposivelo = fopen(posivelofile,"a");  //位置、速度をファイルへ書き出し.
 	  if(fpposivelo==NULL){
@@ -838,8 +846,11 @@ int main(void){
 
 
 
-      
-
+#if INDIRECT_TERM
+	  CenterOfGravity(x_c,v_c,x_G,v_G,ele);  //重心計算
+#endif
+	  
+	  
 #if ENERGY_FILE
 
 	  E_tot = 0.0;
