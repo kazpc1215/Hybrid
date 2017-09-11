@@ -32,7 +32,7 @@ void Energy_Correction(int i_col,int j_col,double x_0[][4],double v_0[][4],struc
   double m_2 = ele[j_col].mass;
   double abs_v2 = SquareOfRelativeVelocity(i_col,j_col,v_0);  //相対速度.
   double r_p12 = sqrt(SquareOfRelativeDistance(i_col,j_col,x_0));  //2粒子間の距離.
-  double r_g12 = RadiusFromCenter(0,x_0);  //重心と中心星との距離.
+  double r_g12 = RadiusFromCenter(0,x_0);  //2粒子の重心と中心星との距離.
   double r_1 = RadiusFromCenter(i_col,x_0);
   double r_2 = RadiusFromCenter(j_col,x_0);
   

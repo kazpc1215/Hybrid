@@ -652,17 +652,15 @@ int main(void){
 	    printf("collision\ti=%d, j=%d\n",i_col,j_col);
 	    printf("r_ij=%.15e\tradius[%d]+radius[%d]=%.15e\n",abs_r[j_col],i_col,j_col,ele[i_col].radius + ele[j_col].radius);
 
+
+	    //t_sysで揃えるためDt[i]を使う.
 	    for(i=1;i<=global_n;++i){
-	      dt_[i] = Dt[i];  //t_sysで揃えるためDt[i]を使う.
-	    }
-	
-	    for(i=1;i<=global_n;++i){
-	      Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);  //修正子 すべての粒子.
+	      Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,Dt);  //修正子 すべての粒子.
 	    }
 
 	    for(ite=1;ite<=ITE_MAX;++ite){  //iteration 3回.
 	      for(i=1;i<=global_n;++i){
-		Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);  //すべての粒子.
+		Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,Dt);  //すべての粒子.
 	      }
 	    }
 
@@ -1143,7 +1141,7 @@ int main(void){
 	if((i_col != 0) && (j_col != 0)){  //衝突した場合.
 
 	  for(i=1;i<=global_n;++i){
-	    t_[i] += dt_[i];  //すべての粒子の時間はt_sysに揃う.
+	    t_[i] += Dt[i];  //すべての粒子の時間はt_sysに揃う.
 	
 	    dt_[i] = Timestep_i_0(i,a_0,adot_0,abs_a,abs_adot);  //すべての粒子のタイムステップ計算.
 	    //printf("initial dt_[%d]=%e\n",i,dt_[i]);

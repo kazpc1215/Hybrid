@@ -693,8 +693,8 @@ int main(void){
 	    Coalescence(i_col,j_col,x_0,v_0,ele);
 
 	    
-	     printf("after\tn=%d\tx[%d]=%f\tx[%d]=%f\n",global_n,j_col,x_0[j_col][1],global_n+1,x_0[global_n+1][1]);
-
+	    printf("after\tn=%d\tx[%d]=%f\tx[%d]=%f\n",global_n,j_col,x_0[j_col][1],global_n+1,x_0[global_n+1][1]);
+	    
 	     
 	    
 	    //以下、すべての粒子の加速度などを再計算.
