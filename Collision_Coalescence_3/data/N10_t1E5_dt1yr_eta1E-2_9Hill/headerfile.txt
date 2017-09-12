@@ -9,7 +9,7 @@
 #include <time.h>
 
 
-#define DIRECTORY ../data/N10_t1E5_dt1yr_eta1E-2_10Hill/  //ファイル保存用のディレクトリ.
+#define DIRECTORY ../data/N10_t1E5_dt1yr_eta1E-2_9Hill/  //ファイル保存用のディレクトリ.
 //#define DIRECTORY_FILE dt1E-2yr_eta1E-3  //連番のディレクトリを作りたいとき. "b****_dt1E-*yr_eta*E-*"
 #define _STR(str) #str
 #define STR(str) _STR(str)
@@ -62,7 +62,7 @@ EXTERN int global_n_p;  //グローバル変数.
 #define PLANET_INC 0.0
 #define PLANET_DENSITY 3.0  //[g/cc]
 #define PLANET_RADIUS (cbrt(3.0/4.0/M_PI*PLANET_MASS*1.989E33/PLANET_DENSITY)/1.496E13)
-#define DELTA_AXIS 10.0
+#define DELTA_AXIS 9.0
 #define PLANET_NO 1
 
 
