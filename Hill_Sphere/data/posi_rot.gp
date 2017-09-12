@@ -1,5 +1,5 @@
 reset
-set term aqua
+set term aqua font "Helvetica,20"
 set view equal xy
 set size square
 
@@ -7,8 +7,6 @@ set size square
 #set yr [-3:3]
 #set xr [-1.1:1.1]
 #set yr [-1.1:1.1]
-set xr [-3:3]
-set yr [-pi/2.0:pi/2.0]
 
 #set xl "x [R_{Hill}]" font "Helvetica,20" offset 0,-0.5
 #set yl "y [R_{Hill}]" font "Helvetica,20"
@@ -18,13 +16,13 @@ set yr [-pi/2.0:pi/2.0]
 #set yl "y [R_{Planet}]" font "Helvetica,20"
 
 #########################################################
-set xr [-3:3]
+set xr [-5:5]
 set yr [-pi/2.0:pi/2.0]
 set xl "x [R_{Hill}]" font "Helvetica,20" offset 0,-0.5
-set yl "r {/Symbol q} [AU]" font "Helvetica,20"
+set yl "r {/Symbol q} [AU]" font "Helvetica,20" offset -0.5,0
 set ytics nomirror
-set y2tics -0.5,0.1
-set y2l "{/Symbol q} [{/Symbol p} rad]"
+set y2tics -0.5,0.1 font "Helvetica,20"
+set y2l "{/Symbol q} [{/Symbol p} rad]" font "Helvetica,20" offset 1,0
 set y2r [-0.5:0.5]
 #########################################################
 
@@ -45,7 +43,7 @@ while (n<=3000){
 #set label 1 sprintf("b=%1.3f",n/1000.0) at -1,1 font "Helvetica,20"
 #set label 1 sprintf("b=%1.3f",n/1000.0) at -4.5,4.5 font "Helvetica,20"
 #set label 1 sprintf("b=%1.3f",n/1000.0) at -2.7,2.7 font "Helvetica,20"
-set label 1 sprintf("b=%1.3f",n/1000.0) at -2.7,1.4 font "Helvetica,20"
+set label 1 sprintf("b=%1.3f",n/1000.0) at -4.5,1.4 font "Helvetica,20"
 
 
 set term pngcairo size 600,600
