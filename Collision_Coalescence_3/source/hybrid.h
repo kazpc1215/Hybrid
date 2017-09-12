@@ -9,7 +9,10 @@
 #include <time.h>
 
 
-#define DIRECTORY ../data/N10_t1E5_dt1yr_eta1E-2_10Hill/  //ファイル保存用のディレクトリ.
+#define DIRECTORY ../data/N10_t1E6_dt1yr_eta1E-2_10Hill/  //ファイル保存用のディレクトリ.
+
+//#define DIRECTORY /Volumes/HDCL-UT/isoya/Collision_Coalescence_3/data/N10_t1E6_dt1yr_eta1E-2_10Hill/  //Ta Mac Pro用
+
 //#define DIRECTORY_FILE dt1E-2yr_eta1E-3  //連番のディレクトリを作りたいとき. "b****_dt1E-*yr_eta*E-*"
 #define _STR(str) #str
 #define STR(str) _STR(str)
