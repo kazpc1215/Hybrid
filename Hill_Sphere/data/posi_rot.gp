@@ -3,17 +3,30 @@ set term aqua
 set view equal xy
 set size square
 
-set xr [-3:3]
-set yr [-3:3]
+#set xr [-3:3]
+#set yr [-3:3]
 #set xr [-1.1:1.1]
 #set yr [-1.1:1.1]
+set xr [-3:3]
+set yr [-pi/2.0:pi/2.0]
 
-set xl "x [R_{Hill}]" font "Helvetica,20" offset 0,-0.5
-set yl "y [R_{Hill}]" font "Helvetica,20"
+#set xl "x [R_{Hill}]" font "Helvetica,20" offset 0,-0.5
+#set yl "y [R_{Hill}]" font "Helvetica,20"
 #set xl "x [AU]" font "Helvetica,20" offset 0,-0.5
 #set yl "y [AU]" font "Helvetica,20"
 #set xl "x [R_{Planet}]" font "Helvetica,20" offset 0,-0.5
 #set yl "y [R_{Planet}]" font "Helvetica,20"
+
+#########################################################
+set xr [-3:3]
+set yr [-pi/2.0:pi/2.0]
+set xl "x [R_{Hill}]" font "Helvetica,20" offset 0,-0.5
+set yl "r {/Symbol q} [AU]" font "Helvetica,20"
+set ytics nomirror
+set y2tics -0.5,0.1
+set y2l "{/Symbol q} [{/Symbol p} rad]"
+set y2r [-0.5:0.5]
+#########################################################
 
 set xtics font "Helvetica,20"
 set ytics font "Helvetica,20"
@@ -24,21 +37,23 @@ set samples 1000
 
 
 #n=2000
-n=1700
+n=2500
 while (n<=3000){
 #while (n<=3000){
 
 #set title sprintf("b=%1.3f",n/1000.0)
 #set label 1 sprintf("b=%1.3f",n/1000.0) at -1,1 font "Helvetica,20"
 #set label 1 sprintf("b=%1.3f",n/1000.0) at -4.5,4.5 font "Helvetica,20"
-set label 1 sprintf("b=%1.3f",n/1000.0) at -2.7,2.7 font "Helvetica,20"
+#set label 1 sprintf("b=%1.3f",n/1000.0) at -2.7,2.7 font "Helvetica,20"
+set label 1 sprintf("b=%1.3f",n/1000.0) at -2.7,1.4 font "Helvetica,20"
 
 
-#set term pngcairo size 600,600
+set term pngcairo size 600,600
 #set out sprintf("../image/b%4d_dt1E-2yr_eta5E-2_RHill.png",n)
 #set out sprintf("../image/b%4d_dt1E-2yr_eta5E-2_AU.png",n)
 #set out sprintf("../image/b%4d_dt1E-2yr_eta5E-2_Radius.png",n)
 #set out sprintf("../image/b%4d_dt1E-2yr_eta5E-2_RHill_contour.png",n)
+set out sprintf("../image/b%4d_dt1E-2yr_eta5E-2_RHill_rtheta_contour.png",n)
 
 
 
@@ -59,16 +74,21 @@ set label 1 sprintf("b=%1.3f",n/1000.0) at -2.7,2.7 font "Helvetica,20"
 
 
 
-p sprintf("./dt1E-2yr_eta5E-2/b%4d_dt1E-2yr_eta5E-2/Planetesimal_posi_rot.dat",n) u ((($2)-($8))/($14)):((($3)-($9))/($14)) w l t "orbit",\
-sprintf("< head -2 ./dt1E-2yr_eta5E-2/b%4d_dt1E-2yr_eta5E-2/Planetesimal_posi_rot.dat",n) u ((($8)-($8))/($14)):((($9)-($9))/($14)) w p t "Planet",\
-"ZeroVelocityCurve_contour" u (($1)/0.01):(($2)/0.01) w l lc rgb "gray50" dt 3 t "zero-velocity curves"
+#p sprintf("./dt1E-2yr_eta5E-2/b%4d_dt1E-2yr_eta5E-2/Planetesimal_posi_rot.dat",n) u ((($2)-($8))/($14)):((($3)-($9))/($14)) w l t "orbit",\
+#sprintf("< head -2 ./dt1E-2yr_eta5E-2/b%4d_dt1E-2yr_eta5E-2/Planetesimal_posi_rot.dat",n) u ((($8)-($8))/($14)):((($9)-($9))/($14)) w p t "Planet",\
+#"ZeroVelocityCurve_contour" u (($1)/0.01):(($2)/0.01) w l lc rgb "gray50" dt 3 t "zero-velocity curves"
 
+
+
+p sprintf("./dt1E-2yr_eta5E-2/b%4d_dt1E-2yr_eta5E-2/Planetesimal_posi_rot.dat",n) u ((($5)-($11))/($14)):(($5)*($6)) w l t "orbit",\
+sprintf("< head -2 ./dt1E-2yr_eta5E-2/b%4d_dt1E-2yr_eta5E-2/Planetesimal_posi_rot.dat",n) u ((($11)-($11))/($14)):(($11)*($12)-($9)) w p t "Planet",\
+"ZeroVelocityCurve_contour_rtheta" u (($1)/0.01):2 w l lc rgb "gray50" dt 3 t "zero-velocity curves"
 
 
 
 print n
 
-#set output
+set output
 
 n = n+1
 }
