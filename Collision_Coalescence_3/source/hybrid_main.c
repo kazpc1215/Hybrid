@@ -186,10 +186,10 @@ int main(void){
     ele[i].ecc = PLANET_ECC;
     ele[i].inc = PLANET_INC;
     ele[i].u = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
-    //ele[i].omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
-    //ele[i].Omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;    
-    ele[i].omega = 0.0;
-    ele[i].Omega = 0.0;
+    ele[i].omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
+    ele[i].Omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;    
+    //ele[i].omega = 0.0;
+    //ele[i].Omega = 0.0;
     /*
 #ifndef M_0
     ele[i].r_h = ele[i].axis*cbrt(ele[i].mass/3.0);

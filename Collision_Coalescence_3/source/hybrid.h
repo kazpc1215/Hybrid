@@ -9,7 +9,7 @@
 #include <time.h>
 
 
-#define DIRECTORY ../data/N10_t1E6_dt1yr_eta1E-2_10Hill/  //ファイル保存用のディレクトリ.
+#define DIRECTORY ../data/N10_t1E4_dt1yr_eta1E-2_5Hill_omegaOmega/  //ファイル保存用のディレクトリ.
 
 //#define DIRECTORY /Volumes/HDCL-UT/isoya/Collision_Coalescence_3/data/N10_t1E6_dt1yr_eta1E-2_10Hill/  //Ta Mac Pro用
 
@@ -29,7 +29,7 @@
 
 //////////////////////////////////////////////////
 #define N_tr 0  //初期のトレーサーの数.
-#define N_p 10  //初期の原始惑星の数.
+#define N_p 5  //初期の原始惑星の数.
 
 EXTERN int global_n;  //グローバル変数.
 EXTERN int global_n_p;  //グローバル変数.
@@ -116,8 +116,8 @@ Mean Longitude (deg)               100.46435
 
 
 //////////////////////////////////////////////////
-//#define T_MAX (2.0*M_PI*1.0E4)  //1E4yr  全計算時間.
-#define T_MAX (2.0*M_PI*1.0E5)  //1E5yr  全計算時間.
+#define T_MAX (2.0*M_PI*1.0E4)  //1E4yr  全計算時間.
+//#define T_MAX (2.0*M_PI*1.0E5)  //1E5yr  全計算時間.
 
 #define DT_LOG 0  // 1: t_eneをlogでとる 0: t_eneをlinearでとる
 
