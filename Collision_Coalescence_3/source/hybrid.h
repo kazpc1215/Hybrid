@@ -9,7 +9,7 @@
 #include <time.h>
 
 
-#define DIRECTORY ../data/N10_t1E4_dt1yr_eta1E-2_5Hill_omegaOmega/  //ファイル保存用のディレクトリ.
+#define DIRECTORY ../data/N10_t1E4_dt1yr_eta1E-2_5Hill_e0001i00005/  //ファイル保存用のディレクトリ.
 
 //#define DIRECTORY /Volumes/HDCL-UT/isoya/Collision_Coalescence_3/data/N10_t1E6_dt1yr_eta1E-2_10Hill/  //Ta Mac Pro用
 
@@ -29,7 +29,7 @@
 
 //////////////////////////////////////////////////
 #define N_tr 0  //初期のトレーサーの数.
-#define N_p 5  //初期の原始惑星の数.
+#define N_p 10  //初期の原始惑星の数.
 
 EXTERN int global_n;  //グローバル変数.
 EXTERN int global_n_p;  //グローバル変数.
@@ -59,13 +59,13 @@ EXTERN int global_n_p;  //グローバル変数.
 
 //#define PLANET_MASS 3.0E-6
 #define PLANET_MASS 3.0E-7  //火星サイズ.
-//#define PLANET_ECC 0.01
-#define PLANET_ECC 0.0
-//#define PLANET_INC 0.005
-#define PLANET_INC 0.0
+#define PLANET_ECC 0.001
+//#define PLANET_ECC 0.0
+#define PLANET_INC 0.0005
+//#define PLANET_INC 0.0
 #define PLANET_DENSITY 3.0  //[g/cc]
 #define PLANET_RADIUS (cbrt(3.0/4.0/M_PI*PLANET_MASS*1.989E33/PLANET_DENSITY)/1.496E13)
-#define DELTA_AXIS 10.0
+#define DELTA_AXIS 5.0
 #define PLANET_NO 1
 
 

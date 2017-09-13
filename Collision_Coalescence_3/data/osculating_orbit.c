@@ -3,7 +3,7 @@
 #include <math.h>
 
 #define GYOU 10000
-#define RH 10
+#define RH 5
 
 /*
   struct orbital_elements{
@@ -46,7 +46,8 @@ int main(void){
 
   
     
-    sprintf(datafile,"./N10_t1E4_dt1yr_eta1E-2_%dHill/Planet%02d_osculating_orbit.dat",RH,n);  //書き出しファイル.
+    //sprintf(datafile,"./N10_t1E4_dt1yr_eta1E-2_%dHill/Planet%02d_osculating_orbit.dat",RH,n);  //書き出しファイル.
+    sprintf(datafile,"./N10_t1E4_dt1yr_eta1E-2_%dHill_e0001i00005/Planet%02d_e0001i00005_osculating_orbit.dat",RH,n);  //書き出しファイル.
     if((forbit = fopen(datafile,"w")) == NULL){
       fprintf(stderr,"Can't open %s.\n",datafile);
       exit(-1);
@@ -58,7 +59,8 @@ int main(void){
     
     //////////////////////////////////////////////////////////////////////////////
     
-    sprintf(readfile,"./N10_t1E4_dt1yr_eta1E-2_%dHill/Planet%02d.dat",RH,n);  //読み込みファイル.
+    //sprintf(readfile,"./N10_t1E4_dt1yr_eta1E-2_%dHill/Planet%02d.dat",RH,n);  //読み込みファイル.
+    sprintf(readfile,"./N10_t1E4_dt1yr_eta1E-2_%dHill_e0001i00005/Planet%02d.dat",RH,n);  //読み込みファイル.
     if((fp = fopen(readfile,"r")) == NULL){
       fprintf(stderr,"Can't open %s.\n",readfile);
       exit(-1);

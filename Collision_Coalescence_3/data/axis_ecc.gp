@@ -15,9 +15,9 @@ set lmargin 12
 set bmargin 5
 set key right font "Helvetica,20"
 
-RH = 10
-set xr [0.9:1.6]
-set yr [0:0.005]
+RH = 5
+set xr [0.95:1.3]
+set yr [0:0.06]
 
 n = 2
 step = n - 2
@@ -30,9 +30,13 @@ set title sprintf("Time %.f [yr], \t {/Symbol D}a = %d [R_H]",TIME,RH) font "Hel
 
 
 set term pngcairo size 800,600
-set out sprintf("../image/N10_t1E4_dt1yr_eta1E-2_%dHill/axisecc_%05d.png",RH,step)
+#set out sprintf("../image/N10_t1E4_dt1yr_eta1E-2_%dHill/axisecc_%05d.png",RH,step)
+set out sprintf("../image/N10_t1E4_dt1yr_eta1E-2_%dHill_omegaOmega/axisecc_%05d.png",RH,step)
 
-p for [i=1:10] sprintf("./N10_t1E4_dt1yr_eta1E-2_%dHill/Planet%02d.dat",RH,i) every ::n-2::n-2 u 3:2:8 w circle t sprintf("%d",i),for [i=1:10] sprintf("./N10_t1E4_dt1yr_eta1E-2_%dHill/Planet%02d.dat",RH,i) every ::n-2::n-2 u 3:2:(($2)*($3)) w xerrorbars pt 7 ps 0.5 lc rgb "black" t ""
+
+#p for [i=1:10] sprintf("./N10_t1E4_dt1yr_eta1E-2_%dHill/Planet%02d.dat",RH,i) every ::n-2::n-2 u 3:2:8 w circle t sprintf("%d",i),for [i=1:10] sprintf("./N10_t1E4_dt1yr_eta1E-2_%dHill/Planet%02d.dat",RH,i) every ::n-2::n-2 u 3:2:(($2)*($3)) w xerrorbars pt 7 ps 0.5 lc rgb "black" t ""
+
+p for [i=1:10] sprintf("./N10_t1E4_dt1yr_eta1E-2_%dHill_omegaOmega/Planet%02d.dat",RH,i) every ::n-2::n-2 u 3:2:8 w circle t sprintf("%d",i),for [i=1:10] sprintf("./N10_t1E4_dt1yr_eta1E-2_%dHill/Planet%02d.dat",RH,i) every ::n-2::n-2 u 3:2:(($2)*($3)) w xerrorbars pt 7 ps 0.5 lc rgb "black" t ""
 
 set output
 

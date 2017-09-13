@@ -30,12 +30,12 @@ while(n<=10000){
 
 set title sprintf("TIME %d [yr], \t {/Symbol D}a = %d [R_H]",n,RH) font "Helvetica,20"
 
-plot for [i=1:10] sprintf("./N10_t1E4_dt1yr_eta1E-2_%dHill/Planet%02d_osculating_orbit.dat",RH,i) index n u 2:3 w l lw 1 t sprintf("%d",i)
+plot for [i=1:10] sprintf("./N10_t1E4_dt1yr_eta1E-2_%dHill_e0001i00005/Planet%02d_e0001i00005_osculating_orbit.dat",RH,i) index n u 2:3 w l lw 1 t sprintf("%d",i)
 
 
 #set output
 
-n = n + 10
+n = n + 1
 }
 
 set term aqua font "Helvetica,20"
