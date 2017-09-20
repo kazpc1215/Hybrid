@@ -131,9 +131,9 @@ int main(void){
 
 
 
-    //Rotation_3D_zaxis(i,x_eject,M_PI);  //z軸周りに180度回転
-    //Rotation_3D_zaxis(i,x_eject,M_PI/2.0);  //z軸周りに90度回転
-    Rotation_3D_zaxis(i,x_eject,-M_PI/2.0);  //z軸周りに-90度回転
+    //Rotation_3D_zaxis(i,x_eject,M_PI);  //z軸周りに180度回転  L1
+    //Rotation_3D_zaxis(i,x_eject,M_PI/2.0);  //z軸周りに90度回転  front
+    Rotation_3D_zaxis(i,x_eject,-M_PI/2.0);  //z軸周りに-90度回転  back
 
 
     
@@ -159,9 +159,9 @@ int main(void){
 
 
 
-    //Rotation_3D_zaxis(i,v_eject,M_PI);  //z軸周りに180度回転
-    //Rotation_3D_zaxis(i,v_eject,M_PI/2.0);  //z軸周りに90度回転
-    Rotation_3D_zaxis(i,v_eject,-M_PI/2.0);  //z軸周りに-90度回転
+    //Rotation_3D_zaxis(i,v_eject,M_PI);  //z軸周りに180度回転  L1
+    //Rotation_3D_zaxis(i,v_eject,M_PI/2.0);  //z軸周りに90度回転  front
+    Rotation_3D_zaxis(i,v_eject,-M_PI/2.0);  //z軸周りに-90度回転  back
     
 
     
