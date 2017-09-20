@@ -4,11 +4,66 @@
 int global_n = N_p + N_tr;  //全粒子数.
 int global_n_p = N_p;  //原始惑星の数.
 
+
+
+struct execution_time exetime = {
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0
+};
+  
+
+
+
 int main(void){
+  
 
-
-  global_n = N_p + N_tr;  //全粒子数.
-  global_n_p = N_p;  //原始惑星の数.
+  //global_n = N_p + N_tr;  //全粒子数.
+  //global_n_p = N_p;  //原始惑星の数.
     
   int i=0,j=0,i_sys=0,k=0,ite=0;
   int i_col=0,j_col=0;
@@ -483,7 +538,6 @@ int main(void){
   
 
 #if FRAGMENTATION
-  //start = clock();
 
   mass_tot_all = 0.0;
   for(i=global_n_p+1;i<=global_n;++i){
@@ -522,7 +576,6 @@ int main(void){
 
   //printf("t_sys=%e[yr]\tmass[1]=%e\n",t_sys/2.0/M_PI,ele[1].mass);
 
-  //end = clock();
 	
   //printf("t=%e[yr]\tfrag calculation time = %f [sec]\n",t_sys/2.0/M_PI,(double)(end-start)/CLOCKS_PER_SEC);
 
@@ -932,8 +985,6 @@ int main(void){
 
     
 #if FRAGMENTATION
-    //start = clock();
-    
     
     mass_tot_all = 0.0;
     for(i=global_n_p+1;i<=global_n;++i){    
@@ -988,7 +1039,6 @@ int main(void){
     //printf("t=%e\tmass_tot=%.15f\tM_TOT=%.15e\n",t_sys,mass_tot,M_TOT);		
     //printf("t_sys=%e[yr]\tmass[1]=%e\n",t_sys/2.0/M_PI,ele[1].mass);
 	
-    //end = clock();
 	
     //printf("t=%e[yr]\tfrag calculation time = %f [sec]\n",t_sys/2.0/M_PI,(double)(end-start)/CLOCKS_PER_SEC);
 	
@@ -1074,7 +1124,7 @@ int main(void){
       
     
     
-    if(fmod(step,1.0E6)==0.0){
+    if(fmod(step,1.0E4)==0.0){
       //if(fmod(step,1.0E2)==0.0){
       //printf("i_sys=%03d\tt=%.15e\tE=%.15e\tL=%.15e\tr_min=%.15e\n",i_sys,t_sys,E_tot,abs_L,r_min);  //全エネルギー,全角運動量.
       printf("step=%e\tN=%d\ti_sys=%03d\tdt[%03d]=%.2e[yr]\tt_sys=%.2e[yr]\n",step,global_n,i_sys,i_sys,dt_[i_sys]/2.0/M_PI,t_sys/2.0/M_PI);
@@ -1214,5 +1264,56 @@ int main(void){
 #else
   printf("dt_ene=%e[yr]\n",DT_ENE/2.0/M_PI);
 #endif
+
+
+  printf("\nexecution time\n");
+  printf("AngularMomentum = %e [s]\n",exetime.AngularMomentum);
+  printf("InnerProduct = %e [s]\n",exetime.InnerProduct);
+  printf("RadiusFromCenter = %e [s]\n",exetime.RadiusFromCenter);
+  printf("SquareOfVelocity = %e [s]\n",exetime.SquareOfVelocity);
+  printf("Timestep_i_0 = %e [s]\n",exetime.Timestep_i_0);
+  printf("Timestep_i_sys = %e [s]\n",exetime.Timestep_i_sys);
+  printf("SquareOfRelativeDistance = %e [s]\n",exetime.SquareOfRelativeDistance);
+  printf("SquareOfRelativeVelocity = %e [s]\n",exetime.SquareOfRelativeVelocity);
+  printf("RelativeInnerProduct = %e [s]\n",exetime.RelativeInnerProduct);
+  printf("Acceleration_ij = %e [s]\n",exetime.Acceleration_ij);
+  printf("dAcceleration_ij = %e [s]\n",exetime.dAcceleration_ij);
+  printf("Acceleration_indirect = %e [s]\n",exetime.Acceleration_indirect);
+  printf("dAcceleration_indirect = %e [s]\n",exetime.dAcceleration_indirect);
+  printf("External_Acceleration = %e [s]\n",exetime.External_Acceleration);
+  printf("External_dAcceleration = %e [s]\n",exetime.External_dAcceleration);
+  printf("All_Acceleration = %e [s]\n",exetime.All_Acceleration);
+  printf("All_dAcceleration = %e [s]\n",exetime.All_dAcceleration);
+  printf("Calculate_OrbitalElements = %e [s]\n",exetime.Calculate_OrbitalElements);
+  printf("Calculate_P = %e [s]\n",exetime.Calculate_P);
+  printf("Calculate_Q = %e [s]\n",exetime.Calculate_Q);
+  printf("Calculate_Energy = %e [s]\n",exetime.Calculate_Energy);
+  printf("InitialCondition = %e [s]\n",exetime.InitialCondition);
+  printf("Predictor = %e [s]\n",exetime.Predictor);
+  printf("Corrector_sys = %e [s]\n",exetime.Corrector_sys);
+  printf("Iteration_sys = %e [s]\n",exetime.Iteration_sys);
+  printf("Collision_Judgement = %e [s]\n",exetime.Collision_Judgement);
+  printf("Energy_Correction = %e [s]\n",exetime.Energy_Correction);
+  printf("Coalescence = %e [s]\n",exetime.Coalescence);
+  printf("NeighborSearch = %e [s]\n",exetime.NeighborSearch);
+  printf("RandomVelocity = %e [s]\n",exetime.RandomVelocity);
+  printf("MassFlux = %e [s]\n",exetime.MassFlux);
+  printf("Depletion_Time = %e [s]\n",exetime.Depletion_Time);
+  printf("MassDepletion = %e [s]\n",exetime.MassDepletion);
+  printf("s_1_FRAG_trapezoid = %e [s]\n",exetime.s_1_FRAG_trapezoid);
+  printf("s_2_FRAG_trapezoid = %e [s]\n",exetime.s_2_FRAG_trapezoid);
+  printf("s_3_FRAG_trapezoid = %e [s]\n",exetime.AngularMomentum);
+  printf("s_1_FRAG_integrand = %e [s]\n",exetime.s_1_FRAG_integrand);
+  printf("s_2_FRAG_integrand = %e [s]\n",exetime.s_2_FRAG_integrand);
+  printf("s_3_FRAG_integrand = %e [s]\n",exetime.s_3_FRAG_integrand);
+  printf("s_1_FRAG = %e [s]\n",exetime.s_1_FRAG);
+  printf("s_2_FRAG = %e [s]\n",exetime.s_2_FRAG);
+  printf("s_3_FRAG = %e [s]\n",exetime.s_3_FRAG);
+  printf("Rotation_3D_xaxis = %e [s]\n",exetime.Rotation_3D_xaxis);
+  printf("Rotation_3D_yaxis = %e [s]\n",exetime.Rotation_3D_yaxis);
+  printf("Rotation_3D_zaxis = %e [s]\n",exetime.Rotation_3D_zaxis);
+  printf("Swap = %e [s]\n",exetime.Swap);
+  printf("CenterOfGravity = %e [s]\n",exetime.CenterOfGravity);
+  
 }
     

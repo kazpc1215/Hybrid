@@ -9,7 +9,7 @@
 #include <time.h>
 
 
-#define DIRECTORY ../data/Ejection_L2cone30equidistant_v1011curl_Frag_OnlyPlanet_xi001_n1000_100yr/  //ファイル保存用のディレクトリ.
+#define DIRECTORY ../data/Ejection_L2cone30equidistant_v1011curl_Frag_OnlyPlanet_xi001_n1000_10yr/  //ファイル保存用のディレクトリ.
 
 //#define DIRECTORY /Volumes/HDCL-UT/isoya/Collision_Coalescence_3/data/N10_t1E6_dt1yr_eta1E-2_10Hill/  //Ta Mac Pro用
 
@@ -47,7 +47,7 @@ EXTERN int global_n_p;  //グローバル変数.
 //////////////////////////////////////////////////
 #define INTERACTION_ALL 0  //全粒子同士の重力相互作用.  //どちらかひとつ.
 #define INTERACTION_ONLY_PLANET_TRACER 1  //惑星とトレーサー間の重力相互作用のみ.  //どちらかひとつ.
-#define FRAGMENTATION 0  //近傍粒子探索と質量フラックス計算.
+#define FRAGMENTATION 1  //近傍粒子探索と質量フラックス計算.
 //////////////////////////////////////////////////
 
 
@@ -98,13 +98,16 @@ Mean Longitude (deg)               100.46435
 
 
 //////////////////////////////////////////////////
-#define T_MAX (2.0*M_PI*1.0E2)  //1E2yr  全計算時間.
+#define T_MAX (2.0*M_PI*1.0E-5)  //1E1yr  全計算時間.
 
 #define DT_LOG 1  // 1: t_eneをlogでとる 0: t_eneをlinearでとる
 
 /*  log 用 */
-#define TIME_INTERVAL 2.0*M_PI*1.0E-6,2.0*M_PI*1.0E-5,2.0*M_PI*1.0E-4,2.0*M_PI*1.0E-3,2.0*M_PI*1.0E-2,2.0*M_PI*1.0E-1,2.0*M_PI*1.0E0,2.0*M_PI*1.0E1,T_MAX  //t_ene配列の中身.
-#define TIME_INTERVAL_MAX 9 //t_ene配列の要素数.
+#define TIME_INTERVAL 2.0*M_PI*1.0E-6,T_MAX  //t_ene配列の中身.
+#define TIME_INTERVAL_MAX 2 //t_ene配列の要素数.
+
+//#define TIME_INTERVAL 2.0*M_PI*1.0E-6,2.0*M_PI*1.0E-5,2.0*M_PI*1.0E-4,2.0*M_PI*1.0E-3,2.0*M_PI*1.0E-2,2.0*M_PI*1.0E-1,2.0*M_PI*1.0E0,T_MAX  //t_ene配列の中身.
+//#define TIME_INTERVAL_MAX 8 //t_ene配列の要素数.
 
 
 /*  linear 用 */
@@ -213,6 +216,62 @@ struct parameter{
   double h_0;
   double Q_D;
 };
+
+
+
+struct execution_time{
+  double AngularMomentum;
+  double InnerProduct;
+  double RadiusFromCenter;
+  double SquareOfVelocity;
+  double Timestep_i_0;
+  double Timestep_i_sys;
+  double SquareOfRelativeDistance;
+  double SquareOfRelativeVelocity;
+  double RelativeInnerProduct;
+  double Acceleration_ij;
+  double dAcceleration_ij;
+  double Acceleration_indirect;
+  double dAcceleration_indirect;
+  double External_Acceleration;
+  double External_dAcceleration;
+  double All_Acceleration;
+  double All_dAcceleration;
+  double Calculate_OrbitalElements;
+  double Calculate_P;
+  double Calculate_Q;
+  double Calculate_Energy;
+  double InitialCondition;
+  double Predictor;
+  double Corrector_sys;
+  double Iteration_sys;
+  double Collision_Judgement;
+  double Energy_Correction;
+  double Coalescence;
+  double NeighborSearch;
+  double RandomVelocity;
+  double MassFlux;
+  double Depletion_Time;
+  double MassDepletion;
+  double s_1_FRAG_trapezoid;
+  double s_2_FRAG_trapezoid;
+  double s_3_FRAG_trapezoid;
+  double s_1_FRAG_integrand;
+  double s_2_FRAG_integrand;
+  double s_3_FRAG_integrand;
+  double s_1_FRAG;
+  double s_2_FRAG;
+  double s_3_FRAG;
+  double Rotation_3D_xaxis;
+  double Rotation_3D_yaxis;
+  double Rotation_3D_zaxis;
+  double Swap;
+  double CenterOfGravity;
+};
+EXTERN struct execution_time exetime;  //グローバル変数
+
+
+
 
 double AngularMomentum(int i,struct orbital_elements ele[],double x_0[][4],double v_0[][4]);
 
