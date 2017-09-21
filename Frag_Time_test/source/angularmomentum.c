@@ -2,7 +2,7 @@
 
 /*角運動量*/
 double AngularMomentum(int i,struct orbital_elements ele[],double x_0[][4],double v_0[][4]){
-  clock_t start = clock();
+  uint64_t start = mach_absolute_time();
   
   int k;
   double L[global_n+1][4];
@@ -25,8 +25,9 @@ double AngularMomentum(int i,struct orbital_elements ele[],double x_0[][4],doubl
     abs_L_0 += L_tot_0[k]*L_tot_0[k];
   }
   abs_L_0 = sqrt(abs_L_0);
-  return abs_L_0;
 
-  clock_t end = clock();
-  exetime.AngularMomentum += (double)(end-start)/CLOCKS_PER_SEC;
+  uint64_t end = mach_absolute_time();
+  exetime.AngularMomentum += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
+  
+  return abs_L_0;
 }

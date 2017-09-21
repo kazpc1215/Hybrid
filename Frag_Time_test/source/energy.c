@@ -9,7 +9,7 @@ double Calculate_Energy(struct orbital_elements ele[],double x_c[][4],
 			double v2_c[],
 #endif
 			double r_c[],double abs_r[],double abs_r2[]){
-  clock_t start = clock();
+  uint64_t start = mach_absolute_time();
 
   int i,j;
   double E[N_p+N_tr+1]={};
@@ -53,8 +53,9 @@ double Calculate_Energy(struct orbital_elements ele[],double x_c[][4],
 #endif
   
   }  //i loop
-  return E_tot;
 
-  clock_t end = clock();
-  exetime.Calculate_Energy += (double)(end-start)/CLOCKS_PER_SEC;
+  uint64_t end = mach_absolute_time();
+  exetime.Calculate_Energy += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
+  
+  return E_tot;
 }

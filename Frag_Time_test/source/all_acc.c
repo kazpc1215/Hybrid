@@ -2,7 +2,7 @@
 
 /*全加速度*/
 double All_Acceleration(int i,int k,struct orbital_elements ele[],double x_0[][4],double r_0[],double abs_r2[]){
-  clock_t start = clock();
+  uint64_t start = mach_absolute_time();
   
   int j;
   double a_0;
@@ -28,16 +28,15 @@ double All_Acceleration(int i,int k,struct orbital_elements ele[],double x_0[][4
     }
   }
 
+  uint64_t end = mach_absolute_time();
+  exetime.All_Acceleration += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
     
   return a_0;
-
-  clock_t end = clock();
-  exetime.All_Acceleration += (double)(end-start)/CLOCKS_PER_SEC;
 }
 
 /*全加加速度*/
 double All_dAcceleration(int i,int k,struct orbital_elements ele[],double x_0[][4],double v_0[][4],double r_dot_v[],double r_dot_v_ij[],double r_0[],double abs_r2[]){
-  clock_t start = clock();
+  uint64_t start = mach_absolute_time();
   
   int j;
   double adot_0;
@@ -62,10 +61,10 @@ double All_dAcceleration(int i,int k,struct orbital_elements ele[],double x_0[][
       adot_0 += dAcceleration_ij(i,j,k,ele,x_0,v_0,r_dot_v_ij,abs_r2);
     } 
   }
+
+  uint64_t end = mach_absolute_time();
+  exetime.All_dAcceleration += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
   
   return adot_0;
-
-  clock_t end = clock();
-  exetime.All_dAcceleration += (double)(end-start)/CLOCKS_PER_SEC;
 }
 

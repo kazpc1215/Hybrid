@@ -2,7 +2,7 @@
 
 
 void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation frag[],double x_0[][4]){
-  clock_t start = clock();
+  uint64_t start = mach_absolute_time();
 
   int j,l,m;
   double radius[global_n+1];
@@ -87,13 +87,13 @@ void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation fra
     frag[i].n_s = 0.0;
   }
 
-  clock_t end = clock();
-  exetime.NeighborSearch += (double)(end-start)/CLOCKS_PER_SEC;
+  uint64_t end = mach_absolute_time();
+  exetime.NeighborSearch += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
 }
 
 
 double RandomVelocity(int i,int j,struct orbital_elements ele[]){
-  clock_t start = clock();
+  uint64_t start = mach_absolute_time();
   
   double eij2;
   double iij2;
@@ -123,13 +123,13 @@ double RandomVelocity(int i,int j,struct orbital_elements ele[]){
     printf("eij2=%e\tiij2=%e\taxis=%e\n",eij2,iij2,ele[i].axis);
   }
 
+  uint64_t end = mach_absolute_time();
+  exetime.RandomVelocity += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
+  
 #if !defined(G) && !defined(M_0)
   return sqrt((eij2 + iij2)/ele[i].axis);
 #else
   return sqrt((eij2 + iij2)*G*M_0/ele[i].axis);
 #endif
-
-  clock_t end = clock();
-  exetime.RandomVelocity += (double)(end-start)/CLOCKS_PER_SEC;
 }
 

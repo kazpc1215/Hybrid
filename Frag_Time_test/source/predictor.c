@@ -2,7 +2,7 @@
 
 /*予測子*/
 void Predictor(int i,double x_0[][4],double v_0[][4],double a_0[][4],double adot_0[][4],double x_p[][4],double v_p[][4],double r_p[],double v2_p[],double Dt[]){
-  clock_t start = clock();
+  uint64_t start = mach_absolute_time();
   
   int k;
   
@@ -18,6 +18,6 @@ void Predictor(int i,double x_0[][4],double v_0[][4],double a_0[][4],double adot
   r_p[i] = RadiusFromCenter(i,x_p);  //中心星からの距離.
   v2_p[i] = SquareOfVelocity(i,v_p); //速度の2乗.
 
-  clock_t end = clock();
-  exetime.Predictor += (double)(end-start)/CLOCKS_PER_SEC;
+  uint64_t end = mach_absolute_time();
+  exetime.Predictor += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
 }

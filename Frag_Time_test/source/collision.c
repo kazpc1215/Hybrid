@@ -1,7 +1,7 @@
 #include "hybrid.h"
 
 int Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double abs_r[],double abs_r2[],int *i_col,int *j_col){
-  clock_t start = clock();
+  uint64_t start = mach_absolute_time();
 
   int i,j;
   
@@ -16,6 +16,10 @@ int Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double abs
       if(abs_r[j] < ele[i].radius + ele[j].radius){
 	(*i_col) = i;
 	(*j_col) = j;
+
+	uint64_t end = mach_absolute_time();
+	exetime.Collision_Judgement += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
+	
 	return 1;  //衝突した場合.
       }
 
@@ -23,15 +27,15 @@ int Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double abs
     }
   }
 
+  uint64_t end = mach_absolute_time();
+  exetime.Collision_Judgement += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
+  
   return 0;  //衝突しない場合.
-
-  clock_t end = clock();
-  exetime.Collision_Judgement += (double)(end-start)/CLOCKS_PER_SEC;
 }
 
 
 void Energy_Correction(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbital_elements ele[],double *dE_heat,double *dE_grav,double *dE_c,double *v_imp){
-  clock_t start = clock();
+  uint64_t start = mach_absolute_time();
   
   double m_1 = ele[i_col].mass;
   double m_2 = ele[j_col].mass;
@@ -60,14 +64,14 @@ void Energy_Correction(int i_col,int j_col,double x_0[][4],double v_0[][4],struc
   
   printf("dE_heat=%e\tdE_grav=%e\tdE_c=%e\tv_imp=%e\n",(*dE_heat),(*dE_grav),(*dE_c),(*v_imp));
 
-  clock_t end = clock();
-  exetime.Energy_Correction += (double)(end-start)/CLOCKS_PER_SEC;
+  uint64_t end = mach_absolute_time();
+  exetime.Energy_Correction += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
 }
 
 
 
 void Coalescence(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbital_elements ele[]){
-  clock_t start = clock();
+  uint64_t start = mach_absolute_time();
   
   int k;
 
@@ -104,6 +108,6 @@ void Coalescence(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbi
   global_n_p--;
   global_n = global_n_p + N_tr;
 
-  clock_t end = clock();
-  exetime.Coalescence += (double)(end-start)/CLOCKS_PER_SEC;
+  uint64_t end = mach_absolute_time();
+  exetime.Coalescence += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
 }

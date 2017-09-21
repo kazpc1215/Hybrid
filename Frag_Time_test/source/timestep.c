@@ -2,6 +2,8 @@
 
 /*初期 タイムステップ計算*/
 double Timestep_i_0(int i,double a_0[][4],double adot_0[][4],double abs_a[],double abs_adot[]){
+  uint64_t start = mach_absolute_time();
+  
   int k;
 
   abs_a[i] = 0.0;  
@@ -15,12 +17,17 @@ double Timestep_i_0(int i,double a_0[][4],double adot_0[][4],double abs_a[],doub
   abs_adot[i] = sqrt(abs_adot[i]);
   
   //printf("abs_a[%d]=%f\tabs_adot[%d]=%f\n",i,abs_a[i],i,abs_adot[i]);
+
+  uint64_t end = mach_absolute_time();
+  exetime.Timestep_i_0 += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
+  
   return ETA*abs_a[i]/abs_adot[i];
 }
 
 
 /*i_sys のみのタイムステップ計算*/
 double Timestep_i_sys(int i_sys,double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],double abs_a[],double abs_adot[],double abs_adot2[],double abs_adot3[],double dt_[]){
+  uint64_t start = mach_absolute_time();
 
   int k;
   double dt_inv = 1.0/dt_[i_sys];
@@ -41,6 +48,9 @@ double Timestep_i_sys(int i_sys,double a[][4],double adot[][4],double adot2_dt2[
   abs_adot3[i_sys] = sqrt(abs_adot3[i_sys]);
   
   dt_[i_sys] = ETA*sqrt((abs_a[i_sys]*abs_adot2[i_sys] + abs_adot[i_sys]*abs_adot[i_sys])/(abs_adot[i_sys]*abs_adot3[i_sys] + abs_adot2[i_sys]*abs_adot2[i_sys]));
+
+  uint64_t end = mach_absolute_time();
+  exetime.Timestep_i_sys += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
 
   return dt_[i_sys];
 }

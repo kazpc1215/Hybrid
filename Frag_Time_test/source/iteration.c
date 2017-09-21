@@ -2,7 +2,7 @@
 
 /*i_sys のみのiteration*/
 void Iteration_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],double v_p[][4],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double a_0[][4],double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],double abs_r[],double abs_r2[],double abs_v[],double abs_v2[],double r_dot_v_ij[],double r_dot_v[],double dt_[]){
-  clock_t start = clock();
+  uint64_t start = mach_absolute_time();
 
   int j,k;
 
@@ -41,7 +41,7 @@ void Iteration_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],doubl
   r_c[i_sys] = RadiusFromCenter(i_sys,x_c);  //中心からの距離.
   v2_c[i_sys] = SquareOfVelocity(i_sys,v_c);  //速度の2乗.
 
-  clock_t end = clock();
-  exetime.Iteration_sys += (double)(end-start)/CLOCKS_PER_SEC;
+  uint64_t end = mach_absolute_time();
+  exetime.Iteration_sys += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
 }
 

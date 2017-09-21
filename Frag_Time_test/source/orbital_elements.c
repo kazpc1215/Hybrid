@@ -2,7 +2,7 @@
 
 /*軌道要素計算*/
 int Calculate_OrbitalElements(int i,double x_c[][4],double v_c[][4],struct orbital_elements ele[],double P[][4],double Q[][4],double r_c[],double v2_c[],double r_dot_v[]){
-  clock_t start = clock();
+  uint64_t start = mach_absolute_time();
   
 #if INDIRECT_TERM
   
@@ -160,16 +160,19 @@ int Calculate_OrbitalElements(int i,double x_c[][4],double v_c[][4],struct orbit
   if(isnan(ele[i].Omega)){
     printf("i=%d\tOmega is nan.\n",i);
   }
+
+  uint64_t end = mach_absolute_time();
+  exetime.Calculate_OrbitalElements += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
   
   return 0;
-
-  clock_t end = clock();
-  exetime.Calculate_OrbitalElements += (double)(end-start)/CLOCKS_PER_SEC;
 }
 
 /*P計算*/
 double Calculate_P(int i,int k,struct orbital_elements ele[]){
-  clock_t start = clock();
+  uint64_t start = mach_absolute_time();
+
+  uint64_t end = mach_absolute_time();
+  exetime.Calculate_P += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
   
   if(k==1){
     return cos(ele[i].omega)*cos(ele[i].Omega) - sin(ele[i].omega)*sin(ele[i].Omega)*cos(ele[i].inc);
@@ -178,14 +181,14 @@ double Calculate_P(int i,int k,struct orbital_elements ele[]){
   }else{
     return sin(ele[i].omega)*sin(ele[i].inc);
   }
-
-  clock_t end = clock();
-  exetime.Calculate_P += (double)(end-start)/CLOCKS_PER_SEC;
 }
 
 /*Q計算*/
 double Calculate_Q(int i,int k,struct orbital_elements ele[]){
-  clock_t start = clock();
+  uint64_t start = mach_absolute_time();
+
+  uint64_t end = mach_absolute_time();
+  exetime.Calculate_Q += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
   
   if(k==1){
     return -sin(ele[i].omega)*cos(ele[i].Omega) - cos(ele[i].omega)*sin(ele[i].Omega)*cos(ele[i].inc);
@@ -194,16 +197,13 @@ double Calculate_Q(int i,int k,struct orbital_elements ele[]){
   }else{
     return cos(ele[i].omega)*sin(ele[i].inc);
   }
-
-  clock_t end = clock();
-  exetime.Calculate_Q += (double)(end-start)/CLOCKS_PER_SEC;
 }
 
 
 
 /*初期位置、速度計算*/
 void InitialCondition(int i,double P[][4],double Q[][4],double x_0[][4],double v_0[][4],double v2_0[],double r_dot_v[],double r_0[],struct orbital_elements ele[]){
-  clock_t start = clock();
+  uint64_t start = mach_absolute_time();
   
 #if INDIRECT_TERM
   
@@ -246,8 +246,8 @@ void InitialCondition(int i,double P[][4],double Q[][4],double x_0[][4],double v
   v2_0[i] = SquareOfVelocity(i,v_0);  //速度の2乗.
   //printf("vx=%f\tvy=%f\tvz=%f\n",v_0[i][1],v_0[i][2],v_0[i][3]);
 
-  clock_t end = clock();
-  exetime.InitialCondition += (double)(end-start)/CLOCKS_PER_SEC;
+  uint64_t end = mach_absolute_time();
+  exetime.InitialCondition += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
 }
 
 

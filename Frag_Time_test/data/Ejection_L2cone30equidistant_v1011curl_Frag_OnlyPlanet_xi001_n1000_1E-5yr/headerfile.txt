@@ -10,7 +10,7 @@
 #include <time.h>
 
 
-#define DIRECTORY ../data/Ejection_L2cone30equidistant_v1011curl_Frag_OnlyPlanet_xi001_n1000_1E-4yr/  //ファイル保存用のディレクトリ.
+#define DIRECTORY ../data/Ejection_L2cone30equidistant_v1011curl_Frag_OnlyPlanet_xi001_n1000_1E-5yr/  //ファイル保存用のディレクトリ.
 
 //#define DIRECTORY /Volumes/HDCL-UT/isoya/Collision_Coalescence_3/data/N10_t1E6_dt1yr_eta1E-2_10Hill/  //Ta Mac Pro用
 
@@ -99,13 +99,13 @@ Mean Longitude (deg)               100.46435
 
 
 //////////////////////////////////////////////////
-#define T_MAX (2.0*M_PI*1.0E-4)  //1E1yr  全計算時間.
+#define T_MAX (2.0*M_PI*1.0E-5)  //1E1yr  全計算時間.
 
 #define DT_LOG 1  // 1: t_eneをlogでとる 0: t_eneをlinearでとる
 
 /*  log 用 */
-#define TIME_INTERVAL 2.0*M_PI*1.0E-6,2.0*M_PI*1.0E-5,T_MAX  //t_ene配列の中身.
-#define TIME_INTERVAL_MAX 3 //t_ene配列の要素数.
+#define TIME_INTERVAL 2.0*M_PI*1.0E-6,T_MAX  //t_ene配列の中身.
+#define TIME_INTERVAL_MAX 2 //t_ene配列の要素数.
 
 //#define TIME_INTERVAL 2.0*M_PI*1.0E-6,2.0*M_PI*1.0E-5,2.0*M_PI*1.0E-4,2.0*M_PI*1.0E-3,2.0*M_PI*1.0E-2,2.0*M_PI*1.0E-1,2.0*M_PI*1.0E0,T_MAX  //t_ene配列の中身.
 //#define TIME_INTERVAL_MAX 8 //t_ene配列の要素数.
