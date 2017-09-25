@@ -42,21 +42,25 @@ EXTERN int global_n_p;  //グローバル変数.
 #define ORBITALELEMENTS_FILE 1
 #define POSI_VELO_FILE 0
 #define POSITION_ROT_FILE 0
+#define CLOSE_ENCOUNTER_FILE 1
 //////////////////////////////////////////////////
 
 
 //////////////////////////////////////////////////
-#define INTERACTION_ALL 1//全粒子同士の重力相互作用.  //どちらかひとつ.
-#define INTERACTION_ONLY_PLANET_TRACER 0  //惑星とトレーサー間の重力相互作用のみ.  //どちらかひとつ.
+#define INTERACTION_ALL 1//全粒子同士の重力相互作用.
+#define INTERACTION_ONLY_PLANET_TRACER 0  //惑星とトレーサー間の重力相互作用のみ.
 #define FRAGMENTATION 0  //近傍粒子探索と質量フラックス計算.
+#define ELIMINATE_PARTICLE 1  //太陽に飲みこまれるか系外へ出て行くかで粒子を消す.
 //////////////////////////////////////////////////
 
 
 
 
 //////////////////////////////////////////////////
+#if ELIMINATE_PARTICLE
 #define SOLAR_RADIUS (6.957E10/1.496E13)
 #define SOLAR_SYSTEM_LIMIT 100.0
+#endif
 
 //#define PLANET_MASS 3.0E-6
 #define PLANET_MASS 3.0E-7  //火星サイズ.

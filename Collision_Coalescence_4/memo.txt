@@ -1,3 +1,4 @@
 エネルギーファイルにstep数も含める
 時間の書き出しで%.15eを使う
 Posi_Velo用の#ifを作った
+ELIMINATE_PARTICLEを作った
