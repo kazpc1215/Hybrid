@@ -78,7 +78,7 @@ int main(void){
 
   
   char cat_header[200]={};
-  char headerfile[20]="hybrid.h";
+  char headerfile[10]="hybrid.h";
   sprintf(cat_header,"cat %s > %sheaderfile.txt",headerfile,
 #ifdef DIRECTORY
 	  STR(DIRECTORY)
@@ -346,7 +346,7 @@ int main(void){
 
 #if POSI_VELO_FILE
   FILE *fpposivelo;   //初期位置、速度をファイルへ書き出し.
-  char posivelofile[100]={};
+  char posivelofile[200]={};
   sprintf(posivelofile,"%sPosi_Velo.dat",
 #ifdef DIRECTORY
 	  STR(DIRECTORY)
@@ -390,7 +390,7 @@ int main(void){
   Rotation_3D_zaxis(PLANET_NO,x_rot,-theta);
   
   FILE *fpposi_rot;
-  char posi_rot[100]={};
+  char posi_rot[200]={};
   sprintf(posi_rot,"%s%s_posi_rot.dat",
 #ifdef DIRECTORY
 	  STR(DIRECTORY)
@@ -414,7 +414,7 @@ int main(void){
   
 #if CLOSE_ENCOUNTER_FILE
   FILE *fpcloseencounter;   //近接遭遇時の位置速度をファイルへ書き出し.
-  char closefile[100]={};
+  char closefile[200]={};
   sprintf(closefile,"%sClose_Encounter.dat",
 #ifdef DIRECTORY
 	  STR(DIRECTORY)
@@ -491,7 +491,7 @@ int main(void){
   //printf("%e\t%.15e\n",0.0,E_tot_0);
   
   FILE *fpEne;   //初期エネルギーをファイルへ書き出し.
-  char Ene[100]={};
+  char Ene[200]={};
   sprintf(Ene,"%sENERGY.dat",
 #ifdef DIRECTORY
 	  STR(DIRECTORY)
@@ -612,7 +612,7 @@ int main(void){
 
 
   FILE *fpfrag;   //初期総質量をファイルへ書き出し.
-  char fragfile[100]={};
+  char fragfile[200]={};
   sprintf(fragfile,"%sTotalMass.dat",
 #ifdef DIRECTORY
 	  STR(DIRECTORY)
@@ -635,7 +635,7 @@ int main(void){
   
 
   FILE *fpposimass;   //初期位置、質量などをファイルへ書き出し.
-  char posimassfile[100]={};
+  char posimassfile[200]={};
   sprintf(posimassfile,"%sPosi_Mass.dat",
 #ifdef DIRECTORY
 	  STR(DIRECTORY)
