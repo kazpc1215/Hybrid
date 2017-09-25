@@ -344,6 +344,7 @@ int main(void){
 #endif
     
 
+#if POSI_VELO_FILE
   FILE *fpposivelo;   //初期位置、速度をファイルへ書き出し.
   char posivelofile[100]={};
   sprintf(posivelofile,"%sPosi_Velo.dat",
@@ -366,7 +367,8 @@ int main(void){
   }
   fprintf(fpposivelo,"\n\n");
   fclose(fpposivelo);
-
+#endif
+  
 
   
 #if POSITION_ROT_FILE
@@ -671,7 +673,9 @@ int main(void){
 	Predictor(i,x_0,v_0,a_0,adot_0,x_p,v_p,r_p,v2_p,Dt);  //予測子 t_sysにおけるすべての粒子を計算.
       }
 
-      //CenterOfGravity(x_p,v_p,x_G,v_G,ele);  //重心計算
+#if INDIRECT_TERM
+      CenterOfGravity(x_p,v_p,x_G,v_G,ele);  //重心計算
+#endif
       
       if(Collision_Judgement(ele,x_p,abs_r,abs_r2,&i_col,&j_col)==1){  //予測子を用いた衝突判定.
 
@@ -720,45 +724,24 @@ int main(void){
 	//新しい合体粒子を作る. 0番目の要素はコピーに使うだけ.
 	ele[0].mass = ele[i_col].mass + ele[j_col].mass;
 
-	/*
-	printf("x[%d]=%f\ty[%d]=%f\tz[%d]=%f\tvx[%d]=%f\tvy[%d]=%f\tvz[%d]=%f\n",0,x_0[0][1],0,x_0[0][2],0,x_0[0][3],0,v_0[0][1],0,v_0[0][2],0,v_0[0][3]);
-	printf("x[%d]=%f\ty[%d]=%f\tz[%d]=%f\tvx[%d]=%f\tvy[%d]=%f\tvz[%d]=%f\n",i_col,x_0[i_col][1],i_col,x_0[i_col][2],i_col,x_0[i_col][3],i_col,v_0[i_col][1],i_col,v_0[i_col][2],i_col,v_0[i_col][3]);
-	printf("x[%d]=%f\ty[%d]=%f\tz[%d]=%f\tvx[%d]=%f\tvy[%d]=%f\tvz[%d]=%f\n",j_col,x_0[j_col][1],j_col,x_0[j_col][2],j_col,x_0[j_col][3],j_col,v_0[j_col][1],j_col,v_0[j_col][2],j_col,v_0[j_col][3]);
-	printf("x[%d]=%f\ty[%d]=%f\tz[%d]=%f\tvx[%d]=%f\tvy[%d]=%f\tvz[%d]=%f\n",global_n,x_0[global_n][1],global_n,x_0[global_n][2],global_n,x_0[global_n][3],global_n,v_0[global_n][1],global_n,v_0[global_n][2],global_n,v_0[global_n][3]);
-	*/
+
 	
 	for(k=1;k<=3;++k){
 	  x_0[0][k] = (ele[i_col].mass*x_0[i_col][k] + ele[j_col].mass*x_0[j_col][k])/ele[0].mass;
 	  v_0[0][k] = (ele[i_col].mass*v_0[i_col][k] + ele[j_col].mass*v_0[j_col][k])/ele[0].mass;
 	}
 
-	/*
-	printf("x[%d]=%f\ty[%d]=%f\tz[%d]=%f\tvx[%d]=%f\tvy[%d]=%f\tvz[%d]=%f\n",0,x_0[0][1],0,x_0[0][2],0,x_0[0][3],0,v_0[0][1],0,v_0[0][2],0,v_0[0][3]);
-	printf("x[%d]=%f\ty[%d]=%f\tz[%d]=%f\tvx[%d]=%f\tvy[%d]=%f\tvz[%d]=%f\n",i_col,x_0[i_col][1],i_col,x_0[i_col][2],i_col,x_0[i_col][3],i_col,v_0[i_col][1],i_col,v_0[i_col][2],i_col,v_0[i_col][3]);
-	printf("x[%d]=%f\ty[%d]=%f\tz[%d]=%f\tvx[%d]=%f\tvy[%d]=%f\tvz[%d]=%f\n",j_col,x_0[j_col][1],j_col,x_0[j_col][2],j_col,x_0[j_col][3],j_col,v_0[j_col][1],j_col,v_0[j_col][2],j_col,v_0[j_col][3]);
-	printf("x[%d]=%f\ty[%d]=%f\tz[%d]=%f\tvx[%d]=%f\tvy[%d]=%f\tvz[%d]=%f\n",global_n,x_0[global_n][1],global_n,x_0[global_n][2],global_n,x_0[global_n][3],global_n,v_0[global_n][1],global_n,v_0[global_n][2],global_n,v_0[global_n][3]);
-	*/
+
 
 	//衝突合体する際のエネルギーの補正量を計算
 	Energy_Correction(i_col,j_col,x_0,v_0,ele,&dE_heat,&dE_grav,&dE_c,&v_imp);
 	
 
 	    
-	//printf("before\tn=%d\tmass[%d]=%e\tmass[%d]=%e\n",global_n,i_col,ele[i_col].mass,global_n,ele[global_n].mass);
-
-	    
 	//合体後の操作
 	Coalescence(i_col,j_col,x_0,v_0,ele);
 
 	    
-	//printf("after\tn=%d\tmass[%d]=%e\tmass[%d]=%e\n",global_n,i_col,ele[i_col].mass,global_n,ele[global_n].mass);
-
-	/*
-	printf("x[%d]=%f\ty[%d]=%f\tz[%d]=%f\tvx[%d]=%f\tvy[%d]=%f\tvz[%d]=%f\n",0,x_0[0][1],0,x_0[0][2],0,x_0[0][3],0,v_0[0][1],0,v_0[0][2],0,v_0[0][3]);
-	printf("x[%d]=%f\ty[%d]=%f\tz[%d]=%f\tvx[%d]=%f\tvy[%d]=%f\tvz[%d]=%f\n",i_col,x_0[i_col][1],i_col,x_0[i_col][2],i_col,x_0[i_col][3],i_col,v_0[i_col][1],i_col,v_0[i_col][2],i_col,v_0[i_col][3]);
-	printf("x[%d]=%f\ty[%d]=%f\tz[%d]=%f\tvx[%d]=%f\tvy[%d]=%f\tvz[%d]=%f\n",j_col,x_0[j_col][1],j_col,x_0[j_col][2],j_col,x_0[j_col][3],j_col,v_0[j_col][1],j_col,v_0[j_col][2],j_col,v_0[j_col][3]);
-	printf("x[%d]=%f\ty[%d]=%f\tz[%d]=%f\tvx[%d]=%f\tvy[%d]=%f\tvz[%d]=%f\n",global_n,x_0[global_n][1],global_n,x_0[global_n][2],global_n,x_0[global_n][3],global_n,v_0[global_n][1],global_n,v_0[global_n][2],global_n,v_0[global_n][3]);
-	*/
 	
 	    
 	//以下、すべての粒子の加速度などを再計算.
@@ -897,7 +880,7 @@ int main(void){
 	}
       }
 
-
+#if POSI_VELO_FILE
       fpposivelo = fopen(posivelofile,"a");  //位置、速度をファイルへ書き出し.
       if(fpposivelo==NULL){
 	printf("posivelofile error\n");
@@ -909,7 +892,7 @@ int main(void){
       fprintf(fpposivelo,"\n\n");
   
       fclose(fpposivelo);
-
+#endif
 
 
 #if INDIRECT_TERM
@@ -1134,7 +1117,7 @@ int main(void){
     if(fmod(step,1.0E6)==0.0){
       //if(fmod(step,1.0E2)==0.0){
       //printf("i_sys=%03d\tt=%.15e\tE=%.15e\tL=%.15e\tr_min=%.15e\n",i_sys,t_sys,E_tot,abs_L,r_min);  //全エネルギー,全角運動量.
-      printf("step=%e\tN=%d\ti_sys=%03d\tdt[%03d]=%.2e[yr]\tt_sys=%.2e[yr]\n",step,global_n,i_sys,i_sys,dt_[i_sys]/2.0/M_PI,t_sys/2.0/M_PI);
+      printf("step=%.e\tN=%d\ti_sys=%03d\tdt[%03d]=%.2e[yr]\tt_sys=%.2e[yr]\n",step,global_n,i_sys,i_sys,dt_[i_sys]/2.0/M_PI,t_sys/2.0/M_PI);
     }
     
 
@@ -1248,8 +1231,7 @@ int main(void){
     }
 
 
-    
- 
+
     
     
     step+=1.0;

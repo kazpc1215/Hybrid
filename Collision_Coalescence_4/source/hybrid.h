@@ -40,6 +40,7 @@ EXTERN int global_n_p;  //グローバル変数.
 //////////////////////////////////////////////////
 #define ENERGY_FILE 1
 #define ORBITALELEMENTS_FILE 1
+#define POSI_VELO_FILE 0
 #define POSITION_ROT_FILE 0
 //////////////////////////////////////////////////
 
