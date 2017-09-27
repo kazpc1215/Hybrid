@@ -204,6 +204,7 @@ int main(void){
   }
 
 
+  
 #if N_tr != 0
   double x_eject[N_p+N_tr+1][4]={};
   double v_eject[N_p+N_tr+1][4]={};
