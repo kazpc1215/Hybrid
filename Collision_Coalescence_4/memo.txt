@@ -2,3 +2,4 @@
 時間の書き出しで%.15eを使う
 Posi_Velo用の#ifを作った
 ELIMINATE_PARTICLEを作った
+Timestep関数の引数を減らした
