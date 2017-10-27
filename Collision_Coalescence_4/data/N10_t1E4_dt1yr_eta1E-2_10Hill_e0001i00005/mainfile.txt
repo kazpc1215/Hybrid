@@ -505,8 +505,8 @@ int main(void){
     printf("Ene 0 error\n");
     return -1;
   }
-  fprintf(fpEne,"#t[yr]\tE_tot\trelative E error\trelative dE_correct\n");
-  fprintf(fpEne,"%.15e\t%.15e\t%.15e\t%.15e\n",0.0,E_tot_0,0.0,dE_correct/fabs(E_tot_0));
+  fprintf(fpEne,"#t[yr]\tE_tot\trelative E error\trelative dE_correct\tstep\n");
+  fprintf(fpEne,"%.15e\t%.15e\t%.15e\t%.15e\t%15e\n",0.0,E_tot_0,0.0,dE_correct/fabs(E_tot_0),0.0);
   fclose(fpEne);
 
   abs_L_0 = 0.0;
@@ -807,7 +807,7 @@ int main(void){
 	}
 	fprintf(fpEne,"#collision occur\t%e[yr]\n",(t_sys+t_tmp)/2.0/M_PI);
 	fprintf(fpEne,"#dE_heat=%e\tdE_grav=%e\tdE_c=%e\tv_imp=%e\n",dE_heat,dE_grav,dE_c,v_imp);
-	fprintf(fpEne,"%.15e\t%.15e\t%.15e\t%.15e\n",(t_sys+t_tmp)/2.0/M_PI,E_tot,(E_tot-E_tot_0)/fabs(E_tot_0),dE_correct/fabs(E_tot_0));
+	fprintf(fpEne,"%.15e\t%.15e\t%.15e\t%.15e\t%15e\n",(t_sys+t_tmp)/2.0/M_PI,E_tot,(E_tot-E_tot_0)/fabs(E_tot_0),dE_correct/fabs(E_tot_0),step);
 	fclose(fpEne);
 
 	abs_L = AngularMomentum(i,ele,x_0,v_0);
@@ -948,7 +948,7 @@ int main(void){
 	printf("Ene error\n");
 	return -1;
       }
-      fprintf(fpEne,"%.15e\t%.15e\t%.15e\t%.15e\n",(t_sys+t_tmp)/2.0/M_PI,E_tot,(E_tot-E_tot_0)/fabs(E_tot_0),dE_correct/fabs(E_tot_0));
+      fprintf(fpEne,"%.15e\t%.15e\t%.15e\t%.15e\t%15e\n",(t_sys+t_tmp)/2.0/M_PI,E_tot,(E_tot-E_tot_0)/fabs(E_tot_0),dE_correct/fabs(E_tot_0),step);
       fclose(fpEne);
 
       abs_L = AngularMomentum(i,ele,x_c,v_c);

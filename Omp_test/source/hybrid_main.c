@@ -5,7 +5,14 @@ int global_n = N_p + N_tr;  //全粒子数.
 int global_n_p = N_p;  //原始惑星の数.
 
 int main(void){
-
+  
+#ifdef _OPENMP
+  omp_set_num_threads(4);
+#pragma omp parallel
+  {
+    printf("max threads (set): %d\n", omp_get_max_threads());
+  }
+#endif
 
   global_n = N_p + N_tr;  //全粒子数.
   global_n_p = N_p;  //原始惑星の数.
@@ -175,7 +182,9 @@ int main(void){
     ele[i].r_h = ele[i].axis*cbrt(ele[i].mass/M_0/3.0);
 #endif
   }
-  
+
+
+  //#pragma omp parallel for
   for(i=1;i<=global_n_p;++i){  //惑星.
 
     sprintf(ele[i].name,"Planet%02d",i);
@@ -515,7 +524,7 @@ int main(void){
 #endif
 
   
-
+  //#pragma omp parallel for private(j,k)
   for(i=1;i<=global_n;++i){
     for(j=1;j<=global_n;++j){
       if(i!=j){
@@ -537,7 +546,7 @@ int main(void){
   }
 
   
-
+  //#pragma omp parallel for
   for(i=1;i<=global_n;++i){
     t_[i] = 0.0;
     
@@ -550,6 +559,7 @@ int main(void){
    
   t_sys = t_[1] + dt_[1];
   i_sys = 1;
+  //#pragma omp parallel for
   for(i=2;i<=global_n;++i){
     if((t_[i] + dt_[i]) < t_sys){
       t_sys = t_[i] + dt_[i];  //dt_[i]が最小のものを選ぶ.
@@ -691,7 +701,7 @@ int main(void){
       //individual timestep
 	
 	
-	
+      //#pragma omp parallel for
       for(i=1;i<=global_n;++i){ 
 	Dt[i] = t_sys - t_[i];
 	Predictor(i,x_0,v_0,a_0,adot_0,x_p,v_p,r_p,v2_p,Dt);  //予測子 t_sysにおけるすべての粒子を計算.
@@ -709,11 +719,14 @@ int main(void){
 
 
 	//t_sysで揃えるためDt[i]を使う.
+	//#pragma omp parallel for
 	for(i=1;i<=global_n;++i){
 	  Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,Dt);  //修正子 すべての粒子.
 	}
 
-	for(ite=1;ite<=ITE_MAX;++ite){  //iteration 3回.
+
+	for(ite=1;ite<=ITE_MAX;++ite){  //iteration.
+	  //#pragma omp parallel for
 	  for(i=1;i<=global_n;++i){
 	    Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,Dt);  //すべての粒子.
 	  }
@@ -728,7 +741,7 @@ int main(void){
 
 	
 
-	
+	//#pragma omp parallel for private(k)
 	for(i=1;i<=global_n;++i){  //位置と速度を更新.
 	  for(k=1;k<=3;++k){
 	    x_0[i][k] = x_c[i][k];
@@ -749,7 +762,7 @@ int main(void){
 	ele[0].mass = ele[i_col].mass + ele[j_col].mass;
 
 
-	
+	//#pragma omp parallel for
 	for(k=1;k<=3;++k){
 	  x_0[0][k] = (ele[i_col].mass*x_0[i_col][k] + ele[j_col].mass*x_0[j_col][k])/ele[0].mass;
 	  v_0[0][k] = (ele[i_col].mass*v_0[i_col][k] + ele[j_col].mass*v_0[j_col][k])/ele[0].mass;
@@ -769,12 +782,14 @@ int main(void){
 	
 	    
 	//以下、すべての粒子の加速度などを再計算.
+	//#pragma omp parallel for
 	for(i=1;i<=global_n;++i){
 	  r_0[i] = RadiusFromCenter(i,x_0);  //中心星からの距離.
 	  r_dot_v[i] = InnerProduct(i,x_0,v_0);  //r_i,v_iの内積.
 	  v2_0[i] = SquareOfVelocity(i,v_0);  //速度の2乗.
 	}
 
+	//#pragma omp parallel for
 	for(i=1;i<=global_n;++i){
 	  Calculate_OrbitalElements(i,x_0,v_0,ele,P,Q,r_0,v2_0,r_dot_v);
 	}
@@ -813,6 +828,7 @@ int main(void){
 	abs_L = AngularMomentum(i,ele,x_0,v_0);
 #endif
 
+	//#pragma omp parallel for private(j,k)
 	for(i=1;i<=global_n;++i){
 	  for(j=1;j<=global_n;++j){
 	    if(i!=j){
@@ -842,6 +858,7 @@ int main(void){
       }else{
 
 	/////////////////////////衝突しない場合/////////////////////////
+	//#pragma omp parallel for private(k)
 	for(i=1;i<=global_n;++i){
 	  if(i==i_sys){  
 	    Corrector_sys(i_sys,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);  //修正子. i_sys のみ.
@@ -855,7 +872,6 @@ int main(void){
 	  }
 	}
 
-	     
 	for(ite=1;ite<=ITE_MAX;++ite){  //iteration 3回.
 	  Iteration_sys(i_sys,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);  //i_sysのみ.
 	}
@@ -872,7 +888,8 @@ int main(void){
 	
     }else{  
       //t_ene[interval] ですべての粒子をそろえ、エネルギー、軌道要素等計算.
-      
+
+      //#pragma omp parallel for
       for(i=1;i<=global_n;++i){
 	
 #if DT_LOG == 1
@@ -893,17 +910,20 @@ int main(void){
       t_tmp = t_ene;
       t_sys = 0.0;
 #endif
-      
 
+      
+      //#pragma omp parallel for
       for(i=1;i<=global_n;++i){ 	  
 	Predictor(i,x_0,v_0,a_0,adot_0,x_p,v_p,r_p,v2_p,Dt);  //予測子. t_sysにおけるすべての粒子を計算.
       }
-	
+
+      //#pragma omp parallel for
       for(i=1;i<=global_n;++i){
 	Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);
       }
 
-      for(ite=1;ite<=ITE_MAX;++ite){  //iteration 3回.
+      for(ite=1;ite<=ITE_MAX;++ite){  //iteration.
+	//#pragma omp parallel for
 	for(i=1;i<=global_n;++i){	  
 	  Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);
 	}
@@ -915,6 +935,8 @@ int main(void){
 	printf("posivelofile error\n");
 	return -1;
       }
+      
+      //#pragma omp parallel for
       for(i=1;i<=global_n;i++){
 	fprintf(fpposivelo,"%.15e\t%4d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\n",(t_sys+t_tmp)/2.0/M_PI,i,x_c[i][1],x_c[i][2],x_c[i][3],r_c[i],sqrt(x_c[i][1]*x_c[i][1]+x_c[i][2]*x_c[i][2]),v_c[i][1],v_c[i][2],v_c[i][3],sqrt(v_c[i][1]*v_c[i][1]+v_c[i][2]*v_c[i][2]+v_c[i][3]*v_c[i][3]));
       }
@@ -959,7 +981,6 @@ int main(void){
       
       
 #if ORBITALELEMENTS_FILE
-      
       for(i=1;i<=global_n;++i){
 	Calculate_OrbitalElements(i,x_c,v_c,ele,P,Q,r_c,v2_c,r_dot_v);  //軌道要素計算. ファイルへ書き出し.
 	sprintf(orbit,"%s%s.dat",
@@ -974,7 +995,7 @@ int main(void){
 	fporbit = fopen(orbit,"a");
 	if(fporbit==NULL){
 	  printf("orbit error\n");
-	  return -1;
+	  exit(-1);
 	}
 	
 	fprintf(fporbit,"%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\n",(t_sys+t_tmp)/2.0/M_PI,ele[i].ecc,ele[i].axis,ele[i].u,ele[i].inc,ele[i].Omega,ele[i].omega,ele[i].r_h,ele[i].radius,ele[i].mass);
@@ -1143,7 +1164,7 @@ int main(void){
       
     
     
-    if(fmod(step,1.0E6)==0.0){
+    if(fmod(step,1.0E5)==0.0){
       printf("step=%e\tN=%d\ti_sys=%03d\tdt[%03d]=%.2e[yr]\tt_sys+t_tmp=%.15e[yr]\n",step,global_n,i_sys,i_sys,dt_[i_sys]/2.0/M_PI,(t_sys+t_tmp)/2.0/M_PI);      
     }
 
@@ -1168,6 +1189,7 @@ int main(void){
     
 
 #if ELIMINATE_PARTICLE
+    //#pragma omp parallel for private(k)
     for(i=1;i<=global_n_p;++i){
       //r_c[i]は計算してある
       if(r_c[i]<SOLAR_RADIUS || r_c[i]>SOLAR_SYSTEM_LIMIT){  //太陽に飲みこまれるか系外へ出て行くか.
@@ -1240,6 +1262,7 @@ int main(void){
 
     if((i_col != 0) && (j_col != 0)){  //衝突した場合.
 
+      //#pragma omp parallel for
       for(i=1;i<=global_n;++i){
 	t_[i] += Dt[i];  //すべての粒子の時間はt_sysに揃う.
 	    
@@ -1270,6 +1293,7 @@ int main(void){
 
     t_sys = t_[1] + dt_[1];
     i_sys = 1;
+    //#pragma omp parallel for
     for(i=2;i<=global_n;++i){
       if((t_[i] + dt_[i]) < t_sys){
 	t_sys = t_[i] + dt_[i];  //dt_[i]が最小のものを選ぶ.

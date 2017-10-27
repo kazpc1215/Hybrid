@@ -1,26 +1,30 @@
 # Makefile
 
-CC	= cc
-GCC     = gcc
+# SINGLE, DEBUG, OMP
+MODE	= OMP
+LEVEL	= -O0
+
+CC	= gcc
 OBJS	= hybrid_main.o sub.o all_acc.o acc.o predictor.o corrector.o iteration.o energy.o orbital_elements.o timestep.o angularmomentum.o neighbor.o massflux.o collision.o
 CFILE	= hybrid_main.c sub.c all_acc.c acc.c predictor.c corrector.c iteration.c energy.c orbital_elements.c timestep.c angularmomentum.c neighbor.c massflux.c collision.c
 
-FLAG	= -O3
-OMP_FLAG	= -fopenmp -O0	# for openmp
-DEBUG_FLAG	= -g -O0	# for debug
+ifeq ($(MODE),SINGLE)
+	CFLAGS	= $(LEVEL)
+endif
+ifeq ($(MODE),DEBUG)
+	CFLAGS	= -g -fopenmp -O0
+endif
+ifeq ($(MODE),OMP)
+	CFLAGS	= -fopenmp $(LEVEL)
+endif
 
 
 hybrid: $(OBJS)
-	$(CC) $(FLAG) -o $@ $(OBJS)
-
-hybrid_omp: $(OBJS)
-	$(GCC) $(OMP_FLAG) -o $@ $(OBJS)
-
-debug: $(OBJS)
-	$(CC) $(DEBUG_FLAG) -o $@ $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $(OBJS)
 
 .c.o:
-	$(CC) -c $<
+	$(CC) $(CFLAGS) -c $<
+
 
 $(OBJS): $(CFILE) hybrid.h
 

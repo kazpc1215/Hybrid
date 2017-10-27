@@ -2,3 +2,5 @@
 Posi_Velo用の#ifを作った
 ELIMINATE_PARTICLEを作った
 Timestep関数の引数を減らした
+Energy fileにstep数を出すようにした（3でやった変更を反映してなかった）
+Makefileにopenmp用の文を足した
