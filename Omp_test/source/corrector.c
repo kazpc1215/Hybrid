@@ -5,7 +5,7 @@
 void Corrector_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],double v_p[][4],double r_p[],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double a_0[][4],double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],double abs_r[],double abs_r2[],double abs_v[],double abs_v2[],double r_dot_v_ij[],double r_dot_v[],double dt_[]){
 
   int j,k;
-  
+
   for(j=1;j<=global_n;++j){
     if(i_sys!=j){
       abs_r2[j] = SquareOfRelativeDistance(i_sys,j,x_p); //i,j 絶対値2乗.
@@ -39,8 +39,7 @@ void Corrector_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],doubl
     v_c[i_sys][k] = v_p[i_sys][k] + adot2_dt2[i_sys][k]*dt_[i_sys]/6.0 +adot3_dt3[i_sys][k]*dt_[i_sys]/24.0;
   }  //k loop
   
-  //printf("corector\t%s\tx_c[%d][1]=%f\tx_c[%d][2]=%f\tx_c[%d][3]=%f\n",ele[i_sys].name,i_sys,x_c[i_sys][1],i_sys,x_c[i_sys][2],i_sys,x_c[i_sys][3]);
-  //printf("corector\t%s\tv_c[%d][1]=%f\tv_c[%d][2]=%f\tv_c[%d][3]=%f\n",ele[i_sys].name,i_sys,v_c[i_sys][1],i_sys,v_c[i_sys][2],i_sys,v_c[i_sys][3]);
+
 
   r_c[i_sys] = RadiusFromCenter(i_sys,x_c);
   v2_c[i_sys] = SquareOfVelocity(i_sys,v_c);

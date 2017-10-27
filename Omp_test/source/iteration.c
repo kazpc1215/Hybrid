@@ -9,7 +9,7 @@ void Iteration_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],doubl
     if(i_sys!=j){	 
       abs_r2[j] = SquareOfRelativeDistance(i_sys,j,x_c); //絶対値2乗.
       abs_v2[j] = SquareOfRelativeVelocity(i_sys,j,v_c);
-      r_dot_v_ij[j] = RelativeInnerProduct(i_sys,j,x_c,v_c);  //r_ij,v_ijの内積.	    
+      r_dot_v_ij[j] = RelativeInnerProduct(i_sys,j,x_c,v_c);  //r_ij,v_ijの内積.
       abs_r[j] = sqrt(abs_r2[j]); //絶対値.
       abs_v[j] = sqrt(abs_v2[j]);	
     }
@@ -34,7 +34,6 @@ void Iteration_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],doubl
     v_c[i_sys][k] = v_p[i_sys][k] + adot2_dt2[i_sys][k]*dt_[i_sys]/6.0 +adot3_dt3[i_sys][k]*dt_[i_sys]/24.0;
   }  //k loop
    
-  
 
     
   r_c[i_sys] = RadiusFromCenter(i_sys,x_c);  //中心からの距離.

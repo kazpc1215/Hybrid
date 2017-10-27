@@ -10,7 +10,7 @@
 #include <omp.h>
 
 
-#define DIRECTORY ../data/N100_t1E1_dt1yr_eta1E-2_10Hill_e0001i00005/  //ファイル保存用のディレクトリ.
+#define DIRECTORY ../data/N10_t1E1_dt1yr_eta1E-2_10Hill_e0001i00005/  //ファイル保存用のディレクトリ.
 
 //#define DIRECTORY /Volumes/HDCL-UT/isoya/Collision_Coalescence_3/data/N10_t1E6_dt1yr_eta1E-2_10Hill/  //Ta Mac Pro用
 
@@ -30,7 +30,7 @@
 
 //////////////////////////////////////////////////
 #define N_tr 0  //初期のトレーサーの数.
-#define N_p 100  //初期の原始惑星の数.
+#define N_p 10  //初期の原始惑星の数.
 
 EXTERN int global_n;  //グローバル変数.
 EXTERN int global_n_p;  //グローバル変数.

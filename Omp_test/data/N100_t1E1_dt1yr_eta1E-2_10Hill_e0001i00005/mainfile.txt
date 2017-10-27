@@ -718,7 +718,7 @@ int main(void){
       //individual timestep
 	
 	
-      //#pragma omp parallel for
+      
       for(i=1;i<=global_n;++i){ 
 	Dt[i] = t_sys - t_[i];
 	Predictor(i,x_0,v_0,a_0,adot_0,x_p,v_p,r_p,v2_p,Dt);  //予測子 t_sysにおけるすべての粒子を計算.
@@ -736,14 +736,12 @@ int main(void){
 
 
 	//t_sysで揃えるためDt[i]を使う.
-	//#pragma omp parallel for
 	for(i=1;i<=global_n;++i){
 	  Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,Dt);  //修正子 すべての粒子.
 	}
 
 
 	for(ite=1;ite<=ITE_MAX;++ite){  //iteration.
-	  //#pragma omp parallel for
 	  for(i=1;i<=global_n;++i){
 	    Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,Dt);  //すべての粒子.
 	  }
@@ -871,7 +869,6 @@ int main(void){
       }else{
 
 	/////////////////////////衝突しない場合/////////////////////////
-	//#pragma omp parallel for private(k)
 	for(i=1;i<=global_n;++i){
 	  if(i==i_sys){  
 	    Corrector_sys(i_sys,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);  //修正子. i_sys のみ.
@@ -924,18 +921,17 @@ int main(void){
 #endif
 
       
-      //#pragma omp parallel for
+      
       for(i=1;i<=global_n;++i){ 	  
 	Predictor(i,x_0,v_0,a_0,adot_0,x_p,v_p,r_p,v2_p,Dt);  //予測子. t_sysにおけるすべての粒子を計算.
       }
 
-      //#pragma omp parallel for
+      
       for(i=1;i<=global_n;++i){
 	Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);
       }
 
       for(ite=1;ite<=ITE_MAX;++ite){  //iteration.
-	//#pragma omp parallel for
 	for(i=1;i<=global_n;++i){	  
 	  Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);
 	}

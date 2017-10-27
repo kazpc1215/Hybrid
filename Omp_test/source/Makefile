@@ -1,8 +1,8 @@
 # Makefile
 
 # SINGLE, DEBUG, OMP
-MODE	= OMP
-LEVEL	= -O0
+MODE	= SINGLE
+LEVEL	= -O3
 
 CC	= gcc
 OBJS	= hybrid_main.o sub.o all_acc.o acc.o predictor.o corrector.o iteration.o energy.o orbital_elements.o timestep.o angularmomentum.o neighbor.o massflux.o collision.o
