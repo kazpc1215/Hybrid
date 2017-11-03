@@ -11,6 +11,7 @@ struct execution_time exetime = {
   0.0,
   0.0,
   0.0,
+  0.0
 };
 
 int main(void){
@@ -54,7 +55,7 @@ int main(void){
 
 #if EXECUTION_TIME
   //時間計測用.
-  uint64_t start,end;
+  uint64_t start,end /*,start2,end2*/ ;
   if(sTimebaseInfo.denom == 0) {
     (void) mach_timebase_info(&sTimebaseInfo);
   }
@@ -373,9 +374,17 @@ int main(void){
     r_dot_v[i] = InnerProduct(i,x_0,v_0);  //r_i,v_iの内積.
   }
 
+#if EXECUTION_TIME
+  start = mach_absolute_time();
+#endif
   for(i=global_n_p+1;i<=global_n;++i){
     Calculate_OrbitalElements(i,x_0,v_0,ele,P,Q,r_0,v2_0,r_dot_v);
   }
+#if EXECUTION_TIME
+  end = mach_absolute_time();
+  exetime.Orbital_Elements += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
+#endif
+
 #endif
   
 
@@ -487,6 +496,10 @@ int main(void){
   
   
 #if ORBITALELEMENTS_FILE
+
+#if EXECUTION_TIME
+  start = mach_absolute_time();
+#endif
   //初期の軌道要素をファイルへ書き出し.
   for(i=1;i<=global_n;++i){
     sprintf(orbit,"%s%s.dat",
@@ -509,6 +522,11 @@ int main(void){
     
     fclose(fporbit);
   }
+#if EXECUTION_TIME
+  end = mach_absolute_time();
+  exetime.Orbital_Elements += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
+#endif
+
 #endif 
 
 
@@ -839,9 +857,16 @@ int main(void){
 	  r_dot_v[i] = InnerProduct(i,x_0,v_0);  //r_i,v_iの内積.
 	}
 
+#if EXECUTION_TIME
+	start = mach_absolute_time();
+#endif
 	for(i=1;i<=global_n;++i){
 	  Calculate_OrbitalElements(i,x_0,v_0,ele,P,Q,r_0,v2_0,r_dot_v);
 	}
+#if EXECUTION_TIME
+	end = mach_absolute_time();
+	exetime.Orbital_Elements += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
+#endif
 
 	
 #if INDIRECT_TERM
@@ -1080,6 +1105,10 @@ int main(void){
 
       
 #if ORBITALELEMENTS_FILE
+
+#if EXECUTION_TIME
+      start = mach_absolute_time();
+#endif
       for(i=1;i<=global_n;++i){
 	Calculate_OrbitalElements(i,x_c,v_c,ele,P,Q,r_c,v2_c,r_dot_v);  //軌道要素計算. ファイルへ書き出し.
 	sprintf(orbit,"%s%s.dat",
@@ -1101,6 +1130,11 @@ int main(void){
 	
 	fclose(fporbit);
       }
+#if EXECUTION_TIME
+      end = mach_absolute_time();
+      exetime.Orbital_Elements += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
+#endif
+      
 #endif
 
 
@@ -1133,7 +1167,16 @@ int main(void){
 	frag[i].t_frag += frag[i].dt_frag;
 	frag[i].fragtimes++;
 
+	
+#if EXECUTION_TIME
+	start2 = mach_absolute_time();
+#endif
 	Calculate_OrbitalElements(i,x_c,v_c,ele,P,Q,r_c,v2_c,r_dot_v);  //軌道要素計算.
+#if EXECUTION_TIME
+	end2 = mach_absolute_time();
+	exetime.Energy += (double)(end2-start2) * sTimebaseInfo.numer / sTimebaseInfo.denom;
+#endif
+
 	
 	NeighborSearch(i,ele,frag,x_c);  //近傍(扇形領域に入った)粒子探索.
 	
@@ -1403,6 +1446,7 @@ int main(void){
 
   printf("\nexecution time\n");
   printf("Energy = %e [s]\n",exetime.Energy*1.0E-9);
+  printf("Orbital_Elements = %e [s]\n",exetime.Orbital_Elements*1.0E-9);
   printf("Predictor = %e [s]\n",exetime.Predictor*1.0E-9);
   printf("Corrector = %e [s]\n",exetime.Corrector*1.0E-9);
   printf("Iteration = %e [s]\n",exetime.Iteration*1.0E-9);

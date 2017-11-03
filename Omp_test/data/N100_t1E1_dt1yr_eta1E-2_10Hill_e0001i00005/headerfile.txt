@@ -234,6 +234,7 @@ struct parameter{
 #if EXECUTION_TIME
 struct execution_time{
   double Energy;
+  double Orbital_Elements;
   double Predictor;
   double Corrector;
   double Iteration;
