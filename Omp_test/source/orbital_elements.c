@@ -1,10 +1,10 @@
 #include "hybrid.h"
 
 /*軌道要素計算*/
-int Calculate_OrbitalElements(int i,double x_c[][4],double v_c[][4],struct orbital_elements ele[],double P[][4],double Q[][4],double r_c[],double v2_c[],double r_dot_v[]){
+void Calculate_OrbitalElements(int i,double x_c[][4],double v_c[][4],struct orbital_elements ele[],double P[][4],double Q[][4],double r_c[],double v2_c[],double r_dot_v[]){
 
 #if INDIRECT_TERM
-  
+
 #if !defined(G) && !defined(M_0)
   double mu = 1.0*(1.0 + ele[i].mass);
 #else
@@ -32,7 +32,8 @@ int Calculate_OrbitalElements(int i,double x_c[][4],double v_c[][4],struct orbit
   double cos_Omega;
   double radian;
 
-  
+
+  /*
   if(isnan(x_c[i][1])||isnan(x_c[i][2])||isnan(x_c[i][3])){
     printf("i=%d\tx is nan.\t[1]=%f\t[2]=%f\t[3]=%f\n",i,x_c[i][1],x_c[i][2],x_c[i][3]);
   }
@@ -48,7 +49,7 @@ int Calculate_OrbitalElements(int i,double x_c[][4],double v_c[][4],struct orbit
   if(isnan(r_dot_v[i])){
     printf("i=%d\tr_dot_v is nan.\n",i);
   }
-  
+  */
 
   ele[i].axis = 1.0/(2.0/r_c[i] - v2_c[i]/mu);
 
@@ -56,12 +57,18 @@ int Calculate_OrbitalElements(int i,double x_c[][4],double v_c[][4],struct orbit
   if(isnan(ele[i].axis)){
     printf("i=%d\taxis is nan.\n",i);
   }
-
+  
   
   
   if(ele[i].axis<0.0){
-    printf("i=%d\taxis=%e < 0 双曲線軌道. axis -> -1*axis\n",i,ele[i].axis);
-    ele[i].axis *= -1.0;
+    printf("i=%d\taxis=%e < 0 双曲線軌道\n",i,ele[i].axis);
+    ele[i].ecc = NAN;
+    ele[i].u = NAN;
+    ele[i].inc = NAN;
+    ele[i].omega = NAN;
+    ele[i].Omega = NAN;
+    ele[i].r_h = NAN;
+    
     //printf("\tr=%f[AU]\tR_planet=%f\n",sqrt((x_c[i][1]-x_c[PLANET_NO][1])*(x_c[i][1]-x_c[PLANET_NO][1])+(x_c[i][2]-x_c[PLANET_NO][2])*(x_c[i][2]-x_c[PLANET_NO][2])+(x_c[i][3]-x_c[PLANET_NO][3])*(x_c[i][3]-x_c[PLANET_NO][3])),PLANET_RADIUS);
   }
 
@@ -89,10 +96,11 @@ int Calculate_OrbitalElements(int i,double x_c[][4],double v_c[][4],struct orbit
     }
   }
 
+  /*
   if(isnan(ele[i].u)){
     printf("i=%d\tu is nan.\n",i);
   }
-
+  */
 
   
   for(k=1;k<=3;++k){
@@ -101,6 +109,7 @@ int Calculate_OrbitalElements(int i,double x_c[][4],double v_c[][4],struct orbit
     Q[i][k] = (x_c[i][k]*sin(ele[i].u)/r_c[i] + sqrt(ele[i].axis/mu)*v_c[i][k]*(cos(ele[i].u)-ele[i].ecc))/sqrt(1.0-ele[i].ecc);
   }
 
+  
   if(isnan(P[i][1])||isnan(P[i][2])||isnan(P[i][3])){
     printf("i=%d\tP is nan.\t[1]=%f\t[2]=%f\t[3]=%f\n",i,P[i][1],P[i][2],P[i][3]);
   }
@@ -108,9 +117,11 @@ int Calculate_OrbitalElements(int i,double x_c[][4],double v_c[][4],struct orbit
     printf("i=%d\tQ is nan.\t[1]=%f\t[2]=%f\t[3]=%f\n",i,Q[i][1],Q[i][2],Q[i][3]);
   }
   
+  
   sin_inc = sqrt(P[i][3]*P[i][3] + Q[i][3]*Q[i][3]);
   cos_inc = P[i][1]*Q[i][2] - P[i][2]*Q[i][1];
   radian = atan2(sin_inc,cos_inc);
+
   
   if(radian<0.0){
     ele[i].inc = radian + 2.0*M_PI;
@@ -149,6 +160,7 @@ int Calculate_OrbitalElements(int i,double x_c[][4],double v_c[][4],struct orbit
 #else
   ele[i].r_h = ele[i].axis*cbrt(ele[i].mass/M_0/3.0);
 #endif
+
   
   if(isnan(ele[i].inc)){
     printf("i=%d\tinc is nan.\n",i);
@@ -161,7 +173,7 @@ int Calculate_OrbitalElements(int i,double x_c[][4],double v_c[][4],struct orbit
   }
   
 
-  return 0;
+  return;
 }
 
 /*P計算*/
@@ -220,17 +232,16 @@ void InitialCondition(int i,double P[][4],double Q[][4],double x_0[][4],double v
            
   r_0[i] = RadiusFromCenter(i,x_0);  //中心星からの距離.
 
-
       
   for(k=1;k<=3;++k){
-
-    
     v_0[i][k] = sqrt(mu/ele[i].axis)/r_0[i]*(-ele[i].axis*P[i][k]*sin(ele[i].u) + ele[i].axis*sqrt(1.0-ele[i].ecc*ele[i].ecc)*Q[i][k]*cos(ele[i].u));
   }
 
   r_dot_v[i] = InnerProduct(i,x_0,v_0);  //r_i,v_iの内積.
   v2_0[i] = SquareOfVelocity(i,v_0);  //速度の2乗.
   //printf("vx=%f\tvy=%f\tvz=%f\n",v_0[i][1],v_0[i][2],v_0[i][3]);
+
+  return;
 }
 
 

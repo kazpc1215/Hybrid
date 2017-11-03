@@ -22,6 +22,8 @@ void MassFlux(int i,struct orbital_elements ele[],struct fragmentation frag[],st
   F *= ((- log(EPSILON_FRAG) + 1.0/(2.0-B_FRAG))*s_1 + s_2 + s_3);
 
   frag[i].flux = F;
+
+  return;
 }
 
 

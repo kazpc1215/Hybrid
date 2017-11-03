@@ -2,6 +2,8 @@
 
 # SINGLE, DEBUG, OMP
 MODE	= SINGLE
+
+#-O0,-O1,-O2,-O3
 LEVEL	= -O3
 
 CC	= gcc

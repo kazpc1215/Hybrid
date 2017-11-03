@@ -86,6 +86,7 @@ void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation fra
     frag[i].n_s = 0.0;
   }
   
+  return;
 }
 
 
@@ -96,7 +97,8 @@ double RandomVelocity(int i,int j,struct orbital_elements ele[]){
   eij2 = fabs(ele[i].ecc*ele[i].ecc + ele[j].ecc*ele[j].ecc - 2.0*ele[i].ecc*ele[j].ecc*cos(ele[i].omega + ele[i].Omega - ele[j].omega - ele[j].Omega));
 
   iij2 = fabs(ele[i].inc*ele[i].inc + ele[j].inc*ele[j].inc - 2.0*ele[i].inc*ele[j].inc*cos(ele[i].Omega - ele[j].Omega));
-  
+
+  /*
   if(isnan(ele[i].ecc)){
     printf("i=%d\tecc is nan. (in RandomVelocity)\n",i);
   }
@@ -121,7 +123,6 @@ double RandomVelocity(int i,int j,struct orbital_elements ele[]){
   if(isnan(ele[j].Omega)){
     printf("j=%d\tOmega is nan. (in RandomVelocity)\n",j);
   }
-  
   if(isnan(eij2)){
     printf("i=%d,j=%d\teij2 is nan. (in RandomVelocity)\n",i,j);
     return -1;
@@ -133,12 +134,15 @@ double RandomVelocity(int i,int j,struct orbital_elements ele[]){
   if(isnan(ele[i].axis)){
     printf("i=%d\taxis is nan. (in RandomVelocity)\taxis=%f\n",i,ele[i].axis);
   }
+  */
 
+  if(
 #if !defined(G) && !defined(M_0)
-  if(isnan(sqrt((eij2 + iij2)/ele[i].axis))){
+     isnan(sqrt((eij2 + iij2)/ele[i].axis))
 #else
-  if(isnan(sqrt((eij2 + iij2)*G*M_0/ele[i].axis))){
+     isnan(sqrt((eij2 + iij2)*G*M_0/ele[i].axis))
 #endif
+     ){
     printf("i=%d,j=%d\tvij is nan.(in RandomVelocity)\n",i,j);
     
     printf("eij2=%e\tiij2=%e\taxis=%e\n",eij2,iij2,ele[i].axis);

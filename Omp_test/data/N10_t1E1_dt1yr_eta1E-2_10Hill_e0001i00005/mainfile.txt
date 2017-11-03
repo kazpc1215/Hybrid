@@ -31,12 +31,12 @@ int main(void){
   double x_0[N_p+N_tr+1][4]={},r_0[N_p+N_tr+1]={},v_0[N_p+N_tr+1][4]={},v2_0[N_p+N_tr+1]={};
   double x_p[N_p+N_tr+1][4]={},r_p[N_p+N_tr+1]={},v_p[N_p+N_tr+1][4]={},v2_p[N_p+N_tr+1]={};
   double x_c[N_p+N_tr+1][4]={},r_c[N_p+N_tr+1]={},v_c[N_p+N_tr+1][4]={},v2_c[N_p+N_tr+1]={};
-
-  double abs_r[N_p+N_tr+1]={},r_dot_v_ij[N_p+N_tr+1]={},r_dot_v[N_p+N_tr+1]={};
+  
+  double abs_r[N_p+N_tr+1]={},abs_r2[N_p+N_tr+1]={},abs_v[N_p+N_tr+1]={},abs_v2[N_p+N_tr+1]={},r_dot_v_ij[N_p+N_tr+1]={},r_dot_v[N_p+N_tr+1]={};
   
   double a_0[N_p+N_tr+1][4]={},adot_0[N_p+N_tr+1][4]={};
   double a[N_p+N_tr+1][4]={},adot[N_p+N_tr+1][4]={},adot2_dt2[N_p+N_tr+1][4]={},adot3_dt3[N_p+N_tr+1][4]={};
-
+  
   double E_tot=0.0,E_tot_0=0.0,dE_correct=0.0;
   double dE_heat=0.0,dE_grav=0.0,dE_c=0.0,v_imp=0.0;
   double abs_L=0.0,abs_L_0=0.0;
@@ -353,12 +353,13 @@ int main(void){
 
     
     r_0[i] = RadiusFromCenter(i,x_0);  //中心星からの距離.
-    v2_0[i] = SquareOfVelocity(i,v_0);  //速度の2乗.
     r_dot_v[i] = InnerProduct(i,x_0,v_0);  //r_i,v_iの内積.
+    v2_0[i] = SquareOfVelocity(i,v_0);  //速度の2乗.
   }
 
   for(i=global_n_p+1;i<=global_n;++i){
     Calculate_OrbitalElements(i,x_0,v_0,ele,P,Q,r_0,v2_0,r_dot_v);
+    //ele[i].r_h = ele[i].axis*cbrt(ele[i].mass/((double)M_0)/3.0);
   }
 #endif
   
@@ -511,7 +512,7 @@ int main(void){
 #else
 			     v2_0,
 #endif
-			     r_0);
+			     r_0,abs_r,abs_r2);
   
   //初期エネルギーをファイルへ書き出し.
   FILE *fpEne;
@@ -540,18 +541,21 @@ int main(void){
 #endif
 
   
-  //#pragma omp parallel for private(j,k,abs_r,r_dot_v_ij)
+  //#pragma omp parallel for private(j,k,abs_r2,r_dot_v_ij)
   for(i=1;i<=global_n;++i){
     for(j=1;j<=global_n;++j){
       if(i!=j){
-	abs_r[j] = RelativeDistance(i,j,x_0);  //絶対値.
+	abs_r2[j] = SquareOfRelativeDistance(i,j,x_0); //絶対値2乗.
+	abs_v2[j] = SquareOfRelativeVelocity(i,j,v_0);
 	r_dot_v_ij[j] = RelativeInnerProduct(i,j,x_0,v_0);  //r_ij,v_ijの内積.
+	abs_r[j] = sqrt(abs_r2[j]); //絶対値.
+	abs_v[j] = sqrt(abs_v2[j]);
       }
     }  //j loop
       
     for(k=1;k<=3;++k){
-      a_0[i][k] = All_Acceleration(i,k,ele,x_0,r_0,abs_r);  //初期の加速度.
-      adot_0[i][k] = All_dAcceleration(i,k,ele,x_0,v_0,r_dot_v,r_dot_v_ij,r_0,abs_r);
+      a_0[i][k] = All_Acceleration(i,k,ele,x_0,r_0,abs_r2);  //初期の加速度.
+      adot_0[i][k] = All_dAcceleration(i,k,ele,x_0,v_0,r_dot_v,r_dot_v_ij,r_0,abs_r2);
       //printf("a_0[%d][%d]=%f\tadot_0[%d][%d]=%f\n",i,k,a_0[i][k],i,k,adot_0[i][k]);
     }
   }
@@ -717,14 +721,14 @@ int main(void){
       
       for(i=1;i<=global_n;++i){ 
 	Dt[i] = t_sys - t_[i];
-	Predictor(i,x_0,v_0,a_0,adot_0,x_p,v_p,r_p,v2_p,r_dot_v,Dt);  //予測子 t_sysにおけるすべての粒子を計算.
+	Predictor(i,x_0,v_0,a_0,adot_0,x_p,v_p,r_p,v2_p,Dt);  //予測子 t_sysにおけるすべての粒子を計算.
       }
       
 #if INDIRECT_TERM
       CenterOfGravity(x_p,v_p,x_G,v_G,ele);  //重心計算
 #endif
       
-      if(Collision_Judgement(ele,x_p,abs_r,&i_col,&j_col)==1){  //予測子を用いた衝突判定.
+      if(Collision_Judgement(ele,x_p,abs_r,abs_r2,&i_col,&j_col)==1){  //予測子を用いた衝突判定.
 
 	/////////////////////////衝突した場合/////////////////////////
 	printf("collision\ti=%d, j=%d\n",i_col,j_col);
@@ -732,15 +736,14 @@ int main(void){
 
 
 	//t_sysで揃えるためDt[i]を使う.
-	//#pragma omp parallel for
 	for(i=1;i<=global_n;++i){
-	  Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,r_dot_v,Dt);  //修正子 すべての粒子.
+	  Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,Dt);  //修正子 すべての粒子.
 	}
 
 
 	for(ite=1;ite<=ITE_MAX;++ite){  //iteration.
 	  for(i=1;i<=global_n;++i){
-	    Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,r_dot_v,Dt);  //すべての粒子.
+	    Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,Dt);  //すべての粒子.
 	  }
 	}
 
@@ -794,8 +797,8 @@ int main(void){
 	//以下、すべての粒子の加速度などを再計算.
 	for(i=1;i<=global_n;++i){
 	  r_0[i] = RadiusFromCenter(i,x_0);  //中心星からの距離.
-	  v2_0[i] = SquareOfVelocity(i,v_0);  //速度の2乗.
 	  r_dot_v[i] = InnerProduct(i,x_0,v_0);  //r_i,v_iの内積.
+	  v2_0[i] = SquareOfVelocity(i,v_0);  //速度の2乗.
 	}
 
 	for(i=1;i<=global_n;++i){
@@ -817,9 +820,9 @@ int main(void){
 #else
 				 v2_0,
 #endif
-				 r_0);  //エネルギー計算.
-	dE_correct += - dE_heat - dE_grav - dE_c;  //エネルギー補正計算
-	E_tot += dE_correct;  //補正をする
+				 r_0,abs_r,abs_r2);  //エネルギー、相対距離.
+	dE_correct += - dE_heat - dE_grav - dE_c;  //エネルギー補正
+	E_tot += dE_correct;
 	
 	
 	      
@@ -841,14 +844,19 @@ int main(void){
 	for(i=1;i<=global_n;++i){
 	  for(j=1;j<=global_n;++j){
 	    if(i!=j){
-	      abs_r[j] = RelativeDistance(i,j,x_0);  //絶対値.
+	      abs_r2[j] = SquareOfRelativeDistance(i,j,x_0); //絶対値2乗.
+	      abs_v2[j] = SquareOfRelativeVelocity(i,j,v_0);
 	      r_dot_v_ij[j] = RelativeInnerProduct(i,j,x_0,v_0);  //r_ij,v_ijの内積.
+	      
+	      abs_r[j] = sqrt(abs_r2[j]); //絶対値.
+	      abs_v[j] = sqrt(abs_v2[j]);
+	      
 	    }
 	  }  //j loop
 	  
 	  for(k=1;k<=3;++k){
-	    a_0[i][k] = All_Acceleration(i,k,ele,x_0,r_0,abs_r);  //加速度.
-	    adot_0[i][k] = All_dAcceleration(i,k,ele,x_0,v_0,r_dot_v,r_dot_v_ij,r_0,abs_r);
+	    a_0[i][k] = All_Acceleration(i,k,ele,x_0,r_0,abs_r2);  //加速度.
+	    adot_0[i][k] = All_dAcceleration(i,k,ele,x_0,v_0,r_dot_v,r_dot_v_ij,r_0,abs_r2);
 	    //printf("a_0[%d][%d]=%f\tadot_0[%d][%d]=%f\n",i,k,a_0[i][k],i,k,adot_0[i][k]);
 	  }
 	}
@@ -861,24 +869,21 @@ int main(void){
       }else{
 
 	/////////////////////////衝突しない場合/////////////////////////
-	//#pragma omp parallel for
 	for(i=1;i<=global_n;++i){
-	  if(i==i_sys){
-	    Corrector_sys(i_sys,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,r_dot_v,dt_);  //修正子. i_sys のみ.
+	  if(i==i_sys){  
+	    Corrector_sys(i_sys,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);  //修正子. i_sys のみ.
 	  }else{
-	    //i_sys以外の粒子は予測子を使う.
-	    for(k=1;k<=3;++k){  
+	    for(k=1;k<=3;++k){  //i_sys以外の粒子は予測子を使う.
 	      x_c[i][k] = x_p[i][k];
 	      v_c[i][k] = v_p[i][k];
 	    }
-	    r_c[i] = RadiusFromCenter(i,x_p);  //中心からの距離.
-	    v2_c[i] = SquareOfVelocity(i,v_p);  //速度の2乗.
-	    r_dot_v[i] = InnerProduct(i,x_p,v_p);  //r_i,v_iの内積.
+	    r_c[i] = RadiusFromCenter(i,x_c);  //中心からの距離.
+	    v2_c[i] = SquareOfVelocity(i,v_c);  //速度の2乗.
 	  }
 	}
 
-	for(ite=1;ite<=ITE_MAX;++ite){  //iteration.
-	  Iteration_sys(i_sys,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,r_dot_v,dt_);  //i_sysのみ.
+	for(ite=1;ite<=ITE_MAX;++ite){  //iteration 3回.
+	  Iteration_sys(i_sys,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);  //i_sysのみ.
 	}
 
 #if INDIRECT_TERM
@@ -918,18 +923,17 @@ int main(void){
       
       
       for(i=1;i<=global_n;++i){ 	  
-	Predictor(i,x_0,v_0,a_0,adot_0,x_p,v_p,r_p,v2_p,r_dot_v,Dt);  //予測子. t_eneにおけるすべての粒子を計算.
+	Predictor(i,x_0,v_0,a_0,adot_0,x_p,v_p,r_p,v2_p,Dt);  //予測子. t_sysにおけるすべての粒子を計算.
       }
 
-
-      //#pragma omp parallel for
+      
       for(i=1;i<=global_n;++i){
-	Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,r_dot_v,dt_);
+	Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);
       }
 
       for(ite=1;ite<=ITE_MAX;++ite){  //iteration.
 	for(i=1;i<=global_n;++i){	  
-	  Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,r_dot_v,dt_);
+	  Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,abs_r,abs_r2,abs_v,abs_v2,r_dot_v_ij,r_dot_v,dt_);
 	}
       }
 
@@ -963,9 +967,9 @@ int main(void){
 #else
 			       v2_c,
 #endif
-			       r_c);  //エネルギー計算.
+			       r_c,abs_r,abs_r2);  //エネルギー計算.
 
-      E_tot += dE_correct;  //補正を常にする
+      E_tot += dE_correct;
       
 	    
       fpEne = fopen(Ene,"a");
@@ -1168,14 +1172,7 @@ int main(void){
     
     
     if(fmod(step,1.0E4)==0.0){
-      printf("step=%e\tN=%d\ti_sys=%03d\tdt[%03d]=%.2e[yr]\tt_sys+t_tmp=%.15e[yr]\n",step,global_n,i_sys,i_sys,dt_[i_sys]/2.0/M_PI,(t_sys+t_tmp)/2.0/M_PI);
-      /*openmp用*/
-    ///////////////////////////////////////////////////
-    //for(k=1;k<=3;++k){
-    //  printf("\tfor debug\n");
-    //  printf("\ta[i_sys][%d]=%f\tadot[i_sys][%d]=%f\n",k,a[i_sys][k],k,adot[i_sys][k]);
-    //}
-    ///////////////////////////////////////////////////
+      printf("step=%e\tN=%d\ti_sys=%03d\tdt[%03d]=%.2e[yr]\tt_sys+t_tmp=%.15e[yr]\n",step,global_n,i_sys,i_sys,dt_[i_sys]/2.0/M_PI,(t_sys+t_tmp)/2.0/M_PI);      
     }
 
 
@@ -1265,7 +1262,9 @@ int main(void){
 #endif
     
 
-        
+
+    
+
 
     if((i_col != 0) && (j_col != 0)){  //衝突した場合.
 

@@ -11,7 +11,7 @@ double InnerProduct(int i,double x_0[][4],double v_0[][4]){
   return r_dot_v;
 }
 
-/*中心星からの距離の2乗*/
+/*中心星からの距離*/
 double RadiusFromCenter(int i,double x_0[][4]){
   int k;
   double r_0 = 0.0;
@@ -32,9 +32,9 @@ double SquareOfVelocity(int i,double v_0[][4]){
   return v2_0;
 }
 
-/*相対距離の2乗*/
-double SquareOfRelativeDistance(int i,int j,double x_0[][4]){
-  return (x_0[j][1] - x_0[i][1])*(x_0[j][1] - x_0[i][1]) + (x_0[j][2] - x_0[i][2])*(x_0[j][2] - x_0[i][2]) + (x_0[j][3] - x_0[i][3])*(x_0[j][3] - x_0[i][3]);
+/*相対距離*/
+double RelativeDistance(int i,int j,double x_0[][4]){
+  return sqrt((x_0[j][1] - x_0[i][1])*(x_0[j][1] - x_0[i][1]) + (x_0[j][2] - x_0[i][2])*(x_0[j][2] - x_0[i][2]) + (x_0[j][3] - x_0[i][3])*(x_0[j][3] - x_0[i][3]));
 }
 
 /*相対速度の2乗*/

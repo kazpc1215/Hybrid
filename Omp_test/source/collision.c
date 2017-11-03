@@ -1,6 +1,6 @@
 #include "hybrid.h"
 
-int Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double abs_r[],double abs_r2[],int *i_col,int *j_col){
+int Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double abs_r[],int *i_col,int *j_col){
 
   int i,j;
   
@@ -9,19 +9,15 @@ int Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double abs
 
   for(i=1;i<=global_n_p-1;++i){
     for(j=i+1;j<=global_n_p;++j){
-      abs_r2[j] = SquareOfRelativeDistance(i,j,x_p); //i,j 絶対値2乗.
-      abs_r[j] = sqrt(abs_r2[j]); //i,j 絶対値.
-      
+      abs_r[j] = RelativeDistance(i,j,x_p);  //絶対値.
       if(abs_r[j] < ele[i].radius + ele[j].radius){
 	(*i_col) = i;
 	(*j_col) = j;
 	return 1;  //衝突した場合.
-      }
-
-      
+      }      
     }
   }
-
+  
   return 0;  //衝突しない場合.
 }
 
@@ -30,8 +26,8 @@ void Energy_Correction(int i_col,int j_col,double x_0[][4],double v_0[][4],struc
   
   double m_1 = ele[i_col].mass;
   double m_2 = ele[j_col].mass;
-  double abs_v2 = SquareOfRelativeVelocity(i_col,j_col,v_0);  //相対速度.
-  double r_p12 = sqrt(SquareOfRelativeDistance(i_col,j_col,x_0));  //2粒子間の距離.
+  double abs_v2 = SquareOfRelativeVelocity(i_col,j_col,v_0);  //相対速度2乗.
+  double r_p12 = RelativeDistance(i_col,j_col,x_0);  //2粒子間の距離.
   double r_g12 = RadiusFromCenter(0,x_0);  //2粒子の重心と中心星との距離.
   double r_1 = RadiusFromCenter(i_col,x_0);
   double r_2 = RadiusFromCenter(j_col,x_0);
@@ -55,6 +51,7 @@ void Energy_Correction(int i_col,int j_col,double x_0[][4],double v_0[][4],struc
   
   printf("dE_heat=%e\tdE_grav=%e\tdE_c=%e\tv_imp=%e\n",(*dE_heat),(*dE_grav),(*dE_c),(*v_imp));
 
+  return;
 }
 
 

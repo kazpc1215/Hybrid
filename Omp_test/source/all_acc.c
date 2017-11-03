@@ -1,7 +1,7 @@
 #include "hybrid.h"
 
 /*全加速度*/
-double All_Acceleration(int i,int k,struct orbital_elements ele[],double x_0[][4],double r_0[],double abs_r2[]){
+double All_Acceleration(int i,int k,struct orbital_elements ele[],double x_0[][4],double r_0[],double abs_r[]){
   int j;
   double a_0;
   
@@ -22,7 +22,7 @@ double All_Acceleration(int i,int k,struct orbital_elements ele[],double x_0[][4
 #endif
     
     if(i!=j){
-      a_0 += Acceleration_ij(i,j,k,ele,x_0,abs_r2);	  
+      a_0 += Acceleration_ij(i,j,k,ele,x_0,abs_r);	  
     }
   }
 
@@ -31,7 +31,7 @@ double All_Acceleration(int i,int k,struct orbital_elements ele[],double x_0[][4
 }
 
 /*全加加速度*/
-double All_dAcceleration(int i,int k,struct orbital_elements ele[],double x_0[][4],double v_0[][4],double r_dot_v[],double r_dot_v_ij[],double r_0[],double abs_r2[]){ 
+double All_dAcceleration(int i,int k,struct orbital_elements ele[],double x_0[][4],double v_0[][4],double r_dot_v[],double r_dot_v_ij[],double r_0[],double abs_r[]){ 
   int j;
   double adot_0;
   
@@ -52,7 +52,7 @@ double All_dAcceleration(int i,int k,struct orbital_elements ele[],double x_0[][
 #endif
     
     if(i!=j){
-      adot_0 += dAcceleration_ij(i,j,k,ele,x_0,v_0,r_dot_v_ij,abs_r2);
+      adot_0 += dAcceleration_ij(i,j,k,ele,x_0,v_0,r_dot_v_ij,abs_r);
     } 
   }
   

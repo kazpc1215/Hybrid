@@ -8,9 +8,10 @@ double Calculate_Energy(struct orbital_elements ele[],double x_c[][4],
 #else
 			double v2_c[],
 #endif
-			double r_c[],double abs_r[],double abs_r2[]){
+			double r_c[]){
 
   int i,j;
+  double abs_r[global_n+1];
   double E[N_p+N_tr+1]={};
   double E_tot;
 
@@ -34,8 +35,7 @@ double Calculate_Energy(struct orbital_elements ele[],double x_c[][4],
 #endif
     
     for(j=i+1;j<=global_n;++j){    
-      abs_r2[j] = SquareOfRelativeDistance(i,j,x_c); //絶対値2乗.
-      abs_r[j] = sqrt(abs_r2[j]); //絶対値.
+      abs_r[j] = RelativeDistance(i,j,x_c); //絶対値.
         
 #ifndef G
       E[i] += - ele[i].mass*ele[j].mass/abs_r[j];  //エネルギー計算.

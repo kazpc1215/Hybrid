@@ -7,12 +7,10 @@
 #include <math.h>
 #include <sys/stat.h>
 #include <time.h>
-
-#ifdef _OPENMP
 #include <omp.h>
-#endif
 
-#define DIRECTORY ../data/N100_t1E1_dt1yr_eta1E-2_10Hill_e0001i00005/  //ファイル保存用のディレクトリ.
+
+#define DIRECTORY ../data/N10_t1E1_dt1yr_eta1E-2_10Hill_e0001i00005/  //ファイル保存用のディレクトリ.
 
 //#define DIRECTORY /Volumes/HDCL-UT/isoya/Collision_Coalescence_3/data/N10_t1E6_dt1yr_eta1E-2_10Hill/  //Ta Mac Pro用
 
@@ -32,7 +30,7 @@
 
 //////////////////////////////////////////////////
 #define N_tr 0  //初期のトレーサーの数.
-#define N_p 100  //初期の原始惑星の数.
+#define N_p 10  //初期の原始惑星の数.
 
 EXTERN int global_n;  //グローバル変数.
 EXTERN int global_n_p;  //グローバル変数.
@@ -145,7 +143,7 @@ Mean Longitude (deg)               100.46435
 //////////////////////////////////////////////////
 //#define G 1.0  //重力定数.
 //#define M_0 1.0  //主星の質量.
-//#define EPSILON 0.0  //ソフトニングパラメーター.
+#define EPSILON 0.0  //ソフトニングパラメーター.
 //#define ETA 0.05  //刻み幅調整.
 #define ETA 1E-2  //刻み幅調整.
 #define ITE_MAX 3  //イテレーション回数.
@@ -241,15 +239,15 @@ double Timestep_i_0(int i,double a_0[][4],double adot_0[][4]);
 
 double Timestep_i_sys(int i_sys,double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],double dt_[]);
 
-double RelativeDistance(int i,int j,double x_0[][4]);
+double SquareOfRelativeDistance(int i,int j,double x_0[][4]);
 
 double SquareOfRelativeVelocity(int i,int j,double v_0[][4]);
 
 double RelativeInnerProduct(int i,int j,double x_0[][4],double v_0[][4]);
 
-double Acceleration_ij(int i,int j,int k,struct orbital_elements ele[],double x_0[][4],double abs_r[]);
+double Acceleration_ij(int i,int j,int k,struct orbital_elements ele[],double x_0[][4],double abs_r2[]);
 
-double dAcceleration_ij(int i,int j,int k,struct orbital_elements ele[],double x_0[][4],double v_0[][4],double r_dot_v_ij[],double abs_r[]);
+double dAcceleration_ij(int i,int j,int k,struct orbital_elements ele[],double x_0[][4],double v_0[][4],double r_dot_v_ij[],double abs_r2[]);
 
 double Acceleration_indirect(int i,int k,struct orbital_elements ele[],double x_0[][4],double r_0[]);
 
@@ -259,11 +257,11 @@ double External_Acceleration(int i,int k,double x_0[][4],double r_0[]);
 
 double External_dAcceleration(int i,int k,double x_0[][4],double v_0[][4],double r_0[],double r_dot_v[]);
 
-double All_Acceleration(int i,int k,struct orbital_elements ele[],double x_0[][4],double r_0[],double abs_r[]);
+double All_Acceleration(int i,int k,struct orbital_elements ele[],double x_0[][4],double r_0[],double abs_r2[]);
 
-double All_dAcceleration(int i,int k,struct orbital_elements ele[],double x_0[][4],double v_0[][4],double r_dot_v[],double r_dot_v_ij[],double r_0[],double abs_r[]);
+double All_dAcceleration(int i,int k,struct orbital_elements ele[],double x_0[][4],double v_0[][4],double r_dot_v[],double r_dot_v_ij[],double r_0[],double abs_r2[]);
 
-void Calculate_OrbitalElements(int i,double x_c[][4],double v_c[][4],struct orbital_elements ele[],double P[][4],double Q[][4],double r_c[],double v2_c[],double r_dot_v[]);
+int Calculate_OrbitalElements(int i,double x_c[][4],double v_c[][4],struct orbital_elements ele[],double P[][4],double Q[][4],double r_c[],double v2_c[],double r_dot_v[]);
 
 double Calculate_P(int i,int k,struct orbital_elements ele[]);
 
@@ -275,17 +273,17 @@ double Calculate_Energy(struct orbital_elements ele[],double x_c[][4],
 #else
 			double v2_c[],
 #endif
-			double r_c[]);
+			double r_c[],double abs_r[],double abs_r2[]);
 
 void InitialCondition(int i,double P[][4],double Q[][4],double x_0[][4],double v_0[][4],double v2_0[],double r_dot_v[],double r_0[],struct orbital_elements ele[]);
 
-void Predictor(int i,double x_0[][4],double v_0[][4],double a_0[][4],double adot_0[][4],double x_p[][4],double v_p[][4],double r_p[],double v2_p[],double r_dot_v[],double Dt[]);
+void Predictor(int i,double x_0[][4],double v_0[][4],double a_0[][4],double adot_0[][4],double x_p[][4],double v_p[][4],double r_p[],double v2_p[],double Dt[]);
 
-void Corrector_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],double v_p[][4],double r_p[],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double a_0[][4],double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],double r_dot_v[],double dt_[]);
+void Corrector_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],double v_p[][4],double r_p[],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double a_0[][4],double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],double abs_r[],double abs_r2[],double abs_v[],double abs_v2[],double r_dot_v_ij[],double r_dot_v[],double dt_[]);
 
-void Iteration_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],double v_p[][4],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double a_0[][4],double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],double r_dot_v[],double dt_[]);
+void Iteration_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],double v_p[][4],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double a_0[][4],double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],double abs_r[],double abs_r2[],double abs_v[],double abs_v2[],double r_dot_v_ij[],double r_dot_v[],double dt_[]);
 
-int Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double abs_r[],int *i_col, int *j_col);
+int Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double abs_r[],double abs_r2[],int *i_col, int *j_col);
 
 void Energy_Correction(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbital_elements ele[],double *dE_heat,double *dE_grav,double *dE_c,double *v_imp);
 

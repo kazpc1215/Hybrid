@@ -1,9 +1,14 @@
 #include "hybrid.h"
 
 /*相互重力加速度*/
-double Acceleration_ij(int i,int j,int k,struct orbital_elements ele[],double x_0[][4],double abs_r2[]){
+double Acceleration_ij(int i,int j,int k,struct orbital_elements ele[],double x_0[][4],double abs_r[]){
   double rij3;
-  rij3 = (abs_r2[j] + EPSILON*EPSILON)*sqrt(abs_r2[j] + EPSILON*EPSILON);
+
+#ifndef EPSILON
+  rij3 = abs_r[j]*abs_r[j]*abs_r[j];
+#else
+  rij3 = (abs_r[j]*abs_r[j] + EPSILON*EPSILON)*sqrt(abs_r[j]*abs_r[j] + EPSILON*EPSILON);
+#endif
   rij3 = 1.0/rij3;
 
 #ifndef G
@@ -15,12 +20,18 @@ double Acceleration_ij(int i,int j,int k,struct orbital_elements ele[],double x_
 
 
 /*相互重力加加速度*/
-double dAcceleration_ij(int i,int j,int k,struct orbital_elements ele[],double x_0[][4],double v_0[][4],double r_dot_v_ij[],double abs_r2[]){
+double dAcceleration_ij(int i,int j,int k,struct orbital_elements ele[],double x_0[][4],double v_0[][4],double r_dot_v_ij[],double abs_r[]){
   double rij3;
   double rij5;
-  rij3 = (abs_r2[j] + EPSILON*EPSILON)*sqrt(abs_r2[j] + EPSILON*EPSILON);
+
+#ifndef EPSILON
+  rij3 = abs_r[j]*abs_r[j]*abs_r[j];
+  rij5 = abs_r[j]*abs_r[j]*abs_r[j]*abs_r[j]*abs_r[j];
+#else
+  rij3 = (abs_r[j]*abs_r[j] + EPSILON*EPSILON)*sqrt(abs_r[j]*abs_r[j] + EPSILON*EPSILON);  
+  rij5 = (abs_r[j]*abs_r[j] + EPSILON*EPSILON)*(abs_r[j]*abs_r[j] + EPSILON*EPSILON)*sqrt(abs_r[j]*abs_r[j] + EPSILON*EPSILON);
+#endif
   rij3 = 1.0/rij3;
-  rij5 = (abs_r2[j] + EPSILON*EPSILON)*(abs_r2[j] + EPSILON*EPSILON)*sqrt(abs_r2[j] + EPSILON*EPSILON);
   rij5 = 1.0/rij5;
 
 #ifndef G
