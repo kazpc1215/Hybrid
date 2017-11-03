@@ -2,6 +2,10 @@
 
 int Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double abs_r[],int *i_col,int *j_col){
 
+#if EXECUTION_TIME
+  uint64_t start = mach_absolute_time();
+#endif
+  
   int i,j;
   
   (*i_col) = 0;
@@ -13,11 +17,20 @@ int Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double abs
       if(abs_r[j] < ele[i].radius + ele[j].radius){
 	(*i_col) = i;
 	(*j_col) = j;
+
+#if EXECUTION_TIME
+	uint64_t end = mach_absolute_time();
+	exetime.Collision_Judgement += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
+#endif
 	return 1;  //衝突した場合.
       }      
     }
   }
-  
+
+#if EXECUTION_TIME
+  uint64_t end = mach_absolute_time();
+  exetime.Collision_Judgement += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
+#endif
   return 0;  //衝突しない場合.
 }
 

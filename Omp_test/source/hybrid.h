@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <sys/stat.h>
+#include <mach/mach_time.h>
 #include <time.h>
 
 #ifdef _OPENMP
@@ -26,7 +27,7 @@
 #endif
 
 
-//#define IMPACT_PARAMETER 0.02038  //[AU]
+#define EXECUTION_TIME 1  //1:実行時間測定.
 
 
 
@@ -228,6 +229,22 @@ struct parameter{
   double h_0;
   double Q_D;
 };
+
+
+#if EXECUTION_TIME
+struct execution_time{
+  double Energy;
+  double Predictor;
+  double Corrector;
+  double Iteration;
+  double Collision_Judgement;
+  double Fragmentation;
+};
+EXTERN struct execution_time exetime;  //グローバル変数
+EXTERN mach_timebase_info_data_t sTimebaseInfo;
+#endif
+
+
 
 double AngularMomentum(int i,struct orbital_elements ele[],double x_0[][4],double v_0[][4]);
 
