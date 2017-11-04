@@ -4,6 +4,7 @@
 int global_n = N_p + N_tr;  //全粒子数.
 int global_n_p = N_p;  //原始惑星の数.
 
+#if EXECUTION_TIME
 struct execution_time exetime = {
   0.0,
   0.0,
@@ -13,11 +14,12 @@ struct execution_time exetime = {
   0.0,
   0.0
 };
+#endif
 
 int main(void){
   
 #ifdef _OPENMP
-  omp_set_num_threads(4);
+  //omp_set_num_threads(4);
   printf("max threads (set): %d\n", omp_get_max_threads());
 #endif
   
@@ -537,6 +539,10 @@ int main(void){
 
   
 #if ENERGY_FILE
+
+#if EXECUTION_TIME
+  start = mach_absolute_time();
+#endif
   //初期エネルギー計算.
   E_tot_0 = 0.0;
   E_tot_0 = Calculate_Energy(ele,x_0,
@@ -571,10 +577,15 @@ int main(void){
   //角運動量の大きさ計算.
   abs_L_0 = 0.0;
   abs_L_0 = AngularMomentum(i,ele,x_0,v_0);
+#if EXECUTION_TIME
+  end = mach_absolute_time();
+  exetime.Energy += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
+#endif
+  
 #endif
 
   
-  //#pragma omp parallel for private(j,k,abs_r,r_dot_v_ij)
+#pragma omp parallel for private(j,k,abs_r,r_dot_v_ij)
   for(i=1;i<=global_n;++i){
     for(j=1;j<=global_n;++j){
       if(i!=j){
@@ -769,7 +780,7 @@ int main(void){
       CenterOfGravity(x_p,v_p,x_G,v_G,ele);  //重心計算
 #endif
       
-      if(Collision_Judgement(ele,x_p,abs_r,&i_col,&j_col)==1){  //予測子を用いた衝突判定.
+      if(0 && Collision_Judgement(ele,x_p,abs_r,&i_col,&j_col)==1){  //予測子を用いた衝突判定.
 
 	/////////////////////////衝突した場合/////////////////////////
 	printf("collision\ti=%d, j=%d\n",i_col,j_col);
@@ -780,7 +791,7 @@ int main(void){
 #if EXECUTION_TIME
 	start = mach_absolute_time();
 #endif
-	//#pragma omp parallel for
+#pragma omp parallel for
 	for(i=1;i<=global_n;++i){
 	  Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,r_dot_v,Dt);  //修正子 すべての粒子.
 	}
@@ -838,10 +849,15 @@ int main(void){
 	}
 
 
-
+#if EXECUTION_TIME
+	start = mach_absolute_time();
+#endif
 	//衝突合体する際のエネルギーの補正量を計算
 	Energy_Correction(i_col,j_col,x_0,v_0,ele,&dE_heat,&dE_grav,&dE_c,&v_imp);
-	
+#if EXECUTION_TIME
+	end = mach_absolute_time();
+	exetime.Energy += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
+#endif	
 
 	    
 	//合体後の操作
@@ -913,7 +929,7 @@ int main(void){
 #endif
 
 	
-	//#pragma omp parallel for private(j,k,abs_r2,r_dot_v_ij)
+#pragma omp parallel for private(j,k,abs_r,r_dot_v_ij)
 	for(i=1;i<=global_n;++i){
 	  for(j=1;j<=global_n;++j){
 	    if(i!=j){
@@ -940,7 +956,7 @@ int main(void){
 #if EXECUTION_TIME
 	start = mach_absolute_time();
 #endif
-	//#pragma omp parallel for
+#pragma omp parallel for
 	for(i=1;i<=global_n;++i){
 	  if(i==i_sys){
 	    Corrector_sys(i_sys,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,r_dot_v,dt_);  //修正子. i_sys のみ.
@@ -1023,7 +1039,7 @@ int main(void){
 #if EXECUTION_TIME
       start = mach_absolute_time();
 #endif
-      //#pragma omp parallel for
+#pragma omp parallel for
       for(i=1;i<=global_n;++i){
 	Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,r_dot_v,dt_);
       }
@@ -1037,7 +1053,7 @@ int main(void){
       start = mach_absolute_time();
 #endif
       for(ite=1;ite<=ITE_MAX;++ite){  //iteration.
-	//#pragma omp parallel for
+#pragma omp parallel for
 	for(i=1;i<=global_n;++i){	  
 	  Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,r_dot_v,dt_);
 	}
@@ -1433,7 +1449,7 @@ int main(void){
   printf("dt_[i_sys]=%e\tE_error=%.15e\tL_error=%.15e\tdE_correct=%.15e\n",dt_[i_sys],(E_tot-E_tot_0)/fabs(E_tot_0),(abs_L-abs_L_0)/abs_L_0,dE_correct);
 #endif
   
-  printf("step=%e\n",step);
+  printf("step=%.15e\n",step);
 
 
 #if DT_LOG == 1
@@ -1444,14 +1460,16 @@ int main(void){
   printf("dt_ene=%e[yr]\n",DT_ENE/2.0/M_PI);
 #endif
 
+#if EXECUTION_TIME
   printf("\nexecution time\n");
-  printf("Energy = %e [s]\n",exetime.Energy*1.0E-9);
-  printf("Orbital_Elements = %e [s]\n",exetime.Orbital_Elements*1.0E-9);
-  printf("Predictor = %e [s]\n",exetime.Predictor*1.0E-9);
-  printf("Corrector = %e [s]\n",exetime.Corrector*1.0E-9);
-  printf("Iteration = %e [s]\n",exetime.Iteration*1.0E-9);
-  printf("Collision_Judgement = %e [s]\n",exetime.Collision_Judgement*1.0E-9);
-  printf("Fragmentation = %e [s]\n",exetime.Fragmentation*1.0E-9);
+  printf("Energy\t\t\t= %e [s]\n",exetime.Energy*1.0E-9);
+  printf("Orbital_Elements\t= %e [s]\n",exetime.Orbital_Elements*1.0E-9);
+  printf("Predictor\t\t= %e [s]\n",exetime.Predictor*1.0E-9);
+  printf("Corrector\t\t= %e [s]\n",exetime.Corrector*1.0E-9);
+  printf("Iteration\t\t= %e [s]\n",exetime.Iteration*1.0E-9);
+  printf("Collision_Judgement\t= %e [s]\n",exetime.Collision_Judgement*1.0E-9);
+  printf("Fragmentation\t\t= %e [s]\n",exetime.Fragmentation*1.0E-9);
+#endif
   
 }
     
