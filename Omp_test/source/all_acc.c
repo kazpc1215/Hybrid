@@ -1,4 +1,5 @@
 #include "hybrid.h"
+#include "func.h"
 
 /*全加速度*/
 inline double All_Acceleration(int i,int k,struct orbital_elements ele[],double x_0[][4],double r_0[],double abs_r[]){
@@ -58,12 +59,3 @@ inline double All_dAcceleration(int i,int k,struct orbital_elements ele[],double
   
   return adot_0;
 }
-
-
-
-
-
-
-
-
-

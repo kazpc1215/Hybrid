@@ -1,4 +1,5 @@
 #include "hybrid.h"
+#include "func.h"
 
 /*相互重力加速度*/
 inline double Acceleration_ij(int i,int j,int k,struct orbital_elements ele[],double x_0[][4],double abs_r[]){

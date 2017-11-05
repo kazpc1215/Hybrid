@@ -1,4 +1,6 @@
 #include "hybrid.h"
+#include "func.h"
+
 
 /*軌道要素計算*/
 void Calculate_OrbitalElements(int i,double x_c[][4],double v_c[][4],struct orbital_elements ele[],double P[][4],double Q[][4],double r_c[],double v2_c[],double r_dot_v[]){

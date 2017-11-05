@@ -20,6 +20,8 @@ ifeq ($(MODE),OMP)
 	CFLAGS	= -fopenmp $(LEVEL)
 endif
 
+CFLAGS += -MD
+
 
 hybrid: $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $(OBJS)
@@ -28,8 +30,8 @@ hybrid: $(OBJS)
 	$(CC) $(CFLAGS) -c $<
 
 
-$(OBJS): $(CFILE) hybrid.h
-
-
 clean:
 	rm -f $(OBJS) *~ *.dat
+	rm -f *.d
+
+-include *.d

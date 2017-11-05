@@ -1,4 +1,6 @@
 #include "hybrid.h"
+#include "func.h"
+
 
 #if FRAGMENTATION
 void MassFlux(int i,struct orbital_elements ele[],struct fragmentation frag[],struct parameter para){

@@ -1,4 +1,5 @@
 #include "hybrid.h"
+#include "func.h"
 
 int Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double abs_r[],int *i_col,int *j_col){
 

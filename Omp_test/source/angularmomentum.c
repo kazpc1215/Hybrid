@@ -1,4 +1,5 @@
 #include "hybrid.h"
+#include "func.h"
 
 /*角運動量*/
 double AngularMomentum(int i,struct orbital_elements ele[],double x_0[][4],double v_0[][4]){

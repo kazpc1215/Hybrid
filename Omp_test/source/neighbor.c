@@ -1,4 +1,6 @@
 #include "hybrid.h"
+#include "func.h"
+
 
 #if FRAGMENTATION
 void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation frag[],double x_0[][4]){

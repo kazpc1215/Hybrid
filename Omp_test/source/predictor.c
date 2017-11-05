@@ -1,4 +1,6 @@
 #include "hybrid.h"
+#include "func.h"
+
 
 /*予測子*/
 inline void Predictor(int i,double x_0[][4],double v_0[][4],double a_0[][4],double adot_0[][4],double x_p[][4],double v_p[][4],double r_p[],double v2_p[],double r_dot_v[],double Dt[]){

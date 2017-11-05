@@ -1,4 +1,7 @@
 #include "hybrid.h"
+#include "func.h"
+
+
 
 /*初期 タイムステップ計算*/
 double Timestep_i_0(int i,double a_0[][4],double adot_0[][4]){

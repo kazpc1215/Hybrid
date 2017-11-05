@@ -210,7 +210,7 @@ EXTERN mach_timebase_info_data_t sTimebaseInfo;
 #endif
 
 
-
+/*
 double AngularMomentum(int i,struct orbital_elements ele[],double x_0[][4],double v_0[][4]);
 
 double InnerProduct(int i,double x_0[][4],double v_0[][4]);
@@ -310,4 +310,5 @@ void Rotation_3D_yaxis(int i,double x_eject[][4],double theta);
 void Rotation_3D_zaxis(int i,double x_eject[][4],double theta);
 
 void CenterOfGravity(double x_0[][4],double v_0[][4],double x_G[],double v_G[],struct orbital_elements ele[]);
+*/
 #endif //include-guard

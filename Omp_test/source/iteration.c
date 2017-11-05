@@ -1,4 +1,6 @@
 #include "hybrid.h"
+#include "func.h"
+
 
 /*i_sys のみのiteration*/
 inline void Iteration_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],double v_p[][4],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double a_0[][4],double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],double r_dot_v[],double dt_[]){

@@ -1,4 +1,5 @@
 #include "hybrid.h"
+#include "func.h"
 
 
 /*i_sys のみの修正子*/

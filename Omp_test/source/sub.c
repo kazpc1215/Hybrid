@@ -1,8 +1,9 @@
 #include "hybrid.h"
+#include "func.h"
 
 
 /*r_i,v_iの内積*/
-double InnerProduct(int i,double x_0[][4],double v_0[][4]){
+inline double InnerProduct(int i,double x_0[][4],double v_0[][4]){
   /*
   int k;
   double r_dot_v = 0.0;
@@ -15,7 +16,7 @@ double InnerProduct(int i,double x_0[][4],double v_0[][4]){
 }
 
 /*中心星からの距離*/
-double RadiusFromCenter(int i,double x_0[][4]){
+inline double RadiusFromCenter(int i,double x_0[][4]){
   /*
   int k;
   double r_0 = 0.0;
@@ -29,7 +30,7 @@ double RadiusFromCenter(int i,double x_0[][4]){
 }
 
 /*速度の2乗*/
-double SquareOfVelocity(int i,double v_0[][4]){
+inline double SquareOfVelocity(int i,double v_0[][4]){
   /*
   int k;
   double v2_0 = 0.0;
@@ -42,12 +43,12 @@ double SquareOfVelocity(int i,double v_0[][4]){
 }
 
 /*相対距離*/
-double RelativeDistance(int i,int j,double x_0[][4]){
+inline double RelativeDistance(int i,int j,double x_0[][4]){
   return sqrt((x_0[j][1] - x_0[i][1])*(x_0[j][1] - x_0[i][1]) + (x_0[j][2] - x_0[i][2])*(x_0[j][2] - x_0[i][2]) + (x_0[j][3] - x_0[i][3])*(x_0[j][3] - x_0[i][3]));
 }
 
 /*相対速度の2乗*/
-double SquareOfRelativeVelocity(int i,int j,double v_0[][4]){
+inline double SquareOfRelativeVelocity(int i,int j,double v_0[][4]){
   return (v_0[j][1] - v_0[i][1])*(v_0[j][1] - v_0[i][1]) + (v_0[j][2] - v_0[i][2])*(v_0[j][2] - v_0[i][2]) + (v_0[j][3] - v_0[i][3])*(v_0[j][3] - v_0[i][3]);
 }
 

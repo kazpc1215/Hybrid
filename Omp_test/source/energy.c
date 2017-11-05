@@ -1,4 +1,5 @@
 #include "hybrid.h"
+#include "func.h"
 
 
 /*エネルギー計算*/

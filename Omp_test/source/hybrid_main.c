@@ -1,5 +1,6 @@
 #define EXTERN
 #include "hybrid.h"
+#include "func.h"
 
 int global_n = N_p + N_tr;  //全粒子数.
 int global_n_p = N_p;  //原始惑星の数.
