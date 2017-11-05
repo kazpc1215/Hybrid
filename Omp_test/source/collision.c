@@ -1,6 +1,7 @@
 #include "hybrid.h"
 #include "func.h"
 
+
 int Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double abs_r[],int *i_col,int *j_col){
 
 #if EXECUTION_TIME
@@ -73,8 +74,7 @@ void Energy_Correction(int i_col,int j_col,double x_0[][4],double v_0[][4],struc
 void Coalescence(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbital_elements ele[]){
 
   int k;
-
-  
+ 
   //i_colを新しい合体粒子の番号にする.
   ele[i_col].mass = ele[0].mass;
   ele[i_col].radius = cbrt(3.0/4.0/M_PI*ele[i_col].mass*1.989E33/PLANET_DENSITY)/1.496E13;
@@ -106,5 +106,6 @@ void Coalescence(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbi
   //global_n_pを1つ減らす.
   global_n_p--;
   global_n = global_n_p + N_tr;
-  
+
+  return;
 }

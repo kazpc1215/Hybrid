@@ -554,7 +554,7 @@ int main(void){
   end = mach_absolute_time();
   exetime.Energy += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
 #endif
-  
+
 #endif
 
   
@@ -573,8 +573,6 @@ int main(void){
       //printf("a_0[%d][%d]=%f\tadot_0[%d][%d]=%f\n",i,k,a_0[i][k],i,k,adot_0[i][k]);
     }
   }
-    
-    
     
     
     

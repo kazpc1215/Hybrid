@@ -1,8 +1,69 @@
 #include "hybrid.h"
 #include "func.h"
 
+
+/*全加速度*/
+double All_Acceleration(int i,int k,struct orbital_elements ele[],double x_0[][4],double r_0[],double abs_r[]){
+  int j;
+  double a_0;
+  
+  a_0 = External_Acceleration(i,k,x_0,r_0);
+
+  for(j=1;j<=
+#if INTERACTION_ALL
+	global_n
+#elif INTERACTION_ONLY_PLANET_TRACER
+	global_n_p
+#else
+	0
+#endif
+	;++j){
+
+#if INDIRECT_TERM
+    a_0 += Acceleration_indirect(j,k,ele,x_0,r_0);
+#endif
+    
+    if(i!=j){
+      a_0 += Acceleration_ij(i,j,k,ele,x_0,abs_r);	  
+    }
+  }
+    
+  return a_0;
+}
+
+
+/*全加加速度*/
+double All_dAcceleration(int i,int k,struct orbital_elements ele[],double x_0[][4],double v_0[][4],double r_dot_v[],double r_dot_v_ij[],double r_0[],double abs_r[]){ 
+  int j;
+  double adot_0;
+  
+  adot_0 = External_dAcceleration(i,k,x_0,v_0,r_0,r_dot_v);
+
+  for(j=1;j<=
+#if INTERACTION_ALL
+	global_n
+#elif INTERACTION_ONLY_PLANET_TRACER
+	global_n_p
+#else
+	0
+#endif
+	;++j){
+
+#if INDIRECT_TERM
+    adot_0 += dAcceleration_indirect(j,k,ele,x_0,v_0,r_0,r_dot_v);
+#endif
+    
+    if(i!=j){
+      adot_0 += dAcceleration_ij(i,j,k,ele,x_0,v_0,r_dot_v_ij,abs_r);
+    } 
+  }
+  
+  return adot_0;
+}
+
+
 /*相互重力加速度*/
-inline double Acceleration_ij(int i,int j,int k,struct orbital_elements ele[],double x_0[][4],double abs_r[]){
+double Acceleration_ij(int i,int j,int k,struct orbital_elements ele[],double x_0[][4],double abs_r[]){
   double rij3;
 
 #ifndef EPSILON
@@ -21,7 +82,7 @@ inline double Acceleration_ij(int i,int j,int k,struct orbital_elements ele[],do
 
 
 /*相互重力加加速度*/
-inline double dAcceleration_ij(int i,int j,int k,struct orbital_elements ele[],double x_0[][4],double v_0[][4],double r_dot_v_ij[],double abs_r[]){
+double dAcceleration_ij(int i,int j,int k,struct orbital_elements ele[],double x_0[][4],double v_0[][4],double r_dot_v_ij[],double abs_r[]){
   double rij3;
   double rij5;
 
@@ -44,7 +105,7 @@ inline double dAcceleration_ij(int i,int j,int k,struct orbital_elements ele[],d
 
 
 /*加速度indirect項*/
-inline double Acceleration_indirect(int i,int k,struct orbital_elements ele[],double x_0[][4],double r_0[]){
+double Acceleration_indirect(int i,int k,struct orbital_elements ele[],double x_0[][4],double r_0[]){
   double r3;
   r3 = r_0[i]*r_0[i]*r_0[i];
   r3 = 1.0/r3;
@@ -58,7 +119,7 @@ inline double Acceleration_indirect(int i,int k,struct orbital_elements ele[],do
 
 
 /*加加速度indirect項*/
-inline double dAcceleration_indirect(int i,int k,struct orbital_elements ele[],double x_0[][4],double v_0[][4],double r_0[],double r_dot_v[]){
+double dAcceleration_indirect(int i,int k,struct orbital_elements ele[],double x_0[][4],double v_0[][4],double r_0[],double r_dot_v[]){
   double r3;
   double r5;
   r3 = r_0[i]*r_0[i]*r_0[i];
@@ -75,7 +136,7 @@ inline double dAcceleration_indirect(int i,int k,struct orbital_elements ele[],d
 
 
 /*外力加速度*/
-inline double External_Acceleration(int i,int k,double x_0[][4],double r_0[]){
+double External_Acceleration(int i,int k,double x_0[][4],double r_0[]){
   double r3;
   r3 = r_0[i]*r_0[i]*r_0[i];
   r3 = 1.0/r3;
@@ -89,7 +150,7 @@ inline double External_Acceleration(int i,int k,double x_0[][4],double r_0[]){
 
 
 /*外力加加速度*/
-inline double External_dAcceleration(int i,int k,double x_0[][4],double v_0[][4],double r_0[],double r_dot_v[]){
+double External_dAcceleration(int i,int k,double x_0[][4],double v_0[][4],double r_0[],double r_dot_v[]){
   double r3;
   double r5;
   r3 = r_0[i]*r_0[i]*r_0[i];
@@ -103,4 +164,3 @@ inline double External_dAcceleration(int i,int k,double x_0[][4],double v_0[][4]
   return -1*G*M_0*(v_0[i][k]*r3 - 3*r_dot_v[i]*x_0[i][k]*r5);
 #endif
 }
-

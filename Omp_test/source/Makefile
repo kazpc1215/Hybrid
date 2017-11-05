@@ -7,8 +7,8 @@ MODE	= SINGLE
 LEVEL	= -O3
 
 CC	= gcc
-OBJS	= hybrid_main.o sub.o all_acc.o acc.o predictor.o corrector.o iteration.o energy.o orbital_elements.o timestep.o angularmomentum.o neighbor.o massflux.o collision.o
-CFILE	= hybrid_main.c sub.c all_acc.c acc.c predictor.c corrector.c iteration.c energy.c orbital_elements.c timestep.c angularmomentum.c neighbor.c massflux.c collision.c
+OBJS	= hybrid_main.o sub.o acc.o predictor.o corrector.o iteration.o energy.o orbital_elements.o timestep.o neighbor.o massflux.o collision.o
+
 
 ifeq ($(MODE),SINGLE)
 	CFLAGS	= $(LEVEL)
@@ -31,7 +31,6 @@ hybrid: $(OBJS)
 
 
 clean:
-	rm -f $(OBJS) *~ *.dat
-	rm -f *.d
+	rm -f $(OBJS) *~ *.dat *.d
 
 -include *.d

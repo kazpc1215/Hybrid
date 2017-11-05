@@ -6,21 +6,9 @@
 
 double AngularMomentum(int i,struct orbital_elements ele[],double x_0[][4],double v_0[][4]);
 
-double InnerProduct(int i,double x_0[][4],double v_0[][4]);
-
-double RadiusFromCenter(int i,double x_0[][4]);
-
-double SquareOfVelocity(int i,double v_0[][4]);
-
 double Timestep_i_0(int i,double a_0[][4],double adot_0[][4]);
 
 double Timestep_i_sys(int i_sys,double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],double dt_[]);
-
-double RelativeDistance(int i,int j,double x_0[][4]);
-
-double SquareOfRelativeVelocity(int i,int j,double v_0[][4]);
-
-double RelativeInnerProduct(int i,int j,double x_0[][4],double v_0[][4]);
 
 double Acceleration_ij(int i,int j,int k,struct orbital_elements ele[],double x_0[][4],double abs_r[]);
 
@@ -103,4 +91,40 @@ void Rotation_3D_yaxis(int i,double x_eject[][4],double theta);
 void Rotation_3D_zaxis(int i,double x_eject[][4],double theta);
 
 void CenterOfGravity(double x_0[][4],double v_0[][4],double x_G[],double v_G[],struct orbital_elements ele[]);
+
+
+//inline関数
+
+/*r_i,v_iの内積*/
+static inline double InnerProduct(int i,double x_0[][4],double v_0[][4]){
+  return x_0[i][1]*v_0[i][1] + x_0[i][2]*v_0[i][2] + x_0[i][3]*v_0[i][3];
+}
+
+
+/*中心星からの距離*/
+static inline double RadiusFromCenter(int i,double x_0[][4]){
+  return sqrt(x_0[i][1]*x_0[i][1] + x_0[i][2]*x_0[i][2] + x_0[i][3]*x_0[i][3]);
+}
+
+/*速度の2乗*/
+static inline double SquareOfVelocity(int i,double v_0[][4]){
+  return v_0[i][1]*v_0[i][1] + v_0[i][2]*v_0[i][2] + v_0[i][3]*v_0[i][3];
+}
+
+/*相対距離*/
+static inline double RelativeDistance(int i,int j,double x_0[][4]){
+  return sqrt((x_0[j][1] - x_0[i][1])*(x_0[j][1] - x_0[i][1]) + (x_0[j][2] - x_0[i][2])*(x_0[j][2] - x_0[i][2]) + (x_0[j][3] - x_0[i][3])*(x_0[j][3] - x_0[i][3]));
+}
+
+/*相対速度の2乗*/
+static inline double SquareOfRelativeVelocity(int i,int j,double v_0[][4]){
+  return (v_0[j][1] - v_0[i][1])*(v_0[j][1] - v_0[i][1]) + (v_0[j][2] - v_0[i][2])*(v_0[j][2] - v_0[i][2]) + (v_0[j][3] - v_0[i][3])*(v_0[j][3] - v_0[i][3]);
+}
+
+/*r_ij, v_ijの内積*/
+static inline double RelativeInnerProduct(int i,int j,double x_0[][4],double v_0[][4]){
+  return (x_0[j][1] - x_0[i][1])*(v_0[j][1] - v_0[i][1]) + (x_0[j][2] - x_0[i][2])*(v_0[j][2] - v_0[i][2]) + (x_0[j][3] - x_0[i][3])*(v_0[j][3] - v_0[i][3]);
+}
+
+
 #endif //include-guard

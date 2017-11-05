@@ -3,7 +3,7 @@
 
 
 /*i_sys のみのiteration*/
-inline void Iteration_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],double v_p[][4],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double a_0[][4],double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],double r_dot_v[],double dt_[]){
+void Iteration_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],double v_p[][4],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double a_0[][4],double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],double r_dot_v[],double dt_[]){
 
   int j,k;
   double abs_r[global_n+1],r_dot_v_ij[global_n+1];
@@ -22,14 +22,11 @@ inline void Iteration_sys(int i_sys,struct orbital_elements ele[],double x_p[][4
   }  //j loop
   
 
-	 	 
-  
   for(k=1;k<=3;++k){
     a_tmp[k] = All_Acceleration(i_sys,k,ele,x_c,r_c,abs_r);
     adot_tmp[k] = All_dAcceleration(i_sys,k,ele,x_c,v_c,r_dot_v,r_dot_v_ij,r_c,abs_r);
   }
   
-
  
   //修正子 (iteration).
   for(k=1;k<=3;++k){	  
@@ -53,7 +50,6 @@ inline void Iteration_sys(int i_sys,struct orbital_elements ele[],double x_p[][4
     x_c[i_sys][k] = x_c_tmp[k];
     v_c[i_sys][k] = v_c_tmp[k];
   }
-
   
   return;     
 }
