@@ -71,12 +71,14 @@ void Rotation_3D_zaxis(int i,double x_eject[][4],double theta){
   x_eject[i][2] = sin(theta)*tmp_x + cos(theta)*tmp_y;
 }
 
+/*
 void Swap(double *a, double *b){
   double tmp;
   tmp = (*a);
   (*a) = (*b);
   (*b) = tmp;
 }
+*/
 
 void CenterOfGravity(double x_0[][4],double v_0[][4],double x_G[],double v_G[],struct orbital_elements ele[]){
   int i,k;

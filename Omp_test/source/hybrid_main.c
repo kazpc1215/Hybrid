@@ -132,15 +132,16 @@ int main(void){
 #endif
 
       
-#if POSITION_ROT_FILE
+#if POSI_VELO_ROT_FILE
   double x_rot[N_p+N_tr+1][4]={};
   double r_xy[N_p+N_tr+1]={},theta=0.0;
 #endif
 
 
-#if CLOSE_ENCOUNTER_FILE
-  FILE *fpcloseencounter;   
-  char closefile[200]={};
+#if COLLISION_FILE
+  FILE *fpcollision;   
+  char collisionfile[200]={};
+  int n_col=0;
 #endif
 
 
@@ -428,7 +429,7 @@ int main(void){
 
 
       
-#if POSITION_ROT_FILE
+#if POSI_VELO_ROT_FILE
   //回転座標系でプロット
   r_xy[PLANET_NO] = sqrt(x_0[PLANET_NO][1]*x_0[PLANET_NO][1]+x_0[PLANET_NO][2]*x_0[PLANET_NO][2]);
   r_xy[PLANETESIMAL_NO] = sqrt(x_0[PLANETESIMAL_NO][1]*x_0[PLANETESIMAL_NO][1]+x_0[PLANETESIMAL_NO][2]*x_0[PLANETESIMAL_NO][2]);
@@ -464,35 +465,6 @@ int main(void){
   fprintf(fpposi_rot,"%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\n",0.0,x_rot[PLANETESIMAL_NO][1],x_rot[PLANETESIMAL_NO][2],x_0[PLANETESIMAL_NO][3],r_xy[PLANETESIMAL_NO],atan2(x_rot[PLANETESIMAL_NO][2],x_rot[PLANETESIMAL_NO][1]),ele[PLANETESIMAL_NO].radius,x_rot[PLANET_NO][1],x_rot[PLANET_NO][2],x_0[PLANET_NO][3],r_xy[PLANET_NO],atan2(x_rot[PLANET_NO][2],x_rot[PLANET_NO][1]),ele[PLANET_NO].radius,ele[PLANET_NO].r_h);
   fclose(fpposi_rot);
 #endif
-
-
-      
-#if CLOSE_ENCOUNTER_FILE
-  //近接遭遇時の位置速度をファイルへ書き出し.
-  sprintf(closefile,"%sClose_Encounter.dat",
-#ifdef DIRECTORY
-	  STR(DIRECTORY)
-#else
-#ifdef DIRECTORY_FILE
-	  dirname
-#endif
-#endif
-	  );
-  fpcloseencounter= fopen(closefile,"w");
-  if(fpcloseencounter==NULL){
-    printf("closefile 0 error\n");
-    exit(-1);
-  }
-  fprintf(fpcloseencounter,"#t[yr]\ti\tx\ty\tz\tr_0(3次元)\tr_0(xy平面に射影)\tv_x\tv_y\tv_z\tabs_v\tR_Hill\tRadius\n");
-  for(i=1;i<=global_n;i++){
-    fprintf(fpcloseencounter,"%.15e\t%4d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15e\t%.15e\n",0.0,i,x_0[i][1],x_0[i][2],x_0[i][3],r_0[i],sqrt(x_0[i][1]*x_0[i][1]+x_0[i][2]*x_0[i][2]),v_0[i][1],v_0[i][2],v_0[i][3],sqrt(v_0[i][1]*v_0[i][1]+v_0[i][2]*v_0[i][2]+v_0[i][3]*v_0[i][3]),ele[i].r_h,ele[i].radius);
-  }
-  fclose(fpcloseencounter);
-#endif
-    
-  
-
-
 
   
   
@@ -814,7 +786,7 @@ int main(void){
 	exetime.Iteration += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
 #endif
 
-	
+
 #if INDIRECT_TERM
 	CenterOfGravity(x_c,v_c,x_G,v_G,ele);  //重心計算
 
@@ -822,6 +794,32 @@ int main(void){
 #endif
 
 	
+#if COLLISION_FILE
+	//衝突時の位置速度をファイルへ書き出し.
+	n_col++;
+	sprintf(collisionfile,"%sCollision_%02d.dat",
+#ifdef DIRECTORY
+		STR(DIRECTORY)
+#else
+#ifdef DIRECTORY_FILE
+		dirname
+#endif
+#endif
+		,n_col
+		);
+	fpcollision= fopen(collisionfile,"w");
+	if(fpcollision==NULL){
+	  printf("collisionfile 0 error\n");
+	  exit(-1);
+	}
+	fprintf(fpcollision,"#i_col=%d\tj_col=%d\tr_ij=%.15e\tradius[%d]+radius[%d]=%.15e\n",i_col,j_col,abs_r[j_col],i_col,j_col,ele[i_col].radius + ele[j_col].radius);
+	fprintf(fpcollision,"#t[yr]\ti\tx\ty\tz\tr_0(3次元)\tr_0(xy平面に射影)\tv_x\tv_y\tv_z\tabs_v\tR_Hill\tRadius\n");
+	for(i=1;i<=global_n;i++){
+	  fprintf(fpcollision,"%.15e\t%4d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15e\t%.15e\n",(t_sys+t_tmp)/2.0/M_PI,i,x_c[i][1],x_c[i][2],x_c[i][3],r_c[i],sqrt(x_c[i][1]*x_c[i][1]+x_c[i][2]*x_c[i][2]),v_c[i][1],v_c[i][2],v_c[i][3],sqrt(v_c[i][1]*v_c[i][1]+v_c[i][2]*v_c[i][2]+v_c[i][3]*v_c[i][3]),ele[i].r_h,ele[i].radius);
+	}
+	fclose(fpcollision);
+#endif
+
 
 	for(i=1;i<=global_n;++i){  //位置と速度を更新.
 	  for(k=1;k<=3;++k){
@@ -832,11 +830,9 @@ int main(void){
 
 	
 #if INDIRECT_TERM
-	CenterOfGravity(x_0,v_0,x_G,v_G,ele);  //重心計算
-
+	CenterOfGravity(x_0,v_0,x_G,v_G,ele);  //重心計算.
 	//printf("x_G=%.15e\ty_G=%.15e\tz_G=%.15e\tvx_G=%.15e\tvy_G=%.15e\tvz_G=%.15e\n",x_G[1],x_G[2],x_G[3],v_G[1],v_G[2],v_G[3]);
 #endif
-	
 	
 	
 	//新しい合体粒子を作る. 0番目の要素はコピーに使うだけ.
@@ -859,12 +855,15 @@ int main(void){
 	exetime.Energy += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
 #endif	
 
-	    
+
+#if COLLISION_FILE
+	fprintf(fpcollision,"#dE_heat=%e\tdE_grav=%e\tdE_c=%e\tv_imp=%e\n",dE_heat,dE_grav,dE_c,v_imp);
+	fclose(fpcollision);
+#endif
 	//合体後の操作
 	Coalescence(i_col,j_col,x_0,v_0,ele);
 
-	    
-	
+
 	    
 	//以下、すべての粒子の加速度などを再計算.
 	for(i=1;i<=global_n;++i){
@@ -886,8 +885,7 @@ int main(void){
 
 	
 #if INDIRECT_TERM
-	CenterOfGravity(x_0,v_0,x_G,v_G,ele);  //重心計算
-
+	CenterOfGravity(x_0,v_0,x_G,v_G,ele);  //重心計算.
 	//printf("x_G=%.15e\ty_G=%.15e\tz_G=%.15e\tvx_G=%.15e\tvy_G=%.15e\tvz_G=%.15e\n",x_G[1],x_G[2],x_G[3],v_G[1],v_G[2],v_G[3]);
 #endif
 	    
@@ -1273,7 +1271,7 @@ int main(void){
 
 
     
-#if POSITION_ROT_FILE
+#if POSI_VELO_ROT_FILE
     if((i_col == 0) && (j_col == 0)){  //衝突しない場合.
       r_xy[PLANET_NO] = sqrt(x_c[PLANET_NO][1]*x_c[PLANET_NO][1]+x_c[PLANET_NO][2]*x_c[PLANET_NO][2]);
       r_xy[PLANETESIMAL_NO] = sqrt(x_c[PLANETESIMAL_NO][1]*x_c[PLANETESIMAL_NO][1]+x_c[PLANETESIMAL_NO][2]*x_c[PLANETESIMAL_NO][2]);
@@ -1309,23 +1307,6 @@ int main(void){
     }
 
 
-
-#if CLOSE_ENCOUNTER_FILE
-    if(fmod(step,1.0E5)==0.0 && dt_[i_sys]<2.0*M_PI*1.0E-8){  //dtが1E-8yr以下なら書き出し.
-      fpcloseencounter= fopen(closefile,"w");
-      if(fpcloseencounter==NULL){
-	printf("closefile error\n");
-	return -1;
-      }
-      fprintf(fpcloseencounter,"#t[yr]\ti\tx\ty\tz\tr_0(3次元)\tr_0(xy平面に射影)\tv_x\tv_y\tv_z\tabs_v\tR_Hill\tRadius\n");
-      for(i=1;i<=global_n;i++){
-	fprintf(fpcloseencounter,"%.15e\t%4d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15e\t%.15e\n",(t_sys+t_tmp)/2.0/M_PI,i,x_c[i][1],x_c[i][2],x_c[i][3],r_c[i],sqrt(x_c[i][1]*x_c[i][1]+x_c[i][2]*x_c[i][2]),v_c[i][1],v_c[i][2],v_c[i][3],sqrt(v_c[i][1]*v_c[i][1]+v_c[i][2]*v_c[i][2]+v_c[i][3]*v_c[i][3]),ele[i].r_h,ele[i].radius);
-      }
-      fclose(fpcloseencounter);
-    }
-#endif
-
-
     
 
 #if ELIMINATE_PARTICLE
@@ -1336,54 +1317,54 @@ int main(void){
 	printf("i=%d is eliminated\tr[%d]=%e\tt_sys+t_tmp=%.15e[yr]\n",i,i,r_c[i],(t_sys+t_tmp)/2.0/M_PI);
 	
 	//iとglobal_n_pを入れ替える.
-	ele[0] = ele[i];  //構造体のためSwap関数は使えない. 0番目の要素はコピーに使うだけ.
+	ele[0] = ele[i];  //構造体のためSWAPマクロは使えない. 0番目の要素はコピーに使うだけ.
 	ele[i] = ele[global_n_p];
 	ele[global_n_p] = ele[0];
 
-	Swap(&t_[i],&t_[global_n_p]);
-	Swap(&dt_[i],&dt_[global_n_p]);
-	
+	SWAP(t_[i],t_[global_n_p]);
+	SWAP(dt_[i],dt_[global_n_p]);
+
 	for(k=1;k<=3;++k){
-	  Swap(&x_0[i][k],&x_0[global_n_p][k]);
-	  Swap(&x_c[i][k],&x_c[global_n_p][k]);
+	  SWAP(x_0[i][k],x_0[global_n_p][k]);
+	  SWAP(x_c[i][k],x_c[global_n_p][k]);
 	  
-	  Swap(&v_0[i][k],&v_0[global_n_p][k]);
-	  Swap(&v_c[i][k],&v_c[global_n_p][k]);
+	  SWAP(v_0[i][k],v_0[global_n_p][k]);
+	  SWAP(v_c[i][k],v_c[global_n_p][k]);
 
-	  Swap(&a_0[i][k],&a_0[global_n_p][k]);
-	  Swap(&a[i][k],&a[global_n_p][k]);
+	  SWAP(a_0[i][k],a_0[global_n_p][k]);
+	  SWAP(a[i][k],a[global_n_p][k]);
 
-	  Swap(&adot_0[i][k],&adot_0[global_n_p][k]);
-	  Swap(&adot[i][k],&adot[global_n_p][k]);
+	  SWAP(adot_0[i][k],adot_0[global_n_p][k]);
+	  SWAP(adot[i][k],adot[global_n_p][k]);
 
-	  Swap(&adot2_dt2[i][k],&adot2_dt2[global_n_p][k]);
-	  Swap(&adot3_dt3[i][k],&adot3_dt3[global_n_p][k]);
+	  SWAP(adot2_dt2[i][k],adot2_dt2[global_n_p][k]);
+	  SWAP(adot3_dt3[i][k],adot3_dt3[global_n_p][k]);
 	}
 
 #if N_tr != 0
 	//global_n_pとglobal_nを入れ替える.
-	ele[0] = ele[global_n_p];  //構造体のためswap関数は使えない. 0番目の要素はコピーに使うだけ.
+	ele[0] = ele[global_n_p];  //構造体のためSWAPマクロは使えない. 0番目の要素はコピーに使うだけ.
 	ele[global_n_p] = ele[global_n];
 	ele[global_n] = ele[0];
 
-	Swap(&t_[global_n_p],&t_[global_n]);
-	Swap(&dt_[global_n_p],&dt_[global_n]);
+	SWAP(t_[global_n_p],t_[global_n]);
+	SWAP(dt_[global_n_p],dt_[global_n]);
 	
 	for(k=1;k<=3;++k){
-	  Swap(&x_0[global_n_p][k],&x_0[global_n][k]);
-	  Swap(&x_c[global_n_p][k],&x_c[global_n][k]);
+	  SWAP(x_0[global_n_p][k],x_0[global_n][k]);
+	  SWAP(x_c[global_n_p][k],x_c[global_n][k]);
 
-	  Swap(&v_0[global_n_p][k],&v_0[global_n][k]);
-	  Swap(&v_c[global_n_p][k],&v_c[global_n][k]);
+	  SWAP(v_0[global_n_p][k],v_0[global_n][k]);
+	  SWAP(v_c[global_n_p][k],v_c[global_n][k]);
 
-	  Swap(&a_0[global_n_p][k],&a_0[global_n][k]);
-	  Swap(&a[global_n_p][k],&a[global_n][k]);
+	  SWAP(a_0[global_n_p][k],a_0[global_n][k]);
+	  SWAP(a[global_n_p][k],a[global_n][k]);
 
-	  Swap(&adot_0[global_n_p][k],&adot_0[global_n][k]);
-	  Swap(&adot[global_n_p][k],&adot[global_n][k]);
+	  SWAP(adot_0[global_n_p][k],adot_0[global_n][k]);
+	  SWAP(adot[global_n_p][k],adot[global_n][k]);
 
-	  Swap(&adot2_dt2[global_n_p][k],&adot2_dt2[global_n][k]);
-	  Swap(&adot3_dt3[global_n_p][k],&adot3_dt3[global_n][k]);
+	  SWAP(adot2_dt2[global_n_p][k],adot2_dt2[global_n][k]);
+	  SWAP(adot3_dt3[global_n_p][k],adot3_dt3[global_n][k]);
 	}
 #endif
 	
@@ -1461,14 +1442,43 @@ int main(void){
 #endif
 
 #if EXECUTION_TIME
+
+  int exetime_num[7]={0,1,2,3,4,5,6};
+  
+  double exetime_array[7]={
+    exetime.Energy*1.0E-9,
+    exetime.Orbital_Elements*1.0E-9,
+    exetime.Predictor*1.0E-9,
+    exetime.Corrector*1.0E-9,
+    exetime.Iteration*1.0E-9,
+    exetime.Collision_Judgement*1.0E-9,
+    exetime.Fragmentation*1.0E-9
+  };
+  
+  char exetime_name[7][30]={
+    "Energy\t\t\t",
+    "Orbital_Elements\t",
+    "Predictor\t\t",
+    "Corrector\t\t",
+    "Iteration\t\t",
+    "Collision_Judgement\t",
+    "Fragmentation\t\t"
+  };
+  
+  for(i=0;i<7;++i){
+    for(j=i+1;j<7;++j){
+      if(exetime_array[i] < exetime_array[j]){
+	SWAP(exetime_num[i],exetime_num[j]);
+	SWAP(exetime_array[i],exetime_array[j]);
+      }
+    }
+  }
+  
   printf("\nexecution time\n");
-  printf("Energy\t\t\t= %e [s]\n",exetime.Energy*1.0E-9);
-  printf("Orbital_Elements\t= %e [s]\n",exetime.Orbital_Elements*1.0E-9);
-  printf("Predictor\t\t= %e [s]\n",exetime.Predictor*1.0E-9);
-  printf("Corrector\t\t= %e [s]\n",exetime.Corrector*1.0E-9);
-  printf("Iteration\t\t= %e [s]\n",exetime.Iteration*1.0E-9);
-  printf("Collision_Judgement\t= %e [s]\n",exetime.Collision_Judgement*1.0E-9);
-  printf("Fragmentation\t\t= %e [s]\n",exetime.Fragmentation*1.0E-9);
+  for(i=0;i<7;++i){
+    printf("%s= %e [s]\n",exetime_name[exetime_num[i]],exetime_array[i]);
+  }
+  
 #endif
   
 }

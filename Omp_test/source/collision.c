@@ -81,24 +81,24 @@ void Coalescence(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbi
     x_0[i_col][k] = x_0[0][k];
     v_0[i_col][k] = v_0[0][k];
   }
-	
+
   //j_colとglobal_n_pを入れ替える.
-  ele[0] = ele[j_col];  //構造体のためswap関数は使えない. 0番目の要素はコピーに使うだけ.
+  ele[0] = ele[j_col];  //構造体のためSWAPマクロは使えない. 0番目の要素はコピーに使うだけ.
   ele[j_col] = ele[global_n_p];
   ele[global_n_p] = ele[0];
   for(k=1;k<=3;++k){
-    Swap(&x_0[j_col][k],&x_0[global_n_p][k]);
-    Swap(&v_0[j_col][k],&v_0[global_n_p][k]);
+    SWAP(x_0[j_col][k],x_0[global_n_p][k]);
+    SWAP(v_0[j_col][k],v_0[global_n_p][k]);
   }
 
 #if N_tr != 0
   //global_n_pとglobal_nを入れ替える.
-  ele[0] = ele[global_n_p];  //構造体のためswap関数は使えない. 0番目の要素はコピーに使うだけ.
+  ele[0] = ele[global_n_p];  //構造体のためSWAPマクロは使えない. 0番目の要素はコピーに使うだけ.
   ele[global_n_p] = ele[global_n];
   ele[global_n] = ele[0];
   for(k=1;k<=3;++k){
-    Swap(&x_0[global_n_p][k],&x_0[global_n][k]);
-    Swap(&v_0[global_n_p][k],&v_0[global_n][k]);
+    SWAP(x_0[global_n_p][k],x_0[global_n][k]);
+    SWAP(v_0[global_n_p][k],v_0[global_n][k]);
   }
 #endif
 	

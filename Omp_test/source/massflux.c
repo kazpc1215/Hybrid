@@ -1,5 +1,6 @@
 #include "hybrid.h"
 
+#if FRAGMENTATION
 void MassFlux(int i,struct orbital_elements ele[],struct fragmentation frag[],struct parameter para){
   double F;
   double a_inv=1.0/ele[i].axis;
@@ -25,12 +26,17 @@ void MassFlux(int i,struct orbital_elements ele[],struct fragmentation frag[],st
 
   return;
 }
+#endif
 
 
+#if FRAGMENTATION
 double Depletion_Time(int i,struct fragmentation frag[]){
   return -XI*frag[i].sigma/frag[i].flux;
 }
+#endif
 
+
+#if FRAGMENTATION
 double MassDepletion(int i,struct orbital_elements ele[]){
 #if DEPLETION_TIME_EXPLICIT
   return (1.0 - XI)*ele[i].mass;
@@ -38,43 +44,55 @@ double MassDepletion(int i,struct orbital_elements ele[]){
   return ele[i].mass/(1.0 + XI);
 #endif
 }
+#endif
 
 
-
-
+#if FRAGMENTATION
 double s_1_FRAG_trapezoid(int n,double dx,double ini,struct parameter para){
   return 0.5*dx*(s_1_FRAG_integrand(ini+n*dx,para)+s_1_FRAG_integrand(ini+(n+1)*dx,para));
 }
+#endif
 
+
+#if FRAGMENTATION
 double s_2_FRAG_trapezoid(int n,double dx,double ini,struct parameter para){
   return 0.5*dx*(s_2_FRAG_integrand(ini+n*dx,para)+s_2_FRAG_integrand(ini+(n+1)*dx,para));
 }
+#endif
 
+
+#if FRAGMENTATION
 double s_3_FRAG_trapezoid(int n,double dx,double ini,struct parameter para){
   return 0.5*dx*(s_3_FRAG_integrand(ini+n*dx,para)+s_3_FRAG_integrand(ini+(n+1)*dx,para));
 }
+#endif
 
 
 
 
-
-
+#if FRAGMENTATION
 double s_1_FRAG_integrand(double x,struct parameter para){
   return exp((2.0 - para.alpha)*x)/(1.0 + exp(x)); 
 }
+#endif
 
+
+#if FRAGMENTATION
 double s_2_FRAG_integrand(double x,struct parameter para){
   return - exp((2.0 - para.alpha)*x)/(1.0 + exp(x))*(x - 2.0*log(1 + exp(x))); 
 }
+#endif
 
+
+#if FRAGMENTATION
 double s_3_FRAG_integrand(double x,struct parameter para){
   return exp((1.0 - para.alpha)*x)/(1.0 + exp(x))*log(1.0 + exp(x));
 }
+#endif
 
 
 
-
-
+#if FRAGMENTATION
 double s_1_FRAG(struct parameter para){
   int n,n_max;
   double dx,sum=0.0,sum_pre=0.0;
@@ -95,7 +113,10 @@ double s_1_FRAG(struct parameter para){
 
   return sum;
 }
+#endif
 
+
+#if FRAGMENTATION
 double s_2_FRAG(struct parameter para){
     int n,n_max;
   double dx,sum=0.0,sum_pre=0.0;
@@ -116,7 +137,10 @@ double s_2_FRAG(struct parameter para){
 
   return sum;
 }
+#endif
 
+
+#if FRAGMENTATION
 double s_3_FRAG(struct parameter para){
     int n,n_max;
   double dx,sum=0.0,sum_pre=0.0;
@@ -137,3 +161,4 @@ double s_3_FRAG(struct parameter para){
 
   return sum;
 }
+#endif

@@ -1,6 +1,6 @@
 #include "hybrid.h"
 
-
+#if FRAGMENTATION
 void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation frag[],double x_0[][4]){
 
   int j,l,m;
@@ -88,8 +88,10 @@ void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation fra
   
   return;
 }
+#endif
 
 
+#if FRAGMENTATION
 double RandomVelocity(int i,int j,struct orbital_elements ele[]){
   double eij2;
   double iij2;
@@ -154,4 +156,4 @@ double RandomVelocity(int i,int j,struct orbital_elements ele[]){
   return sqrt((eij2 + iij2)*G*M_0/ele[i].axis);
 #endif
 }
-
+#endif

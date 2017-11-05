@@ -18,8 +18,10 @@
 //#define DIRECTORY /Volumes/HDCL-UT/isoya/Collision_Coalescence_3/data/N10_t1E6_dt1yr_eta1E-2_10Hill/  //Ta Mac Pro用
 
 //#define DIRECTORY_FILE dt1E-2yr_eta1E-3  //連番のディレクトリを作りたいとき. "b****_dt1E-*yr_eta*E-*"
+
 #define _STR(str) #str
 #define STR(str) _STR(str)
+#define SWAP(_a, _b) do { typeof(_a) _tmp = _a; _a = _b; _b = _tmp; } while(0)
 
 
 #ifndef EXTERN
@@ -27,70 +29,62 @@
 #endif
 
 
-#define EXECUTION_TIME 1  //1:実行時間測定.
-
-
-
 //////////////////////////////////////////////////
 #define N_tr 0  //初期のトレーサーの数.
 #define N_p 100  //初期の原始惑星の数.
+#define RAND_SEED 1  //乱数の種.
 
 EXTERN int global_n;  //グローバル変数.
 EXTERN int global_n_p;  //グローバル変数.
 //////////////////////////////////////////////////
 
 
-/*0以外のときファイル作成*/
 //////////////////////////////////////////////////
-#define ENERGY_FILE 1
-#define ORBITALELEMENTS_FILE 1
-#define POSI_VELO_FILE 0
-#define POSITION_ROT_FILE 0
-#define CLOSE_ENCOUNTER_FILE 1
+#define ENERGY_FILE 1  //1:エネルギー計算&ファイル作成.
+#define ORBITALELEMENTS_FILE 1  //軌道要素計算&ファイル作成.
+#define POSI_VELO_FILE 0  //位置速度ファイル作成.
+#define POSI_VELO_ROT_FILE 0  //回転座標系の位置速度ファイル作成.
+#define COLLISION_FILE 1  //衝突時の位置速度ファイル作成.
+#define EXECUTION_TIME 1  //1:実行時間測定.
 //////////////////////////////////////////////////
 
 
 //////////////////////////////////////////////////
-#define INTERACTION_ALL 1//全粒子同士の重力相互作用.
+#define INTERACTION_ALL 1  //全粒子同士の重力相互作用.
 #define INTERACTION_ONLY_PLANET_TRACER 0  //惑星とトレーサー間の重力相互作用のみ.
-#define FRAGMENTATION 0  //近傍粒子探索と質量フラックス計算.
+#define FRAGMENTATION 0  //破壊 近傍粒子探索と質量フラックス計算.
 #define ELIMINATE_PARTICLE 1  //太陽に飲みこまれるか系外へ出て行くかで粒子を消す.
 //////////////////////////////////////////////////
 
 
+//////////////////////////////////////////////////
+//#define G 1.0  //重力定数.
+//#define M_0 1.0  //主星の質量.
+//#define EPSILON 0.0  //ソフトニングパラメーター.
+//#define ETA 0.05  //刻み幅調整.
+#define ETA 1E-2  //刻み幅調整.
+#define ITE_MAX 3  //イテレーション回数.
+#define INDIRECT_TERM 1  // 0: 中心星を動かさない場合  1: 中心星を動かす場合
+//////////////////////////////////////////////////
+
+
+#if ELIMINATE_PARTICLE
+//////////////////////////////////////////////////
+#define SOLAR_RADIUS (6.957E10/1.496E13)
+#define SOLAR_SYSTEM_LIMIT 100.0
+//////////////////////////////////////////////////
+#endif
 
 
 //////////////////////////////////////////////////
-#if ELIMINATE_PARTICLE
-#define SOLAR_RADIUS (6.957E10/1.496E13)
-#define SOLAR_SYSTEM_LIMIT 100.0
-#endif
-
-//#define PLANET_MASS 3.0E-6
 #define PLANET_MASS 3.0E-7  //火星サイズ.
 #define PLANET_ECC 0.001
-//#define PLANET_ECC 0.0
 #define PLANET_INC 0.0005
-//#define PLANET_INC 0.0
 #define PLANET_DENSITY 3.0  //[g/cc]
 #define PLANET_RADIUS (cbrt(3.0/4.0/M_PI*PLANET_MASS*1.989E33/PLANET_DENSITY)/1.496E13)
 #define DELTA_AXIS 10.0
-#define PLANET_NO 1
-
-
-/*
-#define PLANETESIMAL_MASS 1.0E-15
-#define PLANETESIMAL_ECC 0.0
-#define PLANETESIMAL_INC 0.0
-#define PLANETESIMAL_DENSITY 3.0  //[g/cc]
-#define PLANETESIMAL_NO 2
-*/
-
-
-
 /*
 Earth Mean Orbital Elements (J2000)
-
 Semimajor axis (AU)                  1.00000011  
 Orbital eccentricity                 0.01671022   
 Orbital inclination (deg)            0.00005  
@@ -101,80 +95,53 @@ Mean Longitude (deg)               100.46435
 //////////////////////////////////////////////////
 
 
+#if N_tr != 0
 //////////////////////////////////////////////////
+#define PLANET_NO 1
 #define M_TOT 3.0E-7  //0.1M_E  //破片の総質量.
-#define EJECTION_VELOCITY 1.0*sqrt(2.0*G*PLANET_MASS/PLANET_RADIUS)  //脱出速度の1.0倍.
-#define EJECTION_CONE_ANGLE M_PI/180.0*30.0  //30度.
+#ifndef G
+#define EJECTION_VELOCITY (1.0*sqrt(2.0*PLANET_MASS/PLANET_RADIUS))  //脱出速度の1.0倍.
+#else
+#define EJECTION_VELOCITY (1.0*sqrt(2.0*G*PLANET_MASS/PLANET_RADIUS))  //脱出速度の1.0倍.
+#endif
+#define EJECTION_CONE_ANGLE (M_PI/180.0*30.0)  //30度.
 //////////////////////////////////////////////////
+#endif
 
-
-
-
-
-
-//////////////////////////////////////////////////
-#define RAND_SEED 1  //乱数の種.
-//////////////////////////////////////////////////
 
 //////////////////////////////////////////////////
 #define DELTA_R 0.010  //近傍粒子探索用.
 #define DELTA_THETA 0.5*M_PI  //近傍粒子探索用.
-//#define DELTA_THETA M_PI  //近傍粒子探索用.
 //////////////////////////////////////////////////
 
 
-
 //////////////////////////////////////////////////
-//#define T_MAX (2.0*M_PI*1.0E4)  //1E4yr  全計算時間.
-#define T_MAX (2.0*M_PI*1.0E1)  //10yr  全計算時間.
-
+#define T_MAX (2.0*M_PI*1.0E1)  //10yr 全計算時間.
 #define DT_LOG 0  // 1: t_eneをlogでとる 0: t_eneをlinearでとる
 
+#if DT_LOG
 /*  log 用 */
 //#define TIME_INTERVAL 2.0*M_PI*1.0E0,2.0*M_PI*1.0E1,2.0*M_PI*1.0E2,2.0*M_PI*1.0E3,2.0*M_PI*1.0E4,2.0*M_PI*1.0E5,2.0*M_PI*1.0E6,2.0*M_PI*1.0E7,T_MAX  //t_ene配列の中身.
 #define TIME_INTERVAL 2.0*M_PI*1.0E0,2.0*M_PI*1.0E1,2.0*M_PI*1.0E2,2.0*M_PI*1.0E3,T_MAX  //t_ene配列の中身.
 #define TIME_INTERVAL_MAX 5 //t_ene配列の要素数.
-
-
+#else
 /*  linear 用 */    
 #define DT_ENE (2.0*M_PI*1.0E0)  //dt_ene = 1yr
-//#define DT_ENE (2.0*M_PI*1.0E-1)  //dt_ene = 1E-1yr
+#endif
 //////////////////////////////////////////////////
 
 
-
+#if FRAGMENTATION
 //////////////////////////////////////////////////
-//#define G 1.0  //重力定数.
-//#define M_0 1.0  //主星の質量.
-//#define EPSILON 0.0  //ソフトニングパラメーター.
-//#define ETA 0.05  //刻み幅調整.
-#define ETA 1E-2  //刻み幅調整.
-#define ITE_MAX 3  //イテレーション回数.
-
-#define INDIRECT_TERM 1  // 0: 中心星を動かさない場合  1: 中心星を動かす場合
-//////////////////////////////////////////////////
-
-
-
-//////////////////////////////////////////////////
-//#define INNER_AXIS 0.95  //トレーサーの長軸半径　下限.
-//#define OUTER_AXIS 1.05  //トレーサーの長軸半径　上限.
-//#define ECC_RMS 0.01  //トレーサーの離心率の二乗平均平方根. //Rayleigh分布
-//#define ECC_RMS 0.001  //トレーサーの離心率の二乗平均平方根.  //Rayleigh分布
-//#define INC_RMS 0.005  //トレーサーの軌道傾斜角の二乗平均平方根.  //Rayleigh分布
-//#define INC_RMS 0.0005  //トレーサーの軌道傾斜角の二乗平均平方根.  //Rayleigh分布
-//////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////
+#define INNER_AXIS 0.95  //トレーサーの長軸半径　下限.
+#define OUTER_AXIS 1.05  //トレーサーの長軸半径　上限.
+#define ECC_RMS 0.01  //トレーサーの離心率の二乗平均平方根. //Rayleigh分布
+#define ECC_RMS 0.001  //トレーサーの離心率の二乗平均平方根.  //Rayleigh分布
+#define INC_RMS 0.005  //トレーサーの軌道傾斜角の二乗平均平方根.  //Rayleigh分布
+#define INC_RMS 0.0005  //トレーサーの軌道傾斜角の二乗平均平方根.  //Rayleigh分布
 #define NEIGHBOR_MAX N_tr  //近傍粒子リスト配列の最大値.
-//////////////////////////////////////////////////
-
-
-
-/*破壊用*/
-//////////////////////////////////////////////////
 #define DEPLETION_TIME_EXPLICIT 0  //1のとき、質量減少タイムスケールの計算でexplicit *(1-XI)を使う. 0のときはimplicit /(1+XI)を使う.
+
 #define RHO 3.0  // [g/cc]  微惑星の物質密度.
 #define EPSILON_FRAG 0.2
 #define B_FRAG (5.0/3.0)
@@ -182,10 +149,8 @@ Mean Longitude (deg)               100.46435
 #define P_FRAG 0.453
 #define XI 0.01 //統計的計算のタイムステップがタイムスケールの"XI"倍.
 #define M_MAX 5.00E-15  //微惑星質量. 1E19 g
-//#define M_MAX 5.028E-16  //微惑星質量. 1E18 g
 //////////////////////////////////////////////////
-
-
+#endif
 
 
 struct orbital_elements{
@@ -203,13 +168,12 @@ struct orbital_elements{
 };
 
 
-
+#if FRAGMENTATION
 struct fragmentation{
   int neighborlist[NEIGHBOR_MAX+1];  //近傍粒子リスト.
-  int neighbornumber;
-  //double delta_r;
-  double delta_r_out;  //外側.
-  double delta_r_in;  //内側.
+  int neighbornumber;  //近傍粒子の個数
+  double delta_r_out;  //扇型外側.
+  double delta_r_in;  //扇型内側.
   double sigma;  //表面密度.
   double n_s;  //表面数密度.
   double v_ave;  //領域内での平均速度.
@@ -218,7 +182,6 @@ struct fragmentation{
   double t_frag;  //統計的計算の粒子ごとの時間.
   int fragtimes;  //何回統計的計算をしているか.
 };
-
 
   
 struct parameter{
@@ -229,6 +192,7 @@ struct parameter{
   double h_0;
   double Q_D;
 };
+#endif
 
 
 #if EXECUTION_TIME
@@ -309,6 +273,7 @@ void Energy_Correction(int i_col,int j_col,double x_0[][4],double v_0[][4],struc
 
 void Coalescence(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbital_elements ele[]);
 
+#if FRAGMENTATION
 void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation frag[],double x_0[][4]);
 
 double RandomVelocity(int i,int j,struct orbital_elements ele[]);
@@ -336,14 +301,13 @@ double s_1_FRAG(struct parameter para);
 double s_2_FRAG(struct parameter para);
 
 double s_3_FRAG(struct parameter para);
+#endif
 
 void Rotation_3D_xaxis(int i,double x_eject[][4],double theta);
 
 void Rotation_3D_yaxis(int i,double x_eject[][4],double theta);
 
 void Rotation_3D_zaxis(int i,double x_eject[][4],double theta);
-
-void Swap(double *a, double *b);
 
 void CenterOfGravity(double x_0[][4],double v_0[][4],double x_G[],double v_G[],struct orbital_elements ele[]);
 #endif //include-guard
