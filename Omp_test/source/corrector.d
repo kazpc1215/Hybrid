@@ -72,4 +72,6 @@ corrector.o: corrector.c hybrid.h /usr/include/stdlib.h \
  /usr/include/mach/vm_purgable.h /usr/include/mach/vm_behavior.h \
  /usr/include/mach/vm_region.h /usr/include/mach/machine/vm_param.h \
  /usr/include/mach/kmod.h /usr/include/time.h \
- /usr/include/sys/_types/_clock_t.h func.h
+ /usr/include/sys/_types/_clock_t.h \
+ /opt/local/lib/gcc7/gcc/x86_64-apple-darwin15/7.2.0/include/stdbool.h \
+ func.h

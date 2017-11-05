@@ -2,7 +2,7 @@
 #include "func.h"
 
 
-int Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double abs_r[],int *i_col,int *j_col){
+bool Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double abs_r[],int *i_col,int *j_col){
 
 #if EXECUTION_TIME
   uint64_t start = mach_absolute_time();
@@ -24,7 +24,7 @@ int Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double abs
 	uint64_t end = mach_absolute_time();
 	exetime.Collision_Judgement += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
 #endif
-	return 1;  //衝突した場合.
+	return (TRUE);  //衝突した場合.
       }      
     }
   }
@@ -33,7 +33,7 @@ int Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double abs
   uint64_t end = mach_absolute_time();
   exetime.Collision_Judgement += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
 #endif
-  return 0;  //衝突しない場合.
+  return (FALSE);  //衝突しない場合.
 }
 
 
@@ -76,6 +76,7 @@ void Coalescence(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbi
   int k;
  
   //i_colを新しい合体粒子の番号にする.
+  ele[0].mass = ele[i_col].mass + ele[j_col].mass;
   ele[i_col].mass = ele[0].mass;
   ele[i_col].radius = cbrt(3.0/4.0/M_PI*ele[i_col].mass*1.989E33/PLANET_DENSITY)/1.496E13;
   for(k=1;k<=3;++k){

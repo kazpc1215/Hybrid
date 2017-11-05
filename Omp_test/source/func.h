@@ -48,7 +48,7 @@ void Corrector_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],doubl
 
 void Iteration_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],double v_p[][4],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double a_0[][4],double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],double r_dot_v[],double dt_[]);
 
-int Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double abs_r[],int *i_col, int *j_col);
+bool Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double abs_r[],int *i_col, int *j_col);
 
 void Energy_Correction(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbital_elements ele[],double *dE_heat,double *dE_grav,double *dE_c,double *v_imp);
 

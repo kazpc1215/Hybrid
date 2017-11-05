@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <mach/mach_time.h>
 #include <time.h>
+#include <stdbool.h>
 
 #ifdef _OPENMP
 #include <omp.h>
@@ -21,7 +22,7 @@
 
 #define _STR(str) #str
 #define STR(str) _STR(str)
-#define SWAP(_a, _b) do { typeof(_a) _tmp = _a; _a = _b; _b = _tmp; } while(0)
+#define SWAP(_a, _b) do { typeof(_a) _tmp = _a; _a = _b; _b = _tmp; } while(FALSE)
 
 
 #ifndef EXTERN
@@ -58,6 +59,7 @@ EXTERN int global_n_p;  //グローバル変数.
 #define INTERACTION_ONLY_PLANET_TRACER TRUE  //惑星とトレーサー間の重力相互作用のみ.
 #endif
 #define FRAGMENTATION FALSE  //破壊 近傍粒子探索と質量フラックス計算.
+#define COLLISION FALSE  //衝突
 #define ELIMINATE_PARTICLE TRUE  //太陽に飲みこまれるか系外へ出て行くかで粒子を消す.
 //////////////////////////////////////////////////
 

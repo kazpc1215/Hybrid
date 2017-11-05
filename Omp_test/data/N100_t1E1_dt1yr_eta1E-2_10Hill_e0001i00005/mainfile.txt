@@ -746,8 +746,14 @@ int main(void){
       CenterOfGravity(x_p,v_p,x_G,v_G,ele);  //重心計算
 #endif
       
-      if(Collision_Judgement(ele,x_p,abs_r,&i_col,&j_col)==1){  //予測子を用いた衝突判定.
-
+      if(
+#if COLLISION
+	 Collision_Judgement(ele,x_p,abs_r,&i_col,&j_col)
+#else
+	 FALSE
+#endif
+	 ){  //予測子を用いた衝突判定.
+	
 	/////////////////////////衝突した場合/////////////////////////
 	printf("collision\ti=%d, j=%d\n",i_col,j_col);
 	printf("r_ij=%.15e\tradius[%d]+radius[%d]=%.15e\n",abs_r[j_col],i_col,j_col,ele[i_col].radius + ele[j_col].radius);
@@ -788,6 +794,38 @@ int main(void){
 #endif
 
 	
+	for(i=1;i<=global_n;++i){  //位置と速度を更新.
+	  for(k=1;k<=3;++k){
+	    x_0[i][k] = x_c[i][k];
+	    v_0[i][k] = v_c[i][k];
+	  }
+	}
+
+	
+#if INDIRECT_TERM
+	CenterOfGravity(x_0,v_0,x_G,v_G,ele);  //重心計算.
+	//printf("x_G=%.15e\ty_G=%.15e\tz_G=%.15e\tvx_G=%.15e\tvy_G=%.15e\tvz_G=%.15e\n",x_G[1],x_G[2],x_G[3],v_G[1],v_G[2],v_G[3]);
+#endif
+	
+	
+	//新しい合体粒子を作る. 0番目の要素はコピーに使うだけ.
+	for(k=1;k<=3;++k){
+	  x_0[0][k] = (ele[i_col].mass*x_0[i_col][k] + ele[j_col].mass*x_0[j_col][k])/(ele[i_col].mass + ele[j_col].mass);
+	  v_0[0][k] = (ele[i_col].mass*v_0[i_col][k] + ele[j_col].mass*v_0[j_col][k])/(ele[i_col].mass + ele[j_col].mass);
+	}
+
+
+#if EXECUTION_TIME
+	start = mach_absolute_time();
+#endif
+	//衝突合体する際のエネルギーの補正量を計算
+	Energy_Correction(i_col,j_col,x_0,v_0,ele,&dE_heat,&dE_grav,&dE_c,&v_imp);
+#if EXECUTION_TIME
+	end = mach_absolute_time();
+	exetime.Energy += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
+#endif	
+
+
 #if COLLISION_FILE
 	//衝突時の位置速度をファイルへ書き出し.
 	n_col++;
@@ -805,6 +843,7 @@ int main(void){
 	  exit(-1);
 	}
 	fprintf(fpcollision,"#i_col=%d\tj_col=%d\tr_ij=%.15e\tradius[%d]+radius[%d]=%.15e\n",i_col,j_col,abs_r[j_col],i_col,j_col,ele[i_col].radius + ele[j_col].radius);
+	fprintf(fpcollision,"#dE_heat=%e\tdE_grav=%e\tdE_c=%e\tv_imp=%e\n",dE_heat,dE_grav,dE_c,v_imp);
 	fprintf(fpcollision,"#t[yr]\ti\tx\ty\tz\tr_0(3次元)\tr_0(xy平面に射影)\tv_x\tv_y\tv_z\tabs_v\tR_Hill\tRadius\n");
 	for(i=1;i<=global_n;i++){
 	  fprintf(fpcollision,"%.15e\t%4d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15e\t%.15e\n",(t_sys+t_tmp)/2.0/M_PI,i,x_c[i][1],x_c[i][2],x_c[i][3],r_c[i],sqrt(x_c[i][1]*x_c[i][1]+x_c[i][2]*x_c[i][2]),v_c[i][1],v_c[i][2],v_c[i][3],sqrt(v_c[i][1]*v_c[i][1]+v_c[i][2]*v_c[i][2]+v_c[i][3]*v_c[i][3]),ele[i].r_h,ele[i].radius);
@@ -812,46 +851,7 @@ int main(void){
 	fclose(fpcollision);
 #endif
 
-
-	for(i=1;i<=global_n;++i){  //位置と速度を更新.
-	  for(k=1;k<=3;++k){
-	    x_0[i][k] = x_c[i][k];
-	    v_0[i][k] = v_c[i][k];
-	  }
-	}
-
 	
-#if INDIRECT_TERM
-	CenterOfGravity(x_0,v_0,x_G,v_G,ele);  //重心計算.
-	//printf("x_G=%.15e\ty_G=%.15e\tz_G=%.15e\tvx_G=%.15e\tvy_G=%.15e\tvz_G=%.15e\n",x_G[1],x_G[2],x_G[3],v_G[1],v_G[2],v_G[3]);
-#endif
-	
-	
-	//新しい合体粒子を作る. 0番目の要素はコピーに使うだけ.
-	ele[0].mass = ele[i_col].mass + ele[j_col].mass;
-
-
-	for(k=1;k<=3;++k){
-	  x_0[0][k] = (ele[i_col].mass*x_0[i_col][k] + ele[j_col].mass*x_0[j_col][k])/ele[0].mass;
-	  v_0[0][k] = (ele[i_col].mass*v_0[i_col][k] + ele[j_col].mass*v_0[j_col][k])/ele[0].mass;
-	}
-
-
-#if EXECUTION_TIME
-	start = mach_absolute_time();
-#endif
-	//衝突合体する際のエネルギーの補正量を計算
-	Energy_Correction(i_col,j_col,x_0,v_0,ele,&dE_heat,&dE_grav,&dE_c,&v_imp);
-#if EXECUTION_TIME
-	end = mach_absolute_time();
-	exetime.Energy += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
-#endif	
-
-
-#if COLLISION_FILE
-	fprintf(fpcollision,"#dE_heat=%e\tdE_grav=%e\tdE_c=%e\tv_imp=%e\n",dE_heat,dE_grav,dE_c,v_imp);
-	fclose(fpcollision);
-#endif
 	//合体後の操作
 	Coalescence(i_col,j_col,x_0,v_0,ele);
 
