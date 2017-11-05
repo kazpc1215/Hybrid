@@ -2,6 +2,8 @@
 #include "hybrid.h"
 #include "func.h"
 
+
+//グローバル変数初期化
 int global_n = N_p + N_tr;  //全粒子数.
 int global_n_p = N_p;  //原始惑星の数.
 
@@ -18,14 +20,25 @@ struct execution_time exetime = {
 #endif
 
 int main(void){
+
+  
+#if EXECUTION_TIME
+  //時間計測用.
+  uint64_t start,end,start_main,end_main;
+  if(sTimebaseInfo.denom == 0) {
+    (void) mach_timebase_info(&sTimebaseInfo);
+  }
+  start_main = mach_absolute_time();
+#endif
+  
   
 #ifdef _OPENMP
   //omp_set_num_threads(4);
   printf("max threads (set): %d\n", omp_get_max_threads());
 #endif
   
-  global_n = N_p + N_tr;  //全粒子数.
-  global_n_p = N_p;  //原始惑星の数.
+  //global_n = N_p + N_tr;  //全粒子数.
+  //global_n_p = N_p;  //原始惑星の数.
     
   int i=0,j=0,i_sys=0,k=0,ite=0;
   int i_col=0,j_col=0;
@@ -56,13 +69,6 @@ int main(void){
 
   double P[N_p+N_tr+1][4]={},Q[N_p+N_tr+1][4]={};
 
-#if EXECUTION_TIME
-  //時間計測用.
-  uint64_t start,end /*,start2,end2*/ ;
-  if(sTimebaseInfo.denom == 0) {
-    (void) mach_timebase_info(&sTimebaseInfo);
-  }
-#endif
   
 #if INDIRECT_TERM
   double x_G[4],v_G[4];
@@ -84,8 +90,7 @@ int main(void){
 
 #ifdef DIRECTORY
   mkdir(STR(DIRECTORY), 0755);  //ディレクトリを作成. 755 = rwxr-xr-x.
-#else
-#ifdef DIRECTORY_FILE
+#elif DIRECTORY_FILE
   char mkdir_command[200]={};
   char dirname[200]={};
   sprintf(dirname,"../data/%s/",STR(DIRECTORY_FILE));
@@ -96,7 +101,6 @@ int main(void){
 
   printf("making directory (%s)\n",dirname);
 #endif
-#endif
 
   
   char cat_header[200]={};
@@ -104,10 +108,8 @@ int main(void){
   sprintf(cat_header,"cat %s > %sheaderfile.txt",headerfile,
 #ifdef DIRECTORY
 	  STR(DIRECTORY)
-#else
-#ifdef DIRECTORY_FILE
+#elif DIRECTORY_FILE
 	  dirname
-#endif
 #endif
 	  );
   system(cat_header);
@@ -118,10 +120,8 @@ int main(void){
   sprintf(cat_main,"cat %s > %smainfile.txt",mainfile,
 #ifdef DIRECTORY
 	  STR(DIRECTORY)
-#else
-#ifdef DIRECTORY_FILE
+#elif DIRECTORY_FILE
 	  dirname
-#endif
 #endif
 	  );
   system(cat_main);
@@ -263,6 +263,11 @@ int main(void){
   //double tmp_rand1;
   double tmp_rand2;
   double tmp_v;
+#ifndef G
+  double ejection_velocity = sqrt(2.0*ele[PLANET_NO].mass/ele[PLANET_NO].radius);
+#else
+  double ejection_velocity = sqrt(2.0*G*ele[PLANET_NO].mass/ele[PLANET_NO].radius);
+#endif
   
   for(i=global_n_p+1;i<=global_n;++i){
     sprintf(ele[i].name,"tracer%04d",i-global_n_p);
@@ -271,11 +276,11 @@ int main(void){
 
 
     /*
-      tmp_r = PLANET_RADIUS*(1.0 + 1.0*((double)rand())/((double)RAND_MAX+1.0));
+      tmp_r = ele[PLANET_NO].radius*(1.0 + 1.0*((double)rand())/((double)RAND_MAX+1.0));
       //tmp_rand1 = ((double)rand())/((double)RAND_MAX+1.0)*M_PI;  //theta
       tmp_rand2 = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;  //phi
     */
-    tmp_r = PLANET_RADIUS*(1.0 + 0.1*(int)((double)(i-global_n_p-1)/100.0));
+    tmp_r = ele[PLANET_NO].radius*(1.0 + 0.1*(int)((double)(i-global_n_p-1)/100.0));
     tmp_rand2 = 2.0*M_PI/100.0*(double)(i-global_n_p-1);
     
     
@@ -305,9 +310,9 @@ int main(void){
     printf("%s\tx_eject[%d][1]=%f\tx_eject[%d][2]=%f\tx_eject[%d][3]=%f\n",ele[i].name,i,x_eject[i][1],i,x_eject[i][2],i,x_eject[i][3]);
 
 
-    //tmp_v = EJECTION_VELOCITY;
-    tmp_v = EJECTION_VELOCITY*(0.9+0.1*tmp_r/PLANET_RADIUS);
-    tmp_theta = EJECTION_CONE_ANGLE*tmp_r/PLANET_RADIUS;
+    //tmp_v = ejection_velocity;
+    tmp_v = ejection_velocity*(0.9+0.1*tmp_r/ele[PLANET_NO].radius);
+    tmp_theta = EJECTION_CONE_ANGLE*tmp_r/ele[PLANET_NO].radius;
     //tmp_theta = EJECTION_CONE_ANGLE;
     
     //cone
@@ -409,10 +414,8 @@ int main(void){
   sprintf(posivelofile,"%sPosi_Velo.dat",
 #ifdef DIRECTORY
 	  STR(DIRECTORY)
-#else
-#ifdef DIRECTORY_FILE
+#elif DIRECTORY_FILE
 	  dirname
-#endif
 #endif
 	  );
   fpposivelo= fopen(posivelofile,"w");
@@ -451,11 +454,10 @@ int main(void){
   sprintf(posi_rot,"%s%s_posi_rot.dat",
 #ifdef DIRECTORY
 	  STR(DIRECTORY)
-#else
-#ifdef DIRECTORY_FILE
+#elif DIRECTORY_FILE
 	  dirname
 #endif
-#endif
+
 	  ,ele[PLANETESIMAL_NO].name);
   fpposi_rot = fopen(posi_rot,"w");
   if(fpposi_rot==NULL){
@@ -480,11 +482,10 @@ int main(void){
     sprintf(orbit,"%s%s.dat",
 #ifdef DIRECTORY
 	    STR(DIRECTORY)
-#else
-#ifdef DIRECTORY_FILE
+#elif DIRECTORY_FILE
 	    dirname
 #endif
-#endif
+	  
 	    ,ele[i].name);
     fporbit = fopen(orbit,"w");
     if(fporbit==NULL){
@@ -510,7 +511,7 @@ int main(void){
   CenterOfGravity(x_0,v_0,x_G,v_G,ele);  //重心計算.
 #endif
 
-  
+
 #if ENERGY_FILE
 
 #if EXECUTION_TIME
@@ -525,17 +526,15 @@ int main(void){
 			     v2_0,
 #endif
 			     r_0);
-  
+
   //初期エネルギーをファイルへ書き出し.
   FILE *fpEne;
   char Ene[200]={};
   sprintf(Ene,"%sENERGY.dat",
 #ifdef DIRECTORY
 	  STR(DIRECTORY)
-#else
-#ifdef DIRECTORY_FILE
+#elif DIRECTORY_FILE
 	  dirname
-#endif
 #endif
 	  );
   fpEne = fopen(Ene,"w");
@@ -562,8 +561,8 @@ int main(void){
   for(i=1;i<=global_n;++i){
     for(j=1;j<=global_n;++j){
       if(i!=j){
-	abs_r[j] = RelativeDistance(i,j,x_0);  //絶対値.
-	r_dot_v_ij[j] = RelativeInnerProduct(i,j,x_0,v_0);  //r_ij,v_ijの内積.
+        abs_r[j] = RelativeDistance(i,j,x_0);  //絶対値.
+        r_dot_v_ij[j] = RelativeInnerProduct(i,j,x_0,v_0);  //r_ij,v_ijの内積.
       }
     }  //j loop
       
@@ -573,8 +572,8 @@ int main(void){
       //printf("a_0[%d][%d]=%f\tadot_0[%d][%d]=%f\n",i,k,a_0[i][k],i,k,adot_0[i][k]);
     }
   }
-    
-    
+      
+  
     
     
   for(i=1;i<=global_n;++i){
@@ -655,10 +654,8 @@ int main(void){
   sprintf(fragfile,"%sTotalMass.dat",
 #ifdef DIRECTORY
 	  STR(DIRECTORY)
-#else
-#ifdef DIRECTORY_FILE
+#elif DIRECTORY_FILE
 	  dirname
-#endif
 #endif
 	  );
   fpfrag = fopen(fragfile,"w");
@@ -678,10 +675,8 @@ int main(void){
   sprintf(posimassfile,"%sPosi_Mass.dat",
 #ifdef DIRECTORY
 	  STR(DIRECTORY)
-#else
-#ifdef DIRECTORY_FILE
+#elif DIRECTORY_FILE
 	  dirname
-#endif
 #endif
 	  );
   fpposimass= fopen(posimassfile,"w");
@@ -751,7 +746,7 @@ int main(void){
       CenterOfGravity(x_p,v_p,x_G,v_G,ele);  //重心計算
 #endif
       
-      if(0 && Collision_Judgement(ele,x_p,abs_r,&i_col,&j_col)==1){  //予測子を用いた衝突判定.
+      if(Collision_Judgement(ele,x_p,abs_r,&i_col,&j_col)==1){  //予測子を用いた衝突判定.
 
 	/////////////////////////衝突した場合/////////////////////////
 	printf("collision\ti=%d, j=%d\n",i_col,j_col);
@@ -799,10 +794,8 @@ int main(void){
 	sprintf(collisionfile,"%sCollision_%02d.dat",
 #ifdef DIRECTORY
 		STR(DIRECTORY)
-#else
-#ifdef DIRECTORY_FILE
+#elif DIRECTORY_FILE
 		dirname
-#endif
 #endif
 		,n_col
 		);
@@ -1127,10 +1120,8 @@ int main(void){
 	sprintf(orbit,"%s%s.dat",
 #ifdef DIRECTORY
 		STR(DIRECTORY)
-#else
-#ifdef DIRECTORY_FILE
+#elif DIRECTORY_FILE
 		dirname
-#endif
 #endif
 		,ele[i].name);
 	fporbit = fopen(orbit,"a");
@@ -1182,11 +1173,11 @@ int main(void){
 
 	
 #if EXECUTION_TIME
-	start2 = mach_absolute_time();
+	uint64_t start2 = mach_absolute_time();
 #endif
 	Calculate_OrbitalElements(i,x_c,v_c,ele,P,Q,r_c,v2_c,r_dot_v);  //軌道要素計算.
 #if EXECUTION_TIME
-	end2 = mach_absolute_time();
+	uint64_t end2 = mach_absolute_time();
 	exetime.Energy += (double)(end2-start2) * sTimebaseInfo.numer / sTimebaseInfo.denom;
 #endif
 
@@ -1440,45 +1431,12 @@ int main(void){
   printf("dt_ene=%e[yr]\n",DT_ENE/2.0/M_PI);
 #endif
 
-#if EXECUTION_TIME
 
-  int exetime_num[7]={0,1,2,3,4,5,6};
-  
-  double exetime_array[7]={
-    exetime.Energy*1.0E-9,
-    exetime.Orbital_Elements*1.0E-9,
-    exetime.Predictor*1.0E-9,
-    exetime.Corrector*1.0E-9,
-    exetime.Iteration*1.0E-9,
-    exetime.Collision_Judgement*1.0E-9,
-    exetime.Fragmentation*1.0E-9
-  };
-  
-  char exetime_name[7][30]={
-    "Energy\t\t\t",
-    "Orbital_Elements\t",
-    "Predictor\t\t",
-    "Corrector\t\t",
-    "Iteration\t\t",
-    "Collision_Judgement\t",
-    "Fragmentation\t\t"
-  };
-  
-  for(i=0;i<7;++i){
-    for(j=i+1;j<7;++j){
-      if(exetime_array[i] < exetime_array[j]){
-	SWAP(exetime_num[i],exetime_num[j]);
-	SWAP(exetime_array[i],exetime_array[j]);
-      }
-    }
-  }
-  
-  printf("\nexecution time\n");
-  for(i=0;i<7;++i){
-    printf("%s= %e [s]\n",exetime_name[exetime_num[i]],exetime_array[i]);
-  }
-  
+#if EXECUTION_TIME
+  end_main = mach_absolute_time();
+  Calculate_Exetime(start_main,end_main);
 #endif
-  
+
+  return 0;
 }
-    
+

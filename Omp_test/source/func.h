@@ -92,6 +92,7 @@ void Rotation_3D_zaxis(int i,double x_eject[][4],double theta);
 
 void CenterOfGravity(double x_0[][4],double v_0[][4],double x_G[],double v_G[],struct orbital_elements ele[]);
 
+void Calculate_Exetime(uint64_t start_main,uint64_t end_main);
 
 //inline関数
 
@@ -125,6 +126,5 @@ static inline double SquareOfRelativeVelocity(int i,int j,double v_0[][4]){
 static inline double RelativeInnerProduct(int i,int j,double x_0[][4],double v_0[][4]){
   return (x_0[j][1] - x_0[i][1])*(v_0[j][1] - v_0[i][1]) + (x_0[j][2] - x_0[i][2])*(v_0[j][2] - v_0[i][2]) + (x_0[j][3] - x_0[i][3])*(v_0[j][3] - v_0[i][3]);
 }
-
 
 #endif //include-guard
