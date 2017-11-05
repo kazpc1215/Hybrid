@@ -77,7 +77,6 @@ void Corrector_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],doubl
     x_c[i_sys][k] = x_c_tmp[k];
     v_c[i_sys][k] = v_c_tmp[k];
   }
-
   
   return;
 }

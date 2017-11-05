@@ -2,6 +2,7 @@
 #include "func.h"
 
 
+#if COLLISION
 bool Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double abs_r[],int *i_col,int *j_col){
 
 #if EXECUTION_TIME
@@ -35,8 +36,10 @@ bool Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double ab
 #endif
   return (FALSE);  //衝突しない場合.
 }
+#endif
 
 
+#if COLLISION
 void Energy_Correction(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbital_elements ele[],double *dE_heat,double *dE_grav,double *dE_c,double *v_imp){
   
   double m_1 = ele[i_col].mass;
@@ -68,9 +71,10 @@ void Energy_Correction(int i_col,int j_col,double x_0[][4],double v_0[][4],struc
 
   return;
 }
+#endif
 
 
-
+#if COLLISION
 void Coalescence(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbital_elements ele[]){
 
   int k;
@@ -110,3 +114,4 @@ void Coalescence(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbi
 
   return;
 }
+#endif
