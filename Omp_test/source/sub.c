@@ -3,16 +3,20 @@
 
 /*r_i,v_iの内積*/
 double InnerProduct(int i,double x_0[][4],double v_0[][4]){
+  /*
   int k;
   double r_dot_v = 0.0;
   for(k=1;k<=3;k++){
     r_dot_v += x_0[i][k]*v_0[i][k]; 
   }
   return r_dot_v;
+  */
+  return x_0[i][1]*v_0[i][1] + x_0[i][2]*v_0[i][2] + x_0[i][3]*v_0[i][3];
 }
 
 /*中心星からの距離*/
 double RadiusFromCenter(int i,double x_0[][4]){
+  /*
   int k;
   double r_0 = 0.0;
   for(k=1;k<=3;k++){
@@ -20,16 +24,21 @@ double RadiusFromCenter(int i,double x_0[][4]){
   }
   r_0 = sqrt(r_0);
   return r_0;
+  */
+  return sqrt(x_0[i][1]*x_0[i][1] + x_0[i][2]*x_0[i][2] + x_0[i][3]*x_0[i][3]);
 }
 
 /*速度の2乗*/
 double SquareOfVelocity(int i,double v_0[][4]){
+  /*
   int k;
   double v2_0 = 0.0;
   for(k=1;k<=3;k++){
     v2_0 += v_0[i][k]*v_0[i][k]; 
   }
   return v2_0;
+  */
+  return v_0[i][1]*v_0[i][1] + v_0[i][2]*v_0[i][2] + v_0[i][3]*v_0[i][3];
 }
 
 /*相対距離*/
@@ -43,7 +52,7 @@ double SquareOfRelativeVelocity(int i,int j,double v_0[][4]){
 }
 
 /*r_ij, v_ijの内積*/
-double RelativeInnerProduct(int i,int j,double x_0[][4],double v_0[][4]){
+inline double RelativeInnerProduct(int i,int j,double x_0[][4],double v_0[][4]){
   return (x_0[j][1] - x_0[i][1])*(v_0[j][1] - v_0[i][1]) + (x_0[j][2] - x_0[i][2])*(v_0[j][2] - v_0[i][2]) + (x_0[j][3] - x_0[i][3])*(v_0[j][3] - v_0[i][3]);
 }
 
@@ -71,14 +80,6 @@ void Rotation_3D_zaxis(int i,double x_eject[][4],double theta){
   x_eject[i][2] = sin(theta)*tmp_x + cos(theta)*tmp_y;
 }
 
-/*
-void Swap(double *a, double *b){
-  double tmp;
-  tmp = (*a);
-  (*a) = (*b);
-  (*b) = tmp;
-}
-*/
 
 void CenterOfGravity(double x_0[][4],double v_0[][4],double x_G[],double v_G[],struct orbital_elements ele[]){
   int i,k;

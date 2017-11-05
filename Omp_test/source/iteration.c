@@ -1,7 +1,7 @@
 #include "hybrid.h"
 
 /*i_sys のみのiteration*/
-void Iteration_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],double v_p[][4],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double a_0[][4],double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],double r_dot_v[],double dt_[]){
+inline void Iteration_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],double v_p[][4],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double a_0[][4],double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],double r_dot_v[],double dt_[]){
 
   int j,k;
   double abs_r[global_n+1],r_dot_v_ij[global_n+1];

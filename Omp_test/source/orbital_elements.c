@@ -177,7 +177,7 @@ void Calculate_OrbitalElements(int i,double x_c[][4],double v_c[][4],struct orbi
 }
 
 /*P計算*/
-double Calculate_P(int i,int k,struct orbital_elements ele[]){
+inline double Calculate_P(int i,int k,struct orbital_elements ele[]){
   if(k==1){
     return cos(ele[i].omega)*cos(ele[i].Omega) - sin(ele[i].omega)*sin(ele[i].Omega)*cos(ele[i].inc);
   }else if(k==2){
@@ -188,7 +188,7 @@ double Calculate_P(int i,int k,struct orbital_elements ele[]){
 }
 
 /*Q計算*/
-double Calculate_Q(int i,int k,struct orbital_elements ele[]){
+inline double Calculate_Q(int i,int k,struct orbital_elements ele[]){
   if(k==1){
     return -sin(ele[i].omega)*cos(ele[i].Omega) - cos(ele[i].omega)*sin(ele[i].Omega)*cos(ele[i].inc);
   }else if(k==2){

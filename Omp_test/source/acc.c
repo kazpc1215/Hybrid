@@ -1,7 +1,7 @@
 #include "hybrid.h"
 
 /*相互重力加速度*/
-double Acceleration_ij(int i,int j,int k,struct orbital_elements ele[],double x_0[][4],double abs_r[]){
+inline double Acceleration_ij(int i,int j,int k,struct orbital_elements ele[],double x_0[][4],double abs_r[]){
   double rij3;
 
 #ifndef EPSILON
@@ -20,7 +20,7 @@ double Acceleration_ij(int i,int j,int k,struct orbital_elements ele[],double x_
 
 
 /*相互重力加加速度*/
-double dAcceleration_ij(int i,int j,int k,struct orbital_elements ele[],double x_0[][4],double v_0[][4],double r_dot_v_ij[],double abs_r[]){
+inline double dAcceleration_ij(int i,int j,int k,struct orbital_elements ele[],double x_0[][4],double v_0[][4],double r_dot_v_ij[],double abs_r[]){
   double rij3;
   double rij5;
 
@@ -43,7 +43,7 @@ double dAcceleration_ij(int i,int j,int k,struct orbital_elements ele[],double x
 
 
 /*加速度indirect項*/
-double Acceleration_indirect(int i,int k,struct orbital_elements ele[],double x_0[][4],double r_0[]){
+inline double Acceleration_indirect(int i,int k,struct orbital_elements ele[],double x_0[][4],double r_0[]){
   double r3;
   r3 = r_0[i]*r_0[i]*r_0[i];
   r3 = 1.0/r3;
@@ -57,7 +57,7 @@ double Acceleration_indirect(int i,int k,struct orbital_elements ele[],double x_
 
 
 /*加加速度indirect項*/
-double dAcceleration_indirect(int i,int k,struct orbital_elements ele[],double x_0[][4],double v_0[][4],double r_0[],double r_dot_v[]){
+inline double dAcceleration_indirect(int i,int k,struct orbital_elements ele[],double x_0[][4],double v_0[][4],double r_0[],double r_dot_v[]){
   double r3;
   double r5;
   r3 = r_0[i]*r_0[i]*r_0[i];
@@ -74,7 +74,7 @@ double dAcceleration_indirect(int i,int k,struct orbital_elements ele[],double x
 
 
 /*外力加速度*/
-double External_Acceleration(int i,int k,double x_0[][4],double r_0[]){
+inline double External_Acceleration(int i,int k,double x_0[][4],double r_0[]){
   double r3;
   r3 = r_0[i]*r_0[i]*r_0[i];
   r3 = 1.0/r3;
@@ -88,7 +88,7 @@ double External_Acceleration(int i,int k,double x_0[][4],double r_0[]){
 
 
 /*外力加加速度*/
-double External_dAcceleration(int i,int k,double x_0[][4],double v_0[][4],double r_0[],double r_dot_v[]){
+inline double External_dAcceleration(int i,int k,double x_0[][4],double v_0[][4],double r_0[],double r_dot_v[]){
   double r3;
   double r5;
   r3 = r_0[i]*r_0[i]*r_0[i];
