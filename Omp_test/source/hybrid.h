@@ -34,6 +34,7 @@
 #define N_tr 0  //初期のトレーサーの数.
 #define N_p 100  //初期の原始惑星の数.
 static const int RAND_SEED = 1;  //乱数の種.
+static const double STEP_INTERVAL = 1.0E4;  //何ステップごとに出力するか
 
 EXTERN int global_n;  //グローバル変数.
 EXTERN int global_n_p;  //グローバル変数.

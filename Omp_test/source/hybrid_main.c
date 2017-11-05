@@ -283,14 +283,12 @@ int main(void){
     tmp_r = ele[PLANET_NO].radius*(1.0 + 0.1*(int)((double)(i-global_n_p-1)/100.0));
     tmp_rand2 = 2.0*M_PI/100.0*(double)(i-global_n_p-1);
     
-    
-    
+        
     //cone
     x_eject[i][1] = tmp_r*cos(EJECTION_CONE_ANGLE);  //破片のx座標.
     x_eject[i][2] = tmp_r*sin(EJECTION_CONE_ANGLE)*cos(tmp_rand2);  //破片のy座標.
     x_eject[i][3] = tmp_r*sin(EJECTION_CONE_ANGLE)*sin(tmp_rand2);  //破片のz座標.
     
-
        
     /*
     //isotropic
@@ -300,11 +298,9 @@ int main(void){
     */
 
 
-
     //Rotation_3D_zaxis(i,x_eject,M_PI);  //z軸周りに180度回転.
     //Rotation_3D_zaxis(i,x_eject,M_PI/2.0);  //z軸周りに90度回転.
     Rotation_3D_zaxis(i,x_eject,-M_PI/2.0);  //z軸周りに-90度回転.
-
 
     
     printf("%s\tx_eject[%d][1]=%f\tx_eject[%d][2]=%f\tx_eject[%d][3]=%f\n",ele[i].name,i,x_eject[i][1],i,x_eject[i][2],i,x_eject[i][3]);
@@ -314,12 +310,14 @@ int main(void){
     tmp_v = ejection_velocity*(0.9+0.1*tmp_r/ele[PLANET_NO].radius);
     tmp_theta = EJECTION_CONE_ANGLE*tmp_r/ele[PLANET_NO].radius;
     //tmp_theta = EJECTION_CONE_ANGLE;
+
     
     //cone
     v_eject[i][1] = tmp_v*cos(tmp_theta);  //破片の速度x成分.
     v_eject[i][2] = tmp_v*sin(tmp_theta)*cos(tmp_rand2);  //破片の速度y成分.
     v_eject[i][3] = tmp_v*sin(tmp_theta)*sin(tmp_rand2);  //破片の速度z成分.
     
+
     /*
     //isotropic
     v_eject[i][1] = tmp_v*sin(tmp_rand1)*cos(tmp_rand2);  //破片の速度x成分.
@@ -328,12 +326,10 @@ int main(void){
     */
 
 
-
     //Rotation_3D_zaxis(i,v_eject,M_PI);  //z軸周りに180度回転.
     //Rotation_3D_zaxis(i,v_eject,M_PI/2.0);  //z軸周りに90度回転.
     Rotation_3D_zaxis(i,v_eject,-M_PI/2.0);  //z軸周りに-90度回転.
     
-
     
     printf("%s\tv_eject[%d][1]=%f\tv_eject[%d][2]=%f\tv_eject[%d][3]=%f\n",ele[i].name,i,v_eject[i][1],i,v_eject[i][2],i,v_eject[i][3]);
     //////////////////ここまでで、惑星中心、xyは軌道面上、x軸は太陽から惑星の方向/////////////////////
@@ -377,7 +373,6 @@ int main(void){
     }
     
 
-    
     r_0[i] = RadiusFromCenter(i,x_0);  //中心星からの距離.
     v2_0[i] = SquareOfVelocity(i,v_0);  //速度の2乗.
     r_dot_v[i] = InnerProduct(i,x_0,v_0);  //r_i,v_iの内積.
@@ -396,12 +391,6 @@ int main(void){
 
 #endif
   
-
-  
-  for(i=1;i<=global_n;++i){       
-    printf("%s\t x=%f\t y=%f\t z=%f\t|r|=%f\n",ele[i].name,x_0[i][1],x_0[i][2],x_0[i][3],r_0[i]);
-    printf("\t\tvx=%f\tvy=%f\tvz=%f\t|v|=%f\n",v_0[i][1],v_0[i][2],v_0[i][3],sqrt(v2_0[i]));
-  }
 
 #if INDIRECT_TERM
   CenterOfGravity(x_0,v_0,x_G,v_G,ele);  //重心計算
@@ -573,8 +562,6 @@ int main(void){
     }
   }
       
-  
-    
     
   for(i=1;i<=global_n;++i){
     //初期のタイムステップ計算.
@@ -583,9 +570,7 @@ int main(void){
     //printf("initial dt_[%d]=%e\n",i,dt_[i]);
   }
     
-    
-    
-    
+      
   t_sys = t_[1] + dt_[1];
   i_sys = 1;
   for(i=2;i<=global_n;++i){
@@ -596,9 +581,9 @@ int main(void){
   }
 
   
-  printf("\n");
-  for(i=1;i<=global_n;++i){
-    printf("dt[%d]=%e[yr]\n",i,dt_[i]/2.0/M_PI);
+  printf("#number\tx[AU]\ty[AU]\tz[AU]\t|r|[AU]\tvx[2πAU/yr]\tvy[2πAU/yr]\tvz[2πAU/yr]\t|v|[2πAU/yr]\tdt[yr]\n");
+  for(i=1;i<=global_n;++i){       
+    printf("%d\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%e\n",i,x_0[i][1],x_0[i][2],x_0[i][3],r_0[i],v_0[i][1],v_0[i][2],v_0[i][3],sqrt(v2_0[i]),dt_[i]/2.0/M_PI);
   }
   
   
@@ -1292,8 +1277,11 @@ int main(void){
       
     
     
-    if(fmod(step,1.0E4)==0.0){
-      printf("step=%e\tN=%d\ti_sys=%04d\tdt[%04d]=%.2e[yr]\tt_sys+t_tmp=%.15e[yr]\n",step,global_n,i_sys,i_sys,dt_[i_sys]/2.0/M_PI,(t_sys+t_tmp)/2.0/M_PI);
+    if(fmod(step,STEP_INTERVAL)==0.0){
+      if(fmod(step,STEP_INTERVAL*50.0)==0.0){
+	printf("#step\t\tNp\tNtr\ti_sys\tdt[i_sys]\tt_tmp[yr]\tt_sys[yr]\n");
+      }
+      printf("%e\t%3d\t%4d\t%4d\t%e\t%e\t%.15e\n",step,global_n_p,global_n-global_n_p,i_sys,dt_[i_sys]/2.0/M_PI,t_tmp/2.0/M_PI,t_sys/2.0/M_PI);
     }
 
 
@@ -1417,7 +1405,8 @@ int main(void){
 
 
 #if ENERGY_FILE
-  printf("dt_[i_sys]=%e\tE_error=%.15e\tL_error=%.15e\tdE_correct=%.15e\n",dt_[i_sys],(E_tot-E_tot_0)/fabs(E_tot_0),(abs_L-abs_L_0)/abs_L_0,dE_correct);
+  printf("-----\n");
+  printf("dt_[%d]=%e\nE_error=%.15e\nL_error=%.15e\ndE_correct=%.15e\n",i_sys,dt_[i_sys],(E_tot-E_tot_0)/fabs(E_tot_0),(abs_L-abs_L_0)/abs_L_0,dE_correct/fabs(E_tot_0));
 #endif
   
   printf("step=%.15e\n",step);
@@ -1434,6 +1423,7 @@ int main(void){
 
 #if EXECUTION_TIME
   end_main = mach_absolute_time();
+  printf("-----\n");
   Calculate_Exetime(start_main,end_main);
 #endif
 

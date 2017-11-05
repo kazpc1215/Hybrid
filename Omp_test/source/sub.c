@@ -95,7 +95,7 @@ void Calculate_Exetime(uint64_t start_main,uint64_t end_main){
     }
   }
 
-  printf("\nExecution Time\t(total\t= %e [s])\n",exetime_main);
+  printf("Execution Time\t(total\t= %e [s])\n",exetime_main);
   for(i=0;i<7;++i){
     printf("%s= %e [s]\t%2.2f [%%]\n",exetime_name[exetime_num[i]],exetime_array[i],exetime_array[i]/exetime_main*100.0);
     exetime_others += exetime_array[i];

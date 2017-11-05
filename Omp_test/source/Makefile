@@ -7,7 +7,7 @@ MODE	= SINGLE
 LEVEL	= -O3
 
 CC	= gcc
-OBJS	= hybrid_main.o sub.o acc.o predictor.o corrector.o iteration.o energy.o orbital_elements.o timestep.o neighbor.o massflux.o collision.o
+OBJS	= hybrid_main.o sub.o acc.o energy.o orbital_elements.o timestep.o neighbor.o massflux.o collision.o
 
 
 ifeq ($(MODE),SINGLE)
