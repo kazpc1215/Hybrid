@@ -20,7 +20,7 @@ void MassFlux(int i,struct orbital_elements ele[],struct fragmentation frag[],st
 #else
   F = - (2.0 - alpha)*(2.0 - alpha)/cbrt(M_MAX)*sigma*sigma*sqrt(G*M_0*a_inv*a_inv*a_inv)*h_0;
 #endif
-  
+
   F *= pow(v*v*0.5/Q_D,alpha-1.0);
   F *= ((- log(EPSILON_FRAG) + 1.0/(2.0-B_FRAG))*s_1 + s_2 + s_3);
 
@@ -70,18 +70,16 @@ double s_3_FRAG_trapezoid(int n,double dx,double ini,struct parameter para){
 #endif
 
 
-
-
 #if FRAGMENTATION
 double s_1_FRAG_integrand(double x,struct parameter para){
-  return exp((2.0 - para.alpha)*x)/(1.0 + exp(x)); 
+  return exp((2.0 - para.alpha)*x)/(1.0 + exp(x));
 }
 #endif
 
 
 #if FRAGMENTATION
 double s_2_FRAG_integrand(double x,struct parameter para){
-  return - exp((2.0 - para.alpha)*x)/(1.0 + exp(x))*(x - 2.0*log(1 + exp(x))); 
+  return - exp((2.0 - para.alpha)*x)/(1.0 + exp(x))*(x - 2.0*log(1 + exp(x)));
 }
 #endif
 
@@ -91,7 +89,6 @@ double s_3_FRAG_integrand(double x,struct parameter para){
   return exp((1.0 - para.alpha)*x)/(1.0 + exp(x))*log(1.0 + exp(x));
 }
 #endif
-
 
 
 #if FRAGMENTATION

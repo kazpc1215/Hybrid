@@ -13,11 +13,11 @@ void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation fra
   double v;
   double delta_theta=DELTA_THETA;
 
-  
+
   radius[i] = sqrt(x_0[i][1]*x_0[i][1] + x_0[i][2]*x_0[i][2]);
   theta[i] = atan2(x_0[i][2],x_0[i][1]);  //[-pi:pi]
 
-  
+
   m=1;
   do{
 
@@ -25,15 +25,15 @@ void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation fra
       frag[i].neighborlist[l] = 0;
     }
     frag[i].neighbornumber = 0;
-    
+
     frag[i].delta_r_out = (double)m*DELTA_R;  //外側.
     frag[i].delta_r_in = (double)m*DELTA_R;  //内側.
-  
+
     S = 2.0*(frag[i].delta_r_out + frag[i].delta_r_in)*radius[i]*delta_theta;
 
     //printf("i=%d\tS=%e\n",i,S);
     //printf("delta_r[%d]=%f\n",i,frag[i].delta_r);
-  
+
     l = 1;
     for(j=global_n_p+1;j<=global_n;j++){  //惑星抜き.
       if(j!=i){
@@ -47,16 +47,13 @@ void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation fra
 	}
       }
     }
-  
+
     frag[i].neighbornumber = l-1;
 
     m++;
-    
+
   }while(frag[i].neighbornumber<10);  //近傍粒子が10個未満なら、10個以上になるまでdelta_rをm倍に広げる.
-  
 
-
-  
 
   v=0.0;
   M=ele[i].mass;  //ターゲットiの質量も含める.
@@ -64,13 +61,13 @@ void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation fra
     for(j=1;j<=frag[i].neighbornumber;j++){
       v += RandomVelocity(i,frag[i].neighborlist[j],ele);
       M += ele[frag[i].neighborlist[j]].mass;  //領域iの総質量.
-      
+
       if(isnan(RandomVelocity(i,frag[i].neighborlist[j],ele))){
 	printf("i=%d,j=%d\tvij is nan.\n",i,frag[i].neighborlist[j]);
 	printf("i=%d\taxis=%e\tecc=%e\tinc=%e\tu=%e\tOmega=%e\tomega=%e\n",i,ele[i].axis,ele[i].ecc,ele[i].inc,ele[i].u,ele[i].Omega,ele[i].omega);
 	printf("j=%d\taxis=%e\tecc=%e\tinc=%e\tu=%e\tOmega=%e\tomega=%e\n",frag[i].neighborlist[j],ele[frag[i].neighborlist[j]].axis,ele[frag[i].neighborlist[j]].ecc,ele[frag[i].neighborlist[j]].inc,ele[frag[i].neighborlist[j]].u,ele[frag[i].neighborlist[j]].Omega,ele[frag[i].neighborlist[j]].omega);
       }
-      
+
     }
     if(isnan(v)){
       printf("i=%d\tv_tot is nan.\n",i);
@@ -79,7 +76,7 @@ void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation fra
 
     //printf("i=%d\tmass=%e\n",i,ele[i].mass);
     //printf("i=%d\tM=%e\n",i,M);
-      
+
     frag[i].sigma = M/S;  //領域iの表面密度.
     frag[i].n_s = frag[i].neighbornumber/S;  //領域iの表面密度.
   }else{
@@ -87,7 +84,7 @@ void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation fra
     frag[i].sigma = 0.0;
     frag[i].n_s = 0.0;
   }
-  
+
   return;
 }
 #endif
@@ -148,9 +145,9 @@ double RandomVelocity(int i,int j,struct orbital_elements ele[]){
 #endif
      ){
     printf("i=%d,j=%d\tvij is nan.(in RandomVelocity)\n",i,j);
-    
     printf("eij2=%e\tiij2=%e\taxis=%e\n",eij2,iij2,ele[i].axis);
   }
+
 
 #if !defined(G) && !defined(M_0)
   return sqrt((eij2 + iij2)/ele[i].axis);

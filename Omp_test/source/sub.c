@@ -41,7 +41,7 @@ void CenterOfGravity(double x_0[][4],double v_0[][4],double x_G[],double v_G[],s
   for(i=1;i<=global_n;++i){
     M += ele[i].mass;
   }
-  
+
   for(k=1;k<=3;++k){
     x_G[k] = 0.0;
     v_G[k] = 0.0;
@@ -52,7 +52,7 @@ void CenterOfGravity(double x_0[][4],double v_0[][4],double x_G[],double v_G[],s
     x_G[k] /= M;
     v_G[k] /= M;
   }
-  
+
   return;
 }
 
@@ -63,9 +63,9 @@ void Calculate_Exetime(uint64_t start_main,uint64_t end_main){
   int i,j;
   double exetime_main = (double)(end_main-start_main) * sTimebaseInfo.numer / sTimebaseInfo.denom * 1.0E-9;
   double exetime_others = 0.0;
-  
+
   int exetime_num[7]={0,1,2,3,4,5,6};
-  
+
   double exetime_array[7]={
     exetime.Energy*1.0E-9,
     exetime.Orbital_Elements*1.0E-9,
@@ -75,7 +75,7 @@ void Calculate_Exetime(uint64_t start_main,uint64_t end_main){
     exetime.Collision_Judgement*1.0E-9,
     exetime.Fragmentation*1.0E-9
   };
-  
+
   char exetime_name[7][30]={
     "Energy\t\t\t",
     "Orbital_Elements\t",
@@ -85,7 +85,7 @@ void Calculate_Exetime(uint64_t start_main,uint64_t end_main){
     "Collision_Judgement\t",
     "Fragmentation\t\t"
   };
-  
+
   for(i=0;i<7;++i){
     for(j=i+1;j<7;++j){
       if(exetime_array[i] < exetime_array[j]){

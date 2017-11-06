@@ -8,11 +8,8 @@ bool Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double ab
 #if EXECUTION_TIME
   uint64_t start = mach_absolute_time();
 #endif
-  
+
   int i,j;
-  
-  (*i_col) = 0;
-  (*j_col) = 0;
 
   for(i=1;i<=global_n_p-1;++i){
     for(j=i+1;j<=global_n_p;++j){
@@ -26,7 +23,7 @@ bool Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double ab
 	exetime.Collision_Judgement += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
 #endif
 	return (TRUE);  //衝突した場合.
-      }      
+      }
     }
   }
 
@@ -41,7 +38,7 @@ bool Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double ab
 
 #if COLLISION
 void Energy_Correction(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbital_elements ele[],double *dE_heat,double *dE_grav,double *dE_c,double *v_imp){
-  
+
   double m_1 = ele[i_col].mass;
   double m_2 = ele[j_col].mass;
   double abs_v2 = SquareOfRelativeVelocity(i_col,j_col,v_0);  //相対速度2乗.
@@ -49,7 +46,7 @@ void Energy_Correction(int i_col,int j_col,double x_0[][4],double v_0[][4],struc
   double r_g12 = RadiusFromCenter(0,x_0);  //2粒子の重心と中心星との距離.
   double r_1 = RadiusFromCenter(i_col,x_0);
   double r_2 = RadiusFromCenter(j_col,x_0);
-  
+
 
   (*dE_heat) = - 0.5*m_1*m_2/(m_1+m_2)*abs_v2;  //完全合体することで、相対速度分の運動エネルギーが熱エネルギーとなって散逸する.
 
@@ -58,7 +55,7 @@ void Energy_Correction(int i_col,int j_col,double x_0[][4],double v_0[][4],struc
 #else
   (*dE_grav) = G*m_1*m_2/r_p12;  //2粒子間の距離に対応する相互重力エネルギーがなくなっている.
 #endif
-  
+
 #if !defined(G) && !defined(M_0)
   (*dE_c) = (- (m_1+m_2)/r_g12 + m_1/r_1 + m_2/r_2);  //中心星ポテンシャルエネルギーが変わる.
 #else
@@ -66,7 +63,7 @@ void Energy_Correction(int i_col,int j_col,double x_0[][4],double v_0[][4],struc
 #endif
 
   (*v_imp) = sqrt(abs_v2);
-  
+
   printf("dE_heat=%e\tdE_grav=%e\tdE_c=%e\tv_imp=%e\n",(*dE_heat),(*dE_grav),(*dE_c),(*v_imp));
 
   return;
@@ -78,7 +75,7 @@ void Energy_Correction(int i_col,int j_col,double x_0[][4],double v_0[][4],struc
 void Coalescence(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbital_elements ele[]){
 
   int k;
- 
+
   //i_colを新しい合体粒子の番号にする.
   ele[0].mass = ele[i_col].mass + ele[j_col].mass;
   ele[i_col].mass = ele[0].mass;
@@ -107,7 +104,7 @@ void Coalescence(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbi
     SWAP(v_0[global_n_p][k],v_0[global_n][k]);
   }
 #endif
-	
+
   //global_n_pを1つ減らす.
   global_n_p--;
   global_n = global_n_p + N_tr;

@@ -12,7 +12,7 @@ void Predictor(int i,double x_0[][4],double v_0[][4],double a_0[][4],double adot
     x_p[i][k] = x_0[i][k] + v_0[i][k]*Dt[i] + a_0[i][k]*Dt[i]*Dt[i]/2.0 + adot_0[i][k]*Dt[i]*Dt[i]*Dt[i]/6.0;
     v_p[i][k] = v_0[i][k] + a_0[i][k]*Dt[i] + adot_0[i][k]*Dt[i]*Dt[i]/2.0;
   }
-  
+
   //printf("predictor\tx_p[%d][1]=%f\tx_p[%d][2]=%f\tx_p[%d][3]=%f\n",i,x_p[i][1],i,x_p[i][2],i,x_p[i][3]);
   //printf("predictor\tv_p[%d][1]=%f\tv_p[%d][2]=%f\tv_p[%d][3]=%f\n",i,v_p[i][1],i,v_p[i][2],i,v_p[i][3]);
 
@@ -32,7 +32,7 @@ void Corrector_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],doubl
   double a_tmp[4]={},adot_tmp[4]={},adot2_dt2_tmp[4]={},adot3_dt3_tmp[4]={};
   double x_c_tmp[4]={},v_c_tmp[4]={};
 
-  
+
   for(j=1;j<=global_n;++j){
     if(i_sys!=j){
       abs_r[j] = RelativeDistance(i_sys,j,x_p);  //絶対値.
@@ -42,33 +42,33 @@ void Corrector_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],doubl
       r_dot_v_ij[i_sys] = 0.0;
     }
   }
-  
-  
+
+
   for(k=1;k<=3;++k){
     a_tmp[k] = All_Acceleration(i_sys,k,ele,x_p,r_p,abs_r);
     adot_tmp[k] = All_dAcceleration(i_sys,k,ele,x_p,v_p,r_dot_v,r_dot_v_ij,r_p,abs_r);
   }
-   
+
 
   /*for(k=1;k<=3;++k){
     printf("a[%d][%d]=%f\tadot[%d][%d]=%f\n",i_sys,k,a[i_sys][k],i_sys,k,adot[i_sys][k]);
-    }*/	  
- 
+    }*/
+
   for(k=1;k<=3;++k){  //修正子.
-	  
+
     adot2_dt2_tmp[k] = -6*(a_0[i_sys][k] - a_tmp[k]) - (4*adot_0[i_sys][k] + 2*adot_tmp[k])*dt_[i_sys]; //第2次導関数.
     adot3_dt3_tmp[k] = 12*(a_0[i_sys][k] - a_tmp[k]) + 6*(adot_0[i_sys][k] + adot_tmp[k])*dt_[i_sys]; //第3次導関数.
-	  
+
     x_c_tmp[k] = x_p[i_sys][k] + adot2_dt2_tmp[k]*dt_[i_sys]*dt_[i_sys]/24.0 + adot3_dt3_tmp[k]*dt_[i_sys]*dt_[i_sys]/120.0;
     v_c_tmp[k] = v_p[i_sys][k] + adot2_dt2_tmp[k]*dt_[i_sys]/6.0 +adot3_dt3_tmp[k]*dt_[i_sys]/24.0;
   }  //k loop
-  
+
 
   r_c[i_sys] = sqrt(x_c_tmp[1]*x_c_tmp[1] + x_c_tmp[2]*x_c_tmp[2] + x_c_tmp[3]*x_c_tmp[3]);
   v2_c[i_sys] = v_c_tmp[1]*v_c_tmp[1] + v_c_tmp[2]*v_c_tmp[2] + v_c_tmp[3]*v_c_tmp[3];
   r_dot_v[i_sys] = x_c_tmp[1]*v_c_tmp[1] + x_c_tmp[2]*v_c_tmp[2] + x_c_tmp[3]*v_c_tmp[3];
 
-  
+
   for(k=1;k<=3;++k){
     a[i_sys][k] = a_tmp[k];
     adot[i_sys][k] = adot_tmp[k];
@@ -77,7 +77,7 @@ void Corrector_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],doubl
     x_c[i_sys][k] = x_c_tmp[k];
     v_c[i_sys][k] = v_c_tmp[k];
   }
-  
+
   return;
 }
 
@@ -90,9 +90,9 @@ void Iteration_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],doubl
   double a_tmp[4]={},adot_tmp[4]={},adot2_dt2_tmp[4]={},adot3_dt3_tmp[4]={};
   double x_c_tmp[4]={},v_c_tmp[4]={};
 
-  
+
   for(j=1;j<=global_n;++j){
-    if(i_sys!=j){	 
+    if(i_sys!=j){
       abs_r[j] = RelativeDistance(i_sys,j,x_c);  //絶対値.
       r_dot_v_ij[j] = RelativeInnerProduct(i_sys,j,x_c,v_c);  //r_ij,v_ijの内積.
     }else{
@@ -100,28 +100,28 @@ void Iteration_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],doubl
       r_dot_v_ij[i_sys] = 0.0;
     }
   }  //j loop
-  
+
 
   for(k=1;k<=3;++k){
     a_tmp[k] = All_Acceleration(i_sys,k,ele,x_c,r_c,abs_r);
     adot_tmp[k] = All_dAcceleration(i_sys,k,ele,x_c,v_c,r_dot_v,r_dot_v_ij,r_c,abs_r);
   }
-  
- 
+
+
   //修正子 (iteration).
-  for(k=1;k<=3;++k){	  
+  for(k=1;k<=3;++k){
     adot2_dt2_tmp[k] = -6*(a_0[i_sys][k] - a_tmp[k]) - (4*adot_0[i_sys][k] + 2*adot_tmp[k])*dt_[i_sys]; //第2次導関数.
-    adot3_dt3_tmp[k] = 12*(a_0[i_sys][k] - a_tmp[k]) + 6*(adot_0[i_sys][k] + adot_tmp[k])*dt_[i_sys]; //第3次導関数.	  
+    adot3_dt3_tmp[k] = 12*(a_0[i_sys][k] - a_tmp[k]) + 6*(adot_0[i_sys][k] + adot_tmp[k])*dt_[i_sys]; //第3次導関数.
     x_c_tmp[k] = x_p[i_sys][k] + adot2_dt2_tmp[k]*dt_[i_sys]*dt_[i_sys]/24.0 + adot3_dt3_tmp[k]*dt_[i_sys]*dt_[i_sys]/120.0;
     v_c_tmp[k] = v_p[i_sys][k] + adot2_dt2_tmp[k]*dt_[i_sys]/6.0 +adot3_dt3_tmp[k]*dt_[i_sys]/24.0;
   }  //k loop
-   
+
 
   r_c[i_sys] = sqrt(x_c_tmp[1]*x_c_tmp[1] + x_c_tmp[2]*x_c_tmp[2] + x_c_tmp[3]*x_c_tmp[3]);
   v2_c[i_sys] = v_c_tmp[1]*v_c_tmp[1] + v_c_tmp[2]*v_c_tmp[2] + v_c_tmp[3]*v_c_tmp[3];
   r_dot_v[i_sys] = x_c_tmp[1]*v_c_tmp[1] + x_c_tmp[2]*v_c_tmp[2] + x_c_tmp[3]*v_c_tmp[3];
 
-  
+
   for(k=1;k<=3;++k){
     a[i_sys][k] = a_tmp[k];
     adot[i_sys][k] = adot_tmp[k];
@@ -130,8 +130,8 @@ void Iteration_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],doubl
     x_c[i_sys][k] = x_c_tmp[k];
     v_c[i_sys][k] = v_c_tmp[k];
   }
-  
-  return;     
+
+  return;
 }
 
 
@@ -139,7 +139,7 @@ void Iteration_sys(int i_sys,struct orbital_elements ele[],double x_p[][4],doubl
 double All_Acceleration(int i,int k,struct orbital_elements ele[],double x_0[][4],double r_0[],double abs_r[]){
   int j;
   double a_0;
-  
+
   a_0 = External_Acceleration(i,k,x_0,r_0);
 
   for(j=1;j<=
@@ -155,12 +155,12 @@ double All_Acceleration(int i,int k,struct orbital_elements ele[],double x_0[][4
 #if INDIRECT_TERM
     a_0 += Acceleration_indirect(j,k,ele,x_0,r_0);
 #endif
-    
+
     if(i!=j){
-      a_0 += Acceleration_ij(i,j,k,ele,x_0,abs_r);	  
+      a_0 += Acceleration_ij(i,j,k,ele,x_0,abs_r);
     }
   }
-    
+
   return a_0;
 }
 
@@ -169,7 +169,7 @@ double All_Acceleration(int i,int k,struct orbital_elements ele[],double x_0[][4
 double All_dAcceleration(int i,int k,struct orbital_elements ele[],double x_0[][4],double v_0[][4],double r_dot_v[],double r_dot_v_ij[],double r_0[],double abs_r[]){ 
   int j;
   double adot_0;
-  
+
   adot_0 = External_dAcceleration(i,k,x_0,v_0,r_0,r_dot_v);
 
   for(j=1;j<=
@@ -185,12 +185,12 @@ double All_dAcceleration(int i,int k,struct orbital_elements ele[],double x_0[][
 #if INDIRECT_TERM
     adot_0 += dAcceleration_indirect(j,k,ele,x_0,v_0,r_0,r_dot_v);
 #endif
-    
+
     if(i!=j){
       adot_0 += dAcceleration_ij(i,j,k,ele,x_0,v_0,r_dot_v_ij,abs_r);
-    } 
+    }
   }
-  
+
   return adot_0;
 }
 
@@ -223,7 +223,7 @@ double dAcceleration_ij(int i,int j,int k,struct orbital_elements ele[],double x
   rij3 = abs_r[j]*abs_r[j]*abs_r[j];
   rij5 = abs_r[j]*abs_r[j]*abs_r[j]*abs_r[j]*abs_r[j];
 #else
-  rij3 = (abs_r[j]*abs_r[j] + EPSILON*EPSILON)*sqrt(abs_r[j]*abs_r[j] + EPSILON*EPSILON);  
+  rij3 = (abs_r[j]*abs_r[j] + EPSILON*EPSILON)*sqrt(abs_r[j]*abs_r[j] + EPSILON*EPSILON);
   rij5 = (abs_r[j]*abs_r[j] + EPSILON*EPSILON)*(abs_r[j]*abs_r[j] + EPSILON*EPSILON)*sqrt(abs_r[j]*abs_r[j] + EPSILON*EPSILON);
 #endif
   rij3 = 1.0/rij3;
@@ -259,7 +259,7 @@ double dAcceleration_indirect(int i,int k,struct orbital_elements ele[],double x
   r3 = 1.0/r3;
   r5 = r_0[i]*r_0[i]*r_0[i]*r_0[i]*r_0[i];
   r5 = 1.0/r5;
-  
+
 #ifndef G
   return -1*ele[i].mass*(v_0[i][k]*r3 - 3*r_dot_v[i]*x_0[i][k]*r5);
 #else

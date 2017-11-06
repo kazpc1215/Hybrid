@@ -90,11 +90,11 @@ static const double PLANET_DENSITY = 3.0;  //[g/cc]
 static const double DELTA_AXIS = 10.0;
 /*
 Earth Mean Orbital Elements (J2000)
-Semimajor axis (AU)                  1.00000011  
-Orbital eccentricity                 0.01671022   
-Orbital inclination (deg)            0.00005  
-Longitude of ascending node (deg)  -11.26064  
-Longitude of perihelion (deg)      102.94719  
+Semimajor axis (AU)                  1.00000011
+Orbital eccentricity                 0.01671022
+Orbital inclination (deg)            0.00005
+Longitude of ascending node (deg)  -11.26064
+Longitude of perihelion (deg)      102.94719
 Mean Longitude (deg)               100.46435
 */
 //////////////////////////////////////////////////
@@ -121,7 +121,7 @@ static const double T_MAX = 2.0*M_PI*1.0E1;  //10yr 全計算時間.
 #define TIME_INTERVAL 2.0*M_PI*1.0E0,2.0*M_PI*1.0E1,2.0*M_PI*1.0E2,2.0*M_PI*1.0E3,T_MAX  //t_ene配列の中身.
 static const int TIME_INTERVAL_MAX = 5; //t_ene配列の要素数.
 #else
-/*  linear 用 */    
+/*  linear 用 */
 static const double DT_ENE = 2.0*M_PI*1.0E0;  //dt_ene = 1yr
 #endif
 //////////////////////////////////////////////////
@@ -177,7 +177,7 @@ struct fragmentation{
   int fragtimes;  //何回統計的計算をしているか.
 };
 
-  
+
 struct parameter{
   double s_1;
   double s_2;

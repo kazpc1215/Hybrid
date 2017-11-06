@@ -22,36 +22,36 @@ double Calculate_Energy(struct orbital_elements ele[],double x_c[][4],
 #else
   E_tot = 0.5*M_0*(v_G[1]*v_G[1] + v_G[2]*v_G[2] + v_G[3]*v_G[3]);
 #endif
-  
+
 #else
   E_tot = 0.0
 #endif
-  
+
   for(i=1;i<=global_n;++i){
-    
-#if INDIRECT_TERM    
+
+#if INDIRECT_TERM
     E[i] = 0.5*ele[i].mass*((v_c[i][1]-v_G[1])*(v_c[i][1]-v_G[1]) + (v_c[i][2]-v_G[2])*(v_c[i][2]-v_G[2]) + (v_c[i][3]-v_G[3])*(v_c[i][3]-v_G[3]));
-#else    
+#else
     E[i] = 0.5*ele[i].mass*v2_c[i];
 #endif
-    
-    for(j=i+1;j<=global_n;++j){    
+
+    for(j=i+1;j<=global_n;++j){
       abs_r[j] = RelativeDistance(i,j,x_c); //絶対値.
-        
+
 #ifndef G
       E[i] += - ele[i].mass*ele[j].mass/abs_r[j];  //エネルギー計算.
 #else
       E[i] += - G*ele[i].mass*ele[j].mass/abs_r[j];  //エネルギー計算.
 #endif
-      
+
     }  //j loop
-    
+
 #if !defined(G) && !defined(M_0)
     E_tot += - ele[i].mass/r_c[i] + E[i];
 #else
     E_tot += - G*M_0*ele[i].mass/r_c[i] + E[i];
 #endif
-  
+
   }  //i loop
   return E_tot;
 }
@@ -63,26 +63,26 @@ double AngularMomentum(int i,struct orbital_elements ele[],double x_0[][4],doubl
   double L[global_n+1][4];
   double L_tot_0[4];
   double abs_L_0;
-  
-  for(i=1;i<=global_n;++i){ 
+
+  for(i=1;i<=global_n;++i){
     L[i][1] = ele[i].mass*(x_0[i][2]*v_0[i][3] - x_0[i][3]*v_0[i][2]);
     L[i][2] = ele[i].mass*(x_0[i][3]*v_0[i][1] - x_0[i][1]*v_0[i][3]);
     L[i][3] = ele[i].mass*(x_0[i][1]*v_0[i][2] - x_0[i][2]*v_0[i][1]);
   }
-  
+
   for(k=1;k<=3;++k){
     L_tot_0[k] = 0.0;
     for(i=1;i<=global_n;++i){
       L_tot_0[k] += L[i][k];
     }
   }
-  
+
   abs_L_0 = 0.0;
 
   for(k=1;k<=3;++k){
     abs_L_0 += L_tot_0[k]*L_tot_0[k];
   }
-  
+
   abs_L_0 = sqrt(abs_L_0);
 
   return abs_L_0;
