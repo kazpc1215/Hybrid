@@ -3,14 +3,14 @@
 
 
 /*軌道要素計算*/
-void Calculate_OrbitalElements(int i,const double x_c[][4],const double v_c[][4],struct orbital_elements ele[],double P[][4],double Q[][4],const double r_c[],const double v2_c[],const double r_dot_v[]){
+void Calculate_OrbitalElements(int i,const double x_c[][4],const double v_c[][4],struct orbital_elements *ele_p,double P[][4],double Q[][4],const double r_c[],const double v2_c[],const double r_dot_v[]){
 
 #if INDIRECT_TERM
 
 #if !defined(G) && !defined(M_0)
-  double mu = 1.0*(1.0 + ele[i].mass);
+  double mu = 1.0*(1.0 + ((ele_p+i)->mass));
 #else
-  double mu = G*(M_0 + ele[i].mass);
+  double mu = G*(M_0 + ((ele_p+i)->mass));
 #endif
 
 #else
@@ -53,47 +53,47 @@ void Calculate_OrbitalElements(int i,const double x_c[][4],const double v_c[][4]
   }
   */
 
-  ele[i].axis = 1.0/(2.0/r_c[i] - v2_c[i]/mu);
+  ((ele_p+i)->axis) = 1.0/(2.0/r_c[i] - v2_c[i]/mu);
 
 
-  if(isnan(ele[i].axis)){
+  if(isnan((ele_p+i)->axis)){
     printf("i=%d\taxis is nan.\n",i);
   }
 
 
-  if(ele[i].axis<0.0){
-    printf("i=%d\taxis=%e < 0 双曲線軌道\n",i,ele[i].axis);
-    ele[i].ecc = NAN;
-    ele[i].u = NAN;
-    ele[i].inc = NAN;
-    ele[i].omega = NAN;
-    ele[i].Omega = NAN;
-    ele[i].r_h = NAN;
+  if(((ele_p+i)->axis)<0.0){
+    printf("i=%d\taxis=%e < 0 双曲線軌道\n",i,((ele_p+i)->axis));
+    ((ele_p+i)->ecc) = NAN;
+    ((ele_p+i)->u) = NAN;
+    ((ele_p+i)->inc) = NAN;
+    ((ele_p+i)->omega) = NAN;
+    ((ele_p+i)->Omega) = NAN;
+    ((ele_p+i)->r_h) = NAN;
 
     //printf("\tr=%f[AU]\tR_planet=%f\n",sqrt((x_c[i][1]-x_c[PLANET_NO][1])*(x_c[i][1]-x_c[PLANET_NO][1])+(x_c[i][2]-x_c[PLANET_NO][2])*(x_c[i][2]-x_c[PLANET_NO][2])+(x_c[i][3]-x_c[PLANET_NO][3])*(x_c[i][3]-x_c[PLANET_NO][3])),PLANET_RADIUS);
   }
 
 
-  ele[i].ecc = sqrt((1.0-r_c[i]/ele[i].axis)*(1.0-r_c[i]/ele[i].axis) + r_dot_v[i]*r_dot_v[i]/mu/ele[i].axis);
+  ((ele_p+i)->ecc) = sqrt((1.0-r_c[i]/((ele_p+i)->axis))*(1.0-r_c[i]/((ele_p+i)->axis)) + r_dot_v[i]*r_dot_v[i]/mu/((ele_p+i)->axis));
 
 
   //printf("i=%d\tecc=%f\n",i,ele[i].ecc);
-  if(isnan(ele[i].ecc)){
+  if(isnan((ele_p+i)->ecc)){
     printf("i=%d\tecc is nan.\n",i);
   }
 
 
-  if(ele[i].ecc==0.0){
-    ele[i].u = 0.0;
+  if(((ele_p+i)->ecc)==0.0){
+    ((ele_p+i)->u) = 0.0;
   }else{
 
-    esin_u = r_dot_v[i]/sqrt(mu*ele[i].axis);
-    ecos_u = 1.0-r_c[i]/ele[i].axis;
+    esin_u = r_dot_v[i]/sqrt(mu*((ele_p+i)->axis));
+    ecos_u = 1.0-r_c[i]/((ele_p+i)->axis);
     radian = atan2(esin_u,ecos_u);
     if(radian<0.0){
-      ele[i].u = radian + 2.0*M_PI;
+      ((ele_p+i)->u) = radian + 2.0*M_PI;
     }else{
-      ele[i].u = radian;
+      ((ele_p+i)->u) = radian;
     }
   }
 
@@ -106,8 +106,8 @@ void Calculate_OrbitalElements(int i,const double x_c[][4],const double v_c[][4]
 
   for(k=1;k<=3;++k){
 
-    P[i][k] = x_c[i][k]*cos(ele[i].u)/r_c[i] - sqrt(ele[i].axis/mu)*v_c[i][k]*sin(ele[i].u);
-    Q[i][k] = (x_c[i][k]*sin(ele[i].u)/r_c[i] + sqrt(ele[i].axis/mu)*v_c[i][k]*(cos(ele[i].u)-ele[i].ecc))/sqrt(1.0-ele[i].ecc);
+    P[i][k] = x_c[i][k]*cos(((ele_p+i)->u))/r_c[i] - sqrt(((ele_p+i)->axis)/mu)*v_c[i][k]*sin(((ele_p+i)->u));
+    Q[i][k] = (x_c[i][k]*sin(((ele_p+i)->u))/r_c[i] + sqrt(((ele_p+i)->axis)/mu)*v_c[i][k]*(cos(((ele_p+i)->u))-((ele_p+i)->ecc)))/sqrt(1.0-((ele_p+i)->ecc));
   }
 
 
@@ -125,9 +125,9 @@ void Calculate_OrbitalElements(int i,const double x_c[][4],const double v_c[][4]
 
 
   if(radian<0.0){
-    ele[i].inc = radian + 2.0*M_PI;
+    ((ele_p+i)->inc) = radian + 2.0*M_PI;
   }else{
-    ele[i].inc = radian;
+    ((ele_p+i)->inc) = radian;
   }
 
 
@@ -135,9 +135,9 @@ void Calculate_OrbitalElements(int i,const double x_c[][4],const double v_c[][4]
   cos_omega = Q[i][3]/sin_inc;
   radian = atan2(sin_omega,cos_omega);
   if(radian<0.0){
-    ele[i].omega = radian + 2.0*M_PI;
+    ((ele_p+i)->omega) = radian + 2.0*M_PI;
   }else{
-    ele[i].omega = radian;
+    ((ele_p+i)->omega) = radian;
   }
 
 
@@ -145,31 +145,32 @@ void Calculate_OrbitalElements(int i,const double x_c[][4],const double v_c[][4]
   cos_Omega = (P[i][1]*Q[i][3] - Q[i][1]*P[i][3])/sin_inc;
   radian = atan2(sin_Omega,cos_Omega);
   if(radian<0.0){
-    ele[i].Omega = radian + 2.0*M_PI;
+    ((ele_p+i)->Omega) = radian + 2.0*M_PI;
   }else{
-    ele[i].Omega = radian;
+    ((ele_p+i)->Omega) = radian;
   }
 
 
   if(sin_inc==0.0){
-    ele[i].omega = 0.0;
-    ele[i].Omega = 0.0;
+    ((ele_p+i)->omega) = 0.0;
+    ((ele_p+i)->Omega) = 0.0;
   }
 
+
 #ifndef M_0
-  ele[i].r_h = ele[i].axis*cbrt(ele[i].mass/3.0);
+  ((ele_p+i)->r_h) = ((ele_p+i)->axis)*cbrt(((ele_p+i)->mass)/3.0);
 #else
-  ele[i].r_h = ele[i].axis*cbrt(ele[i].mass/M_0/3.0);
+  ((ele_p+i)->r_h) = ((ele_p+i)->axis)*cbrt(((ele_p+i)->mass)/M_0/3.0);
 #endif
 
 
-  if(isnan(ele[i].inc)){
+  if(isnan((ele_p+i)->inc)){
     printf("i=%d\tinc is nan.\n",i);
   }
-  if(isnan(ele[i].omega)){
+  if(isnan((ele_p+i)->omega)){
     printf("i=%d\tomega is nan.\n",i);
   }
-  if(isnan(ele[i].Omega)){
+  if(isnan((ele_p+i)->Omega)){
     printf("i=%d\tOmega is nan.\n",i);
   }
 
@@ -179,38 +180,38 @@ void Calculate_OrbitalElements(int i,const double x_c[][4],const double v_c[][4]
 
 
 /*P計算*/
-double Calculate_P(int i,int k,struct orbital_elements ele[]){
+double Calculate_P(int i,int k,const struct orbital_elements *ele_p){
   if(k==1){
-    return cos(ele[i].omega)*cos(ele[i].Omega) - sin(ele[i].omega)*sin(ele[i].Omega)*cos(ele[i].inc);
+    return cos(((ele_p+i)->omega))*cos(((ele_p+i)->Omega)) - sin(((ele_p+i)->omega))*sin(((ele_p+i)->Omega))*cos(((ele_p+i)->inc));
   }else if(k==2){
-    return cos(ele[i].omega)*sin(ele[i].Omega) + sin(ele[i].omega)*cos(ele[i].Omega)*cos(ele[i].inc);
+    return cos(((ele_p+i)->omega))*sin(((ele_p+i)->Omega)) + sin(((ele_p+i)->omega))*cos(((ele_p+i)->Omega))*cos(((ele_p+i)->inc));
   }else{
-    return sin(ele[i].omega)*sin(ele[i].inc);
+    return sin(((ele_p+i)->omega))*sin(((ele_p+i)->inc));
   }
 }
 
 
 /*Q計算*/
-double Calculate_Q(int i,int k,struct orbital_elements ele[]){
+double Calculate_Q(int i,int k,const struct orbital_elements *ele_p){
   if(k==1){
-    return -sin(ele[i].omega)*cos(ele[i].Omega) - cos(ele[i].omega)*sin(ele[i].Omega)*cos(ele[i].inc);
+    return -sin(((ele_p+i)->omega))*cos(((ele_p+i)->Omega)) - cos(((ele_p+i)->omega))*sin(((ele_p+i)->Omega))*cos(((ele_p+i)->inc));
   }else if(k==2){
-    return -sin(ele[i].omega)*sin(ele[i].Omega) + cos(ele[i].omega)*cos(ele[i].Omega)*cos(ele[i].inc);
+    return -sin(((ele_p+i)->omega))*sin(((ele_p+i)->Omega)) + cos(((ele_p+i)->omega))*cos(((ele_p+i)->Omega))*cos(((ele_p+i)->inc));
   }else{
-    return cos(ele[i].omega)*sin(ele[i].inc);
+    return cos(((ele_p+i)->omega))*sin(((ele_p+i)->inc));
   }
 }
 
 
 /*初期位置、速度計算*/
-void InitialCondition(int i,double P[][4],double Q[][4],double x_0[][4],double v_0[][4],double v2_0[],double r_dot_v[],double r_0[],struct orbital_elements ele[]){
+void InitialCondition(int i,double P[][4],double Q[][4],double x_0[][4],double v_0[][4],double v2_0[],double r_dot_v[],double r_0[],const struct orbital_elements *ele_p){
 
 #if INDIRECT_TERM
 
 #if !defined(G) && !defined(M_0)
-  double mu = 1.0*(1.0 + ele[i].mass);
+  double mu = 1.0*(1.0 + ((ele_p+i)->mass));
 #else
-  double mu = G*(M_0 + ele[i].mass);
+  double mu = G*(M_0 + ((ele_p+i)->mass));
 #endif
 
 #else
@@ -225,10 +226,10 @@ void InitialCondition(int i,double P[][4],double Q[][4],double x_0[][4],double v
 
   int k;
   for(k=1;k<=3;k++){
-    P[i][k] = Calculate_P(i,k,ele);
-    Q[i][k] = Calculate_Q(i,k,ele);
+    P[i][k] = Calculate_P(i,k,ele_p);
+    Q[i][k] = Calculate_Q(i,k,ele_p);
 
-    x_0[i][k] = ele[i].axis*P[i][k]*(cos(ele[i].u)-ele[i].ecc) + ele[i].axis*sqrt(1.0-ele[i].ecc*ele[i].ecc)*Q[i][k]*sin(ele[i].u);
+    x_0[i][k] = ((ele_p+i)->axis)*P[i][k]*(cos(((ele_p+i)->u))-((ele_p+i)->ecc)) + ((ele_p+i)->axis)*sqrt(1.0-((ele_p+i)->ecc)*((ele_p+i)->ecc))*Q[i][k]*sin(((ele_p+i)->u));
   }
   //printf("x=%f\ty=%f\tz=%f\n",x_0[i][1],x_0[i][2],x_0[i][3]);
 
@@ -236,7 +237,7 @@ void InitialCondition(int i,double P[][4],double Q[][4],double x_0[][4],double v
 
 
   for(k=1;k<=3;++k){
-    v_0[i][k] = sqrt(mu/ele[i].axis)/r_0[i]*(-ele[i].axis*P[i][k]*sin(ele[i].u) + ele[i].axis*sqrt(1.0-ele[i].ecc*ele[i].ecc)*Q[i][k]*cos(ele[i].u));
+    v_0[i][k] = sqrt(mu/((ele_p+i)->axis))/r_0[i]*(-((ele_p+i)->axis)*P[i][k]*sin(((ele_p+i)->u)) + ((ele_p+i)->axis)*sqrt(1.0-((ele_p+i)->ecc)*((ele_p+i)->ecc))*Q[i][k]*cos(((ele_p+i)->u)));
   }
 
   r_dot_v[i] = InnerProduct(i,x_0,v_0);  //r_i,v_iの内積.

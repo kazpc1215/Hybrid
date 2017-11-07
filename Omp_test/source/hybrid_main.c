@@ -83,9 +83,8 @@ int main(void){
 #endif
 
 
-
   struct orbital_elements ele[N_p+N_tr+1]={};
-
+  //struct orbital_elements *ele_p = ele;
 
 #if FRAGMENTATION
   struct fragmentation frag[N_p+N_tr+1]={};
@@ -170,9 +169,9 @@ int main(void){
 
 #if FRAGMENTATION
   para.alpha = (11.0 + 3.0*P_FRAG)/(6.0 + 3.0*P_FRAG);
-  para.s_1 = s_1_FRAG(para);
-  para.s_2 = s_2_FRAG(para);
-  para.s_3 = s_3_FRAG(para);
+  para.s_1 = s_1_FRAG(&para);
+  para.s_2 = s_2_FRAG(&para);
+  para.s_3 = s_3_FRAG(&para);
   para.h_0 = 0.061*17.3*pow(1.68E6*RHO,-2.0/3.0);  // g/cc = 1.68E6 M_0/AU^3, F(I) = 17.3 として.
   para.Q_D = Q_0_FRAG*1.13E-13*pow(RHO/3.0,0.55)*pow(M_MAX*1.989E12,P_FRAG);  //erg/g = 1.13E-13 AU^2/(yr/2pi)^2 として.
 
@@ -617,7 +616,7 @@ int main(void){
     */
     //printf("initial\tF[%d]=%e\tsigma[%d]=%e\tdt_frag[%d]=%e[yr]\tdt_[%d]=%e[yr]\n",i,frag[i].flux,i,frag[i].sigma,i,frag[i].dt_frag/2.0/M_PI,i,dt_[i]/2.0/M_PI);
 
-    MassFlux(i,ele,frag,para);  //質量フラックス計算.
+    MassFlux(i,ele,frag,&para);  //質量フラックス計算.
 
     frag[i].dt_frag = Depletion_Time(i,frag);  //統計的計算のタイムスケール.
 
@@ -1171,7 +1170,7 @@ int main(void){
 	*/
 	//printf("i=%d\tv_ave=%f\tsigma=%f\tecc=%f\tr_c=%f\tdelta_r=%f\n",i,frag[i].v_ave,frag[i].sigma,ele[i].ecc,r_c[i],frag[i].delta_r);
 
-	MassFlux(i,ele,frag,para);  //質量フラックス計算.
+	MassFlux(i,ele,frag,&para);  //質量フラックス計算.
 	frag[i].dt_frag = Depletion_Time(i,frag);  //統計的計算のタイムスケール.
 
 	if(isnan(frag[i].dt_frag)){

@@ -3,7 +3,7 @@
 
 
 /*エネルギー計算*/
-double Calculate_Energy(struct orbital_elements ele[],const double x_c[][4],
+double Calculate_Energy(const struct orbital_elements *ele_p,const double x_c[][4],
 #if INDIRECT_TERM
 			const double v_c[][4],const double v_G[],
 #else
@@ -30,26 +30,26 @@ double Calculate_Energy(struct orbital_elements ele[],const double x_c[][4],
   for(i=1;i<=global_n;++i){
 
 #if INDIRECT_TERM
-    E[i] = 0.5*ele[i].mass*((v_c[i][1]-v_G[1])*(v_c[i][1]-v_G[1]) + (v_c[i][2]-v_G[2])*(v_c[i][2]-v_G[2]) + (v_c[i][3]-v_G[3])*(v_c[i][3]-v_G[3]));
+    E[i] = 0.5*((ele_p+i)->mass)*((v_c[i][1]-v_G[1])*(v_c[i][1]-v_G[1]) + (v_c[i][2]-v_G[2])*(v_c[i][2]-v_G[2]) + (v_c[i][3]-v_G[3])*(v_c[i][3]-v_G[3]));
 #else
-    E[i] = 0.5*ele[i].mass*v2_c[i];
+    E[i] = 0.5*((ele_p+i)->mass)*v2_c[i];
 #endif
 
     for(j=i+1;j<=global_n;++j){
       abs_r[j] = RelativeDistance(i,j,x_c); //絶対値.
 
 #ifndef G
-      E[i] += - ele[i].mass*ele[j].mass/abs_r[j];  //エネルギー計算.
+      E[i] += - ((ele_p+i)->mass)*((ele_p+j)->mass)/abs_r[j];  //エネルギー計算.
 #else
-      E[i] += - G*ele[i].mass*ele[j].mass/abs_r[j];  //エネルギー計算.
+      E[i] += - G*((ele_p+i)->mass)*((ele_p+j)->mass)/abs_r[j];  //エネルギー計算.
 #endif
 
     }  //j loop
 
 #if !defined(G) && !defined(M_0)
-    E_tot += - ele[i].mass/r_c[i] + E[i];
+    E_tot += - ((ele_p+i)->mass)/r_c[i] + E[i];
 #else
-    E_tot += - G*M_0*ele[i].mass/r_c[i] + E[i];
+    E_tot += - G*M_0*((ele_p+i)->mass)/r_c[i] + E[i];
 #endif
 
   }  //i loop
@@ -58,16 +58,18 @@ double Calculate_Energy(struct orbital_elements ele[],const double x_c[][4],
 
 
 /*角運動量*/
-double AngularMomentum(int i,struct orbital_elements ele[],const double x_0[][4],const double v_0[][4]){
+double AngularMomentum(int i,const struct orbital_elements *ele_p,const double x_0[][4],const double v_0[][4]){
   int k;
   double L[global_n+1][4];
   double L_tot_0[4];
   double abs_L_0;
 
+
   for(i=1;i<=global_n;++i){
-    L[i][1] = ele[i].mass*(x_0[i][2]*v_0[i][3] - x_0[i][3]*v_0[i][2]);
-    L[i][2] = ele[i].mass*(x_0[i][3]*v_0[i][1] - x_0[i][1]*v_0[i][3]);
-    L[i][3] = ele[i].mass*(x_0[i][1]*v_0[i][2] - x_0[i][2]*v_0[i][1]);
+    L[i][1] = ((ele_p+i)->mass)*(x_0[i][2]*v_0[i][3] - x_0[i][3]*v_0[i][2]);
+    L[i][2] = ((ele_p+i)->mass)*(x_0[i][3]*v_0[i][1] - x_0[i][1]*v_0[i][3]);
+    L[i][3] = ((ele_p+i)->mass)*(x_0[i][1]*v_0[i][2] - x_0[i][2]*v_0[i][1]);
+    //printf("i=%d\t(ele_p+i)->mass=%e\n",i,(ele_p+i)->mass);
   }
 
   for(k=1;k<=3;++k){

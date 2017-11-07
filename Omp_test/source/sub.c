@@ -29,7 +29,7 @@ void Rotation_3D_zaxis(int i,double x_eject[][4],double theta){
 }
 
 
-void CenterOfGravity(const double x_0[][4],const double v_0[][4],double x_G[],double v_G[],struct orbital_elements ele[]){
+void CenterOfGravity(const double x_0[][4],const double v_0[][4],double x_G[],double v_G[],const struct orbital_elements *ele_p){
   int i,k;
   double M;
 
@@ -39,15 +39,15 @@ void CenterOfGravity(const double x_0[][4],const double v_0[][4],double x_G[],do
   M = M_0;
 #endif
   for(i=1;i<=global_n;++i){
-    M += ele[i].mass;
+    M += ((ele_p+i)->mass);
   }
 
   for(k=1;k<=3;++k){
     x_G[k] = 0.0;
     v_G[k] = 0.0;
     for(i=1;i<=global_n;++i){
-      x_G[k] += ele[i].mass*x_0[i][k];
-      v_G[k] += ele[i].mass*v_0[i][k];
+      x_G[k] += ((ele_p+i)->mass)*x_0[i][k];
+      v_G[k] += ((ele_p+i)->mass)*v_0[i][k];
     }
     x_G[k] /= M;
     v_G[k] /= M;
