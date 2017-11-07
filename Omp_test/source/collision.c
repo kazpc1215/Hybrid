@@ -3,7 +3,7 @@
 
 
 #if COLLISION
-bool Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double abs_r[],int *i_col,int *j_col){
+bool Collision_Judgement(struct orbital_elements ele[],const double x_p[][4],double abs_r[],int *i_col,int *j_col){
 
 #if EXECUTION_TIME
   uint64_t start = mach_absolute_time();
@@ -37,7 +37,7 @@ bool Collision_Judgement(struct orbital_elements ele[],double x_p[][4],double ab
 
 
 #if COLLISION
-void Energy_Correction(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbital_elements ele[],double *dE_heat,double *dE_grav,double *dE_c,double *v_imp){
+void Energy_Correction(int i_col,int j_col,const double x_0[][4],const double v_0[][4],struct orbital_elements ele[],double *dE_heat,double *dE_grav,double *dE_c,double *v_imp){
 
   double m_1 = ele[i_col].mass;
   double m_2 = ele[j_col].mass;
@@ -90,8 +90,8 @@ void Coalescence(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbi
   ele[j_col] = ele[global_n_p];
   ele[global_n_p] = ele[0];
   for(k=1;k<=3;++k){
-    SWAP(x_0[j_col][k],x_0[global_n_p][k]);
-    SWAP(v_0[j_col][k],v_0[global_n_p][k]);
+    Swap_double(&x_0[j_col][k],&x_0[global_n_p][k]);
+    Swap_double(&v_0[j_col][k],&v_0[global_n_p][k]);
   }
 
 #if N_tr != 0
@@ -100,8 +100,8 @@ void Coalescence(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbi
   ele[global_n_p] = ele[global_n];
   ele[global_n] = ele[0];
   for(k=1;k<=3;++k){
-    SWAP(x_0[global_n_p][k],x_0[global_n][k]);
-    SWAP(v_0[global_n_p][k],v_0[global_n][k]);
+    Swap_double(&x_0[global_n_p][k],&x_0[global_n][k]);
+    Swap_double(&v_0[global_n_p][k],&v_0[global_n][k]);
   }
 #endif
 

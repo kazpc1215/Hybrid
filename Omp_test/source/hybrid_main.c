@@ -9,16 +9,20 @@ int global_n_p = N_p;  //原始惑星の数.
 
 
 #if EXECUTION_TIME
-struct execution_time exetime = {
-  0.0,
-  0.0,
-  0.0,
-  0.0,
-  0.0,
-  0.0,
-  0.0
-};
+struct execution_time exetime = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 #endif
+
+
+//外部から参照されるinline関数の定義を生成(func.cに本当の定義).
+extern inline double InnerProduct(int i,const double x_0[][4],const double v_0[][4]);
+extern inline double RadiusFromCenter(int i,const double x_0[][4]);
+extern inline double SquareOfVelocity(int i,const double v_0[][4]);
+extern inline double RelativeDistance(int i,int j,const double x_0[][4]);
+extern inline double SquareOfRelativeVelocity(int i,int j,const double v_0[][4]);
+extern inline double RelativeInnerProduct(int i,int j,const double x_0[][4],const double v_0[][4]);
+extern inline void Swap_double(double *a, double *b);
+extern inline void Swap_int(int *a, int *b);
+
 
 int main(void){
 
@@ -749,7 +753,7 @@ int main(void){
 #endif
 #pragma omp parallel for
 	for(i=1;i<=global_n;++i){
-	  Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,r_dot_v,Dt);  //修正子 すべての粒子.
+	  Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,r_dot_v,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,Dt);  //修正子 すべての粒子.
 	}
 #if EXECUTION_TIME
 	end = mach_absolute_time();
@@ -762,7 +766,7 @@ int main(void){
 #endif
 	for(ite=1;ite<=ITE_MAX;++ite){  //iteration.
 	  for(i=1;i<=global_n;++i){
-	    Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,r_dot_v,Dt);  //すべての粒子.
+	    Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,r_dot_v,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,Dt);  //すべての粒子.
 	  }
 	}
 #if EXECUTION_TIME
@@ -927,7 +931,7 @@ int main(void){
 #pragma omp parallel for
 	for(i=1;i<=global_n;++i){
 	  if(i==i_sys){
-	    Corrector_sys(i_sys,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,r_dot_v,dt_);  //修正子. i_sys のみ.
+	    Corrector_sys(i_sys,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,r_dot_v,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,dt_);  //修正子. i_sys のみ.
 	  }else{
 	    //i_sys以外の粒子は予測子を使う.
 	    for(k=1;k<=3;++k){  
@@ -949,7 +953,7 @@ int main(void){
 	start = mach_absolute_time();
 #endif
 	for(ite=1;ite<=ITE_MAX;++ite){  //iteration.
-	  Iteration_sys(i_sys,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,r_dot_v,dt_);  //i_sysのみ.
+	  Iteration_sys(i_sys,ele,x_p,v_p,x_c,v_c,r_c,v2_c,r_dot_v,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,dt_);  //i_sysのみ.
 	}
 #if EXECUTION_TIME
 	end = mach_absolute_time();
@@ -1007,7 +1011,7 @@ int main(void){
 #endif
 #pragma omp parallel for
       for(i=1;i<=global_n;++i){
-	Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,r_dot_v,dt_);
+	Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,r_dot_v,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,dt_);
       }
 #if EXECUTION_TIME
       end = mach_absolute_time();
@@ -1021,7 +1025,7 @@ int main(void){
       for(ite=1;ite<=ITE_MAX;++ite){  //iteration.
 #pragma omp parallel for
 	for(i=1;i<=global_n;++i){
-	  Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,r_dot_v,dt_);
+	  Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,r_dot_v,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,dt_);
 	}
       }
 #if EXECUTION_TIME
@@ -1277,54 +1281,54 @@ int main(void){
 	printf("i=%d is eliminated\tr[%d]=%e\tt_sys+t_tmp=%.15e[yr]\n",i,i,r_c[i],(t_sys+t_tmp)/2.0/M_PI);
 
 	//iとglobal_n_pを入れ替える.
-	ele[0] = ele[i];  //構造体のためSWAPマクロは使えない. 0番目の要素はコピーに使うだけ.
+	ele[0] = ele[i];  //構造体のためSwap_double関数は使えない. 0番目の要素はコピーに使うだけ.
 	ele[i] = ele[global_n_p];
 	ele[global_n_p] = ele[0];
 
-	SWAP(t_[i],t_[global_n_p]);
-	SWAP(dt_[i],dt_[global_n_p]);
+	Swap_double(&t_[i],&t_[global_n_p]);
+	Swap_double(&dt_[i],&dt_[global_n_p]);
 
 	for(k=1;k<=3;++k){
-	  SWAP(x_0[i][k],x_0[global_n_p][k]);
-	  SWAP(x_c[i][k],x_c[global_n_p][k]);
+	  Swap_double(&x_0[i][k],&x_0[global_n_p][k]);
+	  Swap_double(&x_c[i][k],&x_c[global_n_p][k]);
 
-	  SWAP(v_0[i][k],v_0[global_n_p][k]);
-	  SWAP(v_c[i][k],v_c[global_n_p][k]);
+	  Swap_double(&v_0[i][k],&v_0[global_n_p][k]);
+	  Swap_double(&v_c[i][k],&v_c[global_n_p][k]);
 
-	  SWAP(a_0[i][k],a_0[global_n_p][k]);
-	  SWAP(a[i][k],a[global_n_p][k]);
+	  Swap_double(&a_0[i][k],&a_0[global_n_p][k]);
+	  Swap_double(&a[i][k],&a[global_n_p][k]);
 
-	  SWAP(adot_0[i][k],adot_0[global_n_p][k]);
-	  SWAP(adot[i][k],adot[global_n_p][k]);
+	  Swap_double(&adot_0[i][k],&adot_0[global_n_p][k]);
+	  Swap_double(&adot[i][k],&adot[global_n_p][k]);
 
-	  SWAP(adot2_dt2[i][k],adot2_dt2[global_n_p][k]);
-	  SWAP(adot3_dt3[i][k],adot3_dt3[global_n_p][k]);
+	  Swap_double(&adot2_dt2[i][k],&adot2_dt2[global_n_p][k]);
+	  Swap_double(&adot3_dt3[i][k],&adot3_dt3[global_n_p][k]);
 	}
 
 #if N_tr != 0
 	//global_n_pとglobal_nを入れ替える.
-	ele[0] = ele[global_n_p];  //構造体のためSWAPマクロは使えない. 0番目の要素はコピーに使うだけ.
+	ele[0] = ele[global_n_p];  //構造体のためSwap_doubleは使えない. 0番目の要素はコピーに使うだけ.
 	ele[global_n_p] = ele[global_n];
 	ele[global_n] = ele[0];
 
-	SWAP(t_[global_n_p],t_[global_n]);
-	SWAP(dt_[global_n_p],dt_[global_n]);
+	Swap_double(&t_[global_n_p],&t_[global_n]);
+	Swap_double(&dt_[global_n_p],&dt_[global_n]);
 
 	for(k=1;k<=3;++k){
-	  SWAP(x_0[global_n_p][k],x_0[global_n][k]);
-	  SWAP(x_c[global_n_p][k],x_c[global_n][k]);
+	  Swap_double(&x_0[global_n_p][k],&x_0[global_n][k]);
+	  Swap_double(&x_c[global_n_p][k],&x_c[global_n][k]);
 
-	  SWAP(v_0[global_n_p][k],v_0[global_n][k]);
-	  SWAP(v_c[global_n_p][k],v_c[global_n][k]);
+	  Swap_double(&v_0[global_n_p][k],&v_0[global_n][k]);
+	  Swap_double(&v_c[global_n_p][k],&v_c[global_n][k]);
 
-	  SWAP(a_0[global_n_p][k],a_0[global_n][k]);
-	  SWAP(a[global_n_p][k],a[global_n][k]);
+	  Swap_double(&a_0[global_n_p][k],&a_0[global_n][k]);
+	  Swap_double(&a[global_n_p][k],&a[global_n][k]);
 
-	  SWAP(adot_0[global_n_p][k],adot_0[global_n][k]);
-	  SWAP(adot[global_n_p][k],adot[global_n][k]);
+	  Swap_double(&adot_0[global_n_p][k],&adot_0[global_n][k]);
+	  Swap_double(&adot[global_n_p][k],&adot[global_n][k]);
 
-	  SWAP(adot2_dt2[global_n_p][k],adot2_dt2[global_n][k]);
-	  SWAP(adot3_dt3[global_n_p][k],adot3_dt3[global_n][k]);
+	  Swap_double(&adot2_dt2[global_n_p][k],&adot2_dt2[global_n][k]);
+	  Swap_double(&adot3_dt3[global_n_p][k],&adot3_dt3[global_n][k]);
 	}
 #endif
 

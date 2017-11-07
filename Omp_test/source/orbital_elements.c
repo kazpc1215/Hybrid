@@ -3,7 +3,7 @@
 
 
 /*軌道要素計算*/
-void Calculate_OrbitalElements(int i,double x_c[][4],double v_c[][4],struct orbital_elements ele[],double P[][4],double Q[][4],double r_c[],double v2_c[],double r_dot_v[]){
+void Calculate_OrbitalElements(int i,const double x_c[][4],const double v_c[][4],struct orbital_elements ele[],double P[][4],double Q[][4],const double r_c[],const double v2_c[],const double r_dot_v[]){
 
 #if INDIRECT_TERM
 

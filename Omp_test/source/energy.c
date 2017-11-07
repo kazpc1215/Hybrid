@@ -3,13 +3,13 @@
 
 
 /*エネルギー計算*/
-double Calculate_Energy(struct orbital_elements ele[],double x_c[][4],
+double Calculate_Energy(struct orbital_elements ele[],const double x_c[][4],
 #if INDIRECT_TERM
-			double v_c[][4],double v_G[],
+			const double v_c[][4],const double v_G[],
 #else
-			double v2_c[],
+			const double v2_c[],
 #endif
-			double r_c[]){
+			const double r_c[]){
 
   int i,j;
   double abs_r[global_n+1];
@@ -58,7 +58,7 @@ double Calculate_Energy(struct orbital_elements ele[],double x_c[][4],
 
 
 /*角運動量*/
-double AngularMomentum(int i,struct orbital_elements ele[],double x_0[][4],double v_0[][4]){
+double AngularMomentum(int i,struct orbital_elements ele[],const double x_0[][4],const double v_0[][4]){
   int k;
   double L[global_n+1][4];
   double L_tot_0[4];

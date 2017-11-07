@@ -3,7 +3,7 @@
 
 
 /*初期 タイムステップ計算*/
-double Timestep_i_0(int i,double a_0[][4],double adot_0[][4]){
+double Timestep_i_0(int i,const double a_0[][4],const double adot_0[][4]){
   int k;
   double abs_a = 0.0;
   double abs_adot = 0.0;
@@ -22,7 +22,7 @@ double Timestep_i_0(int i,double a_0[][4],double adot_0[][4]){
 
 
 /*i_sys のみのタイムステップ計算*/
-double Timestep_i_sys(int i_sys,double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],double dt_[]){
+double Timestep_i_sys(int i_sys,const double a[][4],const double adot[][4],const double adot2_dt2[][4],const double adot3_dt3[][4],const double dt_[]){
 
   int k;
   double dt_inv = 1.0/dt_[i_sys];

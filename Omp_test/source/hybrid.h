@@ -20,9 +20,8 @@
 
 //#define DIRECTORY_FILE dt1E-2yr_eta1E-3  //連番のディレクトリを作りたいとき. "b****_dt1E-*yr_eta*E-*"
 
-#define _STR(str) #str
-#define STR(str) _STR(str)
-#define SWAP(_a, _b) do { typeof(_a) _tmp = (_a); (_a) = (_b); (_b) = _tmp; } while(FALSE)
+#define STR_(str) #str
+#define STR(str) STR_(str)
 
 
 #ifndef EXTERN
@@ -54,11 +53,7 @@ EXTERN int global_n_p;  //グローバル変数.
 
 //////////////////////////////////////////////////
 #define INTERACTION_ALL TRUE  //全粒子同士の重力相互作用.
-#if INTERACTION_ALL
-#define INTERACTION_ONLY_PLANET_TRACER FALSE
-#else
-#define INTERACTION_ONLY_PLANET_TRACER TRUE  //惑星とトレーサー間の重力相互作用のみ.
-#endif
+#define INTERACTION_ONLY_PLANET_TRACER (!INTERACTION_ALL)  //惑星とトレーサー間の重力相互作用のみ.
 #define FRAGMENTATION FALSE  //破壊 近傍粒子探索と質量フラックス計算.
 #define COLLISION FALSE  //衝突
 #define ELIMINATE_PARTICLE TRUE  //太陽に飲みこまれるか系外へ出て行くかで粒子を消す.

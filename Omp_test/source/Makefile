@@ -11,13 +11,13 @@ OBJS	= hybrid_main.o sub.o acc.o energy.o orbital_elements.o timestep.o neighbor
 
 
 ifeq ($(MODE),SINGLE)
-	CFLAGS	= $(LEVEL)
+	CFLAGS	= $(LEVEL) -Wall
 endif
 ifeq ($(MODE),DEBUG)
-	CFLAGS	= -g -O0
+	CFLAGS	= -g -O0 -Wall
 endif
 ifeq ($(MODE),OMP)
-	CFLAGS	= -fopenmp $(LEVEL)
+	CFLAGS	= -fopenmp $(LEVEL) -Wall
 endif
 
 CFLAGS += -MD

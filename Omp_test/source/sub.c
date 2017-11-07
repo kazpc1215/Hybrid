@@ -29,7 +29,7 @@ void Rotation_3D_zaxis(int i,double x_eject[][4],double theta){
 }
 
 
-void CenterOfGravity(double x_0[][4],double v_0[][4],double x_G[],double v_G[],struct orbital_elements ele[]){
+void CenterOfGravity(const double x_0[][4],const double v_0[][4],double x_G[],double v_G[],struct orbital_elements ele[]){
   int i,k;
   double M;
 
@@ -89,8 +89,8 @@ void Calculate_Exetime(uint64_t start_main,uint64_t end_main){
   for(i=0;i<7;++i){
     for(j=i+1;j<7;++j){
       if(exetime_array[i] < exetime_array[j]){
-	SWAP(exetime_num[i],exetime_num[j]);
-	SWAP(exetime_array[i],exetime_array[j]);
+	Swap_int(&exetime_num[i],&exetime_num[j]);
+	Swap_double(&exetime_array[i],&exetime_array[j]);
       }
     }
   }

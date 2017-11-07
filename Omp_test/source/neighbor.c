@@ -3,7 +3,7 @@
 
 
 #if FRAGMENTATION
-void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation frag[],double x_0[][4]){
+void NeighborSearch(int i,struct orbital_elements ele[],struct fragmentation frag[],const double x_0[][4]){
 
   int j,l,m;
   double radius[global_n+1];
