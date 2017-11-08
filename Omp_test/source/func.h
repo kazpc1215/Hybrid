@@ -104,34 +104,33 @@ void Calculate_Exetime(uint64_t start_main,uint64_t end_main);
 //inline関数
 
 /*x_i,v_iの内積*/
-inline double InnerProduct(int i,const double x_0[][4],const double v_0[][4]){
-  return x_0[i][1]*v_0[i][1] + x_0[i][2]*v_0[i][2] + x_0[i][3]*v_0[i][3];
+inline double InnerProduct(int i,const double x[][4],const double v[][4]){
+  return x[i][1]*v[i][1] + x[i][2]*v[i][2] + x[i][3]*v[i][3];
 }
 
-
 /*中心星からの距離*/
-inline double RadiusFromCenter(int i,const double x_0[][4]){
-  return sqrt(x_0[i][1]*x_0[i][1] + x_0[i][2]*x_0[i][2] + x_0[i][3]*x_0[i][3]);
+inline double RadiusFromCenter(int i,const double x[][4]){
+  return sqrt(x[i][1]*x[i][1] + x[i][2]*x[i][2] + x[i][3]*x[i][3]);
 }
 
 /*速度の2乗*/
-inline double SquareOfVelocity(int i,const double v_0[][4]){
-  return v_0[i][1]*v_0[i][1] + v_0[i][2]*v_0[i][2] + v_0[i][3]*v_0[i][3];
+inline double SquareOfVelocity(int i,const double v[][4]){
+  return v[i][1]*v[i][1] + v[i][2]*v[i][2] + v[i][3]*v[i][3];
 }
 
 /*相対距離*/
-inline double RelativeDistance(int i,int j,const double x_0[][4]){
-  return sqrt((x_0[j][1] - x_0[i][1])*(x_0[j][1] - x_0[i][1]) + (x_0[j][2] - x_0[i][2])*(x_0[j][2] - x_0[i][2]) + (x_0[j][3] - x_0[i][3])*(x_0[j][3] - x_0[i][3]));
+inline double RelativeDistance(int i,int j,const double x[][4]){
+  return sqrt((x[j][1] - x[i][1])*(x[j][1] - x[i][1]) + (x[j][2] - x[i][2])*(x[j][2] - x[i][2]) + (x[j][3] - x[i][3])*(x[j][3] - x[i][3]));
 }
 
 /*相対速度の2乗*/
-inline double SquareOfRelativeVelocity(int i,int j,const double v_0[][4]){
-  return (v_0[j][1] - v_0[i][1])*(v_0[j][1] - v_0[i][1]) + (v_0[j][2] - v_0[i][2])*(v_0[j][2] - v_0[i][2]) + (v_0[j][3] - v_0[i][3])*(v_0[j][3] - v_0[i][3]);
+inline double SquareOfRelativeVelocity(int i,int j,const double v[][4]){
+  return (v[j][1] - v[i][1])*(v[j][1] - v[i][1]) + (v[j][2] - v[i][2])*(v[j][2] - v[i][2]) + (v[j][3] - v[i][3])*(v[j][3] - v[i][3]);
 }
 
 /*x_ij, v_ijの内積*/
-inline double RelativeInnerProduct(int i,int j,const double x_0[][4],const double v_0[][4]){
-  return (x_0[j][1] - x_0[i][1])*(v_0[j][1] - v_0[i][1]) + (x_0[j][2] - x_0[i][2])*(v_0[j][2] - v_0[i][2]) + (x_0[j][3] - x_0[i][3])*(v_0[j][3] - v_0[i][3]);
+inline double RelativeInnerProduct(int i,int j,const double x[][4],const double v[][4]){
+  return (x[j][1] - x[i][1])*(v[j][1] - v[i][1]) + (x[j][2] - x[i][2])*(v[j][2] - v[i][2]) + (x[j][3] - x[i][3])*(v[j][3] - v[i][3]);
 }
 
 /*Swap*/

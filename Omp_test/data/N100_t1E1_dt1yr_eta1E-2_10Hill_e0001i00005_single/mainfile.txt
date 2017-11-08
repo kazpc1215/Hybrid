@@ -14,12 +14,12 @@ struct execution_time exetime = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
 
 //外部から参照されるinline関数の定義を生成(func.cに本当の定義).
-extern inline double InnerProduct(int i,const double x[][4],const double v[][4]);
-extern inline double RadiusFromCenter(int i,const double x[][4]);
-extern inline double SquareOfVelocity(int i,const double v[][4]);
-extern inline double RelativeDistance(int i,int j,const double x[][4]);
-extern inline double SquareOfRelativeVelocity(int i,int j,const double v[][4]);
-extern inline double RelativeInnerProduct(int i,int j,const double x[][4],const double v[][4]);
+extern inline double InnerProduct(int i,const double x_0[][4],const double v_0[][4]);
+extern inline double RadiusFromCenter(int i,const double x_0[][4]);
+extern inline double SquareOfVelocity(int i,const double v_0[][4]);
+extern inline double RelativeDistance(int i,int j,const double x_0[][4]);
+extern inline double SquareOfRelativeVelocity(int i,int j,const double v_0[][4]);
+extern inline double RelativeInnerProduct(int i,int j,const double x_0[][4],const double v_0[][4]);
 extern inline void Swap_double(double *a, double *b);
 extern inline void Swap_int(int *a, int *b);
 

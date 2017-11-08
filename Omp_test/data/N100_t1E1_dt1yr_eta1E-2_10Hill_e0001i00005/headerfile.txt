@@ -12,6 +12,7 @@
 
 #ifdef _OPENMP
 #include <omp.h>
+#define OMP_THREADS 2
 #endif
 
 #define DIRECTORY ../data/N100_t1E1_dt1yr_eta1E-2_10Hill_e0001i00005/  //ファイル保存用のディレクトリ.
@@ -56,7 +57,7 @@ EXTERN int global_n_p;  //グローバル変数.
 #define INTERACTION_ONLY_PLANET_TRACER (!INTERACTION_ALL)  //惑星とトレーサー間の重力相互作用のみ.
 #define FRAGMENTATION FALSE  //破壊 近傍粒子探索と質量フラックス計算.
 #define COLLISION FALSE  //衝突
-#define ELIMINATE_PARTICLE TRUE  //太陽に飲みこまれるか系外へ出て行くかで粒子を消す.
+#define ELIMINATE_PARTICLE FALSE  //太陽に飲みこまれるか系外へ出て行くかで粒子を消す.
 //////////////////////////////////////////////////
 
 
@@ -65,7 +66,7 @@ EXTERN int global_n_p;  //グローバル変数.
 //#define M_0 1.0  //主星の質量.
 //#define EPSILON 0.0  //ソフトニングパラメーター.
 #define ETA 1.0E-2  //刻み幅調整.
-#define ITE_MAX 3  //イテレーション回数.
+#define ITE_MAX 2  //イテレーション回数.
 //////////////////////////////////////////////////
 
 
