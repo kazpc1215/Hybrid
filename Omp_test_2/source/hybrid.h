@@ -12,7 +12,7 @@
 
 #ifdef _OPENMP
 #include <omp.h>
-#define OMP_THREADS 2
+#define OMP_THREADS 4
 #endif
 
 #define DIRECTORY ../data/N100_t1E1_dt1yr_eta1E-2_10Hill_e0001i00005/  //ファイル保存用のディレクトリ.
@@ -56,7 +56,7 @@ EXTERN int global_n_p;  //グローバル変数.
 #define INTERACTION_ALL TRUE  //全粒子同士の重力相互作用.
 #define INTERACTION_ONLY_PLANET_TRACER (!INTERACTION_ALL)  //惑星とトレーサー間の重力相互作用のみ.
 #define FRAGMENTATION FALSE  //破壊 近傍粒子探索と質量フラックス計算.
-#define COLLISION FALSE  //衝突
+#define COLLISION TRUE  //衝突
 #define ELIMINATE_PARTICLE FALSE  //太陽に飲みこまれるか系外へ出て行くかで粒子を消す.
 //////////////////////////////////////////////////
 

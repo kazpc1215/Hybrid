@@ -22,6 +22,8 @@ extern inline double SquareOfRelativeVelocity(int i,int j,const double v[][4]);
 extern inline double RelativeInnerProduct(int i,int j,const double x[][4],const double v[][4]);
 extern inline void Swap_double(double *a, double *b);
 extern inline void Swap_int(int *a, int *b);
+extern inline int Min_int(int a, int b);
+extern inline int Max_int(int a, int b);
 
 
 int main(void){
@@ -711,14 +713,15 @@ int main(void){
 #else
        t_sys + t_tmp < t_ene
 #endif
-       ){ 
+       ){
 
       //individual timestep
 
 #if EXECUTION_TIME
       start = mach_absolute_time();
 #endif
-      for(i=1;i<=global_n;++i){ 
+      //#pragma omp parallel for
+      for(i=1;i<=global_n;++i){
 	Dt[i] = t_sys - t_[i];
 	Predictor(i,x_0,v_0,a_0,adot_0,x_p,v_p,r_p,v2_p,r_dot_v,Dt);  //予測子 t_sysにおけるすべての粒子を計算.
       }
@@ -734,7 +737,7 @@ int main(void){
 
       if(
 #if COLLISION
-	 Collision_Judgement(ele,x_p,abs_r,&i_col,&j_col)
+	 (i_sys > N_p) && Collision_Judgement(i_sys,ele,x_p,abs_r,&i_col,&j_col)
 #else
 	 FALSE
 #endif
@@ -750,7 +753,7 @@ int main(void){
 #if EXECUTION_TIME
 	start = mach_absolute_time();
 #endif
-#pragma omp parallel for
+	//#pragma omp parallel for
 	for(i=1;i<=global_n;++i){
 	  Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,r_dot_v,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,Dt);  //修正子 すべての粒子.
 	}
@@ -903,7 +906,7 @@ int main(void){
 #endif
 
 
-#pragma omp parallel for private(j,k,abs_r,r_dot_v_ij)
+	//#pragma omp parallel for private(j,k,abs_r,r_dot_v_ij)
 	for(i=1;i<=global_n;++i){
 	  for(j=1;j<=global_n;++j){
 	    if(i!=j){
@@ -927,13 +930,11 @@ int main(void){
 #if EXECUTION_TIME
 	start = mach_absolute_time();
 #endif
-#pragma omp parallel for
+	//#pragma omp parallel for
 	for(i=1;i<=global_n;++i){
-	  if(i==i_sys){
-	    Corrector_sys(i_sys,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,r_dot_v,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,dt_);  //修正子. i_sys のみ.
-	  }else{
+	  if(i!=i_sys){
 	    //i_sys以外の粒子は予測子を使う.
-	    for(k=1;k<=3;++k){  
+	    for(k=1;k<=3;++k){
 	      x_c[i][k] = x_p[i][k];
 	      v_c[i][k] = v_p[i][k];
 	    }
@@ -942,6 +943,8 @@ int main(void){
 	    r_dot_v[i] = InnerProduct(i,x_p,v_p);  //r_i,v_iの内積.
 	  }
 	}
+
+	Corrector_sys(i_sys,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,r_dot_v,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,dt_);  //修正子. i_sys のみ.
 #if EXECUTION_TIME
 	end = mach_absolute_time();
 	exetime.Corrector += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
@@ -982,7 +985,7 @@ int main(void){
 #endif
 	dt_[i] = Dt[i];
       }
-      
+
 
 #if DT_LOG == 1
       t_tmp = t_ene[interval];
@@ -1008,7 +1011,7 @@ int main(void){
 #if EXECUTION_TIME
       start = mach_absolute_time();
 #endif
-#pragma omp parallel for
+      //#pragma omp parallel for
       for(i=1;i<=global_n;++i){
 	Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,r_dot_v,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,dt_);
       }
@@ -1022,7 +1025,7 @@ int main(void){
       start = mach_absolute_time();
 #endif
       for(ite=1;ite<=ITE_MAX;++ite){  //iteration.
-#pragma omp parallel for
+	//#pragma omp parallel for
 	for(i=1;i<=global_n;++i){
 	  Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,r_dot_v,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,dt_);
 	}
