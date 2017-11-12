@@ -3,20 +3,21 @@
 
 
 #if COLLISION
-bool Collision_Judgement(const struct orbital_elements *ele_p,const double x_p[][4],double abs_r[],int *i_col,int *j_col){
+bool Collision_Judgement(int i_sys,const struct orbital_elements *ele_p,const double x_p[][4],double abs_r[],int *i_col,int *j_col){
+
 
 #if EXECUTION_TIME
   uint64_t start = mach_absolute_time();
 #endif
 
-  int i,j;
+  int j;
 
-  for(i=1;i<=global_n_p-1;++i){
-    for(j=i+1;j<=global_n_p;++j){
-      abs_r[j] = RelativeDistance(i,j,x_p);  //絶対値.
-      if(abs_r[j] < ((ele_p+i)->radius) + ((ele_p+j)->radius)){
-	(*i_col) = i;
-	(*j_col) = j;
+  for(j=1;j<=global_n_p;++j){
+    if(i_sys!=j){
+      abs_r[j] = RelativeDistance(i_sys,j,x_p);  //絶対値.
+      if(abs_r[j] < ((ele_p+i_sys)->radius) + ((ele_p+j)->radius)){
+	(*i_col) = Min_int(i_sys,j);
+	(*j_col) = Max_int(i_sys,j);
 
 #if EXECUTION_TIME
 	uint64_t end = mach_absolute_time();
@@ -26,6 +27,7 @@ bool Collision_Judgement(const struct orbital_elements *ele_p,const double x_p[]
       }
     }
   }
+
 
 #if EXECUTION_TIME
   uint64_t end = mach_absolute_time();
