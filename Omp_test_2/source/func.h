@@ -49,7 +49,7 @@ void Corrector_sys(int i_sys,const struct orbital_elements *ele_p,const double x
 void Iteration_sys(int i_sys,const struct orbital_elements *ele_p,const double x_p[][4],const double v_p[][4],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double r_dot_v[],const double a_0[][4],const double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],const double dt_[]);
 
 #if COLLISION
-bool Collision_Judgement(int i_sys,const struct orbital_elements *ele_p,const double x_p[][4],double abs_r[],int *i_col, int *j_col);
+bool Collision_Judgement(const struct orbital_elements *ele_p,const double x_p[][4],double abs_r[],int *i_col, int *j_col);
 
 void Energy_Correction(int i_col,int j_col,const double x_0[][4],const double v_0[][4],const struct orbital_elements *ele_p,double *dE_heat,double *dE_grav,double *dE_c,double *v_imp);
 
@@ -147,24 +147,6 @@ inline void Swap_int(int *a, int *b){
   tmp = (*a);
   (*a) = (*b);
   (*b) = tmp;
-}
-
-
-inline int Min_int(int a, int b){
-  if(a < b){
-    return a;
-  }else{
-    return b;
-  }
-}
-
-
-inline int Max_int(int a, int b){
-  if(a > b){
-    return a;
-  }else{
-    return b;
-  }
 }
 
 #endif //include-guard
