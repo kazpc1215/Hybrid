@@ -578,7 +578,7 @@ int main(void){
     //printf("initial dt_[%d]=%e\n",i,dt_[i]);
   }
 
-
+  
   t_sys = t_[1] + dt_[1];
   i_sys = 1;
   for(i=2;i<=global_n;++i){
@@ -709,7 +709,7 @@ int main(void){
 
     if(
 #if DT_LOG == 1
-       t_sys + t_tmp < t_ene[interval] 
+       t_sys + t_tmp < t_ene[interval]
 #else
        t_sys + t_tmp < t_ene
 #endif
@@ -720,7 +720,7 @@ int main(void){
 #if EXECUTION_TIME
       start = mach_absolute_time();
 #endif
-      //#pragma omp parallel for
+#pragma omp parallel for
       for(i=1;i<=global_n;++i){
 	Dt[i] = t_sys - t_[i];
 	Predictor(i,x_0,v_0,a_0,adot_0,x_p,v_p,r_p,v2_p,r_dot_v,Dt);  //予測子 t_sysにおけるすべての粒子を計算.
@@ -737,7 +737,7 @@ int main(void){
 
       if(
 #if COLLISION
-	 (i_sys > N_p) && Collision_Judgement(i_sys,ele,x_p,abs_r,&i_col,&j_col)
+	 (i_sys <= global_n_p) && Collision_Judgement(i_sys,ele,x_p,abs_r,&i_col,&j_col)
 #else
 	 FALSE
 #endif
