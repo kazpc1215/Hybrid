@@ -3,7 +3,7 @@
 
 
 #if COLLISION
-bool Collision_Judgement(int i_sys,const struct orbital_elements *ele_p,const double x_p[][4],double abs_r[],int *i_col,int *j_col){
+bool Collision_Judgement(int i_sys,CONST struct orbital_elements *ele_p,CONST double x_p[][4],double abs_r[],int *i_col,int *j_col){
 
 
 #if EXECUTION_TIME
@@ -39,7 +39,7 @@ bool Collision_Judgement(int i_sys,const struct orbital_elements *ele_p,const do
 
 
 #if COLLISION
-void Energy_Correction(int i_col,int j_col,const double x_0[][4],const double v_0[][4],const struct orbital_elements *ele_p,double *dE_heat,double *dE_grav,double *dE_c,double *v_imp){
+void Energy_Correction(int i_col,int j_col,CONST double x_0[][4],CONST double v_0[][4],CONST struct orbital_elements *ele_p,double *dE_heat,double *dE_grav,double *dE_c,double *v_imp){
 
   double m_1 = ((ele_p+i_col)->mass);
   double m_2 = ((ele_p+j_col)->mass);

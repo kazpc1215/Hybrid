@@ -13,18 +13,6 @@ struct execution_time exetime = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 #endif
 
 
-//外部から参照されるinline関数の定義を生成(func.cに本当の定義).
-extern inline double InnerProduct(int i,const double x[][4],const double v[][4]);
-extern inline double RadiusFromCenter(int i,const double x[][4]);
-extern inline double SquareOfVelocity(int i,const double v[][4]);
-extern inline double RelativeDistance(int i,int j,const double x[][4]);
-extern inline double SquareOfRelativeVelocity(int i,int j,const double v[][4]);
-extern inline double RelativeInnerProduct(int i,int j,const double x[][4],const double v[][4]);
-extern inline void Swap_double(double *a, double *b);
-extern inline void Swap_int(int *a, int *b);
-extern inline int Min_int(int a, int b);
-extern inline int Max_int(int a, int b);
-
 
 int main(void){
 
@@ -578,7 +566,7 @@ int main(void){
     //printf("initial dt_[%d]=%e\n",i,dt_[i]);
   }
 
-
+  
   t_sys = t_[1] + dt_[1];
   i_sys = 1;
   for(i=2;i<=global_n;++i){
@@ -930,7 +918,7 @@ int main(void){
 #if EXECUTION_TIME
 	start = mach_absolute_time();
 #endif
-	//#pragma omp parallel for
+#pragma omp parallel for
 	for(i=1;i<=global_n;++i){
 	  if(i!=i_sys){
 	    //i_sys以外の粒子は予測子を使う.
@@ -1011,7 +999,7 @@ int main(void){
 #if EXECUTION_TIME
       start = mach_absolute_time();
 #endif
-      //#pragma omp parallel for
+#pragma omp parallel for
       for(i=1;i<=global_n;++i){
 	Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,r_dot_v,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,dt_);
       }
@@ -1025,7 +1013,7 @@ int main(void){
       start = mach_absolute_time();
 #endif
       for(ite=1;ite<=ITE_MAX;++ite){  //iteration.
-	//#pragma omp parallel for
+#pragma omp parallel for
 	for(i=1;i<=global_n;++i){
 	  Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,r_dot_v,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,dt_);
 	}
@@ -1391,18 +1379,18 @@ int main(void){
 
 #if ENERGY_FILE
   printf("-----\n");
-  printf("dt_[%d]=%e\nE_error=%.15e\nL_error=%.15e\ndE_correct=%.15e\n",i_sys,dt_[i_sys],(E_tot-E_tot_0)/fabs(E_tot_0),(abs_L-abs_L_0)/abs_L_0,dE_correct/fabs(E_tot_0));
+  printf("dt_[%d]\t= %e\nE_error\t= %.15e\nL_error\t= %.15e\ndE_correct\t= %.15e\n",i_sys,dt_[i_sys],(E_tot-E_tot_0)/fabs(E_tot_0),(abs_L-abs_L_0)/abs_L_0,dE_correct/fabs(E_tot_0));
 #endif
 
-  printf("step=%.15e\n",step);
+  printf("step\t= %.15e\n",step);
 
 
 #if DT_LOG == 1
   for(i=0;i<TIME_INTERVAL_MAX;i++){
-    printf("t_ene[%d]=%e[yr]\n",i,t_ene[i]/2.0/M_PI);
+    printf("t_ene[%d]\t= %e[yr]\n",i,t_ene[i]/2.0/M_PI);
   }
 #else
-  printf("dt_ene=%e[yr]\n",DT_ENE/2.0/M_PI);
+  printf("dt_ene\t= %e[yr]\n",DT_ENE/2.0/M_PI);
 #endif
 
 
@@ -1411,7 +1399,7 @@ int main(void){
   printf("-----\n");
   Calculate_Exetime(start_main,end_main);
 #endif
-
+  printf("-----\n");
   return 0;
 }
 

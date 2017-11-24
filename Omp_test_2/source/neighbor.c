@@ -3,7 +3,7 @@
 
 #if N_tr !=0
 #if FRAGMENTATION
-void NeighborSearch(int i,const struct orbital_elements *ele_p,struct fragmentation *frag_p,const double x_0[][4]){
+void NeighborSearch(int i,CONST struct orbital_elements *ele_p,struct fragmentation *frag_p,CONST double x_0[][4]){
 
   int j,l,m;
   double radius[global_n+1];
@@ -93,7 +93,7 @@ void NeighborSearch(int i,const struct orbital_elements *ele_p,struct fragmentat
 
 #if N_tr != 0
 #if FRAGMENTATION
-double RandomVelocity(int i,int j,const struct orbital_elements *ele_p){
+double RandomVelocity(int i,int j,CONST struct orbital_elements *ele_p){
   double eij2;
   double iij2;
 

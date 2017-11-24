@@ -3,7 +3,7 @@
 
 
 /*軌道要素計算*/
-void Calculate_OrbitalElements(int i,const double x_c[][4],const double v_c[][4],struct orbital_elements *ele_p,double P[][4],double Q[][4],const double r_c[],const double v2_c[],const double r_dot_v[]){
+void Calculate_OrbitalElements(int i,CONST double x_c[][4],CONST double v_c[][4],struct orbital_elements *ele_p,double P[][4],double Q[][4],CONST double r_c[],CONST double v2_c[],CONST double r_dot_v[]){
 
 #if INDIRECT_TERM
 
@@ -180,7 +180,7 @@ void Calculate_OrbitalElements(int i,const double x_c[][4],const double v_c[][4]
 
 
 /*P計算*/
-double Calculate_P(int i,int k,const struct orbital_elements *ele_p){
+double Calculate_P(int i,int k,CONST struct orbital_elements *ele_p){
   if(k==1){
     return cos(((ele_p+i)->omega))*cos(((ele_p+i)->Omega)) - sin(((ele_p+i)->omega))*sin(((ele_p+i)->Omega))*cos(((ele_p+i)->inc));
   }else if(k==2){
@@ -192,7 +192,7 @@ double Calculate_P(int i,int k,const struct orbital_elements *ele_p){
 
 
 /*Q計算*/
-double Calculate_Q(int i,int k,const struct orbital_elements *ele_p){
+double Calculate_Q(int i,int k,CONST struct orbital_elements *ele_p){
   if(k==1){
     return -sin(((ele_p+i)->omega))*cos(((ele_p+i)->Omega)) - cos(((ele_p+i)->omega))*sin(((ele_p+i)->Omega))*cos(((ele_p+i)->inc));
   }else if(k==2){
@@ -204,7 +204,7 @@ double Calculate_Q(int i,int k,const struct orbital_elements *ele_p){
 
 
 /*初期位置、速度計算*/
-void InitialCondition(int i,double P[][4],double Q[][4],double x_0[][4],double v_0[][4],double v2_0[],double r_dot_v[],double r_0[],const struct orbital_elements *ele_p){
+void InitialCondition(int i,double P[][4],double Q[][4],double x_0[][4],double v_0[][4],double v2_0[],double r_dot_v[],double r_0[],CONST struct orbital_elements *ele_p){
 
 #if INDIRECT_TERM
 

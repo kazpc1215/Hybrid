@@ -3,7 +3,7 @@
 
 
 /*予測子*/
-void Predictor(int i,const double x_0[][4],const double v_0[][4],const double a_0[][4],const double adot_0[][4],double x_p[][4],double v_p[][4],double r_p[],double v2_p[],double r_dot_v[],const double Dt[]){
+void Predictor(int i,CONST double x_0[][4],CONST double v_0[][4],CONST double a_0[][4],CONST double adot_0[][4],double x_p[][4],double v_p[][4],double r_p[],double v2_p[],double r_dot_v[],CONST double Dt[]){
 
   int k;
 
@@ -25,7 +25,7 @@ void Predictor(int i,const double x_0[][4],const double v_0[][4],const double a_
 
 
 /*i_sys のみの修正子*/
-void Corrector_sys(int i_sys,const struct orbital_elements *ele_p,const double x_p[][4],const double v_p[][4],const double r_p[],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double r_dot_v[],const double a_0[][4],const double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],const double dt_[]){
+void Corrector_sys(int i_sys,CONST struct orbital_elements *ele_p,CONST double x_p[][4],CONST double v_p[][4],CONST double r_p[],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double r_dot_v[],CONST double a_0[][4],CONST double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],CONST double dt_[]){
 
   int j,k;
   double abs_r[global_n+1],r_dot_v_ij[global_n+1];
@@ -83,7 +83,7 @@ void Corrector_sys(int i_sys,const struct orbital_elements *ele_p,const double x
 
 
 /*i_sys のみのiteration*/
-void Iteration_sys(int i_sys,const struct orbital_elements *ele_p,const double x_p[][4],const double v_p[][4],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double r_dot_v[],const double a_0[][4],const double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],const double dt_[]){
+void Iteration_sys(int i_sys,CONST struct orbital_elements *ele_p,CONST double x_p[][4],CONST double v_p[][4],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double r_dot_v[],CONST double a_0[][4],CONST double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],CONST double dt_[]){
 
   int j,k;
   double abs_r[global_n+1],r_dot_v_ij[global_n+1];
@@ -136,7 +136,7 @@ void Iteration_sys(int i_sys,const struct orbital_elements *ele_p,const double x
 
 
 /*全加速度*/
-double All_Acceleration(int i,int k,const struct orbital_elements *ele_p,const double x_0[][4],const double r_0[],const double abs_r[]){
+double All_Acceleration(int i,int k,CONST struct orbital_elements *ele_p,CONST double x_0[][4],CONST double r_0[],CONST double abs_r[]){
   int j;
   double a_0;
 
@@ -166,7 +166,7 @@ double All_Acceleration(int i,int k,const struct orbital_elements *ele_p,const d
 
 
 /*全加加速度*/
-double All_dAcceleration(int i,int k,const struct orbital_elements *ele_p,const double x_0[][4],const double v_0[][4],const double r_dot_v[],const double r_dot_v_ij[],const double r_0[],const double abs_r[]){ 
+double All_dAcceleration(int i,int k,CONST struct orbital_elements *ele_p,CONST double x_0[][4],CONST double v_0[][4],CONST double r_dot_v[],CONST double r_dot_v_ij[],CONST double r_0[],CONST double abs_r[]){ 
   int j;
   double adot_0;
 
@@ -196,7 +196,7 @@ double All_dAcceleration(int i,int k,const struct orbital_elements *ele_p,const 
 
 
 /*相互重力加速度*/
-double Acceleration_ij(int i,int j,int k,const struct orbital_elements *ele_p,const double x_0[][4],const double abs_r[]){
+double Acceleration_ij(int i,int j,int k,CONST struct orbital_elements *ele_p,CONST double x_0[][4],CONST double abs_r[]){
   double rij3;
 
 #ifndef EPSILON
@@ -215,7 +215,7 @@ double Acceleration_ij(int i,int j,int k,const struct orbital_elements *ele_p,co
 
 
 /*相互重力加加速度*/
-double dAcceleration_ij(int i,int j,int k,const struct orbital_elements *ele_p,const double x_0[][4],const double v_0[][4],const double r_dot_v_ij[],const double abs_r[]){
+double dAcceleration_ij(int i,int j,int k,CONST struct orbital_elements *ele_p,CONST double x_0[][4],CONST double v_0[][4],CONST double r_dot_v_ij[],CONST double abs_r[]){
   double rij3;
   double rij5;
 
@@ -238,7 +238,7 @@ double dAcceleration_ij(int i,int j,int k,const struct orbital_elements *ele_p,c
 
 
 /*加速度indirect項*/
-double Acceleration_indirect(int i,int k,const struct orbital_elements *ele_p,const double x_0[][4],const double r_0[]){
+double Acceleration_indirect(int i,int k,CONST struct orbital_elements *ele_p,CONST double x_0[][4],CONST double r_0[]){
   double r3;
   r3 = r_0[i]*r_0[i]*r_0[i];
   r3 = 1.0/r3;
@@ -252,7 +252,7 @@ double Acceleration_indirect(int i,int k,const struct orbital_elements *ele_p,co
 
 
 /*加加速度indirect項*/
-double dAcceleration_indirect(int i,int k,const struct orbital_elements *ele_p,const double x_0[][4],const double v_0[][4],const double r_0[],const double r_dot_v[]){
+double dAcceleration_indirect(int i,int k,CONST struct orbital_elements *ele_p,CONST double x_0[][4],CONST double v_0[][4],CONST double r_0[],CONST double r_dot_v[]){
   double r3;
   double r5;
   r3 = r_0[i]*r_0[i]*r_0[i];
@@ -269,7 +269,7 @@ double dAcceleration_indirect(int i,int k,const struct orbital_elements *ele_p,c
 
 
 /*外力加速度*/
-double External_Acceleration(int i,int k,const double x_0[][4],const double r_0[]){
+double External_Acceleration(int i,int k,CONST double x_0[][4],CONST double r_0[]){
   double r3;
   r3 = r_0[i]*r_0[i]*r_0[i];
   r3 = 1.0/r3;
@@ -283,7 +283,7 @@ double External_Acceleration(int i,int k,const double x_0[][4],const double r_0[
 
 
 /*外力加加速度*/
-double External_dAcceleration(int i,int k,const double x_0[][4],const double v_0[][4],const double r_0[],const double r_dot_v[]){
+double External_dAcceleration(int i,int k,CONST double x_0[][4],CONST double v_0[][4],CONST double r_0[],CONST double r_dot_v[]){
   double r3;
   double r5;
   r3 = r_0[i]*r_0[i]*r_0[i];

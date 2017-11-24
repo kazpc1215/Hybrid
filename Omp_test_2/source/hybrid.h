@@ -10,9 +10,17 @@
 #include <time.h>
 #include <stdbool.h>
 
+
 #ifdef _OPENMP
 #include <omp.h>
-#define OMP_THREADS 4
+#define OMP_THREADS 4  //OpenMP並列数
+#endif
+
+//constでエラーが出るため
+#if __GNUC__ == 7
+#define CONST const
+#elif __GNUC__ == 4
+#define CONST
 #endif
 
 #define DIRECTORY ../data/N100_t1E1_dt1yr_eta1E-2_10Hill_e0001i00005/  //ファイル保存用のディレクトリ.

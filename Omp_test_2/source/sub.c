@@ -29,7 +29,7 @@ void Rotation_3D_zaxis(int i,double x_eject[][4],double theta){
 }
 
 
-void CenterOfGravity(const double x_0[][4],const double v_0[][4],double x_G[],double v_G[],const struct orbital_elements *ele_p){
+void CenterOfGravity(CONST double x_0[][4],CONST double v_0[][4],double x_G[],double v_G[],CONST struct orbital_elements *ele_p){
   int i,k;
   double M;
 
