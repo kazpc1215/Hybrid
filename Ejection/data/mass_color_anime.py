@@ -46,7 +46,7 @@ neighbornumber = np.zeros((nblock, nline))  # time, space
 
 for nb in range(1001):
     # for nb in nblist:
-    print nb    
+    print nb
     n1 = ntotalline * nb
     n2 = ntotalline * (nb + 1) - 1
     print n1,n2
