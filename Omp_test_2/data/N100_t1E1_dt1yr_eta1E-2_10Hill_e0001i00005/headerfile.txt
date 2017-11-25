@@ -6,10 +6,12 @@
 #include <stdio.h>
 #include <math.h>
 #include <sys/stat.h>
-#include <mach/mach_time.h>
 #include <time.h>
 #include <stdbool.h>
 
+
+#define TRUE 1
+#define FALSE 0
 
 #ifdef _OPENMP
 #include <omp.h>
@@ -56,6 +58,9 @@ EXTERN int global_n_p;  //グローバル変数.
 #define POSI_VELO_ROT_FILE FALSE  //回転座標系の位置速度ファイル作成.
 #define COLLISION_FILE TRUE  //衝突時の位置速度ファイル作成.
 #define EXECUTION_TIME TRUE  //実行時間測定.
+#if EXECUTION_TIME
+#include <mach/mach_time.h>
+#endif
 #define INDIRECT_TERM TRUE  //中心星が動く.
 //////////////////////////////////////////////////
 

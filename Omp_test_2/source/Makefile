@@ -20,7 +20,7 @@ ifeq ($(MODE),OMP)
 	CFLAGS	= -fopenmp $(LEVEL)
 endif
 
-CFLAGS += -Wall -Wextra -MD
+CFLAGS += -lm -Wall -Wextra -MD
 
 
 

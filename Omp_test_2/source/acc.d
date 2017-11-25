@@ -40,38 +40,7 @@ acc.o: acc.c hybrid.h /usr/include/stdlib.h /usr/include/Availability.h \
  /usr/include/sys/_types/_ino_t.h /usr/include/sys/_types/_ino64_t.h \
  /usr/include/sys/_types/_nlink_t.h /usr/include/sys/_types/_gid_t.h \
  /usr/include/sys/_types/_time_t.h /usr/include/sys/_types/_s_ifmt.h \
- /usr/include/sys/_types/_filesec_t.h /usr/include/mach/mach_time.h \
- /usr/include/mach/mach_types.h /usr/include/mach/host_info.h \
- /usr/include/mach/message.h /usr/include/mach/port.h \
- /usr/include/mach/boolean.h /usr/include/mach/machine/boolean.h \
- /usr/include/mach/i386/boolean.h /usr/include/mach/machine/vm_types.h \
- /usr/include/mach/i386/vm_types.h /usr/include/mach/i386/vm_param.h \
- /usr/include/sys/_types/_mach_port_t.h /usr/include/mach/kern_return.h \
- /usr/include/mach/machine/kern_return.h \
- /usr/include/mach/i386/kern_return.h /usr/include/mach/vm_statistics.h \
- /usr/include/mach/machine.h /usr/include/mach/time_value.h \
- /usr/include/mach/host_notify.h /usr/include/mach/host_special_ports.h \
- /usr/include/mach/memory_object_types.h /usr/include/mach/vm_prot.h \
- /usr/include/mach/vm_sync.h /usr/include/mach/vm_types.h \
- /usr/include/mach/exception_types.h \
- /usr/include/mach/machine/exception.h /usr/include/mach/i386/exception.h \
- /usr/include/mach/thread_status.h \
- /usr/include/mach/machine/thread_status.h \
- /usr/include/mach/i386/thread_status.h /usr/include/mach/i386/fp_reg.h \
- /usr/include/mach/i386/thread_state.h /usr/include/i386/eflags.h \
- /usr/include/mach/machine/thread_state.h \
- /usr/include/mach/mach_voucher_types.h /usr/include/mach/std_types.h \
- /usr/include/mach/processor_info.h \
- /usr/include/mach/machine/processor_info.h \
- /usr/include/mach/i386/processor_info.h /usr/include/mach/task_info.h \
- /usr/include/mach/policy.h /usr/include/mach/task_policy.h \
- /usr/include/mach/task_special_ports.h /usr/include/mach/thread_info.h \
- /usr/include/mach/thread_policy.h \
- /usr/include/mach/thread_special_ports.h /usr/include/mach/clock_types.h \
- /usr/include/mach/vm_attributes.h /usr/include/mach/vm_inherit.h \
- /usr/include/mach/vm_purgable.h /usr/include/mach/vm_behavior.h \
- /usr/include/mach/vm_region.h /usr/include/mach/machine/vm_param.h \
- /usr/include/mach/kmod.h /usr/include/time.h \
+ /usr/include/sys/_types/_filesec_t.h /usr/include/time.h \
  /usr/include/sys/_types/_clock_t.h \
  /opt/local/lib/gcc7/gcc/x86_64-apple-darwin15/7.2.0/include/stdbool.h \
  /opt/local/lib/gcc7/gcc/x86_64-apple-darwin15/7.2.0/include/omp.h func.h
