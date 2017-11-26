@@ -25,7 +25,7 @@
 #define CONST
 #endif
 
-#define DIRECTORY ../data/Np20_Ntr1000_t1E1yr_dt1yr_eta1E-2_10RHM_e001i0005/  //ファイル保存用のディレクトリ.
+#define DIRECTORY ../data/Np20_Ntr1000_t1E2yr_dt1yr_eta1E-2_10RHM_e001i0005/  //ファイル保存用のディレクトリ.
 
 //#define DIRECTORY /Volumes/HDCL-UT/isoya/Collision_Coalescence_3/data/N10_t1E6_dt1yr_eta1E-2_10Hill/  //Ta Mac Pro用
 
@@ -137,7 +137,7 @@ Mean Longitude (deg)               100.46435
 
 
 //////////////////////////////////////////////////
-#define T_MAX (2.0*M_PI*1.0E1)  //10yr 全計算時間.
+#define T_MAX (2.0*M_PI*1.0E2)  //100yr 全計算時間.
 #define DT_LOG FALSE  //TRUE: t_eneをlogでとる. FALSE: t_eneをlinearでとる.
 
 #if DT_LOG
