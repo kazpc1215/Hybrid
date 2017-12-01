@@ -1,0 +1,28 @@
+#Np20 Ntr1000 t1E1yr dt1yr eta1E-2 10RHM e001 i0005
+
+#aprun で ./hybrid のジョブを投げた
+
+
+#OpenMP スレッド数 1
+XC30	    	utime ~2243s, stime ~4s, Rss ~5356, inblocks ~220, outblocks ~4971
+
+
+
+#OpenMP スレッド数 2
+XC30	    	utime ~2496s, stime ~47s, Rss ~5928, inblocks ~220, outblocks ~4971
+
+
+#OpenMP スレッド数 4
+XC30	    	utime ~3409s, stime ~110s, Rss ~5356, inblocks ~220, outblocks ~4971
+
+
+#OpenMP スレッド数 8
+XC30	    	utime ~3793s, stime ~267s, Rss ~5488, inblocks ~220, outblocks ~4971
+
+
+#OpenMP スレッド数 16
+XC30	    	utime ~6788s, stime ~718s, Rss ~5928, inblocks ~220, outblocks ~4971
+
+
+#OpenMP スレッド数 24 (限界のはず)
+XC30	    	utime ~9683s, stime ~1415s, Rss ~5356, inblocks ~220, outblocks ~4971
