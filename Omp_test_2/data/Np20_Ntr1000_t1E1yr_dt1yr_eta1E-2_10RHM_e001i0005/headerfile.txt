@@ -15,7 +15,7 @@
 
 #ifdef _OPENMP
 #include <omp.h>
-#define OMP_THREADS 4  //OpenMP並列数
+#define OMP_THREADS 2  //OpenMP並列数
 #endif
 
 //constでエラーが出るため

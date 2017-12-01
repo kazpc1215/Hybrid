@@ -1,7 +1,7 @@
 # Makefile
 
 # SINGLE, DEBUG, OMP
-MODE	= OMP
+MODE	= DEBUG
 
 #-O0,-O1,-O2,-O3
 LEVEL	= -O3
@@ -14,7 +14,7 @@ ifeq ($(MODE),SINGLE)
 	CFLAGS	= $(LEVEL)
 endif
 ifeq ($(MODE),DEBUG)
-	CFLAGS	= -g -O0
+	CFLAGS	= -fopenmp -g -O0
 endif
 ifeq ($(MODE),OMP)
 	CFLAGS	= -fopenmp $(LEVEL)

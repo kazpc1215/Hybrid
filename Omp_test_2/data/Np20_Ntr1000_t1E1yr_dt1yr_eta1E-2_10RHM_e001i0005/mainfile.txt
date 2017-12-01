@@ -959,7 +959,7 @@ int main(void){
 #if EXECUTION_TIME
 	start = mach_absolute_time();
 #endif
-#pragma omp parallel for
+#pragma omp parallel for private(k)
 	for(i=1;i<=global_n;++i){
 	  if(i!=i_sys){
 	    //i_sys以外の粒子は予測子を使う.
