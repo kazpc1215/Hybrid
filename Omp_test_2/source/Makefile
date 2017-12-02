@@ -14,7 +14,7 @@ ifeq ($(MODE),SINGLE)
 	CFLAGS	= $(LEVEL)
 endif
 ifeq ($(MODE),DEBUG)
-	CFLAGS	= -g3 -O0
+	CFLAGS	= -g -O0
 endif
 ifeq ($(MODE),OMP)
 	CFLAGS	= -fopenmp $(LEVEL)

@@ -39,7 +39,7 @@ int main(void){
   int i_col=0,j_col=0;
   double t_sys=0.0,t_tmp=0.0;
 
-#if DT_LOG == 1
+#if DT_LOG
   int interval;
   double t_ene[TIME_INTERVAL_MAX]={TIME_INTERVAL};
 #else
@@ -733,12 +733,12 @@ int main(void){
 
   ////////////////////////////////////////////////////////////////////////////////////
 
-#if DT_LOG == 1
+#if DT_LOG
   interval = 0;
 #endif
 
   while(
-#if DT_LOG == 1
+#if DT_LOG
 	TIME_INTERVAL_MAX > interval
 #else
 	t_sys + t_tmp <= T_MAX
@@ -746,7 +746,7 @@ int main(void){
 	){
 
     if(
-#if DT_LOG == 1
+#if DT_LOG
        t_sys + t_tmp < t_ene[interval]
 #else
        t_sys + t_tmp < t_ene
@@ -1022,7 +1022,7 @@ int main(void){
 
       for(i=1;i<=global_n;++i){
 
-#if DT_LOG == 1
+#if DT_LOG
 	Dt[i] = t_ene[interval] - t_[i] - t_tmp;
 	t_[i] = 0.0;
 #else
@@ -1033,7 +1033,7 @@ int main(void){
       }
 
 
-#if DT_LOG == 1
+#if DT_LOG
       t_tmp = t_ene[interval];
       t_sys = 0.0;
 #else
@@ -1167,7 +1167,7 @@ int main(void){
 #endif
 
 
-#if DT_LOG == 1
+#if DT_LOG
       interval++;
 #else
       t_ene += DT_ENE;
@@ -1441,7 +1441,7 @@ int main(void){
   printf("step\t= %.15e\n",step);
 
 
-#if DT_LOG == 1
+#if DT_LOG
   for(i=0;i<TIME_INTERVAL_MAX;i++){
     printf("t_ene[%d]\t= %e[yr]\n",i,t_ene[i]/2.0/M_PI);
   }

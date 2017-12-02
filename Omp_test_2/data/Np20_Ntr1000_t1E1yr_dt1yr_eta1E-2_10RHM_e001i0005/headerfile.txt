@@ -21,8 +21,6 @@
 #endif
 
 
-
-
 //constでエラーが出るため
 #if __GNUC__ == 7
 #define CONST const
@@ -39,6 +37,7 @@
 #define STR_(str) #str
 #define STR(str) STR_(str)
 
+#define INV_3 0.33333333333333333333
 
 #ifndef EXTERN
 #define EXTERN extern
