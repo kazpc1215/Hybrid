@@ -581,7 +581,7 @@ int main(void){
 #endif
 
 
-#pragma omp parallel for private(j,k,abs_r,r_dot_v_ij)
+  //#pragma omp parallel for private(j,k,abs_r,r_dot_v_ij)
   for(i=1;i<=global_n;++i){
     for(j=1;j<=global_n;++j){
       if(i!=j){
@@ -959,7 +959,7 @@ int main(void){
 #if EXECUTION_TIME
 	start = mach_absolute_time();
 #endif
-#pragma omp parallel for private(k)
+	//#pragma omp parallel for private(k)
 	for(i=1;i<=global_n;++i){
 	  if(i!=i_sys){
 	    //i_sys以外の粒子は予測子を使う.
@@ -1040,7 +1040,7 @@ int main(void){
 #if EXECUTION_TIME
       start = mach_absolute_time();
 #endif
-#pragma omp parallel for
+      //#pragma omp parallel for
       for(i=1;i<=global_n;++i){
 	Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,r_dot_v,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,dt_);
       }
@@ -1054,7 +1054,7 @@ int main(void){
       start = mach_absolute_time();
 #endif
       for(ite=1;ite<=ITE_MAX;++ite){  //iteration.
-#pragma omp parallel for
+	//#pragma omp parallel for
 	for(i=1;i<=global_n;++i){
 	  Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,r_dot_v,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,dt_);
 	}

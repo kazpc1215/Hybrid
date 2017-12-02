@@ -14,8 +14,8 @@ hybrid_main.o: hybrid_main.c hybrid.h /usr/include/stdlib.h \
  /usr/include/sys/_types/_ucontext.h /usr/include/sys/_types/_sigset_t.h \
  /usr/include/sys/_types/_size_t.h /usr/include/sys/_types/_uid_t.h \
  /usr/include/sys/resource.h \
- /opt/local/lib/gcc7/gcc/x86_64-apple-darwin15/7.2.0/include/stdint.h \
- /opt/local/lib/gcc7/gcc/x86_64-apple-darwin15/7.2.0/include-fixed/stdint.h \
+ /opt/local/lib/gcc49/gcc/x86_64-apple-darwin15/4.9.4/include/stdint.h \
+ /opt/local/lib/gcc49/gcc/x86_64-apple-darwin15/4.9.4/include-fixed/stdint.h \
  /usr/include/sys/_types/_int8_t.h /usr/include/sys/_types/_int16_t.h \
  /usr/include/sys/_types/_int32_t.h /usr/include/sys/_types/_int64_t.h \
  /usr/include/_types/_uint8_t.h /usr/include/_types/_uint16_t.h \
@@ -34,7 +34,7 @@ hybrid_main.o: hybrid_main.c hybrid.h /usr/include/stdlib.h \
  /usr/include/sys/stdio.h /usr/include/sys/_types/_off_t.h \
  /usr/include/sys/_types/_ssize_t.h /usr/include/secure/_stdio.h \
  /usr/include/secure/_common.h \
- /opt/local/lib/gcc7/gcc/x86_64-apple-darwin15/7.2.0/include-fixed/math.h \
+ /opt/local/lib/gcc49/gcc/x86_64-apple-darwin15/4.9.4/include-fixed/math.h \
  /usr/include/sys/stat.h /usr/include/sys/_types/_timespec.h \
  /usr/include/sys/_types/_blkcnt_t.h /usr/include/sys/_types/_blksize_t.h \
  /usr/include/sys/_types/_ino_t.h /usr/include/sys/_types/_ino64_t.h \
@@ -42,5 +42,6 @@ hybrid_main.o: hybrid_main.c hybrid.h /usr/include/stdlib.h \
  /usr/include/sys/_types/_time_t.h /usr/include/sys/_types/_s_ifmt.h \
  /usr/include/sys/_types/_filesec_t.h /usr/include/time.h \
  /usr/include/sys/_types/_clock_t.h \
- /opt/local/lib/gcc7/gcc/x86_64-apple-darwin15/7.2.0/include/stdbool.h \
- /opt/local/lib/gcc7/gcc/x86_64-apple-darwin15/7.2.0/include/omp.h func.h
+ /opt/local/lib/gcc49/gcc/x86_64-apple-darwin15/4.9.4/include/stdbool.h \
+ /opt/local/lib/gcc49/gcc/x86_64-apple-darwin15/4.9.4/include/omp.h \
+ func.h

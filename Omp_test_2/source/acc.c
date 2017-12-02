@@ -9,8 +9,11 @@ void Predictor(int i,CONST double x_0[][4],CONST double v_0[][4],CONST double a_
 
   //printf("Dt[%d]=%f",i,Dt[i]);
   for(k=1;k<=3;++k){
-    x_p[i][k] = x_0[i][k] + v_0[i][k]*Dt[i] + a_0[i][k]*Dt[i]*Dt[i]/2.0 + adot_0[i][k]*Dt[i]*Dt[i]*Dt[i]/6.0;
-    v_p[i][k] = v_0[i][k] + a_0[i][k]*Dt[i] + adot_0[i][k]*Dt[i]*Dt[i]/2.0;
+    //x_p[i][k] = x_0[i][k] + v_0[i][k]*Dt[i] + a_0[i][k]*Dt[i]*Dt[i]/2.0 + adot_0[i][k]*Dt[i]*Dt[i]*Dt[i]/6.0;
+    //v_p[i][k] = v_0[i][k] + a_0[i][k]*Dt[i] + adot_0[i][k]*Dt[i]*Dt[i]/2.0;
+
+    x_p[i][k] = x_0[i][k] + Dt[i]*(v_0[i][k] + Dt[i]*0.5*(a_0[i][k] + adot_0[i][k]*Dt[i]/3.0));
+    v_p[i][k] = v_0[i][k] + Dt[i]*(a_0[i][k] + adot_0[i][k]*Dt[i]*0.5);
   }
 
   //printf("predictor\tx_p[%d][1]=%f\tx_p[%d][2]=%f\tx_p[%d][3]=%f\n",i,x_p[i][1],i,x_p[i][2],i,x_p[i][3]);
@@ -56,11 +59,14 @@ void Corrector_sys(int i_sys,CONST struct orbital_elements *ele_p,CONST double x
 
   for(k=1;k<=3;++k){  //修正子.
 
-    adot2_dt2_tmp[k] = -6*(a_0[i_sys][k] - a_tmp[k]) - (4*adot_0[i_sys][k] + 2*adot_tmp[k])*dt_[i_sys]; //第2次導関数.
-    adot3_dt3_tmp[k] = 12*(a_0[i_sys][k] - a_tmp[k]) + 6*(adot_0[i_sys][k] + adot_tmp[k])*dt_[i_sys]; //第3次導関数.
+    adot2_dt2_tmp[k] = -6.0*(a_0[i_sys][k] - a_tmp[k]) - (4.0*adot_0[i_sys][k] + 2*adot_tmp[k])*dt_[i_sys]; //第2次導関数.
+    adot3_dt3_tmp[k] = 12.0*(a_0[i_sys][k] - a_tmp[k]) + 6.0*(adot_0[i_sys][k] + adot_tmp[k])*dt_[i_sys]; //第3次導関数.
 
-    x_c_tmp[k] = x_p[i_sys][k] + adot2_dt2_tmp[k]*dt_[i_sys]*dt_[i_sys]/24.0 + adot3_dt3_tmp[k]*dt_[i_sys]*dt_[i_sys]/120.0;
-    v_c_tmp[k] = v_p[i_sys][k] + adot2_dt2_tmp[k]*dt_[i_sys]/6.0 +adot3_dt3_tmp[k]*dt_[i_sys]/24.0;
+    //x_c_tmp[k] = x_p[i_sys][k] + adot2_dt2_tmp[k]*dt_[i_sys]*dt_[i_sys]/24.0 + adot3_dt3_tmp[k]*dt_[i_sys]*dt_[i_sys]/120.0;
+    //v_c_tmp[k] = v_p[i_sys][k] + adot2_dt2_tmp[k]*dt_[i_sys]/6.0 +adot3_dt3_tmp[k]*dt_[i_sys]/24.0;
+
+    x_c_tmp[k] = x_p[i_sys][k] + dt_[i_sys]*dt_[i_sys]/24.0*(adot2_dt2_tmp[k] + adot3_dt3_tmp[k]*0.2);
+    v_c_tmp[k] = v_p[i_sys][k] + dt_[i_sys]/6.0*(adot2_dt2_tmp[k] +adot3_dt3_tmp[k]*0.25);
   }  //k loop
 
 
@@ -112,8 +118,12 @@ void Iteration_sys(int i_sys,CONST struct orbital_elements *ele_p,CONST double x
   for(k=1;k<=3;++k){
     adot2_dt2_tmp[k] = -6*(a_0[i_sys][k] - a_tmp[k]) - (4*adot_0[i_sys][k] + 2*adot_tmp[k])*dt_[i_sys]; //第2次導関数.
     adot3_dt3_tmp[k] = 12*(a_0[i_sys][k] - a_tmp[k]) + 6*(adot_0[i_sys][k] + adot_tmp[k])*dt_[i_sys]; //第3次導関数.
-    x_c_tmp[k] = x_p[i_sys][k] + adot2_dt2_tmp[k]*dt_[i_sys]*dt_[i_sys]/24.0 + adot3_dt3_tmp[k]*dt_[i_sys]*dt_[i_sys]/120.0;
-    v_c_tmp[k] = v_p[i_sys][k] + adot2_dt2_tmp[k]*dt_[i_sys]/6.0 +adot3_dt3_tmp[k]*dt_[i_sys]/24.0;
+
+    //x_c_tmp[k] = x_p[i_sys][k] + adot2_dt2_tmp[k]*dt_[i_sys]*dt_[i_sys]/24.0 + adot3_dt3_tmp[k]*dt_[i_sys]*dt_[i_sys]/120.0;
+    //v_c_tmp[k] = v_p[i_sys][k] + adot2_dt2_tmp[k]*dt_[i_sys]/6.0 +adot3_dt3_tmp[k]*dt_[i_sys]/24.0;
+
+    x_c_tmp[k] = x_p[i_sys][k] + dt_[i_sys]*dt_[i_sys]/24.0*(adot2_dt2_tmp[k] + adot3_dt3_tmp[k]*0.2);
+    v_c_tmp[k] = v_p[i_sys][k] + dt_[i_sys]/6.0*(adot2_dt2_tmp[k] +adot3_dt3_tmp[k]*0.25);
   }  //k loop
 
 
@@ -142,6 +152,7 @@ double All_Acceleration(int i,int k,CONST struct orbital_elements *ele_p,CONST d
 
   a_0 = External_Acceleration(i,k,x_0,r_0);
 
+#pragma omp parallel for reduction(+:a_0)
   for(j=1;j<=
 #if INTERACTION_ALL
 	global_n
@@ -166,12 +177,13 @@ double All_Acceleration(int i,int k,CONST struct orbital_elements *ele_p,CONST d
 
 
 /*全加加速度*/
-double All_dAcceleration(int i,int k,CONST struct orbital_elements *ele_p,CONST double x_0[][4],CONST double v_0[][4],CONST double r_dot_v[],CONST double r_dot_v_ij[],CONST double r_0[],CONST double abs_r[]){ 
+double All_dAcceleration(int i,int k,CONST struct orbital_elements *ele_p,CONST double x_0[][4],CONST double v_0[][4],CONST double r_dot_v[],CONST double r_dot_v_ij[],CONST double r_0[],CONST double abs_r[]){
   int j;
   double adot_0;
 
   adot_0 = External_dAcceleration(i,k,x_0,v_0,r_0,r_dot_v);
 
+#pragma omp parallel for reduction(+:adot_0)
   for(j=1;j<=
 #if INTERACTION_ALL
 	global_n
@@ -221,7 +233,7 @@ double dAcceleration_ij(int i,int j,int k,CONST struct orbital_elements *ele_p,C
 
 #ifndef EPSILON
   rij3 = abs_r[j]*abs_r[j]*abs_r[j];
-  rij5 = abs_r[j]*abs_r[j]*abs_r[j]*abs_r[j]*abs_r[j];
+  rij5 = rij3*abs_r[j]*abs_r[j];
 #else
   rij3 = (abs_r[j]*abs_r[j] + EPSILON*EPSILON)*sqrt(abs_r[j]*abs_r[j] + EPSILON*EPSILON);
   rij5 = (abs_r[j]*abs_r[j] + EPSILON*EPSILON)*(abs_r[j]*abs_r[j] + EPSILON*EPSILON)*sqrt(abs_r[j]*abs_r[j] + EPSILON*EPSILON);
@@ -256,8 +268,8 @@ double dAcceleration_indirect(int i,int k,CONST struct orbital_elements *ele_p,C
   double r3;
   double r5;
   r3 = r_0[i]*r_0[i]*r_0[i];
+  r5 = r3*r_0[i]*r_0[i];
   r3 = 1.0/r3;
-  r5 = r_0[i]*r_0[i]*r_0[i]*r_0[i]*r_0[i];
   r5 = 1.0/r5;
 
 #ifndef G
@@ -287,8 +299,8 @@ double External_dAcceleration(int i,int k,CONST double x_0[][4],CONST double v_0
   double r3;
   double r5;
   r3 = r_0[i]*r_0[i]*r_0[i];
+  r5 = r3*r_0[i]*r_0[i];
   r3 = 1.0/r3;
-  r5 = r_0[i]*r_0[i]*r_0[i]*r_0[i]*r_0[i];
   r5 = 1.0/r5;
 
 #if !defined(G) && !defined(M_0)
