@@ -101,7 +101,7 @@ double RandomVelocity(int i,int j,CONST struct orbital_elements *ele_p){
 
   iij2 = fabs(((ele_p+i)->inc)*((ele_p+i)->inc) + ((ele_p+j)->inc)*((ele_p+j)->inc) - 2.0*((ele_p+i)->inc)*((ele_p+j)->inc)*cos(((ele_p+i)->Omega) - ((ele_p+j)->Omega)));
 
-  
+
   if(isnan((ele_p+i)->ecc)){
     printf("i=%d\tecc is nan. (in RandomVelocity)\n",i);
   }

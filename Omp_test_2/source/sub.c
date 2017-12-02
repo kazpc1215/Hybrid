@@ -41,10 +41,8 @@ void CenterOfGravity(CONST double x_0[][4],CONST double v_0[][4],double x_G[],do
   for(i=1;i<=
 #if INTERACTION_ALL
 	global_n
-#elif INTERACTION_ONLY_PLANET_TRACER
-	global_n_p
 #else
-	0
+	global_n_p
 #endif
 	;++i){
     M += ((ele_p+i)->mass);
@@ -55,11 +53,9 @@ void CenterOfGravity(CONST double x_0[][4],CONST double v_0[][4],double x_G[],do
     v_G[k] = 0.0;
     for(i=1;i<=
 #if INTERACTION_ALL
-	  global_n
-#elif INTERACTION_ONLY_PLANET_TRACER
-	  global_n_p
+	global_n
 #else
-	  0
+	global_n_p
 #endif
 	  ;++i){
       x_G[k] += ((ele_p+i)->mass)*x_0[i][k];

@@ -28,7 +28,7 @@ int main(void){
 
 
 #ifdef _OPENMP
-  omp_set_num_threads(OMP_THREADS);
+  omp_set_num_threads(OMP_NUM_THREADS);
   printf("max threads (set): %d\n", omp_get_max_threads());
 #endif
 
@@ -583,10 +583,19 @@ int main(void){
 
   //#pragma omp parallel for private(j,k,abs_r,r_dot_v_ij)
   for(i=1;i<=global_n;++i){
-    for(j=1;j<=global_n;++j){
+    for(j=1;j<=
+#if INTERACTION_ALL
+	  global_n
+#else
+	  global_n_p
+#endif
+	  ;++j){
       if(i!=j){
-        abs_r[j] = RelativeDistance(i,j,x_0);  //絶対値.
-        r_dot_v_ij[j] = RelativeInnerProduct(i,j,x_0,v_0);  //r_ij,v_ijの内積.
+	abs_r[j] = RelativeDistance(i,j,x_0);  //絶対値.
+	r_dot_v_ij[j] = RelativeInnerProduct(i,j,x_0,v_0);  //r_ij,v_ijの内積.
+      }else{
+	abs_r[i] = 0.0;
+	r_dot_v_ij[i] = 0.0;
       }
     }  //j loop
 
@@ -768,7 +777,7 @@ int main(void){
 #if COLLISION
 	 (i_sys <= global_n_p) && Collision_Judgement(i_sys,ele,x_p,abs_r,&i_col,&j_col)
 #else
-	 FALSE
+	 false
 #endif
 	 ){  //予測子を用いた衝突判定.
 
@@ -782,7 +791,6 @@ int main(void){
 #if EXECUTION_TIME
 	start = mach_absolute_time();
 #endif
-	//#pragma omp parallel for
 	for(i=1;i<=global_n;++i){
 	  Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,r_dot_v,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,Dt);  //修正子 すべての粒子.
 	}
@@ -937,10 +945,19 @@ int main(void){
 
 	//#pragma omp parallel for private(j,k,abs_r,r_dot_v_ij)
 	for(i=1;i<=global_n;++i){
-	  for(j=1;j<=global_n;++j){
+	  for(j=1;j<=
+#if INTERACTION_ALL
+		global_n
+#else
+		global_n_p
+#endif
+		;++j){
 	    if(i!=j){
 	      abs_r[j] = RelativeDistance(i,j,x_0);  //絶対値.
 	      r_dot_v_ij[j] = RelativeInnerProduct(i,j,x_0,v_0);  //r_ij,v_ijの内積.
+	    }else{
+	      abs_r[i] = 0.0;
+	      r_dot_v_ij[i] = 0.0;
 	    }
 	  }  //j loop
 
@@ -1040,7 +1057,6 @@ int main(void){
 #if EXECUTION_TIME
       start = mach_absolute_time();
 #endif
-      //#pragma omp parallel for
       for(i=1;i<=global_n;++i){
 	Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,r_dot_v,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,dt_);
       }
@@ -1054,7 +1070,6 @@ int main(void){
       start = mach_absolute_time();
 #endif
       for(ite=1;ite<=ITE_MAX;++ite){  //iteration.
-	//#pragma omp parallel for
 	for(i=1;i<=global_n;++i){
 	  Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,r_dot_v,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,dt_);
 	}
@@ -1230,7 +1245,7 @@ int main(void){
     }
 
 
-    //printf("t=%e\tmass_tot=%.15f\tM_TOT=%.15e\n",t_sys,mass_tot,M_TOT);		
+    //printf("t=%e\tmass_tot=%.15f\tM_TOT=%.15e\n",t_sys,mass_tot,M_TOT);
     //printf("t_sys=%e[yr]\tmass[1]=%e\n",t_sys/2.0/M_PI,ele[1].mass);
 
 
@@ -1305,7 +1320,7 @@ int main(void){
 
 
 #if ELIMINATE_PARTICLE
-    for(i=1;i<=global_n_p;++i){
+    for(i=1;i<=global_n;++i){
       //r_c[i]は計算してある
       if(r_c[i]<SOLAR_RADIUS || r_c[i]>SOLAR_SYSTEM_LIMIT){  //太陽に飲みこまれるか系外へ出て行くか.
 

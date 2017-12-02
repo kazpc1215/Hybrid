@@ -23,7 +23,7 @@ bool Collision_Judgement(int i_sys,CONST struct orbital_elements *ele_p,CONST do
 	uint64_t end = mach_absolute_time();
 	exetime.Collision_Judgement += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
 #endif
-	return (TRUE);  //衝突した場合.
+	return (true);  //衝突した場合.
       }
     }
   }
@@ -33,7 +33,7 @@ bool Collision_Judgement(int i_sys,CONST struct orbital_elements *ele_p,CONST do
   uint64_t end = mach_absolute_time();
   exetime.Collision_Judgement += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
 #endif
-  return (FALSE);  //衝突しない場合.
+  return (false);  //衝突しない場合.
 }
 #endif
 

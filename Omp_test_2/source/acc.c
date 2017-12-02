@@ -31,12 +31,31 @@ void Predictor(int i,CONST double x_0[][4],CONST double v_0[][4],CONST double a_
 void Corrector_sys(int i_sys,CONST struct orbital_elements *ele_p,CONST double x_p[][4],CONST double v_p[][4],CONST double r_p[],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double r_dot_v[],CONST double a_0[][4],CONST double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],CONST double dt_[]){
 
   int j,k;
-  double abs_r[global_n+1],r_dot_v_ij[global_n+1];
+  double abs_r[
+#if INTERACTION_ALL
+	       global_n
+#else
+	       global_n_p
+#endif
+	       +1];
+  double r_dot_v_ij[
+#if INTERACTION_ALL
+		    global_n
+#else
+		    global_n_p
+#endif
+		    +1];
   double a_tmp[4]={},adot_tmp[4]={},adot2_dt2_tmp[4]={},adot3_dt3_tmp[4]={};
   double x_c_tmp[4]={},v_c_tmp[4]={};
 
 
-  for(j=1;j<=global_n;++j){
+  for(j=1;j<=
+#if INTERACTION_ALL
+	global_n
+#else
+	global_n_p
+#endif
+	;++j){
     if(i_sys!=j){
       abs_r[j] = RelativeDistance(i_sys,j,x_p);  //絶対値.
       r_dot_v_ij[j] = RelativeInnerProduct(i_sys,j,x_p,v_p);  //r_ij,v_ijの内積.
@@ -92,12 +111,31 @@ void Corrector_sys(int i_sys,CONST struct orbital_elements *ele_p,CONST double x
 void Iteration_sys(int i_sys,CONST struct orbital_elements *ele_p,CONST double x_p[][4],CONST double v_p[][4],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double r_dot_v[],CONST double a_0[][4],CONST double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],CONST double dt_[]){
 
   int j,k;
-  double abs_r[global_n+1],r_dot_v_ij[global_n+1];
+  double abs_r[
+#if INTERACTION_ALL
+	       global_n
+#else
+	       global_n_p
+#endif
+	       +1];
+  double r_dot_v_ij[
+#if INTERACTION_ALL
+		    global_n
+#else
+		    global_n_p
+#endif
+		    +1];
   double a_tmp[4]={},adot_tmp[4]={},adot2_dt2_tmp[4]={},adot3_dt3_tmp[4]={};
   double x_c_tmp[4]={},v_c_tmp[4]={};
 
 
-  for(j=1;j<=global_n;++j){
+  for(j=1;j<=
+#if INTERACTION_ALL
+	global_n
+#else
+	global_n_p
+#endif
+	;++j){
     if(i_sys!=j){
       abs_r[j] = RelativeDistance(i_sys,j,x_c);  //絶対値.
       r_dot_v_ij[j] = RelativeInnerProduct(i_sys,j,x_c,v_c);  //r_ij,v_ijの内積.
@@ -156,10 +194,8 @@ double All_Acceleration(int i,int k,CONST struct orbital_elements *ele_p,CONST d
   for(j=1;j<=
 #if INTERACTION_ALL
 	global_n
-#elif INTERACTION_ONLY_PLANET_TRACER
-	global_n_p
 #else
-	0
+	global_n_p
 #endif
 	;++j){
 
@@ -187,10 +223,8 @@ double All_dAcceleration(int i,int k,CONST struct orbital_elements *ele_p,CONST 
   for(j=1;j<=
 #if INTERACTION_ALL
 	global_n
-#elif INTERACTION_ONLY_PLANET_TRACER
-	global_n_p
 #else
-	0
+	global_n_p
 #endif
 	;++j){
 

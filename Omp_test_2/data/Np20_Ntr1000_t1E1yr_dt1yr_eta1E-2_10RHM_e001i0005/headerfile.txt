@@ -10,13 +10,18 @@
 #include <stdbool.h>
 
 
-#define TRUE 1
-#define FALSE 0
+//#define true 1
+//#define false 0
 
 #ifdef _OPENMP
 #include <omp.h>
-#define OMP_THREADS 2  //OpenMP並列数
+#define OMP_NUM_THREADS 2  //OpenMP並列数
+#define OMP_SCHEDULE static
+#define GOMP_CPU_AFFINITY 0 2
 #endif
+
+
+
 
 //constでエラーが出るため
 #if __GNUC__ == 7
@@ -52,12 +57,12 @@ EXTERN int global_n_p;  //グローバル変数.
 
 
 //////////////////////////////////////////////////
-#define ENERGY_FILE TRUE  //エネルギー計算&ファイル作成.
-#define ORBITALELEMENTS_FILE TRUE  //軌道要素計算&ファイル作成.
-#define POSI_VELO_FILE FALSE  //位置速度ファイル作成.
-#define POSI_VELO_ROT_FILE FALSE  //回転座標系の位置速度ファイル作成.
-#define COLLISION_FILE TRUE  //衝突時の位置速度ファイル作成.
-#define EXECUTION_TIME FALSE  //実行時間測定.
+#define ENERGY_FILE true  //エネルギー計算&ファイル作成.
+#define ORBITALELEMENTS_FILE true  //軌道要素計算&ファイル作成.
+#define POSI_VELO_FILE false  //位置速度ファイル作成.
+#define POSI_VELO_ROT_FILE false  //回転座標系の位置速度ファイル作成.
+#define COLLISION_FILE true  //衝突時の位置速度ファイル作成.
+#define EXECUTION_TIME false  //実行時間測定.
 #if EXECUTION_TIME
 #include <mach/mach_time.h>
 #endif
@@ -65,14 +70,14 @@ EXTERN int global_n_p;  //グローバル変数.
 
 
 //////////////////////////////////////////////////
-#define INTERACTION_ALL TRUE  //全粒子同士の重力相互作用.
-#define INTERACTION_ONLY_PLANET_TRACER (!INTERACTION_ALL)  //惑星とトレーサー間の重力相互作用のみ.
-#define INDIRECT_TERM TRUE  //中心星が動く.
-#define FRAGMENTATION FALSE  //破壊 近傍粒子探索と質量フラックス計算.
-#define COLLISION TRUE  //衝突
-#define EJECTION FALSE  //衝突後に破片をコーン状に放出する.
-#define ORBITING_SMALL_PARTICLE TRUE  //微惑星を初期にケプラー運動させておく.
-#define ELIMINATE_PARTICLE FALSE  //太陽に飲みこまれるか系外へ出て行くかで粒子を消す.
+#define INTERACTION_ALL false  //全粒子同士の重力相互作用.
+//#define INTERACTION_ONLY_PLANET_TRACER true  //惑星とトレーサー間の重力相互作用のみ.
+#define INDIRECT_TERM true  //中心星が動く.
+#define FRAGMENTATION false  //破壊 近傍粒子探索と質量フラックス計算.
+#define COLLISION true  //衝突
+#define EJECTION false  //衝突後に破片をコーン状に放出する.
+#define ORBITING_SMALL_PARTICLE true  //微惑星を初期にケプラー運動させておく.
+#define ELIMINATE_PARTICLE false  //太陽に飲みこまれるか系外へ出て行くかで粒子を消す.
 //////////////////////////////////////////////////
 
 
@@ -138,7 +143,7 @@ Mean Longitude (deg)               100.46435
 
 //////////////////////////////////////////////////
 #define T_MAX (2.0*M_PI*1.0E1)  //10yr 全計算時間.
-#define DT_LOG FALSE  //TRUE: t_eneをlogでとる. FALSE: t_eneをlinearでとる.
+#define DT_LOG false  //true: t_eneをlogでとる. false: t_eneをlinearでとる.
 
 #if DT_LOG
 /*  log 用 */
@@ -155,7 +160,7 @@ Mean Longitude (deg)               100.46435
 #if FRAGMENTATION
 //////////////////////////////////////////////////
 #define NEIGHBOR_MAX N_tr  //近傍粒子リスト配列の最大値.
-#define DEPLETION_TIME_EXPLICIT FALSE  //TRUE: 質量減少タイムスケールの計算でexplicit *(1-XI)を使う. FALSE: implicit /(1+XI)を使う.
+#define DEPLETION_TIME_EXPLICIT false  //true: 質量減少タイムスケールの計算でexplicit *(1-XI)を使う. false: implicit /(1+XI)を使う.
 
 #define RHO 3.0  // [g/cc]  微惑星の物質密度.
 #define EPSILON_FRAG 0.2
