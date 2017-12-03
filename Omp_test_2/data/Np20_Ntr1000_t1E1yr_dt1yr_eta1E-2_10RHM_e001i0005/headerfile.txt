@@ -69,7 +69,7 @@ EXTERN int global_n_p;  //グローバル変数.
 
 
 //////////////////////////////////////////////////
-#define INTERACTION_ALL false  //全粒子同士の重力相互作用.
+#define INTERACTION_ALL true  //全粒子同士の重力相互作用.
 //#define INTERACTION_ONLY_PLANET_TRACER true  //惑星とトレーサー間の重力相互作用のみ.
 #define INDIRECT_TERM true  //中心星が動く.
 #define FRAGMENTATION false  //破壊 近傍粒子探索と質量フラックス計算.

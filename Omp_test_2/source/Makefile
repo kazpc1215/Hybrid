@@ -33,5 +33,6 @@ hybrid: $(OBJS)
 
 clean:
 	rm -f $(OBJS) *~ *.dat *.d
+	rm -r *.dSYM/ *.dtps
 
 -include *.d

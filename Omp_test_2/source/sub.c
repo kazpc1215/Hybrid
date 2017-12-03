@@ -61,8 +61,8 @@ void CenterOfGravity(CONST double x_0[][4],CONST double v_0[][4],double x_G[],do
       x_G[k] += ((ele_p+i)->mass)*x_0[i][k];
       v_G[k] += ((ele_p+i)->mass)*v_0[i][k];
     }
-    x_G[k] /= M;
-    v_G[k] /= M;
+    x_G[k] = x_G[k]/M;
+    v_G[k] = v_G[k]/M;
   }
 
   return;
