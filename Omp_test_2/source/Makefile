@@ -47,7 +47,7 @@ ifeq ($(CC),gcc)
 else
 hybrid_main.o: hybrid_main.c hybrid.h func.h
 acc.o: acc.c hybrid.h func.h
-collision.o: collision.c hybrid.h
+collision.o: collision.c hybrid.h func.h
 energy.o: energy.c hybrid.h func.h
 massflux.o: massflux.c hybrid.h func.h
 neighbor.o: neighbor.c hybrid.h func.h
