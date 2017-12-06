@@ -10,9 +10,6 @@
 #include <stdbool.h>
 
 
-//#define true 1
-//#define false 0
-
 #ifdef _OPENMP
 #include <omp.h>
 #define OMP_NUM_THREADS 2  //OpenMP並列数
@@ -21,6 +18,7 @@
 #endif
 
 
+//#define CONST const
 //constでエラーが出るため
 #if __GNUC__ == 7
 #define CONST const
@@ -28,7 +26,8 @@
 #define CONST
 #endif
 
-#define DIRECTORY ../data/Np20_Ntr1000_t1E1yr_dt1yr_eta1E-2_10RHM_e001i0005/  //ファイル保存用のディレクトリ.
+
+#define DIRECTORY ../data/Np20_Ntr1000_t2E0yr_dt1yr_eta1E-2_10RHM_e001i0005/  //ファイル保存用のディレクトリ.
 
 //#define DIRECTORY /Volumes/HDCL-UT/isoya/Collision_Coalescence_3/data/N10_t1E6_dt1yr_eta1E-2_10Hill/  //Ta Mac Pro用
 
@@ -141,7 +140,7 @@ Mean Longitude (deg)               100.46435
 
 
 //////////////////////////////////////////////////
-#define T_MAX (2.0*M_PI*1.0E1)  //10yr 全計算時間.
+#define T_MAX (2.0*M_PI*2.0E0)  //2yr 全計算時間.
 #define DT_LOG false  //true: t_eneをlogでとる. false: t_eneをlinearでとる.
 
 #if DT_LOG
