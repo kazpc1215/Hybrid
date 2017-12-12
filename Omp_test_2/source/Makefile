@@ -1,18 +1,18 @@
 # Makefile
 
 # SINGLE, DEBUG, OMP
-MODE	= OMP
+MODE	= SINGLE
 
 # -O0,-O1,-O2,-O3
 LEVEL	= -O3
 
-CC	= cc
+CC	= gcc
 OBJS	= hybrid_main.o sub.o acc.o energy.o orbital_elements.o timestep.o neighbor.o massflux.o collision.o
 
 ifeq ($(MODE),OMP)
 # OpenMP option
-#OMPOP	= -fopenmp
-OMPOP	= -h omp
+OMPOP	= -fopenmp
+#OMPOP	= -h omp
 endif
 
 

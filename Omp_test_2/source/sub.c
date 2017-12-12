@@ -70,22 +70,22 @@ void CenterOfGravity(CONST double x_0[][4],CONST double v_0[][4],double x_G[],do
 
 
 #if EXECUTION_TIME
-void Calculate_Exetime(uint64_t start_main,uint64_t end_main){
+void Sort_Exetime(struct timeval realtime_start_main,struct timeval realtime_end_main){
 
   int i,j;
-  double exetime_main = (double)(end_main-start_main) * sTimebaseInfo.numer / sTimebaseInfo.denom * 1.0E-9;
+  double exetime_main = Cal_time(realtime_start_main,realtime_end_main);
   double exetime_others = 0.0;
 
   int exetime_num[7]={0,1,2,3,4,5,6};
 
   double exetime_array[7]={
-    exetime.Energy*1.0E-9,
-    exetime.Orbital_Elements*1.0E-9,
-    exetime.Predictor*1.0E-9,
-    exetime.Corrector*1.0E-9,
-    exetime.Iteration*1.0E-9,
-    exetime.Collision_Judgement*1.0E-9,
-    exetime.Fragmentation*1.0E-9
+    exetime.Energy[0],
+    exetime.Orbital_Elements[0],
+    exetime.Predictor[0],
+    exetime.Corrector[0],
+    exetime.Iteration[0],
+    exetime.Collision_Judgement[0],
+    exetime.Fragmentation[0]
   };
 
   char exetime_name[7][30]={

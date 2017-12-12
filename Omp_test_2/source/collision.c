@@ -7,8 +7,12 @@ bool Collision_Judgement(int i_sys,CONST struct orbital_elements *ele_p,CONST do
 
 
 #if EXECUTION_TIME
-  uint64_t start = mach_absolute_time();
+  struct timeval realtime_start,realtime_end;
+  struct rusage usage_start,usage_end;
+  gettimeofday(&realtime_start,NULL);
+  getrusage(RUSAGE_SELF,&usage_start);
 #endif
+
 
   int j;
 
@@ -20,9 +24,13 @@ bool Collision_Judgement(int i_sys,CONST struct orbital_elements *ele_p,CONST do
 	(*j_col) = Max_int(i_sys,j);
 
 #if EXECUTION_TIME
-	uint64_t end = mach_absolute_time();
-	exetime.Collision_Judgement += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
+	gettimeofday(&realtime_end,NULL);
+	getrusage(RUSAGE_SELF,&usage_end);
+	exetime.Collision_Judgement[0] += Cal_time(realtime_start,realtime_end);
+	exetime.Collision_Judgement[1] += Cal_time(usage_start.ru_utime,usage_end.ru_utime);
+	exetime.Collision_Judgement[2] += Cal_time(usage_start.ru_stime,usage_end.ru_stime);
 #endif
+
 	return (true);  //衝突した場合.
       }
     }
@@ -30,9 +38,13 @@ bool Collision_Judgement(int i_sys,CONST struct orbital_elements *ele_p,CONST do
 
 
 #if EXECUTION_TIME
-  uint64_t end = mach_absolute_time();
-  exetime.Collision_Judgement += (double)(end-start) * sTimebaseInfo.numer / sTimebaseInfo.denom;
+  gettimeofday(&realtime_end,NULL);
+  getrusage(RUSAGE_SELF,&usage_end);
+  exetime.Collision_Judgement[0] += Cal_time(realtime_start,realtime_end);
+  exetime.Collision_Judgement[1] += Cal_time(usage_start.ru_utime,usage_end.ru_utime);
+  exetime.Collision_Judgement[2] += Cal_time(usage_start.ru_stime,usage_end.ru_stime);
 #endif
+
   return (false);  //衝突しない場合.
 }
 #endif
