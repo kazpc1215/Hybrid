@@ -34,13 +34,14 @@ endif
 hybrid: $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $(OBJS)
 
+
 .c.o:
 	$(CC) $(CFLAGS) -c $<
 
 
 clean:
 	rm -f $(OBJS) *~ *.dat *.d
-	rm -r *.dSYM/ *.dtps/
+
 
 ifeq ($(CC),gcc)
 -include *.d

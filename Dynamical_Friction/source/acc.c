@@ -108,31 +108,6 @@ static inline __attribute__((always_inline)) double External_dAcceleration(int i
 }
 
 
-/*予測子*/
-/*
-void Predictor(int i,CONST double x_0[][4],CONST double v_0[][4],CONST double a_0[][4],CONST double adot_0[][4],double x_p[][4],double v_p[][4],double r_p[],double v2_p[],double r_dot_v[],CONST double Dt[]){
-
-  int k;
-  double dt = Dt[i];
-
-  for(k=1;k<=3;++k){
-    //x_p[i][k] = x_0[i][k] + v_0[i][k]*Dt[i] + a_0[i][k]*Dt[i]*Dt[i]/2.0 + adot_0[i][k]*Dt[i]*Dt[i]*Dt[i]/6.0;
-    //v_p[i][k] = v_0[i][k] + a_0[i][k]*Dt[i] + adot_0[i][k]*Dt[i]*Dt[i]/2.0;
-
-    x_p[i][k] = x_0[i][k] + dt*(v_0[i][k] + dt*0.5*(a_0[i][k] + adot_0[i][k]*dt*INV_3));
-    v_p[i][k] = v_0[i][k] + dt*(a_0[i][k] + adot_0[i][k]*dt*0.5);
-  }
-
-
-  r_p[i] = RadiusFromCenter(i,x_p);  //中心星からの距離.
-  v2_p[i] = SquareOfVelocity(i,v_p); //速度の2乗.
-  r_dot_v[i] = InnerProduct(i,x_p,v_p);  //r_i,v_iの内積.
-
-  return;
-}
-*/
-
-
 /*i_sys のみの修正子*/
 void Corrector_sys(int i_sys,CONST struct orbital_elements *ele_p,CONST double x_p[][4],CONST double v_p[][4],CONST double r_p[],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double r_dot_v[],CONST double a_0[][4],CONST double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],CONST double dt_[]){
 
@@ -141,14 +116,18 @@ void Corrector_sys(int i_sys,CONST struct orbital_elements *ele_p,CONST double x
   double abs_r[
 #if INTERACTION_ALL
 	       global_n
-#else
+#elif INTERACTION_PLANET_TRACER
+	       global_n
+#elif INTERACTION_TEST_PARTICLE
 	       global_n_p
 #endif
 	       +1];
   double r_dot_v_ij[
 #if INTERACTION_ALL
 		    global_n
-#else
+#elif INTERACTION_PLANET_TRACER
+		    global_n
+#elif INTERACTION_TEST_PARTICLE
 		    global_n_p
 #endif
 		    +1];
@@ -159,7 +138,9 @@ void Corrector_sys(int i_sys,CONST struct orbital_elements *ele_p,CONST double x
   for(j=1;j<=
 #if INTERACTION_ALL
 	global_n
-#else
+#elif INTERACTION_PLANET_TRACER
+	global_n
+#elif INTERACTION_TEST_PARTICLE
 	global_n_p
 #endif
 	;++j){
@@ -222,14 +203,18 @@ void Iteration_sys(int i_sys,CONST struct orbital_elements *ele_p,CONST double x
   double abs_r[
 #if INTERACTION_ALL
 	       global_n
-#else
+#elif INTERACTION_PLANET_TRACER
+	       global_n
+#elif INTERACTION_TEST_PARTICLE
 	       global_n_p
 #endif
 	       +1];
   double r_dot_v_ij[
 #if INTERACTION_ALL
 		    global_n
-#else
+#elif INTERACTION_PLANET_TRACER
+		    global_n
+#elif INTERACTION_TEST_PARTICLE
 		    global_n_p
 #endif
 		    +1];
@@ -240,7 +225,9 @@ void Iteration_sys(int i_sys,CONST struct orbital_elements *ele_p,CONST double x
   for(j=1;j<=
 #if INTERACTION_ALL
 	global_n
-#else
+#elif INTERACTION_PLANET_TRACER
+	global_n
+#elif INTERACTION_TEST_PARTICLE
 	global_n_p
 #endif
 	;++j){
@@ -298,23 +285,47 @@ double All_Acceleration(int i,int k,CONST struct orbital_elements *ele_p,CONST d
 
   a_0 = External_Acceleration(i,k,x_0,r_0);
 
-  //#pragma omp parallel for reduction(+:a_0)
-  for(j=1;j<=
-#if INTERACTION_ALL
-	global_n
-#else
-	global_n_p
+#if INTERACTION_PLANET_TRACER
+  if(i>global_n_p){  //i_sysがトレーサーの場合，惑星からの影響を計算.
 #endif
-	;++j){
+
+    //#pragma omp parallel for reduction(+:a_0)
+    for(j=1;j<=
+#if INTERACTION_ALL
+	  global_n
+#elif INTERACTION_PLANET_TRACER
+	  global_n_p
+#elif INTERACTION_TEST_PARTICLE
+	  global_n_p
+#endif
+	  ;++j){
 
 #if INDIRECT_TERM
-    a_0 += Acceleration_indirect(j,k,ele_p,x_0,r_0);
+      a_0 += Acceleration_indirect(j,k,ele_p,x_0,r_0);
 #endif
 
-    if(i!=j){
-      a_0 += Acceleration_ij(i,j,k,ele_p,x_0,abs_r);
+      if(i!=j){
+	a_0 += Acceleration_ij(i,j,k,ele_p,x_0,abs_r);
+      }
     }
+
+#if INTERACTION_PLANET_TRACER
+  }else if(i<=global_n_p){  //i_sysが惑星の場合，自身以外のすべてからの影響を計算.
+
+    //#pragma omp parallel for reduction(+:a_0)
+    for(j=1;j<=global_n;++j){
+
+#if INDIRECT_TERM
+      a_0 += Acceleration_indirect(j,k,ele_p,x_0,r_0);
+#endif
+
+      if(i!=j){
+	a_0 += Acceleration_ij(i,j,k,ele_p,x_0,abs_r);
+      }
+    }
+
   }
+#endif
 
   return a_0;
 }
@@ -327,23 +338,47 @@ double All_dAcceleration(int i,int k,CONST struct orbital_elements *ele_p,CONST 
 
   adot_0 = External_dAcceleration(i,k,x_0,v_0,r_0,r_dot_v);
 
-  //#pragma omp parallel for reduction(+:adot_0)
-  for(j=1;j<=
-#if INTERACTION_ALL
-	global_n
-#else
-	global_n_p
+#if INTERACTION_PLANET_TRACER
+  if(i>global_n_p){  //i_sysがトレーサーの場合，惑星からの影響を計算.
 #endif
-	;++j){
+
+    //#pragma omp parallel for reduction(+:adot_0)
+    for(j=1;j<=
+#if INTERACTION_ALL
+	  global_n
+#elif INTERACTION_PLANET_TRACER
+	  global_n_p
+#elif INTERACTION_TEST_PARTICLE
+	  global_n_p
+#endif
+	  ;++j){
 
 #if INDIRECT_TERM
-    adot_0 += dAcceleration_indirect(j,k,ele_p,x_0,v_0,r_0,r_dot_v);
+      adot_0 += dAcceleration_indirect(j,k,ele_p,x_0,v_0,r_0,r_dot_v);
 #endif
 
-    if(i!=j){
-      adot_0 += dAcceleration_ij(i,j,k,ele_p,x_0,v_0,r_dot_v_ij,abs_r);
+      if(i!=j){
+	adot_0 += dAcceleration_ij(i,j,k,ele_p,x_0,v_0,r_dot_v_ij,abs_r);
+      }
     }
+
+#if INTERACTION_PLANET_TRACER
+  }else if(i<=global_n_p){  //i_sysが惑星の場合，自身以外のすべてからの影響を計算.
+
+    //#pragma omp parallel for reduction(+:adot_0)
+    for(j=1;j<=global_n_p;++j){
+
+#if INDIRECT_TERM
+      adot_0 += dAcceleration_indirect(j,k,ele_p,x_0,v_0,r_0,r_dot_v);
+#endif
+
+      if(i!=j){
+	adot_0 += dAcceleration_ij(i,j,k,ele_p,x_0,v_0,r_dot_v_ij,abs_r);
+      }
+    }
+
   }
+#endif
 
   return adot_0;
 }
