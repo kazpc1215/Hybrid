@@ -19,45 +19,21 @@ struct execution_time exetime =
     {0.0,0.0,0.0},
     {0.0,0.0,0.0}
   };
-
-//時間計測用.
-struct timeval realtime_start,realtime_end,realtime_start_main,realtime_end_main;
-struct rusage usage_start,usage_end,usage_start_main,usage_end_main;
-#if FRAGMENTATION
-struct timeval realtime_start_2,realtime_end_2;
-struct rusage usage_start_2,usage_end_2;
 #endif
-#endif
-
-
-
-static inline void Predictor(int i,CONST double x_0[][4],CONST double v_0[][4],CONST double a_0[][4],CONST double adot_0[][4],double x_p[][4],double v_p[][4],double r_p[],double v2_p[],double r_dot_v[],CONST double Dt[]){
-
-  int k;
-  double dt = Dt[i];
-
-  for(k=1;k<=3;++k){
-    //x_p[i][k] = x_0[i][k] + v_0[i][k]*Dt[i] + a_0[i][k]*Dt[i]*Dt[i]/2.0 + adot_0[i][k]*Dt[i]*Dt[i]*Dt[i]/6.0;
-    //v_p[i][k] = v_0[i][k] + a_0[i][k]*Dt[i] + adot_0[i][k]*Dt[i]*Dt[i]/2.0;
-
-    x_p[i][k] = x_0[i][k] + dt*(v_0[i][k] + dt*0.5*(a_0[i][k] + adot_0[i][k]*dt*INV_3));
-    v_p[i][k] = v_0[i][k] + dt*(a_0[i][k] + adot_0[i][k]*dt*0.5);
-  }
-
-
-  r_p[i] = RadiusFromCenter(i,x_p);  //中心星からの距離.
-  v2_p[i] = SquareOfVelocity(i,v_p); //速度の2乗.
-  r_dot_v[i] = InnerProduct(i,x_p,v_p);  //r_i,v_iの内積.
-
-  return;
-}
 
 
 int main(void){
 
 
-
 #if EXECUTION_TIME
+  //時間計測用.
+  struct timeval realtime_start,realtime_end,realtime_start_main,realtime_end_main;
+  struct rusage usage_start,usage_end,usage_start_main,usage_end_main;
+#if FRAGMENTATION
+  struct timeval realtime_start_2,realtime_end_2;
+  struct rusage usage_start_2,usage_end_2;
+#endif
+
   gettimeofday(&realtime_start_main,NULL);
   getrusage(RUSAGE_SELF,&usage_start_main);
 #endif
@@ -809,7 +785,7 @@ int main(void){
       gettimeofday(&realtime_start,NULL);
       getrusage(RUSAGE_SELF,&usage_start);
 #endif
-#pragma omp parallel for schedule(runtime)
+      //#pragma omp parallel for schedule(runtime)
       for(i=1;i<=global_n;++i){
 	Dt[i] = t_sys - t_[i];
 	Predictor(i,x_0,v_0,a_0,adot_0,x_p,v_p,r_p,v2_p,r_dot_v,Dt);  //予測子 t_sysにおけるすべての粒子を計算.
@@ -1052,7 +1028,7 @@ int main(void){
 	getrusage(RUSAGE_SELF,&usage_start);
 #endif
 
-#pragma omp parallel for private(k) schedule(runtime)
+	//#pragma omp parallel for private(k) schedule(runtime)
 	for(i=1;i<=global_n;++i){
 	  if(i!=i_sys){
 	    //i_sys以外の粒子は予測子を使う.
@@ -1190,7 +1166,7 @@ int main(void){
       fclose(fpposivelo);
 #endif
 
-
+      
 #if INDIRECT_TERM
       CenterOfGravity(x_c,v_c,x_G,v_G,ele);  //重心計算
 #endif
