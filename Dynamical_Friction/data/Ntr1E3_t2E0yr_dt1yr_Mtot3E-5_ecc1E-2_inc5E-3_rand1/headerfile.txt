@@ -19,17 +19,15 @@
 
 //#define CONST const
 //constでエラーが出るため
-#if __GNUC__ == 7
-#define CONST const
-#elif __GNUC__ == 4
+#if __GNUC__ == 4
 #define CONST
+#else
+#define CONST const
 #endif
 
 
-#define DIRECTORY ../data/Ntr1E3_t2E0yr_dt1yr_eta1E-2_e1E-2_i5E-3_rand1/  //ファイル保存用のディレクトリ.
+#define DIRECTORY ../data/Ntr1E3_t2E0yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_rand1/  //ファイル保存用のディレクトリ.
 
-
-//#define DIRECTORY_FILE dt1E-2yr_eta1E-3  //連番のディレクトリを作りたいとき. "b****_dt1E-*yr_eta*E-*"
 
 #define STR_(str) #str
 #define STR(str) STR_(str)
@@ -46,7 +44,7 @@
 #define N_p 1  //初期の原始惑星の数.
 #define RAND_SEED 1  //乱数の種.
 #define STEP_INTERVAL 1.0E5  //何ステップごとに標準出力するか
-#define BREAK_TIME 10.0  //4h = 14400sec
+#define BREAK_TIME 100.0  //4h = 14400sec
 
 EXTERN int global_n;  //グローバル変数.
 EXTERN int global_n_p;  //グローバル変数.
@@ -121,6 +119,8 @@ Mean Longitude (deg)               100.46435
 
 #if N_tr != 0
 //////////////////////////////////////////////////
+#define M_TOT 3.0E-5  //10M_E  //トレーサーの総質量.
+
 #if EJECTION
 #define EJECTION_CONE_ANGLE M_PI/180.0*30.0  //30度.
 #endif
@@ -133,7 +133,6 @@ Mean Longitude (deg)               100.46435
 #endif
 
 #if FRAGMENTATION
-#define M_TOT 3.0E-7  //0.1M_E  //破片の総質量.
 #define DELTA_R 0.010  //Hill 近傍粒子探索用.
 #define DELTA_THETA 0.5*M_PI  //近傍粒子探索用.
 #endif

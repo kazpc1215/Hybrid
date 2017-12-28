@@ -109,11 +109,11 @@ void Sort_Exetime(struct timeval realtime_start_main,struct timeval realtime_end
 
   printf("Execution Time\t(total\t= %e [s])\n",exetime_main);
   for(i=0;i<7;++i){
-    printf("%s= %e [s]\t%2.2f [%%]\n",exetime_name[exetime_num[i]],exetime_array[i],exetime_array[i]/exetime_main*100.0);
+    printf("%s= %e [s]\t%5.2f [%%]\n",exetime_name[exetime_num[i]],exetime_array[i],exetime_array[i]/exetime_main*100.0);
     exetime_others += exetime_array[i];
   }
   exetime_others = exetime_main - exetime_others;
-  printf("Others\t\t\t= %e [s]\t%2.2f [%%]\n",exetime_others,exetime_others/exetime_main*100.0);
+  printf("Others\t\t\t= %e [s]\t%5.2f [%%]\n",exetime_others,exetime_others/exetime_main*100.0);
 
   return;
 }

@@ -3,7 +3,7 @@
 
 
 /*軌道要素計算*/
-void Calculate_OrbitalElements(int i,CONST double x_c[][4],CONST double v_c[][4],struct orbital_elements *ele_p,double P[][4],double Q[][4],CONST double r_c[],CONST double v2_c[],CONST double r_dot_v[]){
+void Calculate_OrbitalElements(int i,CONST double x_c[][4],CONST double v_c[][4],struct orbital_elements *ele_p,CONST double r_c[],CONST double v2_c[],CONST double r_dot_v[]){
 
 #if INDIRECT_TERM
 
@@ -33,6 +33,7 @@ void Calculate_OrbitalElements(int i,CONST double x_c[][4],CONST double v_c[][4]
   double sin_Omega;
   double cos_Omega;
   double radian;
+  static double P[N_p+N_tr+1][4]={},Q[N_p+N_tr+1][4]={};
 
 
   /*
@@ -62,7 +63,7 @@ void Calculate_OrbitalElements(int i,CONST double x_c[][4],CONST double v_c[][4]
 
 
   if(((ele_p+i)->axis)<0.0){
-    printf("i=%d\taxis=%e < 0 双曲線軌道\n",i,((ele_p+i)->axis));
+    printf("i=%d\taxis=%e < 0 hyperbola orbit.\n",i,((ele_p+i)->axis));
     ((ele_p+i)->ecc) = NAN;
     ((ele_p+i)->u) = NAN;
     ((ele_p+i)->inc) = NAN;
@@ -204,7 +205,7 @@ double Calculate_Q(int i,int k,CONST struct orbital_elements *ele_p){
 
 
 /*初期位置、速度計算*/
-void InitialCondition(int i,double P[][4],double Q[][4],double x_0[][4],double v_0[][4],double v2_0[],double r_dot_v[],double r_0[],CONST struct orbital_elements *ele_p){
+void InitialCondition(int i,double x_0[][4],double v_0[][4],double v2_0[],double r_dot_v[],double r_0[],CONST struct orbital_elements *ele_p){
 
 #if INDIRECT_TERM
 
@@ -225,6 +226,9 @@ void InitialCondition(int i,double P[][4],double Q[][4],double x_0[][4],double v
 #endif
 
   int k;
+  static double P[N_p+N_tr+1][4]={},Q[N_p+N_tr+1][4]={};
+
+
   for(k=1;k<=3;k++){
     P[i][k] = Calculate_P(i,k,ele_p);
     Q[i][k] = Calculate_Q(i,k,ele_p);

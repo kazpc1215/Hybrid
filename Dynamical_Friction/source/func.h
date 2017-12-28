@@ -14,7 +14,7 @@ double All_Acceleration(int i,int k,CONST struct orbital_elements *ele_p,CONST d
 
 double All_dAcceleration(int i,int k,CONST struct orbital_elements *ele_p,CONST double x_0[][4],CONST double v_0[][4],CONST double r_dot_v[],CONST double r_dot_v_ij[],CONST double r_0[],CONST double abs_r[]);
 
-void Calculate_OrbitalElements(int i,CONST double x_c[][4],CONST double v_c[][4],struct orbital_elements *ele_p,double P[][4],double Q[][4],CONST double r_c[],CONST double v2_c[],CONST double r_dot_v[]);
+void Calculate_OrbitalElements(int i,CONST double x_c[][4],CONST double v_c[][4],struct orbital_elements *ele_p,CONST double r_c[],CONST double v2_c[],CONST double r_dot_v[]);
 
 double Calculate_Energy(CONST struct orbital_elements *ele_p,CONST double x_c[][4],
 #if INDIRECT_TERM
@@ -24,7 +24,7 @@ double Calculate_Energy(CONST struct orbital_elements *ele_p,CONST double x_c[][
 #endif
 			CONST double r_c[]);
 
-void InitialCondition(int i,double P[][4],double Q[][4],double x_0[][4],double v_0[][4],double v2_0[],double r_dot_v[],double r_0[],CONST struct orbital_elements *ele_p);
+void InitialCondition(int i,double x_0[][4],double v_0[][4],double v2_0[],double r_dot_v[],double r_0[],CONST struct orbital_elements *ele_p);
 
 void Corrector_sys(int i_sys,CONST struct orbital_elements *ele_p,CONST double x_p[][4],CONST double v_p[][4],CONST double r_p[],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double r_dot_v[],CONST double a_0[][4],CONST double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],CONST double dt_[]);
 
