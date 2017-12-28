@@ -42,35 +42,36 @@ endif
 
 
 define generate_shell_script_1
-	echo ""
-	echo "-----Macros in Makefile-----"
+	echo ''
+	echo '-----Macros in Makefile-----'
 	echo "MODE = $(MODE)"
 	echo "LEVEL = $(LEVEL)"
 	echo "CC = $(CC)"
 	echo "JOBFILE = $(JOBFILE)"
 	echo "OMPOP = $(OMPOP)"
 	echo "CFLAGS = $(CFLAGS)"
-	echo "----------------------------"
+	echo '----------------------------'
 
-	echo ""
-	echo "-----The directory name in hybrid.h-----"
+	echo ''
+	echo '-----The directory name in hybrid.h-----'
 	cat hybrid.h | grep DIRECTORY
-	echo "----------------------------------------"
+	echo '----------------------------------------'
 
-	echo ""
+	echo ''
 	while [ -z "$$JOBNAME" ]; do \
 	read -r -p "Type anything to set the 'job name' in a shell script file. (ex. job01) : " JOBNAME; \
 	done; \
 	echo "#PBS -N $$JOBNAME" > $(JOBFILE)
 
-	echo "#PBS -l mppwidth=24" >> $(JOBFILE)
-	echo "#PBS -j oe" >> $(JOBFILE)
-	echo "cd $'\x24PBS_O_WORKDIR" >> $(JOBFILE)
+	echo '#PBS -l mppwidth=24' >> $(JOBFILE)
+	echo '#PBS -j oe' >> $(JOBFILE)
+#echo "cd $'\x24PBS_O_WORKDIR" >> $(JOBFILE)
+	echo 'cd $$PBS_O_WORKDIR' >> $(JOBFILE)
 
 	if [ $(MODE) = SINGLE ] ; then \
-	echo "export OMP_NUM_THREADS=1" >> $(JOBFILE); \
+	echo 'export OMP_NUM_THREADS=1' >> $(JOBFILE); \
 	elif [ $(MODE) = DEBUG ] ; then \
-	echo "export OMP_NUM_THREADS=1" >> $(JOBFILE); \
+	echo 'export OMP_NUM_THREADS=1' >> $(JOBFILE); \
 	elif [ $(MODE) = OMP ] ; then \
 	while [ -z "$$THREADS" ]; do \
 	read -r -p "Type any numbers to set OMP_NUM_THREADS. (2,...,24) : " THREADS; \
@@ -78,24 +79,24 @@ define generate_shell_script_1
 	echo "export OMP_NUM_THREADS=$$THREADS" >> $(JOBFILE); \
 	fi
 
-	echo "export OMP_WAIT_POLICY=PASSIVE" >> $(JOBFILE)
-	echo "export CRAY_OMP_CHECK_AFFINITY=TRUE" >> $(JOBFILE)
+	echo 'export OMP_WAIT_POLICY=PASSIVE' >> $(JOBFILE)
+	echo 'export CRAY_OMP_CHECK_AFFINITY=TRUE' >> $(JOBFILE)
 endef
 
 
 define generate_shell_script_2
-	echo "aprun -n 1 -d OMP_NUM_THREADS ./$$EXENAME.exe >> /work/isoyakz/Dynamical_Friction/log/$$EXENAME.txt" >> $(JOBFILE)
-	echo ""
-	echo "The compilation has ended."
+	echo 'aprun -n 1 -d $$OMP_NUM_THREADS' "./$$EXENAME.exe" '>>' "/work/isoyakz/Dynamical_Friction/log/$$EXENAME.txt" >> $(JOBFILE)
+	echo ''
+	echo 'The compilation has ended.'
 
-	echo ""
+	echo ''
 	echo "-----$(JOBFILE)-----"
 	cat $(JOBFILE)
-	echo "------------------"
+	echo '------------------'
 
-	echo ""
-	echo "The shell script file has generated."
-	echo ""
+	echo ''
+	echo 'The shell script file has generated.'
+	echo ''
 endef
 
 
