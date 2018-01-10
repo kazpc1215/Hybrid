@@ -26,7 +26,7 @@ endif
 endif
 
 ifeq ($(MODE),DEBUG)
-	CFLAGS = -g -O0
+	CFLAGS = -g -O3
 ifeq ($(CC),cc)
 	CFLAGS += -h noomp
 endif

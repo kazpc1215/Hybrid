@@ -5,4 +5,4 @@ cd $PBS_O_WORKDIR
 export OMP_NUM_THREADS=1
 export OMP_WAIT_POLICY=PASSIVE
 export CRAY_OMP_CHECK_AFFINITY=TRUE
-aprun -n 1 -d $OMP_NUM_THREADS ./Ntr1E4_t2E0yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_all_rand1_DEBUG.exe >> /work/isoyakz/Dynamical_Friction/log/Ntr1E4_t2E0yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_all_rand1_DEBUG.txt
+aprun -n 1 -d $OMP_NUM_THREADS ./Ntr1E4_t2E0yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_all_rand1_DEBUG_O3.exe >> /work/isoyakz/Dynamical_Friction/log/Ntr1E4_t2E0yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_all_rand1_DEBUG_O3.txt

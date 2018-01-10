@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 # import matplotlib.animation as animation
 
-plt.figure(figsize=(10, 8), dpi=100)
+# plt.figure(figsize=(10, 8), dpi=100)
 
 
 # from matplotlib.font_manager import FontProperties
@@ -13,7 +13,7 @@ plt.figure(figsize=(10, 8), dpi=100)
 
 
 ######################################################################
-path = "/Users/isoya.kazuhide/Dynamical_Friction/data/Ntr1E3_t2E3yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_all_rand2//"
+path = "/Users/isoya.kazuhide/Dynamical_Friction/data/Ntr1E3_t2E3yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_all_rand3//"
 
 LINE = 2001
 
@@ -46,24 +46,6 @@ for n in range(1, N_p+1):
     mass[n, :] = arr[:, 9]
     print(n, time[n, 1], axis[n, 1], ecc[n, 1])
 
-
-ecc_2 = np.zeros(LINE, dtype=float)
-# print ecc_2
-for n in range(1, N_p+1):
-    ecc_2 = ecc_2 + ecc[n, :] * ecc[n, :]
-ecc_2_mean = ecc_2 / N_p
-ecc_rms = np.sqrt(ecc_2_mean)
-plt.plot(time[1, :], ecc_rms, color="g", label=r"$e_{\rm p}$")
-
-inc_2 = np.zeros(LINE, dtype=float)
-# print inc_2
-for n in range(1, N_p+1):
-    inc_2 = inc_2 + inc[n, :] * inc[n, :]
-inc_2_mean = inc_2 / N_p
-inc_rms = np.sqrt(inc_2_mean)
-# print inc_rms
-# plt.plot(time[1, :], inc_rms, color="g", label=r"$i_{\rm p}$")
-
 #####
 for n in range(N_p+1, N_p+N_tr+1):
     arr = np.genfromtxt(path + "tracer%06d.dat" % (n-N_p), dtype=np.float, delimiter="\t")
@@ -80,38 +62,33 @@ for n in range(N_p+1, N_p+N_tr+1):
     mass[n, :] = arr[:, 9]
     print(n, time[n, 1], axis[n, 1], ecc[n, 1])
 
+#####
 
-ecc_2 = np.zeros(LINE, dtype=float)
-# print ecc_2
-for n in range(N_p+1, N_p+N_tr+1):
-    ecc_2 = ecc_2 + ecc[n, :] * ecc[n, :]
-ecc_2_mean = ecc_2 / N_tr
-ecc_rms = np.sqrt(ecc_2_mean)
-plt.plot(time[1, :], ecc_rms, color="b", label=r"$e_{\rm rms}$")
+for T in range(0, 2001):
+    plt.figure(figsize=(10, 8), dpi=100)
+    plt.scatter(axis[2:, T], ecc[2:, T], color="b", s=5, label="Tracer")
+    # plt.scatter(axis[2:, T], inc[2:, T], color="b", s=5, label="Tracer")
 
-inc_2 = np.zeros(LINE, dtype=float)
-# print inc_2
-for n in range(N_p+1, N_p+N_tr+1):
-    inc_2 = inc_2 + inc[n, :] * inc[n, :]
-inc_2_mean = inc_2 / N_tr
-inc_rms = np.sqrt(inc_2_mean)
-# print inc_rms
-# plt.plot(time[1, :], inc_rms, color="b", label=r"$i_{\rm rms}$")
-######################################################################
+    plt.scatter(axis[1, T], ecc[1, T], color="r", s=20, label="Planet")
+    # plt.scatter(axis[1, T], inc[1, T], color="r", s=20, label="Planet")
 
+    plt.xlim([0.9, 1.1])
+    plt.ylim([0, 0.1])
+    plt.xticks(fontsize=15)
+    plt.yticks(fontsize=15)
+    # plt.yscale("log")
+    plt.xlabel('semi-major axis [AU]', fontsize=25)
+    plt.ylabel('ecc', fontsize=25)
+    # plt.ylabel('inc [rad]', fontsize=25)
+    plt.grid(True)
+    plt.legend(loc="upper left", fontsize=15)
+    # plt.legend(bbox_to_anchor=(1.0, 0.6),fontsize=15)
+    plt.title(r"$N_{\rm tr}=1000,M_{\rm tot}=10 {\rm M_{\oplus}},{\rm time}: %04.0f {\rm yr}$" % time[1, T], fontsize=18)
+    plt.tight_layout()
 
-plt.xlim([0, 2000])
-plt.ylim([0, 0.06])
-plt.xticks(fontsize=15)
-plt.yticks(fontsize=15)
-# plt.yscale("log")
-plt.xlabel('time[yr]', fontsize=25)
-plt.ylabel('ecc', fontsize=25)
-# plt.ylabel('inc [rad]', fontsize=25)
-plt.grid(True)
-plt.legend(loc="upper left", fontsize=15)
-# plt.legend(bbox_to_anchor=(1.0, 0.6),fontsize=15)
-plt.title(r"$N_{\rm tr}=1000,M_{\rm tot}=10 {\rm M_{\oplus}}$", fontsize=18)
-plt.tight_layout()
-
-plt.show()
+    filename = "../image/Ntr1E3_t2E3yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_all_rand3/axis_ecc_T%04.0fyr.png" % time[1, T]
+    # filename = "../image/Ntr1E3_t2E3yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_all_rand3/axis_inc_T%04.0fyr.png" % time[1, T]
+    plt.savefig(filename)
+    plt.close()
+    print(time[1, T])
+    # plt.show()
