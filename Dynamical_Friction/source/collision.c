@@ -16,7 +16,13 @@ bool Collision_Judgement(int i_sys,CONST struct orbital_elements *ele_p,CONST do
 
   int j;
 
-  for(j=1;j<=global_n_p;++j){
+  for(j=1;j<=
+#if RELOCATE_PARTICLE
+	global_n
+#else
+	global_n_p
+#endif
+	;++j){
     if(i_sys!=j){
       abs_r[j] = RelativeDistance(i_sys,j,x_p);  //絶対値.
       if(abs_r[j] < ((ele_p+i_sys)->radius) + ((ele_p+j)->radius)){

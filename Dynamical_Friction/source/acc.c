@@ -5,7 +5,7 @@
 //inline関数
 
 /*相互重力加速度*/
-static inline __attribute__((always_inline)) double Acceleration_ij(int i,int j,int k,CONST struct orbital_elements *ele_p,CONST double x_0[][4],CONST double abs_r[]){
+static inline ALWAYS_INLINE double Acceleration_ij(int i,int j,int k,CONST struct orbital_elements *ele_p,CONST double x_0[][4],CONST double abs_r[]){
   double rij3;
 
 #ifndef EPSILON
@@ -24,7 +24,7 @@ static inline __attribute__((always_inline)) double Acceleration_ij(int i,int j,
 
 
 /*相互重力加加速度*/
-static inline __attribute__((always_inline)) double dAcceleration_ij(int i,int j,int k,CONST struct orbital_elements *ele_p,CONST double x_0[][4],CONST double v_0[][4],CONST double r_dot_v_ij[],CONST double abs_r[]){
+static inline ALWAYS_INLINE double dAcceleration_ij(int i,int j,int k,CONST struct orbital_elements *ele_p,CONST double x_0[][4],CONST double v_0[][4],CONST double r_dot_v_ij[],CONST double abs_r[]){
   double rij3;
   double rij5;
 
@@ -47,7 +47,7 @@ static inline __attribute__((always_inline)) double dAcceleration_ij(int i,int j
 
 
 /*加速度indirect項*/
-static inline __attribute__((always_inline)) double Acceleration_indirect(int i,int k,CONST struct orbital_elements *ele_p,CONST double x_0[][4],CONST double r_0[]){
+static inline ALWAYS_INLINE double Acceleration_indirect(int i,int k,CONST struct orbital_elements *ele_p,CONST double x_0[][4],CONST double r_0[]){
   double r3;
   r3 = r_0[i]*r_0[i]*r_0[i];
   r3 = 1.0/r3;
@@ -61,7 +61,7 @@ static inline __attribute__((always_inline)) double Acceleration_indirect(int i,
 
 
 /*加加速度indirect項*/
-static inline __attribute__((always_inline)) double dAcceleration_indirect(int i,int k,CONST struct orbital_elements *ele_p,CONST double x_0[][4],CONST double v_0[][4],CONST double r_0[],CONST double r_dot_v[]){
+static inline ALWAYS_INLINE double dAcceleration_indirect(int i,int k,CONST struct orbital_elements *ele_p,CONST double x_0[][4],CONST double v_0[][4],CONST double r_0[],CONST double r_dot_v[]){
   double r3;
   double r5;
   r3 = r_0[i]*r_0[i]*r_0[i];
@@ -78,7 +78,7 @@ static inline __attribute__((always_inline)) double dAcceleration_indirect(int i
 
 
 /*外力加速度*/
-static inline __attribute__((always_inline)) double External_Acceleration(int i,int k,CONST double x_0[][4],CONST double r_0[]){
+static inline ALWAYS_INLINE double External_Acceleration(int i,int k,CONST double x_0[][4],CONST double r_0[]){
   double r3;
   r3 = r_0[i]*r_0[i]*r_0[i];
   r3 = 1.0/r3;
@@ -92,7 +92,7 @@ static inline __attribute__((always_inline)) double External_Acceleration(int i,
 
 
 /*外力加加速度*/
-static inline __attribute__((always_inline)) double External_dAcceleration(int i,int k,CONST double x_0[][4],CONST double v_0[][4],CONST double r_0[],CONST double r_dot_v[]){
+static inline ALWAYS_INLINE double External_dAcceleration(int i,int k,CONST double x_0[][4],CONST double v_0[][4],CONST double r_0[],CONST double r_dot_v[]){
   double r3;
   double r5;
   r3 = r_0[i]*r_0[i]*r_0[i];

@@ -21,8 +21,10 @@
 //constでエラーが出るため
 #if __GNUC__ == 4
 #define CONST
+#define ALWAYS_INLINE
 #else
 #define CONST const
+#define ALWAYS_INLINE __attribute__((always_inline))
 #endif
 
 
@@ -72,8 +74,11 @@ EXTERN int global_n_p;  //グローバル変数.
 #define INDIRECT_TERM true  //中心星が動く.
 #define FRAGMENTATION false  //破壊 近傍粒子探索と質量フラックス計算.
 #define COLLISION false  //衝突.
+#if COLLISION
 #define COALESCENCE false  //衝突後に合体.
-#define EJECTION false  //衝突後に破片をコーン状に放出する.
+#define RELOCATE_PARTICLE false  //衝突後に粒子を再配置.
+#endif
+#define EJECTION false  //破片をコーン状に放出する.
 #define ORBITING_SMALL_PARTICLE true  //微惑星を初期にケプラー運動させておく.
 #define ELIMINATE_PARTICLE false  //太陽に飲みこまれるか系外へ出て行くかで粒子を消す.
 //////////////////////////////////////////////////

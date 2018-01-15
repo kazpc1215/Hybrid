@@ -927,7 +927,7 @@ int main(void){
       if((t_[i] + dt_[i]) < t_sys){
 	t_sys = t_[i] + dt_[i];  //dt_[i]が最小のものを選ぶ.
 	i_sys = i;  //i_sysを選ぶ.
-      }
+     }
     }
 
 
@@ -1027,7 +1027,6 @@ int main(void){
 	  x_0[0][k] = (ele[i_col].mass*x_0[i_col][k] + ele[j_col].mass*x_0[j_col][k])/(ele[i_col].mass + ele[j_col].mass);
 	  v_0[0][k] = (ele[i_col].mass*v_0[i_col][k] + ele[j_col].mass*v_0[j_col][k])/(ele[i_col].mass + ele[j_col].mass);
 	}
-#endif
 
 
 #if EXECUTION_TIME
@@ -1042,6 +1041,7 @@ int main(void){
 	exetime.Energy[0] += Cal_time(realtime_start,realtime_end);
 	exetime.Energy[1] += Cal_time(usage_start.ru_utime,usage_end.ru_utime);
 	exetime.Energy[2] += Cal_time(usage_start.ru_stime,usage_end.ru_stime);
+#endif
 #endif
 
 
@@ -1099,6 +1099,13 @@ int main(void){
 
 #if COALESCENCE
 	Coalescence(i_col,j_col,x_0,v_0,ele);  //合体後の操作.
+#endif
+
+
+#if RELOCATE_PARTICLE
+	if(j_col>global_n_p){
+	  Initial_OrbitalElements_Tracer(j_col,ele);  //衝突後に粒子を再配置.
+	}
 #endif
 
 
