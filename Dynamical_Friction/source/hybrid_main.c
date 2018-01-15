@@ -224,7 +224,18 @@ int main(void){
 
     fgets(buf,sizeof(buf),fptempread);  //読み飛ばし.
     fgets(buf,sizeof(buf),fptempread);
-    sscanf(buf,"%lf\t%lf\t%lf\t%d\t%d\t%d\t%lf\t%lf\t%lf\t%lf\n",&t_tmp,&t_sys,&t_ene,&global_n_p,&global_n,&i_sys,&step,&E_tot_0,&abs_L_0,&dE_correct);
+    sscanf(buf,"%lf\t%lf\t%lf\t%d\t%d\t%d\t%lf\t%lf\t%lf\t%lf\n",
+	   &t_tmp,
+	   &t_sys,
+	   &t_ene,
+	   &global_n_p,
+	   &global_n,
+	   &i_sys,
+	   &step,
+	   &E_tot_0,
+	   &abs_L_0,
+	   &dE_correct
+	   );
 
     fgets(buf,sizeof(buf),fptempread);  //読み飛ばし.
     fgets(buf,sizeof(buf),fptempread);  //読み飛ばし.
@@ -232,7 +243,23 @@ int main(void){
 
     for(i=1;i<=global_n;++i){
       if(fgets(buf,sizeof(buf),fptempread)!=NULL){
-	sscanf(buf,"%s\t%lf\t%lf\t%lf\t%*f\t%lf\t%lf\t%lf\t%*f\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\n",ele[i].name,&x_0[i][1],&x_0[i][2],&x_0[i][3],&v_0[i][1],&v_0[i][2],&v_0[i][3],&a_0[i][1],&a_0[i][2],&a_0[i][3],&adot_0[i][1],&adot_0[i][2],&adot_0[i][3],&t_[i],&dt_[i],&ele[i].mass);
+	sscanf(buf,"%s\t%lf\t%lf\t%lf\t%*f\t%lf\t%lf\t%lf\t%*f\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\n",
+	       ele[i].name,
+	       &x_0[i][1],
+	       &x_0[i][2],
+	       &x_0[i][3],
+	       &v_0[i][1],
+	       &v_0[i][2],
+	       &v_0[i][3],
+	       &a_0[i][1],
+	       &a_0[i][2],
+	       &a_0[i][3],
+	       &adot_0[i][1],
+	       &adot_0[i][2],
+	       &adot_0[i][3],
+	       &t_[i],&dt_[i],
+	       &ele[i].mass
+	       );
 
 	t_[i] = 2.0*M_PI*t_[i];
 	dt_[i] = 2.0*M_PI*dt_[i];
@@ -353,7 +380,12 @@ int main(void){
     para.h_0 = 0.061*17.3*pow(1.68E6*RHO,-2.0/3.0);  // g/cc = 1.68E6 M_0/AU^3, F(I) = 17.3 として.
     para.Q_D = Q_0_FRAG*1.13E-13*pow(RHO/3.0,0.55)*pow(M_MAX*1.989E12,P_FRAG);  //erg/g = 1.13E-13 AU^2/(yr/2pi)^2 として.
 
-    printf("alpha=%f\ts_1=%f\ts_2=%f\ts_3=%f\n",para.alpha,para.s_1,para.s_2,para.s_3);
+    printf("alpha=%f\ts_1=%f\ts_2=%f\ts_3=%f\n",
+	   para.alpha,
+	   para.s_1,
+	   para.s_2,
+	   para.s_3
+	   );
 #endif
 
 
@@ -404,7 +436,7 @@ int main(void){
       Rotation_3D_zaxis(i,x_eject,-M_PI/2.0);  //z軸周りに-90度回転.
 
 
-      printf("%s\tx_eject[%d][1]=%f\tx_eject[%d][2]=%f\tx_eject[%d][3]=%f\n",ele[i].name,i,x_eject[i][1],i,x_eject[i][2],i,x_eject[i][3]);
+      //printf("%s\tx_eject[%d][1]=%f\tx_eject[%d][2]=%f\tx_eject[%d][3]=%f\n",ele[i].name,i,x_eject[i][1],i,x_eject[i][2],i,x_eject[i][3]);
 
 
       //tmp_v = ejection_velocity;
@@ -432,7 +464,7 @@ int main(void){
       Rotation_3D_zaxis(i,v_eject,-M_PI/2.0);  //z軸周りに-90度回転.
 
 
-      printf("%s\tv_eject[%d][1]=%f\tv_eject[%d][2]=%f\tv_eject[%d][3]=%f\n",ele[i].name,i,v_eject[i][1],i,v_eject[i][2],i,v_eject[i][3]);
+      //printf("%s\tv_eject[%d][1]=%f\tv_eject[%d][2]=%f\tv_eject[%d][3]=%f\n",ele[i].name,i,v_eject[i][1],i,v_eject[i][2],i,v_eject[i][3]);
       //////////////////ここまでで、惑星中心、xyは軌道面上、x軸は太陽から惑星の方向/////////////////////
 
 
@@ -526,7 +558,19 @@ int main(void){
     }
     fprintf(fpposivelo,"#t[yr]\ti\tx\ty\tz\tr_0(3D)\tr_0(2D)\tv_x\tv_y\tv_z\tabs_v\n");
     for(i=1;i<=global_n;i++){
-      fprintf(fpposivelo,"%.15e\t%4d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\n",0.0,i,x_0[i][1],x_0[i][2],x_0[i][3],r_0[i],sqrt(x_0[i][1]*x_0[i][1]+x_0[i][2]*x_0[i][2]),v_0[i][1],v_0[i][2],v_0[i][3],sqrt(v_0[i][1]*v_0[i][1]+v_0[i][2]*v_0[i][2]+v_0[i][3]*v_0[i][3]));
+      fprintf(fpposivelo,"%.15e\t%4d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\n",
+	      0.0,
+	      i,
+	      x_0[i][1],
+	      x_0[i][2],
+	      x_0[i][3],
+	      r_0[i],
+	      sqrt(x_0[i][1]*x_0[i][1]+x_0[i][2]*x_0[i][2]),
+	      v_0[i][1],
+	      v_0[i][2],
+	      v_0[i][3],
+	      sqrt(v_0[i][1]*v_0[i][1]+v_0[i][2]*v_0[i][2]+v_0[i][3]*v_0[i][3])
+	      );
     }
     fprintf(fpposivelo,"\n\n");
     fclose(fpposivelo);
@@ -563,7 +607,22 @@ int main(void){
       return -1;
     }
     fprintf(fpposi_rot,"#t[yr]\tx_rot[2]\ty_rot[2]\tz[2]\tr_xy[2]\ttheta[2]\tradius[2]\tx_rot[1]\ty_rot[1]\tz[1]\tr_xy[1]\ttheta[1]\tradius[1]\tr_Hill\n");
-    fprintf(fpposi_rot,"%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\n",0.0,x_rot[PLANETESIMAL_NO][1],x_rot[PLANETESIMAL_NO][2],x_0[PLANETESIMAL_NO][3],r_xy[PLANETESIMAL_NO],atan2(x_rot[PLANETESIMAL_NO][2],x_rot[PLANETESIMAL_NO][1]),ele[PLANETESIMAL_NO].radius,x_rot[PLANET_NO][1],x_rot[PLANET_NO][2],x_0[PLANET_NO][3],r_xy[PLANET_NO],atan2(x_rot[PLANET_NO][2],x_rot[PLANET_NO][1]),ele[PLANET_NO].radius,ele[PLANET_NO].r_h);
+    fprintf(fpposi_rot,"%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\n",
+	    0.0,
+	    x_rot[PLANETESIMAL_NO][1],
+	    x_rot[PLANETESIMAL_NO][2],
+	    x_0[PLANETESIMAL_NO][3],
+	    r_xy[PLANETESIMAL_NO],
+	    atan2(x_rot[PLANETESIMAL_NO][2],x_rot[PLANETESIMAL_NO][1]),
+	    ele[PLANETESIMAL_NO].radius,
+	    x_rot[PLANET_NO][1],
+	    x_rot[PLANET_NO][2],
+	    x_0[PLANET_NO][3],
+	    r_xy[PLANET_NO],
+	    atan2(x_rot[PLANET_NO][2],x_rot[PLANET_NO][1]),
+	    ele[PLANET_NO].radius,
+	    ele[PLANET_NO].r_h
+	    );
     fclose(fpposi_rot);
 #endif
 
@@ -590,7 +649,18 @@ int main(void){
       }
 
       fprintf(fporbit,"#t[yr]\te\ta\tu\tI\tOMEGA\tomega\tR_H\tradius\tmass\n");
-      fprintf(fporbit,"%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\n",0.0,ele[i].ecc,ele[i].axis,ele[i].u,ele[i].inc,ele[i].Omega,ele[i].omega,ele[i].r_h,ele[i].radius,ele[i].mass);
+      fprintf(fporbit,"%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\n",
+	      0.0,
+	      ele[i].ecc,
+	      ele[i].axis,
+	      ele[i].u,
+	      ele[i].inc,
+	      ele[i].Omega,
+	      ele[i].omega,
+	      ele[i].r_h,
+	      ele[i].radius,
+	      ele[i].mass
+	      );
       fclose(fporbit);
     }
 #if EXECUTION_TIME
@@ -631,7 +701,13 @@ int main(void){
       return -1;
     }
     fprintf(fpEne,"#t[yr]\tE_tot\trelative E error\trelative dE_correct\tstep\n");
-    fprintf(fpEne,"%.15e\t%.15e\t%.15e\t%.15e\t%15e\n",0.0,E_tot_0,0.0,dE_correct/fabs(E_tot_0),0.0);
+    fprintf(fpEne,"%.15e\t%.15e\t%.15e\t%.15e\t%15e\n",
+	    0.0,
+	    E_tot_0,
+	    0.0,
+	    dE_correct/fabs(E_tot_0),
+	    0.0
+	    );
     fclose(fpEne);
 
     //角運動量の大きさ計算.
@@ -654,11 +730,30 @@ int main(void){
       return -1;
     }
     fprintf(fpinitial,"#t_tmp\tt_sys\ti_sys\tE_tot_0\tabs_L_0\tdE_correct\n");
-    fprintf(fpinitial,"%.15e\t%.15e\t%6d\t\t%.15e\t%.15e\t%.15e\n",t_tmp,t_sys,i_sys,E_tot_0,abs_L_0,dE_correct);
+    fprintf(fpinitial,"%.15e\t%.15e\t%6d\t\t%.15e\t%.15e\t%.15e\n",
+	    t_tmp,
+	    t_sys,
+	    i_sys,
+	    E_tot_0,
+	    abs_L_0,
+	    dE_correct
+	    );
     fprintf(fpinitial,"\n\n");
     fprintf(fpinitial,"#number\tx[AU]\ty[AU]\tz[AU]\t|r|[AU]\tvx[2piAU/yr]\tvy[2piAU/yr]\tvz[2piAU/yr]\t|v|[2piAU/yr]\tdt[yr]\tmass[Msun]\n");
     for(i=1;i<=global_n;++i){
-      fprintf(fpinitial,"%6d\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%e\t%e\n",i,x_0[i][1],x_0[i][2],x_0[i][3],r_0[i],v_0[i][1],v_0[i][2],v_0[i][3],sqrt(v2_0[i]),dt_[i]/2.0/M_PI,ele[i].mass);
+      fprintf(fpinitial,"%6d\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%e\t%e\n",
+	      i,
+	      x_0[i][1],
+	      x_0[i][2],
+	      x_0[i][3],
+	      r_0[i],
+	      v_0[i][1],
+	      v_0[i][2],
+	      v_0[i][3],
+	      sqrt(v2_0[i]),
+	      dt_[i]/2.0/M_PI,
+	      ele[i].mass
+	      );
     }
     fclose(fpinitial);
 
@@ -688,8 +783,25 @@ int main(void){
       MassFlux(i,ele,frag,&para);  //質量フラックス計算.
       frag[i].dt_frag = Depletion_Time(i,frag);  //統計的計算のタイムスケール.
       frag[i].t_frag = frag[i].dt_frag;
-      printf("\tinitial\tF[%d]=%e\tsigma[%d]=%e\tdt_frag[%d]=%e[yr]\tdt_[%d]=%e[yr]\n",i,frag[i].flux,i,frag[i].sigma,i,frag[i].dt_frag/2.0/M_PI,i,dt_[i]/2.0/M_PI);
-      printf("\ti=%d\tv_ave=%f\tsigma=%f\tecc=%f\tr_0=%f\tdelta_r_out=%f\tdelta_r_in=%f\n",i,frag[i].v_ave,frag[i].sigma,ele[i].ecc,r_0[i],frag[i].delta_r_out,frag[i].delta_r_in);
+      printf("\tinitial\tF[%d]=%e\tsigma[%d]=%e\tdt_frag[%d]=%e[yr]\tdt_[%d]=%e[yr]\n",
+	     i,
+	     frag[i].flux,
+	     i,
+	     frag[i].sigma,
+	     i,
+	     frag[i].dt_frag/2.0/M_PI,
+	     i,
+	     dt_[i]/2.0/M_PI
+	     );
+      printf("\ti=%d\tv_ave=%f\tsigma=%f\tecc=%f\tr_0=%f\tdelta_r_out=%f\tdelta_r_in=%f\n",
+	     i,
+	     frag[i].v_ave,
+	     frag[i].sigma,
+	     ele[i].ecc,
+	     r_0[i],
+	     frag[i].delta_r_out,
+	     frag[i].delta_r_in
+	     );
       mass_tot_all += ele[i].mass;
     }
 
@@ -706,7 +818,11 @@ int main(void){
       return -1;
     }
     fprintf(fpfrag,"#t[yr]\tmass_tot_all\tM_TOT\n");
-    fprintf(fpfrag,"%.15e\t%.15f\t%.15f\n",0.0,mass_tot_all,M_TOT);
+    fprintf(fpfrag,"%.15e\t%.15f\t%.15f\n",
+	    0.0,
+	    mass_tot_all,
+	    M_TOT
+	    );
     fclose(fpfrag);
 
 
@@ -717,7 +833,21 @@ int main(void){
     }
     fprintf(fpposimass,"#t[yr]\ti\tx\ty\tz\tr_0(3D)\tr_0(2D)\tmass\tdelta_r\tsigma\tn_s\tneighbornumber\n");
     for(i=1;i<=global_n;i++){
-      fprintf(fpposimass,"%.15e\t%4d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%d\n",0.0,i,x_0[i][1],x_0[i][2],x_0[i][3],r_0[i],sqrt(x_0[i][1]*x_0[i][1]+x_0[i][2]*x_0[i][2]),ele[i].mass,frag[i].delta_r_out,frag[i].delta_r_in,frag[i].sigma,frag[i].n_s,frag[i].neighbornumber);
+      fprintf(fpposimass,"%.15e\t%4d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%d\n",
+	      0.0,
+	      i,
+	      x_0[i][1],
+	      x_0[i][2],
+	      x_0[i][3],
+	      r_0[i],
+	      sqrt(x_0[i][1]*x_0[i][1]+x_0[i][2]*x_0[i][2]),
+	      ele[i].mass,
+	      frag[i].delta_r_out,
+	      frag[i].delta_r_in,
+	      frag[i].sigma,
+	      frag[i].n_s,
+	      frag[i].neighbornumber
+	      );
     }
     fprintf(fpposimass,"\n\n");
     fclose(fpposimass);
@@ -804,7 +934,15 @@ int main(void){
 
   printf("-----\n");
   printf("#step\t\tNp\tNtr\ti_sys\tdt[i_sys]\t\tt_tmp[yr]\t\tt_sys[yr]\n");
-  printf("%e\t%3d\t%6d\t%6d\t%.15e\t%.15e\t%.15e\n",step,global_n_p,global_n-global_n_p,i_sys,dt_[i_sys]/2.0/M_PI,t_tmp/2.0/M_PI,t_sys/2.0/M_PI);
+  printf("%e\t%3d\t%6d\t%6d\t%.15e\t%.15e\t%.15e\n",
+	 step,
+	 global_n_p,
+	 global_n-global_n_p,
+	 i_sys,
+	 dt_[i_sys]/2.0/M_PI,
+	 t_tmp/2.0/M_PI,
+	 t_sys/2.0/M_PI
+	 );
 
   ////////////////////////////////////////////////////////////////////////////////////
 
@@ -871,7 +1009,12 @@ int main(void){
 #if COLLISION
 	/////////////////////////衝突した場合/////////////////////////
 	printf("collision\ti=%d, j=%d\n",i_col,j_col);
-	printf("r_ij=%.15e\tradius[%d]+radius[%d]=%.15e\n",abs_r[j_col],i_col,j_col,ele[i_col].radius + ele[j_col].radius);
+	printf("r_ij=%.15e\tradius[%d]+radius[%d]=%.15e\n",
+	       abs_r[j_col],
+	       i_col,
+	       j_col,
+	       ele[i_col].radius + ele[j_col].radius
+	       );
 
 
 	//t_sysで揃えるためDt[i]を使う.
@@ -917,6 +1060,8 @@ int main(void){
 	}
 
 
+	
+
 	//新しい合体粒子を作る. 0番目の要素はコピーに使うだけ.
 	for(k=1;k<=3;++k){
 	  x_0[0][k] = (ele[i_col].mass*x_0[i_col][k] + ele[j_col].mass*x_0[j_col][k])/(ele[i_col].mass + ele[j_col].mass);
@@ -955,11 +1100,37 @@ int main(void){
 	  printf("collisionfile 0 error\n");
 	  exit(-1);
 	}
-	fprintf(fpcollision,"#i_col=%d\tj_col=%d\tr_ij=%.15e\tradius[%d]+radius[%d]=%.15e\n",i_col,j_col,abs_r[j_col],i_col,j_col,ele[i_col].radius + ele[j_col].radius);
-	fprintf(fpcollision,"#dE_heat=%e\tdE_grav=%e\tdE_c=%e\tv_imp=%e\n",dE_heat,dE_grav,dE_c,v_imp);
+	fprintf(fpcollision,"#i_col=%d\tj_col=%d\tr_ij=%.15e\tradius[%d]+radius[%d]=%.15e\n",
+		i_col,
+		j_col,
+		abs_r[j_col],
+		i_col,
+		j_col,
+		ele[i_col].radius + ele[j_col].radius
+		);
+	fprintf(fpcollision,"#dE_heat=%e\tdE_grav=%e\tdE_c=%e\tv_imp=%e\n",
+		dE_heat,
+		dE_grav,
+		dE_c,
+		v_imp
+		);
 	fprintf(fpcollision,"#t[yr]\ti\tx\ty\tz\tr_0(3D)\tr_0(2D)\tv_x\tv_y\tv_z\tabs_v\tR_Hill\tRadius\n");
 	for(i=1;i<=global_n;i++){
-	  fprintf(fpcollision,"%.15e\t%4d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15e\t%.15e\n",(t_sys+t_tmp)/2.0/M_PI,i,x_c[i][1],x_c[i][2],x_c[i][3],r_c[i],sqrt(x_c[i][1]*x_c[i][1]+x_c[i][2]*x_c[i][2]),v_c[i][1],v_c[i][2],v_c[i][3],sqrt(v_c[i][1]*v_c[i][1]+v_c[i][2]*v_c[i][2]+v_c[i][3]*v_c[i][3]),ele[i].r_h,ele[i].radius);
+	  fprintf(fpcollision,"%.15e\t%4d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15e\t%.15e\n",
+		  (t_sys+t_tmp)/2.0/M_PI,
+		  i,
+		  x_c[i][1],
+		  x_c[i][2],
+		  x_c[i][3],
+		  r_c[i],
+		  sqrt(x_c[i][1]*x_c[i][1]+x_c[i][2]*x_c[i][2]),
+		  v_c[i][1],
+		  v_c[i][2],
+		  v_c[i][3],
+		  sqrt(v_c[i][1]*v_c[i][1]+v_c[i][2]*v_c[i][2]+v_c[i][3]*v_c[i][3]),
+		  ele[i].r_h,
+		  ele[i].radius
+		  );
 	}
 	fclose(fpcollision);
 #endif
@@ -1019,8 +1190,19 @@ int main(void){
 	  return -1;
 	}
 	fprintf(fpEne,"#collision occur\t%e[yr]\n",(t_sys+t_tmp)/2.0/M_PI);
-	fprintf(fpEne,"#dE_heat=%e\tdE_grav=%e\tdE_c=%e\tv_imp=%e\n",dE_heat,dE_grav,dE_c,v_imp);
-	fprintf(fpEne,"%.15e\t%.15e\t%.15e\t%.15e\t%15e\n",(t_sys+t_tmp)/2.0/M_PI,E_tot,(E_tot-E_tot_0)/fabs(E_tot_0),dE_correct/fabs(E_tot_0),step);
+	fprintf(fpEne,"#dE_heat=%e\tdE_grav=%e\tdE_c=%e\tv_imp=%e\n",
+		dE_heat,
+		dE_grav,
+		dE_c,
+		v_imp
+		);
+	fprintf(fpEne,"%.15e\t%.15e\t%.15e\t%.15e\t%15e\n",
+		(t_sys+t_tmp)/2.0/M_PI,
+		E_tot,
+		(E_tot-E_tot_0)/fabs(E_tot_0),
+		dE_correct/fabs(E_tot_0),
+		step
+		);
 	fclose(fpEne);
 
 	abs_L = AngularMomentum(i,ele,x_0,v_0);
@@ -1199,7 +1381,19 @@ int main(void){
       }
 
       for(i=1;i<=global_n;i++){
-	fprintf(fpposivelo,"%.15e\t%4d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\n",(t_sys+t_tmp)/2.0/M_PI,i,x_c[i][1],x_c[i][2],x_c[i][3],r_c[i],sqrt(x_c[i][1]*x_c[i][1]+x_c[i][2]*x_c[i][2]),v_c[i][1],v_c[i][2],v_c[i][3],sqrt(v_c[i][1]*v_c[i][1]+v_c[i][2]*v_c[i][2]+v_c[i][3]*v_c[i][3]));
+	fprintf(fpposivelo,"%.15e\t%4d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\n",
+		(t_sys+t_tmp)/2.0/M_PI,
+		i,
+		x_c[i][1],
+		x_c[i][2],
+		x_c[i][3],
+		r_c[i],
+		sqrt(x_c[i][1]*x_c[i][1]+x_c[i][2]*x_c[i][2]),
+		v_c[i][1],
+		v_c[i][2],
+		v_c[i][3],
+		sqrt(v_c[i][1]*v_c[i][1]+v_c[i][2]*v_c[i][2]+v_c[i][3]*v_c[i][3])
+		);
       }
       fprintf(fpposivelo,"\n\n");
 
@@ -1234,7 +1428,13 @@ int main(void){
 	printf("Ene error\n");
 	return -1;
       }
-      fprintf(fpEne,"%.15e\t%.15e\t%.15e\t%.15e\t%15e\n",(t_sys+t_tmp)/2.0/M_PI,E_tot,(E_tot-E_tot_0)/fabs(E_tot_0),dE_correct/fabs(E_tot_0),step);
+      fprintf(fpEne,"%.15e\t%.15e\t%.15e\t%.15e\t%15e\n",
+	      (t_sys+t_tmp)/2.0/M_PI,
+	      E_tot,
+	      (E_tot-E_tot_0)/fabs(E_tot_0),
+	      dE_correct/fabs(E_tot_0),
+	      step
+	      );
       fclose(fpEne);
 
       abs_L = AngularMomentum(i,ele,x_c,v_c);
@@ -1270,7 +1470,18 @@ int main(void){
 	  exit(-1);
 	}
 
-	fprintf(fporbit,"%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\n",(t_sys+t_tmp)/2.0/M_PI,ele[i].ecc,ele[i].axis,ele[i].u,ele[i].inc,ele[i].Omega,ele[i].omega,ele[i].r_h,ele[i].radius,ele[i].mass);
+	fprintf(fporbit,"%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\n",
+		(t_sys+t_tmp)/2.0/M_PI,
+		ele[i].ecc,
+		ele[i].axis,
+		ele[i].u,
+		ele[i].inc,
+		ele[i].Omega,
+		ele[i].omega,
+		ele[i].r_h,
+		ele[i].radius,
+		ele[i].mass
+		);
 
 	fclose(fporbit);
       }
@@ -1345,15 +1556,38 @@ int main(void){
 
 	if(isnan(frag[i].dt_frag)){
 	  //frag[i].dt_frag = dt_[i]*100.0;  //NaN処理.
-	  printf("time=%.15e[yr]\tfrag[%d].neighbornumber=%d\n",(t_sys+t_tmp)/2.0/M_PI,i,frag[i].neighbornumber);
+	  printf("time=%.15e[yr]\tfrag[%d].neighbornumber=%d\n",
+		 (t_sys+t_tmp)/2.0/M_PI,
+		 i,
+		 frag[i].neighbornumber
+		 );
 	  /*
 	    for(j=1;j<=frag[i].neighbornumber;j++){
 	    printf("\tneighborlist[%d]=%d\n",j,frag[i].neighborlist[j]);
 	    }
 	  */
-	  printf("i=%d\tv_ave=%f\tsigma=%f\tecc=%f\tr_c=%f\tdelta_r_out=%f\tdelta_r_in=%f\n",i,frag[i].v_ave,frag[i].sigma,ele[i].ecc,r_c[i],frag[i].delta_r_out,frag[i].delta_r_in);
-	  printf("axis=%e\tecc=%e\tinc=%e\tu=%e\tOmega=%e\tomega=%e\n",ele[i].axis,ele[i].ecc,ele[i].inc,ele[i].u,ele[i].Omega,ele[i].omega);
-	  printf("x=%f\ty=%f\tz=%f\n",x_c[i][1],x_c[i][2],x_c[i][3]);
+	  printf("i=%d\tv_ave=%f\tsigma=%f\tecc=%f\tr_c=%f\tdelta_r_out=%f\tdelta_r_in=%f\n",
+		 i,
+		 frag[i].v_ave,
+		 frag[i].sigma,
+		 ele[i].ecc,
+		 r_c[i],
+		 frag[i].delta_r_out,
+		 frag[i].delta_r_in
+		 );
+	  printf("axis=%e\tecc=%e\tinc=%e\tu=%e\tOmega=%e\tomega=%e\n",
+		 ele[i].axis,
+		 ele[i].ecc,
+		 ele[i].inc,
+		 ele[i].u,
+		 ele[i].Omega,
+		 ele[i].omega
+		 );
+	  printf("x=%f\ty=%f\tz=%f\n",
+		 x_c[i][1],
+		 x_c[i][2],
+		 x_c[i][3]
+		 );
 	  return -1;
 	}
 	//frag[i].fragtimes = 0;
@@ -1381,7 +1615,10 @@ int main(void){
 	printf("fragfile error\n");
 	return -1;
       }
-      fprintf(fpfrag,"%.15e\t%.15f\t%.15f\n",(t_sys+t_tmp)/2.0/M_PI,mass_tot_all,M_TOT);
+      fprintf(fpfrag,"%.15e\t%.15f\t%.15f\n",
+	      (t_sys+t_tmp)/2.0/M_PI,
+	      mass_tot_all,
+	      M_TOT);
       fclose(fpfrag);
 
       fpposimass = fopen(posimassfile,"a");  //位置、質量などをファイルへ書き出し.
@@ -1390,7 +1627,21 @@ int main(void){
 	return -1;
       }
       for(i=1;i<=global_n;i++){
-	fprintf(fpposimass,"%.15e\t%04d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%d\n",(t_sys+t_tmp)/2.0/M_PI,i,x_c[i][1],x_c[i][2],x_c[i][3],r_c[i],sqrt(x_c[i][1]*x_c[i][1]+x_c[i][2]*x_c[i][2]),ele[i].mass,frag[i].delta_r_out,frag[i].delta_r_in,frag[i].sigma,frag[i].n_s,frag[i].neighbornumber);
+	fprintf(fpposimass,"%.15e\t%04d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%d\n",
+		(t_sys+t_tmp)/2.0/M_PI,
+		i,
+		x_c[i][1],
+		x_c[i][2],
+		x_c[i][3],
+		r_c[i],
+		sqrt(x_c[i][1]*x_c[i][1]+x_c[i][2]*x_c[i][2]),
+		ele[i].mass,
+		frag[i].delta_r_out,
+		frag[i].delta_r_in,
+		frag[i].sigma,
+		frag[i].n_s,
+		frag[i].neighbornumber
+		);
       }
       fprintf(fpposimass,"\n\n");
       fclose(fpposimass);
@@ -1431,7 +1682,22 @@ int main(void){
 	printf("posi error\n");
 	return -1;
       }
-      fprintf(fpposi_rot,"%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\n",(t_sys+t_tmp)/2.0/M_PI,x_rot[PLANETESIMAL_NO][1],x_rot[PLANETESIMAL_NO][2],x_c[PLANETESIMAL_NO][3],r_xy[PLANETESIMAL_NO],atan2(x_rot[PLANETESIMAL_NO][2],x_rot[PLANETESIMAL_NO][1]),ele[PLANETESIMAL_NO].radius,x_rot[PLANET_NO][1],x_rot[PLANET_NO][2],x_c[PLANET_NO][3],r_xy[PLANET_NO],atan2(x_rot[PLANET_NO][2],x_rot[PLANET_NO][1]),ele[PLANET_NO].radius,ele[PLANET_NO].r_h);
+      fprintf(fpposi_rot,"%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\n",
+	      (t_sys+t_tmp)/2.0/M_PI,
+	      x_rot[PLANETESIMAL_NO][1],
+	      x_rot[PLANETESIMAL_NO][2],
+	      x_c[PLANETESIMAL_NO][3],
+	      r_xy[PLANETESIMAL_NO],
+	      atan2(x_rot[PLANETESIMAL_NO][2],x_rot[PLANETESIMAL_NO][1]),
+	      ele[PLANETESIMAL_NO].radius,
+	      x_rot[PLANET_NO][1],
+	      x_rot[PLANET_NO][2],
+	      x_c[PLANET_NO][3],
+	      r_xy[PLANET_NO],
+	      atan2(x_rot[PLANET_NO][2],x_rot[PLANET_NO][1]),
+	      ele[PLANET_NO].radius,
+	      ele[PLANET_NO].r_h
+	      );
       fclose(fpposi_rot);
     }
 #endif
@@ -1442,7 +1708,12 @@ int main(void){
       //r_c[i]は計算してある
       if(r_c[i]<SOLAR_RADIUS || r_c[i]>SOLAR_SYSTEM_LIMIT){  //太陽に飲みこまれるか系外へ出て行くか.
 
-	printf("i=%d is eliminated\tr[%d]=%e\tt_sys+t_tmp=%.15e[yr]\n",i,i,r_c[i],(t_sys+t_tmp)/2.0/M_PI);
+	printf("i=%d is eliminated\tr[%d]=%e\tt_sys+t_tmp=%.15e[yr]\n",
+	       i,
+	       i,
+	       r_c[i],
+	       (t_sys+t_tmp)/2.0/M_PI
+	       );
 
 	//iとglobal_n_pを入れ替える.
 	ele[0] = ele[i];  //構造体のためSwap_double関数は使えない. 0番目の要素はコピーに使うだけ.
@@ -1531,7 +1802,10 @@ int main(void){
       }
 
     }else{
-      printf("Collision Judgement error\ti_col=%d\tj_col=%d\n",i_col,j_col);
+      printf("Collision Judgement error\ti_col=%d\tj_col=%d\n",
+	     i_col,
+	     j_col
+	     );
       exit(-1);
     }
 
@@ -1540,7 +1814,15 @@ int main(void){
       if(fmod(step,STEP_INTERVAL*50.0)==0.0){
 	printf("#step\t\tNp\tNtr\ti_sys\tdt[i_sys]\t\tt_tmp[yr]\t\tt_sys[yr]\n");
       }
-      printf("%e\t%3d\t%6d\t%6d\t%.15e\t%.15e\t%.15e\n",step,global_n_p,global_n-global_n_p,i_sys,dt_[i_sys]/2.0/M_PI,t_tmp/2.0/M_PI,t_sys/2.0/M_PI);
+      printf("%e\t%3d\t%6d\t%6d\t%.15e\t%.15e\t%.15e\n",
+	     step,
+	     global_n_p,
+	     global_n-global_n_p,
+	     i_sys,
+	     dt_[i_sys]/2.0/M_PI,
+	     t_tmp/2.0/M_PI,
+	     t_sys/2.0/M_PI
+	     );
 
 #if EXECUTION_TIME
       gettimeofday(&realtime_end_main,NULL);
@@ -1563,11 +1845,41 @@ int main(void){
     return -1;
   }
   fprintf(fptempread,"#t_tmp\tt_sys\tt_ene\tglobal_n_p\tglobal_n\ti_sys\tstep\tE_tot_0\tabs_L_0\tdE_correct\n");
-  fprintf(fptempread,"%.15e\t%.15e\t%.15e\t%6d\t%6d\t%6d\t%8e\t%.15e\t%.15e\t%.15e\n",t_tmp,t_sys,t_ene,global_n_p,global_n,i_sys,step,E_tot_0,abs_L_0,dE_correct);
+  fprintf(fptempread,"%.15e\t%.15e\t%.15e\t%6d\t%6d\t%6d\t%8e\t%.15e\t%.15e\t%.15e\n",
+	  t_tmp,
+	  t_sys,
+	  t_ene,
+	  global_n_p,
+	  global_n,
+	  i_sys,
+	  step,
+	  E_tot_0,
+	  abs_L_0,
+	  dE_correct
+	  );
   fprintf(fptempread,"\n\n");
   fprintf(fptempread,"#name\tx[AU]\ty[AU]\tz[AU]\t|r|[AU]\tvx[AU(2pi/yr)]\tvy[AU(2pi/yr)]\tvz[AU(2pi/yr)]\t|v|[AU(2pi/yr)]\tax[AU(2pi/yr)^2]\tay[AU(2pi/yr)^2]\taz[AU(2pi/yr)^2]\tadotx[AU(2pi/yr)^3]\tadoty[AU(2pi/yr)^3]\tadotz[AU(2pi/yr)^3]\tt_i[yr]\tdt_i[yr]\tmass[Msun]\n");
   for(i=1;i<=global_n;++i){
-    fprintf(fptempread,"%s\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\n",ele[i].name,x_0[i][1],x_0[i][2],x_0[i][3],r_0[i],v_0[i][1],v_0[i][2],v_0[i][3],sqrt(v2_0[i]),a_0[i][1],a_0[i][2],a_0[i][3],adot_0[i][1],adot_0[i][2],adot_0[i][3],t_[i]/2.0/M_PI,dt_[i]/2.0/M_PI,ele[i].mass);
+    fprintf(fptempread,"%s\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\n",
+	    ele[i].name,
+	    x_0[i][1],
+	    x_0[i][2],
+	    x_0[i][3],
+	    r_0[i],
+	    v_0[i][1],
+	    v_0[i][2],
+	    v_0[i][3],
+	    sqrt(v2_0[i]),
+	    a_0[i][1],
+	    a_0[i][2],
+	    a_0[i][3],
+	    adot_0[i][1],
+	    adot_0[i][2],
+	    adot_0[i][3],
+	    t_[i]/2.0/M_PI,
+	    dt_[i]/2.0/M_PI,
+	    ele[i].mass
+	    );
   }
   fclose(fptempread);
   ////////////////////////////////////////////////
@@ -1575,7 +1887,13 @@ int main(void){
 
 #if ENERGY_FILE
   printf("-----\n");
-  printf("dt_[%d]\t= %e\nE_error\t= %.15e\nL_error\t= %.15e\ndE_correct\t= %.15e\n",i_sys,dt_[i_sys],(E_tot-E_tot_0)/fabs(E_tot_0),(abs_L-abs_L_0)/abs_L_0,dE_correct/fabs(E_tot_0));
+  printf("dt_[%d]\t= %e\nE_error\t= %.15e\nL_error\t= %.15e\ndE_correct\t= %.15e\n",
+	 i_sys,
+	 dt_[i_sys],
+	 (E_tot-E_tot_0)/fabs(E_tot_0),
+	 (abs_L-abs_L_0)/abs_L_0,
+	 dE_correct/fabs(E_tot_0)
+	 );
 #endif
 
   printf("step\t= %.15e\n",step);
@@ -1583,7 +1901,10 @@ int main(void){
 
 #if DT_LOG
   for(i=0;i<TIME_INTERVAL_MAX;i++){
-    printf("t_ene[%d]\t= %e[yr]\n",i,t_ene[i]/2.0/M_PI);
+    printf("t_ene[%d]\t= %e[yr]\n",
+	   i,
+	   t_ene[i]/2.0/M_PI
+	   );
   }
 #else
   printf("dt_ene\t= %e[yr]\n",DT_ENE/2.0/M_PI);
