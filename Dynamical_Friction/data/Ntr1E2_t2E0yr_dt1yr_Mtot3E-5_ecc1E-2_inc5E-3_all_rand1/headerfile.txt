@@ -26,7 +26,7 @@
 #endif
 
 
-#define DIRECTORY ../data/Ntr1E2_t2E1yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_all_rand1/  //ファイル保存用のディレクトリ.
+#define DIRECTORY ../data/Ntr1E2_t2E0yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_all_rand1/  //ファイル保存用のディレクトリ.
 
 
 #define STR_(str) #str
@@ -142,7 +142,7 @@ Mean Longitude (deg)               100.46435
 
 
 //////////////////////////////////////////////////
-#define T_MAX (2.0*M_PI*2.0E1)  //20yr 全計算時間.
+#define T_MAX (2.0*M_PI*2.0E0)  //2yr 全計算時間.
 #define DT_LOG false  //true: t_eneをlogでとる. false: t_eneをlinearでとる.
 
 #if DT_LOG

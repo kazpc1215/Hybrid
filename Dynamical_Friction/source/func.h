@@ -24,6 +24,10 @@ double Calculate_Energy(CONST struct orbital_elements *ele_p,CONST double x_c[][
 #endif
 			CONST double r_c[]);
 
+void Initial_OrbitalElements_Planet(int i,struct orbital_elements *ele_p);
+
+void Initial_OrbitalElements_Tracer(int i,struct orbital_elements *ele_p);
+
 void InitialCondition(int i,double x_0[][4],double v_0[][4],double v2_0[],double r_dot_v[],double r_0[],CONST struct orbital_elements *ele_p);
 
 void Corrector_sys(int i_sys,CONST struct orbital_elements *ele_p,CONST double x_p[][4],CONST double v_p[][4],CONST double r_p[],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double r_dot_v[],CONST double a_0[][4],CONST double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],CONST double dt_[]);

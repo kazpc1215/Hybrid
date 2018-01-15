@@ -2,6 +2,67 @@
 #include "func.h"
 
 
+/*惑星の初期軌道要素*/
+void Initial_OrbitalElements_Planet(int i,struct orbital_elements *ele_p){
+
+  sprintf((ele_p+i)->name,"Planet%02d",i);
+  (ele_p+i)->mass = PLANET_MASS;
+  (ele_p+i)->axis = PLANET_AXIS;
+  (ele_p+i)->ecc = PLANET_ECC;
+  (ele_p+i)->inc = PLANET_INC;
+  (ele_p+i)->u = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
+  (ele_p+i)->omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
+  (ele_p+i)->Omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
+  //(ele_p+i)->omega = 0.0;
+  //(ele_p+i)->Omega = 0.0;
+
+#ifndef M_0
+  (ele_p+i)->r_h = ((ele_p+i)->axis)*cbrt(((ele_p+i)->mass)/3.0);
+#else
+  (ele_p+i)->r_h = ((ele_p+i)->axis)*cbrt(((ele_p+i)->mass)/M_0/3.0);
+#endif
+
+  (ele_p+i)->radius = cbrt(3.0/4.0/M_PI*((ele_p+i)->mass)*1.989E33/PLANET_DENSITY)/1.496E13;
+  (ele_p+i)->orinum = i;
+
+  return;
+}
+
+
+/*トレーサーの初期軌道要素*/
+void Initial_OrbitalElements_Tracer(int i,struct orbital_elements *ele_p){
+
+  double tmp;
+
+  sprintf((ele_p+i)->name,"tracer%06d",i-global_n_p);
+  (ele_p+i)->mass = M_TOT/(double)(global_n-global_n_p);  //質量.
+  (ele_p+i)->axis = ((double)rand())/((double)RAND_MAX+1.0)*8.0*((ele_p+PLANET_NO)->r_h) + ((ele_p+PLANET_NO)->axis) - 4.0*((ele_p+PLANET_NO)->r_h);  //惑星から+/-4Hill半径までに分布.
+  (ele_p+i)->ecc = sqrt(-log(((double)rand())/((double)RAND_MAX+1.0)))*ECC_RMS;  //離心率  //Rayleigh分布
+  (ele_p+i)->inc = sqrt(-log(((double)rand())/((double)RAND_MAX+1.0)))*INC_RMS;  //軌道傾斜角  //Rayleigh分布
+  (ele_p+i)->omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
+  (ele_p+i)->Omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
+  //(ele_p+i)->omega = 0.0;
+  //(ele_p+i)->Omega = 0.0;
+
+  do{
+    (ele_p+i)->u = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
+    tmp = fabs( (((ele_p+i)->u) + ((ele_p+i)->omega) + ((ele_p+i)->Omega)) - (((ele_p+PLANET_NO)->u) + ((ele_p+PLANET_NO)->omega) + ((ele_p+PLANET_NO)->Omega)) );
+    tmp = fmod(tmp,2.0*M_PI)/M_PI;
+  }while(tmp < 1.0/12.0 || tmp > 23.0/12.0);  //惑星の+/-15度以内のときはuを振り直し.
+
+
+#ifndef M_0
+  (ele_p+i)->r_h = ((ele_p+i)->axis)*cbrt(((ele_p+i)->mass)/3.0);
+#else
+  (ele_p+i)->r_h = ((ele_p+i)->axis)*cbrt(((ele_p+i)->mass)/M_0/3.0);
+#endif
+
+  (ele_p+i)->radius = cbrt(3.0/4.0/M_PI*((ele_p+i)->mass)*1.989E33/PLANET_DENSITY)/1.496E13;
+  (ele_p+i)->orinum = i;
+
+  return;
+}
+
 /*軌道要素計算*/
 void Calculate_OrbitalElements(int i,CONST double x_c[][4],CONST double v_c[][4],struct orbital_elements *ele_p,CONST double r_c[],CONST double v2_c[],CONST double r_dot_v[]){
 
@@ -250,11 +311,3 @@ void InitialCondition(int i,double x_0[][4],double v_0[][4],double v2_0[],double
 
   return;
 }
-
-
-
-
-
-
-
-

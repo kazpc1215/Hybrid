@@ -1,7 +1,7 @@
 # Makefile
 
 # SINGLE, DEBUG, OMP
-MODE = DEBUG
+MODE = SINGLE
 
 # -O0,-O1,-O2,-O3
 LEVEL = -O3
@@ -26,7 +26,7 @@ endif
 endif
 
 ifeq ($(MODE),DEBUG)
-	CFLAGS = -g -O3
+	CFLAGS = -g -O0
 ifeq ($(CC),cc)
 	CFLAGS += -h noomp
 endif
