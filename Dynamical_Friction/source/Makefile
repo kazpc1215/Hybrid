@@ -1,7 +1,7 @@
 # Makefile
 
 # SINGLE, DEBUG, OMP
-MODE = SINGLE
+MODE = OMP
 
 # -O0,-O1,-O2,-O3
 LEVEL = -O3
@@ -65,7 +65,6 @@ define generate_shell_script_1
 
 	echo '#PBS -l mppwidth=24' >> $(JOBFILE)
 	echo '#PBS -j oe' >> $(JOBFILE)
-#echo "cd $'\x24PBS_O_WORKDIR" >> $(JOBFILE)
 	echo 'cd $$PBS_O_WORKDIR' >> $(JOBFILE)
 
 	if [ $(MODE) = SINGLE ] ; then \
@@ -79,7 +78,7 @@ define generate_shell_script_1
 	echo "export OMP_NUM_THREADS=$$THREADS" >> $(JOBFILE); \
 	fi
 
-	echo 'export OMP_WAIT_POLICY=PASSIVE' >> $(JOBFILE)
+#echo 'export OMP_WAIT_POLICY=PASSIVE' >> $(JOBFILE)
 	echo 'export CRAY_OMP_CHECK_AFFINITY=TRUE' >> $(JOBFILE)
 endef
 

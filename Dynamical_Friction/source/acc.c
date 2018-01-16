@@ -289,7 +289,9 @@ double All_Acceleration(int i,int k,CONST struct orbital_elements *ele_p,CONST d
   if(i>global_n_p){  //i_sysがトレーサーの場合，惑星からの影響を計算.
 #endif
 
-    //#pragma omp parallel for reduction(+:a_0)
+#if INTERACTION_ALL
+#pragma omp parallel for reduction(+:a_0)
+#endif
     for(j=1;j<=
 #if INTERACTION_ALL
 	  global_n
@@ -309,10 +311,12 @@ double All_Acceleration(int i,int k,CONST struct orbital_elements *ele_p,CONST d
       }
     }
 
+
+
 #if INTERACTION_PLANET_TRACER
   }else if(i<=global_n_p){  //i_sysが惑星の場合，自身以外のすべてからの影響を計算.
 
-    //#pragma omp parallel for reduction(+:a_0)
+#pragma omp parallel for reduction(+:a_0)
     for(j=1;j<=global_n;++j){
 
 #if INDIRECT_TERM
@@ -342,7 +346,9 @@ double All_dAcceleration(int i,int k,CONST struct orbital_elements *ele_p,CONST 
   if(i>global_n_p){  //i_sysがトレーサーの場合，惑星からの影響を計算.
 #endif
 
-    //#pragma omp parallel for reduction(+:adot_0)
+#if INTERACTION_ALL
+#pragma omp parallel for reduction(+:adot_0)
+#endif
     for(j=1;j<=
 #if INTERACTION_ALL
 	  global_n
@@ -365,8 +371,8 @@ double All_dAcceleration(int i,int k,CONST struct orbital_elements *ele_p,CONST 
 #if INTERACTION_PLANET_TRACER
   }else if(i<=global_n_p){  //i_sysが惑星の場合，自身以外のすべてからの影響を計算.
 
-    //#pragma omp parallel for reduction(+:adot_0)
-    for(j=1;j<=global_n_p;++j){
+#pragma omp parallel for reduction(+:adot_0)
+    for(j=1;j<=global_n;++j){
 
 #if INDIRECT_TERM
       adot_0 += dAcceleration_indirect(j,k,ele_p,x_0,v_0,r_0,r_dot_v);

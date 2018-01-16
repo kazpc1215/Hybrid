@@ -42,6 +42,12 @@ int main(void){
 #ifdef _OPENMP
   printf("OMP_NUM_THREADS: %s\n",getenv("OMP_NUM_THREADS"));
   printf("threads: %d\n", omp_get_max_threads());
+
+#pragma omp parallel
+  {
+    printf(". ");
+  }
+  printf("\n");
 #endif
 
 
@@ -927,7 +933,7 @@ int main(void){
       if((t_[i] + dt_[i]) < t_sys){
 	t_sys = t_[i] + dt_[i];  //dt_[i]が最小のものを選ぶ.
 	i_sys = i;  //i_sysを選ぶ.
-     }
+      }
     }
 
 
