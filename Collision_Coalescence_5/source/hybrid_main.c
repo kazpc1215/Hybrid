@@ -67,12 +67,8 @@ int main(void){
   double abs_L=0.0,abs_L_0=0.0;
 
 
-#if DT_LOG
-  int interval;
-  double t_ene[TIME_INTERVAL_MAX]={TIME_INTERVAL};
-#else
   double t_ene=DT_ENE;
-#endif
+
 
 #if INDIRECT_TERM
   double x_G[4]={},v_G[4]={};
@@ -334,30 +330,38 @@ int main(void){
     srand(RAND_SEED);
 
 
-    /*
-      ele[1].mass = PLANET_MASS;
-      ele[1].axis = PLANET_INNER_AXIS;
-      #ifndef M_0
-      ele[1].r_h = ele[1].axis*cbrt(ele[1].mass/3.0);
-      #else
-      ele[1].r_h = ele[1].axis*cbrt(ele[1].mass/M_0/3.0);
-      #endif
+    ele[1].mass = PLANET_MASS;
+    ele[1].axis = PLANET_INNER_AXIS;
+#ifndef M_0
+    ele[1].r_h = ele[1].axis*cbrt(ele[1].mass/3.0);
+#else
+    ele[1].r_h = ele[1].axis*cbrt(ele[1].mass/M_0/3.0);
+#endif
 
-      for(i=2;i<=global_n_p;++i){
+    for(i=2;i<=global_n_p;++i){
       ele[i].mass = PLANET_MASS;
       ele[i].axis = ele[i-1].axis * (1.0/DELTA_AXIS + 0.5*cbrt((ele[i-1].mass+ele[i].mass)/3.0))/(1.0/DELTA_AXIS - 0.5*cbrt((ele[i-1].mass+ele[i].mass)/3.0));  //相互Hill半径 の DELTA_AXIS倍 間隔.
 
-      #ifndef M_0
+#ifndef M_0
       ele[i].r_h = ele[i].axis*cbrt(ele[i].mass/3.0);
-      #else
+#else
       ele[i].r_h = ele[i].axis*cbrt(ele[i].mass/M_0/3.0);
-      #endif
-      }
-    */
+#endif
+    }
 
 
     for(i=1;i<=global_n_p;++i){  //惑星.
-      Initial_OrbitalElements_Planet(i,ele);  //初期軌道要素.
+      //Initial_OrbitalElements_Planet(i,ele);  //初期軌道要素.
+
+      sprintf(ele[i].name,"Planet%02d",i);
+      ele[i].ecc = PLANET_ECC;
+      ele[i].inc = PLANET_INC;
+      ele[i].u = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
+      ele[i].omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
+      ele[i].Omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
+      ele[i].radius = cbrt(3.0/4.0/M_PI*ele[i].mass*1.989E33/PLANET_DENSITY)/1.496E13;
+      ele[i].orinum = i;
+
       InitialCondition(i,x_0,v_0,v2_0,r_dot_v,r_0,ele);  //初期位置、速度計算.
     }
 
@@ -511,6 +515,8 @@ int main(void){
       InitialCondition(i,x_0,v_0,v2_0,r_dot_v,r_0,ele);  //初期位置、速度計算.
     }
 #endif
+
+#endif  /*N_tr != 0*/
 
 
 #if POSI_VELO_FILE
@@ -688,6 +694,7 @@ int main(void){
 #endif  /*ENERGY_FILE*/
 
 
+#if N_tr != 0
 
 #if FRAGMENTATION
 
@@ -794,8 +801,7 @@ int main(void){
 
 #endif  /*FRAGMENTATION*/
 
-#endif  /*N_tr !=0 */
-
+#endif  /*N_tr != 0*/
 
     fpinitial = fopen(initialfile,"w");
     if(fpinitial==NULL){
@@ -913,17 +919,8 @@ int main(void){
 
   ////////////////////////////////////////////////////////////////////////////////////
 
-#if DT_LOG
-  interval = 0;
-#endif
 
-  while(
-#if DT_LOG
-	TIME_INTERVAL_MAX > interval
-#else
-	t_sys + t_tmp <= T_MAX
-#endif
-	){
+  while(t_sys + t_tmp <= T_MAX){
 
     step+=1.0;
 
@@ -937,13 +934,7 @@ int main(void){
     }
 
 
-    if(
-#if DT_LOG
-       t_sys + t_tmp < t_ene[interval]
-#else
-       t_sys + t_tmp < t_ene
-#endif
-       ){
+    if(t_sys + t_tmp < t_ene){
 
       //individual timestep
 
@@ -1276,28 +1267,19 @@ int main(void){
 
 
     }else{
-      //t_ene[interval] ですべての粒子をそろえ、エネルギー、軌道要素等計算.
+      //t_ene ですべての粒子をそろえ、エネルギー、軌道要素等計算.
 
       for(i=1;i<=global_n;++i){
 
-#if DT_LOG
-	Dt[i] = t_ene[interval] - t_[i] - t_tmp;
-	t_[i] = 0.0;
-#else
 	Dt[i] = t_ene - t_[i] - t_tmp;
 	t_[i] = 0.0;
-#endif
+
 	dt_[i] = Dt[i];
       }
 
 
-#if DT_LOG
-      t_tmp = t_ene[interval];
-      t_sys = 0.0;
-#else
       t_tmp = t_ene;
       t_sys = 0.0;
-#endif
 
 
 #if EXECUTION_TIME
@@ -1474,7 +1456,54 @@ int main(void){
 
 
 #if DT_LOG
-      interval++;
+      fptempread = fopen(tempreadfile,"w");
+      if(fptempread==NULL){
+	printf("tempreadfile error\n");
+	return -1;
+      }
+      fprintf(fptempread,"#t_tmp\tt_sys\tt_ene\tglobal_n_p\tglobal_n\ti_sys\tstep\tE_tot_0\tabs_L_0\tdE_correct\n");
+      fprintf(fptempread,"%.15e\t%.15e\t%.15e\t%6d\t%6d\t%6d\t%8e\t%.15e\t%.15e\t%.15e\n",
+	      t_tmp,
+	      t_sys,
+	      t_ene,
+	      global_n_p,
+	      global_n,
+	      i_sys,
+	      step,
+	      E_tot_0,
+	      abs_L_0,
+	      dE_correct
+	      );
+      fprintf(fptempread,"\n\n");
+      fprintf(fptempread,"#name\tx[AU]\ty[AU]\tz[AU]\t|r|[AU]\tvx[AU(2pi/yr)]\tvy[AU(2pi/yr)]\tvz[AU(2pi/yr)]\t|v|[AU(2pi/yr)]\tax[AU(2pi/yr)^2]\tay[AU(2pi/yr)^2]\taz[AU(2pi/yr)^2]\tadotx[AU(2pi/yr)^3]\tadoty[AU(2pi/yr)^3]\tadotz[AU(2pi/yr)^3]\tt_i[yr]\tdt_i[yr]\tmass[Msun]\n");
+      for(i=1;i<=global_n;++i){
+	fprintf(fptempread,"%s\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\n",
+		ele[i].name,
+		x_0[i][1],
+		x_0[i][2],
+		x_0[i][3],
+		r_0[i],
+		v_0[i][1],
+		v_0[i][2],
+		v_0[i][3],
+		sqrt(v2_0[i]),
+		a_0[i][1],
+		a_0[i][2],
+		a_0[i][3],
+		adot_0[i][1],
+		adot_0[i][2],
+		adot_0[i][3],
+		t_[i]/2.0/M_PI,
+		dt_[i]/2.0/M_PI,
+		ele[i].mass
+		);
+      }
+      fclose(fptempread);
+#endif
+
+
+#if DT_LOG
+      t_ene *= GEOMETRIC_RATIO;
 #else
       t_ene += DT_ENE;
 #endif
@@ -1877,12 +1906,7 @@ int main(void){
 
 
 #if DT_LOG
-  for(i=0;i<TIME_INTERVAL_MAX;i++){
-    printf("t_ene[%d]\t= %e[yr]\n",
-	   i,
-	   t_ene[i]/2.0/M_PI
-	   );
-  }
+  printf("dt_ene\t= %e[yr]\ngeometric ratio\t= %s\n",DT_ENE/2.0/M_PI,STR(GEOMETRIC_RATIO));
 #else
   printf("dt_ene\t= %e[yr]\n",DT_ENE/2.0/M_PI);
 #endif

@@ -502,7 +502,7 @@ int main(void){
       v2_0[i] = SquareOfVelocity(i,v_0);  //速度の2乗.
       r_dot_v[i] = InnerProduct(i,x_0,v_0);  //r_i,v_iの内積.
     }
-#endif
+#endif  /*EJECTION*/
 
 
 #if ORBITING_SMALL_PARTICLE
@@ -512,6 +512,7 @@ int main(void){
     }
 #endif
 
+#endif  /*N_tr !=0 */
 
 #if POSI_VELO_FILE
     //初期位置、速度をファイルへ書き出し.
@@ -635,7 +636,7 @@ int main(void){
     exetime.Orbital_Elements[2] += Cal_time(usage_start.ru_stime,usage_end.ru_stime);
 #endif
 
-#endif
+#endif  /*ORBITALELEMENTS_FILE*/
 
 
 #if ENERGY_FILE
@@ -685,41 +686,7 @@ int main(void){
     exetime.Energy[2] += Cal_time(usage_start.ru_stime,usage_end.ru_stime);
 #endif
 
-#endif
-
-
-    fpinitial = fopen(initialfile,"w");
-    if(fpinitial==NULL){
-      printf("initialfile error\n");
-      return -1;
-    }
-    fprintf(fpinitial,"#t_tmp\tt_sys\ti_sys\tE_tot_0\tabs_L_0\tdE_correct\n");
-    fprintf(fpinitial,"%.15e\t%.15e\t%6d\t\t%.15e\t%.15e\t%.15e\n",
-	    t_tmp,
-	    t_sys,
-	    i_sys,
-	    E_tot_0,
-	    abs_L_0,
-	    dE_correct
-	    );
-    fprintf(fpinitial,"\n\n");
-    fprintf(fpinitial,"#number\tx[AU]\ty[AU]\tz[AU]\t|r|[AU]\tvx[2piAU/yr]\tvy[2piAU/yr]\tvz[2piAU/yr]\t|v|[2piAU/yr]\tdt[yr]\tmass[Msun]\n");
-    for(i=1;i<=global_n;++i){
-      fprintf(fpinitial,"%6d\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%e\t%e\n",
-	      i,
-	      x_0[i][1],
-	      x_0[i][2],
-	      x_0[i][3],
-	      r_0[i],
-	      v_0[i][1],
-	      v_0[i][2],
-	      v_0[i][3],
-	      sqrt(v2_0[i]),
-	      dt_[i]/2.0/M_PI,
-	      ele[i].mass
-	      );
-    }
-    fclose(fpinitial);
+#endif  /*ENERGY_FILE*/
 
 
 #if N_tr != 0
@@ -827,9 +794,44 @@ int main(void){
     exetime.Fragmentation[2] += Cal_time(usage_start.ru_stime,usage_end.ru_stime);
 #endif
 
-#endif
+#endif  /*FRAGMENTATION*/
 
-#endif
+#endif  /*N_tr !=0 */
+
+
+    fpinitial = fopen(initialfile,"w");
+    if(fpinitial==NULL){
+      printf("initialfile error\n");
+      return -1;
+    }
+    fprintf(fpinitial,"#t_tmp\tt_sys\ti_sys\tE_tot_0\tabs_L_0\tdE_correct\n");
+    fprintf(fpinitial,"%.15e\t%.15e\t%6d\t\t%.15e\t%.15e\t%.15e\n",
+	    t_tmp,
+	    t_sys,
+	    i_sys,
+	    E_tot_0,
+	    abs_L_0,
+	    dE_correct
+	    );
+    fprintf(fpinitial,"\n\n");
+    fprintf(fpinitial,"#number\tx[AU]\ty[AU]\tz[AU]\t|r|[AU]\tvx[2piAU/yr]\tvy[2piAU/yr]\tvz[2piAU/yr]\t|v|[2piAU/yr]\tdt[yr]\tmass[Msun]\n");
+    for(i=1;i<=global_n;++i){
+      fprintf(fpinitial,"%6d\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%e\t%e\n",
+	      i,
+	      x_0[i][1],
+	      x_0[i][2],
+	      x_0[i][3],
+	      r_0[i],
+	      v_0[i][1],
+	      v_0[i][2],
+	      v_0[i][3],
+	      sqrt(v2_0[i]),
+	      dt_[i]/2.0/M_PI,
+	      ele[i].mass
+	      );
+    }
+    fclose(fpinitial);
+
 
     ////////////////////////////ここまででファイルを上書きオープン/////////////////////////
 
@@ -896,7 +898,7 @@ int main(void){
   exetime.Orbital_Elements[1] += Cal_time(usage_start.ru_utime,usage_end.ru_utime);
   exetime.Orbital_Elements[2] += Cal_time(usage_start.ru_stime,usage_end.ru_stime);
 #endif
-#endif
+
 
 
   printf("-----\n");
@@ -1111,6 +1113,7 @@ int main(void){
 #if RELOCATE_PARTICLE
 	if(j_col>global_n_p){
 	  Initial_OrbitalElements_Tracer(j_col,ele);  //衝突後に粒子を再配置.
+	  InitialCondition(i,x_0,v_0,v2_0,r_dot_v,r_0,ele);
 	}
 #endif
 
