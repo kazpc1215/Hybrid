@@ -13,7 +13,7 @@ plt.figure(figsize=(10, 8), dpi=100)
 
 
 ######################################################################
-path = "/Users/isoya.kazuhide/Dynamical_Friction/data/Ntr1E3_t2E3yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_all_rand2//"
+path = "/Users/isoya.kazuhide/Dynamical_Friction/data/Ntr1E3_t2E3yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_rand2_ver2//"
 
 LINE = 2001
 
@@ -102,8 +102,10 @@ inc_rms = np.sqrt(inc_2_mean)
 
 plt.xlim([0, 2000])
 plt.ylim([0, 0.06])
+# plt.ylim([0, 0.025])
 plt.xticks(fontsize=15)
 plt.yticks(fontsize=15)
+# plt.xscale("log")
 # plt.yscale("log")
 plt.xlabel('time[yr]', fontsize=25)
 plt.ylabel('ecc', fontsize=25)
