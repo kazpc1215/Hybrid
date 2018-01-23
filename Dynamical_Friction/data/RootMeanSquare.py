@@ -13,7 +13,7 @@ plt.figure(figsize=(10, 8), dpi=100)
 
 
 ######################################################################
-path = "/Users/isoya.kazuhide/Dynamical_Friction/data/Ntr1E3_t2E3yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_rand2_ver2//"
+path = "/Users/isoya.kazuhide/Dynamical_Friction/data/Ntr1E3_t2E3yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_all_rand3//"
 
 LINE = 2001
 
@@ -36,33 +36,30 @@ for n in range(1, N_p+1):
 
     time[n, :] = arr[:, 0]
     ecc[n, :] = arr[:, 1]
-    axis[n, :] = arr[:, 2]
-    u[n, :] = arr[:, 3]
+    # axis[n, :] = arr[:, 2]
+    # u[n, :] = arr[:, 3]
     inc[n, :] = arr[:, 4]
-    Omega[n, :] = arr[:, 5]
-    omega[n, :] = arr[:, 6]
-    r_h[n, :] = arr[:, 7]
-    radius[n, :] = arr[:, 8]
-    mass[n, :] = arr[:, 9]
-    print(n, time[n, 1], axis[n, 1], ecc[n, 1])
+    # Omega[n, :] = arr[:, 5]
+    # omega[n, :] = arr[:, 6]
+    # r_h[n, :] = arr[:, 7]
+    # radius[n, :] = arr[:, 8]
+    # mass[n, :] = arr[:, 9]
+    print(n, time[n, 1], axis[n, 1], ecc[n, 1], inc[n, 1])
 
 
 ecc_2 = np.zeros(LINE, dtype=float)
-# print ecc_2
 for n in range(1, N_p+1):
     ecc_2 = ecc_2 + ecc[n, :] * ecc[n, :]
 ecc_2_mean = ecc_2 / N_p
-ecc_rms = np.sqrt(ecc_2_mean)
-plt.plot(time[1, :], ecc_rms, color="g", label=r"$e_{\rm p}$")
+ecc_rms_p = np.sqrt(ecc_2_mean)
+# plt.plot(time[1, :], ecc_rms_p, color="g", label=r"$e_{\rm p}$")
 
 inc_2 = np.zeros(LINE, dtype=float)
-# print inc_2
 for n in range(1, N_p+1):
     inc_2 = inc_2 + inc[n, :] * inc[n, :]
 inc_2_mean = inc_2 / N_p
-inc_rms = np.sqrt(inc_2_mean)
-# print inc_rms
-# plt.plot(time[1, :], inc_rms, color="g", label=r"$i_{\rm p}$")
+inc_rms_p = np.sqrt(inc_2_mean)
+# plt.plot(time[1, :], inc_rms_p, color="g", label=r"$i_{\rm p}$")
 
 #####
 for n in range(N_p+1, N_p+N_tr+1):
@@ -70,33 +67,30 @@ for n in range(N_p+1, N_p+N_tr+1):
 
     time[n, :] = arr[:, 0]
     ecc[n, :] = arr[:, 1]
-    axis[n, :] = arr[:, 2]
-    u[n, :] = arr[:, 3]
+    # axis[n, :] = arr[:, 2]
+    # u[n, :] = arr[:, 3]
     inc[n, :] = arr[:, 4]
-    Omega[n, :] = arr[:, 5]
-    omega[n, :] = arr[:, 6]
-    r_h[n, :] = arr[:, 7]
-    radius[n, :] = arr[:, 8]
-    mass[n, :] = arr[:, 9]
-    print(n, time[n, 1], axis[n, 1], ecc[n, 1])
+    # Omega[n, :] = arr[:, 5]
+    # omega[n, :] = arr[:, 6]
+    # r_h[n, :] = arr[:, 7]
+    # radius[n, :] = arr[:, 8]
+    # mass[n, :] = arr[:, 9]
+    print(n, time[n, 1], axis[n, 1], ecc[n, 1], inc[n, 1])
 
 
 ecc_2 = np.zeros(LINE, dtype=float)
-# print ecc_2
 for n in range(N_p+1, N_p+N_tr+1):
     ecc_2 = ecc_2 + ecc[n, :] * ecc[n, :]
 ecc_2_mean = ecc_2 / N_tr
-ecc_rms = np.sqrt(ecc_2_mean)
-plt.plot(time[1, :], ecc_rms, color="b", label=r"$e_{\rm rms}$")
+ecc_rms_tr = np.sqrt(ecc_2_mean)
+# plt.plot(time[1, :], ecc_rms_tr, color="b", label=r"$e_{\rm rms}$")
 
 inc_2 = np.zeros(LINE, dtype=float)
-# print inc_2
 for n in range(N_p+1, N_p+N_tr+1):
     inc_2 = inc_2 + inc[n, :] * inc[n, :]
 inc_2_mean = inc_2 / N_tr
-inc_rms = np.sqrt(inc_2_mean)
-# print inc_rms
-# plt.plot(time[1, :], inc_rms, color="b", label=r"$i_{\rm rms}$")
+inc_rms_tr = np.sqrt(inc_2_mean)
+# plt.plot(time[1, :], inc_rms_tr, color="b", label=r"$i_{\rm rms}$")
 ######################################################################
 
 
@@ -116,4 +110,14 @@ plt.legend(loc="upper left", fontsize=15)
 plt.title(r"$N_{\rm tr}=1000,M_{\rm tot}=10 {\rm M_{\oplus}}$", fontsize=18)
 plt.tight_layout()
 
-plt.show()
+# plt.show()
+
+arr2 = np.empty([LINE, 5], dtype=float)
+arr2[:, 0] = time[1, :]
+arr2[:, 1] = ecc_rms_p
+arr2[:, 2] = inc_rms_p
+arr2[:, 3] = ecc_rms_tr
+arr2[:, 4] = inc_rms_tr
+
+
+np.savetxt(path + "RMS.dat", arr2, fmt="%.15e", delimiter="\t", newline="\n", header="time\tecc_p\tinc_p\tecc_rms_tr\tinc_rms_tr")
