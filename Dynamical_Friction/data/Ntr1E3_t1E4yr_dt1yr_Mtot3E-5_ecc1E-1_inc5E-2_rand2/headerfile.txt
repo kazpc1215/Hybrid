@@ -21,12 +21,14 @@
 //constでエラーが出るため
 #if __GNUC__ == 4
 #define CONST
+#define ALWAYS_INLINE
 #else
 #define CONST const
+#define ALWAYS_INLINE __attribute__((always_inline))
 #endif
 
 
-#define DIRECTORY ../data/Ntr1E3_t2E0yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_rand1/  //ファイル保存用のディレクトリ.
+#define DIRECTORY ../data/Ntr1E3_t1E4yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_rand2/  //ファイル保存用のディレクトリ.
 
 
 #define STR_(str) #str
@@ -42,9 +44,9 @@
 //////////////////////////////////////////////////
 #define N_tr 1000  //初期のトレーサーの数.
 #define N_p 1  //初期の原始惑星の数.
-#define RAND_SEED 1  //乱数の種.
-#define STEP_INTERVAL 1.0E5  //何ステップごとに標準出力するか
-#define BREAK_TIME 100.0  //4h = 14400sec
+#define RAND_SEED 2  //乱数の種.
+#define STEP_INTERVAL 1.0E6  //何ステップごとに標準出力するか
+#define BREAK_TIME 14200.0  //4h = 14400sec
 
 EXTERN int global_n;  //グローバル変数.
 EXTERN int global_n_p;  //グローバル変数.
@@ -56,7 +58,7 @@ EXTERN int global_n_p;  //グローバル変数.
 #define ORBITALELEMENTS_FILE true  //軌道要素計算&ファイル作成.
 #define POSI_VELO_FILE false  //位置速度ファイル作成.
 #define POSI_VELO_ROT_FILE false  //回転座標系の位置速度ファイル作成.
-#define COLLISION_FILE false  //衝突時の位置速度ファイル作成.
+#define COLLISION_FILE false  //衝突直前の位置速度ファイル作成.
 #define EXECUTION_TIME true  //実行時間測定.
 #if EXECUTION_TIME
 #include <sys/time.h>
@@ -71,8 +73,12 @@ EXTERN int global_n_p;  //グローバル変数.
 #define INTERACTION_TEST_PARTICLE false  //トレーサーをテスト粒子として扱う（惑星に影響を与えないが惑星から影響を受ける）.
 #define INDIRECT_TERM true  //中心星が動く.
 #define FRAGMENTATION false  //破壊 近傍粒子探索と質量フラックス計算.
-#define COLLISION false  //衝突
-#define EJECTION false  //衝突後に破片をコーン状に放出する.
+#define COLLISION true  //衝突.
+#if COLLISION
+#define COALESCENCE false  //衝突後に合体.
+#define RELOCATE_PARTICLE true  //衝突後に粒子を再配置.
+#endif
+#define EJECTION false  //破片をコーン状に放出する.
 #define ORBITING_SMALL_PARTICLE true  //微惑星を初期にケプラー運動させておく.
 #define ELIMINATE_PARTICLE false  //太陽に飲みこまれるか系外へ出て行くかで粒子を消す.
 //////////////////////////////////////////////////
@@ -98,8 +104,8 @@ EXTERN int global_n_p;  //グローバル変数.
 //////////////////////////////////////////////////
 #define PLANET_NO 1
 #define PLANET_MASS 3.0E-6  //地球サイズ.
-#define PLANET_ECC 0.01
-#define PLANET_INC 0.005
+#define PLANET_ECC 0.1
+#define PLANET_INC 0.05
 #define PLANET_DENSITY 3.0  //[g/cc]
 #define PLANET_AXIS 1.0
 //#define PLANET_INNER_AXIS 0.5
@@ -128,8 +134,8 @@ Mean Longitude (deg)               100.46435
 #if ORBITING_SMALL_PARTICLE
 //#define INNER_AXIS 0.5  //トレーサーの長軸半径 下限.
 //#define OUTER_AXIS 1.5  //トレーサーの長軸半径 上限.
-#define ECC_RMS 0.01  //トレーサーの離心率の二乗平均平方根.  //Rayleigh分布.
-#define INC_RMS 0.005  //トレーサーの軌道傾斜角の二乗平均平方根.  //Rayleigh分布.
+#define ECC_RMS 0.1  //トレーサーの離心率の二乗平均平方根.  //Rayleigh分布.
+#define INC_RMS 0.05  //トレーサーの軌道傾斜角の二乗平均平方根.  //Rayleigh分布.
 #endif
 
 #if FRAGMENTATION
@@ -141,7 +147,7 @@ Mean Longitude (deg)               100.46435
 
 
 //////////////////////////////////////////////////
-#define T_MAX (2.0*M_PI*2.0E0)  //2yr 全計算時間.
+#define T_MAX (2.0*M_PI*1.0E4)  //10000yr 全計算時間.
 #define DT_LOG false  //true: t_eneをlogでとる. false: t_eneをlinearでとる.
 
 #if DT_LOG

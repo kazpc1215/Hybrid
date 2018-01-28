@@ -13,9 +13,9 @@ plt.figure(figsize=(10, 8), dpi=100)
 
 
 ######################################################################
-path = "/Users/isoya.kazuhide/Dynamical_Friction/data/Ntr1E3_t2E3yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_rand4_ver2//"
+path = "/Users/isoya.kazuhide/Dynamical_Friction/data/Ntr1E3_t1E4yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_rand2//"
 
-LINE = 2001
+LINE = 10001
 
 N_p = 1
 N_tr = 1000
@@ -99,8 +99,9 @@ plt.plot(time[1, :], ecc_rms_p, color="g", label=r"$e_{\rm p}$")
 plt.plot(time[1, :], ecc_rms_tr, color="b", label=r"$e_{\rm rms}$")
 # plt.plot(time[1, :], inc_rms_tr, color="b", label=r"$i_{\rm rms}$")
 
-plt.xlim([0, 2000])
-plt.ylim([0, 0.06])
+plt.xlim([0, 10000])
+plt.ylim([0, 0.12])
+# plt.ylim([0, 0.06])
 # plt.ylim([0, 0.025])
 plt.xticks(fontsize=15)
 plt.yticks(fontsize=15)
