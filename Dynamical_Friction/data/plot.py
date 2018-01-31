@@ -13,7 +13,7 @@ import numpy as np
 
 
 ######################################################################
-path = "/Users/isoya.kazuhide/Dynamical_Friction/data/Ntr1E3_t1E4yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_rand2//"
+path = "/Users/isoya.kazuhide/Dynamical_Friction/data/Ntr1E3_t1E4yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_rand3//"
 
 LINE = 10001
 
@@ -78,7 +78,7 @@ for T in range(0, LINE):
     plt.scatter(axis[1, T], ecc[1, T], color="r", s=20, label="Planet")
     plt.legend(loc="upper left", fontsize=15)
     plt.tight_layout()
-    filename = "../image/Ntr1E3_t1E4yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_rand2/axis_ecc_T%05.0fyr.png" % time[1, T]
+    filename = "../image/Ntr1E3_t1E4yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_rand3/axis_ecc_T%05.0fyr.png" % time[1, T]
     plt.grid(True)
     plt.savefig(filename)
     plt.close()
@@ -96,7 +96,7 @@ for T in range(0, LINE):
     plt.scatter(axis[1, T], inc[1, T], color="r", s=20, label="Planet")
     plt.legend(loc="upper left", fontsize=15)
     plt.tight_layout()
-    filename = "../image/Ntr1E3_t1E4yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_rand2/axis_inc_T%05.0fyr.png" % time[1, T]
+    filename = "../image/Ntr1E3_t1E4yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_rand3/axis_inc_T%05.0fyr.png" % time[1, T]
     plt.grid(True)
     plt.savefig(filename)
     plt.close()

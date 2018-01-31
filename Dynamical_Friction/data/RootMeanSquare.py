@@ -13,7 +13,7 @@ plt.figure(figsize=(10, 8), dpi=100)
 
 
 ######################################################################
-path = "/Users/isoya.kazuhide/Dynamical_Friction/data/Ntr1E3_t1E4yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_rand2//"
+path = "/Users/isoya.kazuhide/Dynamical_Friction/data/Ntr1E3_t1E4yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_rand3//"
 
 LINE = 10001
 
@@ -94,22 +94,22 @@ inc_rms_tr = np.sqrt(inc_2_mean)
 ######################################################################
 
 
-plt.plot(time[1, :], ecc_rms_p, color="g", label=r"$e_{\rm p}$")
-# plt.plot(time[1, :], inc_rms_p, color="g", label=r"$i_{\rm p}$")
-plt.plot(time[1, :], ecc_rms_tr, color="b", label=r"$e_{\rm rms}$")
-# plt.plot(time[1, :], inc_rms_tr, color="b", label=r"$i_{\rm rms}$")
+# plt.plot(time[1, :], ecc_rms_p, color="g", label=r"$e_{\rm p}$")
+plt.plot(time[1, :], inc_rms_p, color="g", label=r"$i_{\rm p}$")
+# plt.plot(time[1, :], ecc_rms_tr, color="b", label=r"$e_{\rm rms}$")
+plt.plot(time[1, :], inc_rms_tr, color="b", label=r"$i_{\rm rms}$")
 
 plt.xlim([0, 10000])
-plt.ylim([0, 0.12])
-# plt.ylim([0, 0.06])
+# plt.ylim([0, 0.12])
+plt.ylim([0, 0.1])
 # plt.ylim([0, 0.025])
 plt.xticks(fontsize=15)
 plt.yticks(fontsize=15)
 # plt.xscale("log")
 # plt.yscale("log")
 plt.xlabel('time[yr]', fontsize=25)
-plt.ylabel('ecc', fontsize=25)
-# plt.ylabel('inc [rad]', fontsize=25)
+# plt.ylabel('ecc', fontsize=25)
+plt.ylabel('inc [rad]', fontsize=25)
 plt.grid(True)
 plt.legend(loc="upper left", fontsize=15)
 # plt.legend(bbox_to_anchor=(1.0, 0.6),fontsize=15)
@@ -117,12 +117,13 @@ plt.title(r"$N_{\rm tr}=1000,M_{\rm tot}=10 {\rm M_{\oplus}}$", fontsize=18)
 plt.tight_layout()
 
 plt.show()
+"""
+arr2 = np.empty([LINE, 5], dtype=float)
+arr2[:, 0] = time[1, :]
+arr2[:, 1] = ecc_rms_p
+arr2[:, 2] = inc_rms_p
+arr2[:, 3] = ecc_rms_tr
+arr2[:, 4] = inc_rms_tr
 
-# arr2 = np.empty([LINE, 5], dtype=float)
-# arr2[:, 0] = time[1, :]
-# arr2[:, 1] = ecc_rms_p
-# arr2[:, 2] = inc_rms_p
-# arr2[:, 3] = ecc_rms_tr
-# arr2[:, 4] = inc_rms_tr
-
-# np.savetxt(path + "RMS.dat", arr2, fmt="%.15e", delimiter="\t", newline="\n", header="time\tecc_p\tinc_p\tecc_rms_tr\tinc_rms_tr")
+np.savetxt(path + "RMS.dat", arr2, fmt="%.15e", delimiter="\t", newline="\n", header="time\tecc_p\tinc_p\tecc_rms_tr\tinc_rms_tr")
+"""
