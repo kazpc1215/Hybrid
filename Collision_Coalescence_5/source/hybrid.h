@@ -19,12 +19,15 @@
 
 //#define CONST const
 //constでエラーが出るため
-#if __GNUC__ == 4
+#if __GNUC__ == 7
+#define CONST const
+#define ALWAYS_INLINE __attribute__((always_inline))
+#elif __GNUC__ == 4
 #define CONST
 #define ALWAYS_INLINE
 #else
 #define CONST const
-#define ALWAYS_INLINE __attribute__((always_inline))
+#define ALWAYS_INLINE
 #endif
 
 

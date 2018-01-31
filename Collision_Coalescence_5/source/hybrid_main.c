@@ -111,12 +111,12 @@ int main(void){
 #endif
 
 
+  int n_col=0;
 #if COLLISION
   double dE_heat=0.0,dE_grav=0.0,dE_c=0.0,v_imp=0.0;
 #if COLLISION_FILE
   FILE *fpcollision;
   char collisionfile[200]={};
-  int n_col=0;
 #endif
 #endif
 
@@ -226,13 +226,14 @@ int main(void){
 
     fgets(buf,sizeof(buf),fptempread);  //読み飛ばし.
     fgets(buf,sizeof(buf),fptempread);
-    sscanf(buf,"%lf\t%lf\t%lf\t%d\t%d\t%d\t%lf\t%lf\t%lf\t%lf\n",
+    sscanf(buf,"%lf\t%lf\t%lf\t%d\t%d\t%d\t%d\t%lf\t%lf\t%lf\t%lf\n",
 	   &t_tmp,
 	   &t_sys,
 	   &t_ene,
 	   &global_n_p,
 	   &global_n,
 	   &i_sys,
+	   &n_col,
 	   &step,
 	   &E_tot_0,
 	   &abs_L_0,
@@ -966,8 +967,13 @@ int main(void){
 
 #if COLLISION
 	/////////////////////////衝突した場合/////////////////////////
-	printf("collision\ti=%d, j=%d\n",i_col,j_col);
-	printf("r_ij=%.15e\tradius[%d]+radius[%d]=%.15e\n",
+
+	n_col++;
+
+	printf("collision No.%d\ti=%d, j=%d\tr_ij=%.15e\tradius[%d]+radius[%d]=%.15e\n",
+	       n_col,
+	       i_col,
+	       j_col,
 	       abs_r[j_col],
 	       i_col,
 	       j_col,
@@ -1044,7 +1050,6 @@ int main(void){
 
 #if COLLISION_FILE
 	//衝突時の位置速度をファイルへ書き出し.
-	n_col++;
 	sprintf(collisionfile,"%sCollision_%02d.dat",
 #ifdef DIRECTORY
 		STR(DIRECTORY)
@@ -1157,7 +1162,10 @@ int main(void){
 	  printf("Ene error\n");
 	  return -1;
 	}
-	fprintf(fpEne,"#collision occur\t%e[yr]\n",(t_sys+t_tmp)/2.0/M_PI);
+	fprintf(fpEne,"#collision No.%d occur\t%e[yr]\n",
+		n_col,
+		(t_sys+t_tmp)/2.0/M_PI
+		);
 	fprintf(fpEne,"#dE_heat=%e\tdE_grav=%e\tdE_c=%e\tv_imp=%e\n",
 		dE_heat,
 		dE_grav,
@@ -1461,14 +1469,15 @@ int main(void){
 	printf("tempreadfile error\n");
 	return -1;
       }
-      fprintf(fptempread,"#t_tmp\tt_sys\tt_ene\tglobal_n_p\tglobal_n\ti_sys\tstep\tE_tot_0\tabs_L_0\tdE_correct\n");
-      fprintf(fptempread,"%.15e\t%.15e\t%.15e\t%6d\t%6d\t%6d\t%8e\t%.15e\t%.15e\t%.15e\n",
+      fprintf(fptempread,"#t_tmp\tt_sys\tt_ene\tglobal_n_p\tglobal_n\ti_sys\tn_col\tstep\tE_tot_0\tabs_L_0\tdE_correct\n");
+      fprintf(fptempread,"%.15e\t%.15e\t%.15e\t%6d\t%6d\t%6d\t%d\t%8e\t%.15e\t%.15e\t%.15e\n",
 	      t_tmp,
 	      t_sys,
 	      t_ene,
 	      global_n_p,
 	      global_n,
 	      i_sys,
+	      n_col,
 	      step,
 	      E_tot_0,
 	      abs_L_0,
@@ -1850,14 +1859,15 @@ int main(void){
     printf("tempreadfile error\n");
     return -1;
   }
-  fprintf(fptempread,"#t_tmp\tt_sys\tt_ene\tglobal_n_p\tglobal_n\ti_sys\tstep\tE_tot_0\tabs_L_0\tdE_correct\n");
-  fprintf(fptempread,"%.15e\t%.15e\t%.15e\t%6d\t%6d\t%6d\t%8e\t%.15e\t%.15e\t%.15e\n",
+  fprintf(fptempread,"#t_tmp\tt_sys\tt_ene\tglobal_n_p\tglobal_n\ti_sys\tn_col\tstep\tE_tot_0\tabs_L_0\tdE_correct\n");
+  fprintf(fptempread,"%.15e\t%.15e\t%.15e\t%6d\t%6d\t%6d\t%6d\t%8e\t%.15e\t%.15e\t%.15e\n",
 	  t_tmp,
 	  t_sys,
 	  t_ene,
 	  global_n_p,
 	  global_n,
 	  i_sys,
+	  n_col,
 	  step,
 	  E_tot_0,
 	  abs_L_0,

@@ -6,7 +6,7 @@ MODE = SINGLE
 # -O0,-O1,-O2,-O3
 LEVEL = -O3
 
-CC = gcc
+CC = cc
 OBJS = hybrid_main.o sub.o acc.o energy.o orbital_elements.o timestep.o neighbor.o massflux.o collision.o
 
 JOBFILE = job.sh
@@ -21,7 +21,7 @@ endif
 ifeq ($(MODE),SINGLE)
 	CFLAGS = $(LEVEL)
 ifeq ($(CC),cc)
-	CFLAGS += -h noomp
+#CFLAGS += -h noomp
 endif
 endif
 

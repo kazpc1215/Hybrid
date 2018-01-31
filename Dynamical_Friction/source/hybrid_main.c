@@ -67,12 +67,8 @@ int main(void){
   double abs_L=0.0,abs_L_0=0.0;
 
 
-#if DT_LOG
-  int interval;
-  double t_ene[TIME_INTERVAL_MAX]={TIME_INTERVAL};
-#else
   double t_ene=DT_ENE;
-#endif
+
 
 #if INDIRECT_TERM
   double x_G[4]={},v_G[4]={};
@@ -115,12 +111,12 @@ int main(void){
 #endif
 
 
+  int n_col=0;
 #if COLLISION
   double dE_heat=0.0,dE_grav=0.0,dE_c=0.0,v_imp=0.0;
 #if COLLISION_FILE
   FILE *fpcollision;
   char collisionfile[200]={};
-  int n_col=0;
 #endif
 #endif
 
@@ -230,13 +226,14 @@ int main(void){
 
     fgets(buf,sizeof(buf),fptempread);  //読み飛ばし.
     fgets(buf,sizeof(buf),fptempread);
-    sscanf(buf,"%lf\t%lf\t%lf\t%d\t%d\t%d\t%lf\t%lf\t%lf\t%lf\n",
+    sscanf(buf,"%lf\t%lf\t%lf\t%d\t%d\t%d\t%d\t%lf\t%lf\t%lf\t%lf\n",
 	   &t_tmp,
 	   &t_sys,
 	   &t_ene,
 	   &global_n_p,
 	   &global_n,
 	   &i_sys,
+	   &n_col,
 	   &step,
 	   &E_tot_0,
 	   &abs_L_0,
@@ -512,7 +509,7 @@ int main(void){
     }
 #endif
 
-#endif  /*N_tr !=0 */
+#endif  /*N_tr != 0 */
 
 #if POSI_VELO_FILE
     //初期位置、速度をファイルへ書き出し.
@@ -796,7 +793,7 @@ int main(void){
 
 #endif  /*FRAGMENTATION*/
 
-#endif  /*N_tr !=0 */
+#endif  /*N_tr != 0 */
 
 
     fpinitial = fopen(initialfile,"w");
@@ -915,17 +912,8 @@ int main(void){
 
   ////////////////////////////////////////////////////////////////////////////////////
 
-#if DT_LOG
-  interval = 0;
-#endif
 
-  while(
-#if DT_LOG
-	TIME_INTERVAL_MAX > interval
-#else
-	t_sys + t_tmp <= T_MAX
-#endif
-	){
+  while(t_sys + t_tmp <= T_MAX){
 
     step+=1.0;
 
@@ -939,13 +927,7 @@ int main(void){
     }
 
 
-    if(
-#if DT_LOG
-       t_sys + t_tmp < t_ene[interval]
-#else
-       t_sys + t_tmp < t_ene
-#endif
-       ){
+    if(t_sys + t_tmp < t_ene){
 
       //individual timestep
 
@@ -977,8 +959,13 @@ int main(void){
 
 #if COLLISION
 	/////////////////////////衝突した場合/////////////////////////
-	printf("collision\ti=%d, j=%d\n",i_col,j_col);
-	printf("r_ij=%.15e\tradius[%d]+radius[%d]=%.15e\n",
+
+	n_col++;
+
+	printf("collision No.%d\ti=%d, j=%d\tr_ij=%.15e\tradius[%d]+radius[%d]=%.15e\n",
+	       n_col,
+	       i_col,
+	       j_col,
 	       abs_r[j_col],
 	       i_col,
 	       j_col,
@@ -1055,7 +1042,6 @@ int main(void){
 
 #if COLLISION_FILE
 	//衝突時の位置速度をファイルへ書き出し.
-	n_col++;
 	sprintf(collisionfile,"%sCollision_%02d.dat",
 #ifdef DIRECTORY
 		STR(DIRECTORY)
@@ -1168,7 +1154,10 @@ int main(void){
 	  printf("Ene error\n");
 	  return -1;
 	}
-	fprintf(fpEne,"#collision occur\t%e[yr]\n",(t_sys+t_tmp)/2.0/M_PI);
+	fprintf(fpEne,"#collision No.%d occur\t%e[yr]\n",
+		n_col,
+		(t_sys+t_tmp)/2.0/M_PI
+		);
 	fprintf(fpEne,"#dE_heat=%e\tdE_grav=%e\tdE_c=%e\tv_imp=%e\n",
 		dE_heat,
 		dE_grav,
@@ -1278,28 +1267,19 @@ int main(void){
 
 
     }else{
-      //t_ene[interval] ですべての粒子をそろえ、エネルギー、軌道要素等計算.
+      //t_ene ですべての粒子をそろえ、エネルギー、軌道要素等計算.
 
       for(i=1;i<=global_n;++i){
 
-#if DT_LOG
-	Dt[i] = t_ene[interval] - t_[i] - t_tmp;
-	t_[i] = 0.0;
-#else
 	Dt[i] = t_ene - t_[i] - t_tmp;
 	t_[i] = 0.0;
-#endif
+
 	dt_[i] = Dt[i];
       }
 
 
-#if DT_LOG
-      t_tmp = t_ene[interval];
-      t_sys = 0.0;
-#else
       t_tmp = t_ene;
       t_sys = 0.0;
-#endif
 
 
 #if EXECUTION_TIME
@@ -1476,7 +1456,55 @@ int main(void){
 
 
 #if DT_LOG
-      interval++;
+      fptempread = fopen(tempreadfile,"w");
+      if(fptempread==NULL){
+	printf("tempreadfile error\n");
+	return -1;
+      }
+      fprintf(fptempread,"#t_tmp\tt_sys\tt_ene\tglobal_n_p\tglobal_n\ti_sys\tn_col\tstep\tE_tot_0\tabs_L_0\tdE_correct\n");
+      fprintf(fptempread,"%.15e\t%.15e\t%.15e\t%6d\t%6d\t%6d\t%d\t%8e\t%.15e\t%.15e\t%.15e\n",
+	      t_tmp,
+	      t_sys,
+	      t_ene,
+	      global_n_p,
+	      global_n,
+	      i_sys,
+	      n_col,
+	      step,
+	      E_tot_0,
+	      abs_L_0,
+	      dE_correct
+	      );
+      fprintf(fptempread,"\n\n");
+      fprintf(fptempread,"#name\tx[AU]\ty[AU]\tz[AU]\t|r|[AU]\tvx[AU(2pi/yr)]\tvy[AU(2pi/yr)]\tvz[AU(2pi/yr)]\t|v|[AU(2pi/yr)]\tax[AU(2pi/yr)^2]\tay[AU(2pi/yr)^2]\taz[AU(2pi/yr)^2]\tadotx[AU(2pi/yr)^3]\tadoty[AU(2pi/yr)^3]\tadotz[AU(2pi/yr)^3]\tt_i[yr]\tdt_i[yr]\tmass[Msun]\n");
+      for(i=1;i<=global_n;++i){
+	fprintf(fptempread,"%s\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\n",
+		ele[i].name,
+		x_0[i][1],
+		x_0[i][2],
+		x_0[i][3],
+		r_0[i],
+		v_0[i][1],
+		v_0[i][2],
+		v_0[i][3],
+		sqrt(v2_0[i]),
+		a_0[i][1],
+		a_0[i][2],
+		a_0[i][3],
+		adot_0[i][1],
+		adot_0[i][2],
+		adot_0[i][3],
+		t_[i]/2.0/M_PI,
+		dt_[i]/2.0/M_PI,
+		ele[i].mass
+		);
+      }
+      fclose(fptempread);
+#endif
+
+
+#if DT_LOG
+      t_ene *= GEOMETRIC_RATIO;
 #else
       t_ene += DT_ENE;
 #endif
@@ -1823,14 +1851,15 @@ int main(void){
     printf("tempreadfile error\n");
     return -1;
   }
-  fprintf(fptempread,"#t_tmp\tt_sys\tt_ene\tglobal_n_p\tglobal_n\ti_sys\tstep\tE_tot_0\tabs_L_0\tdE_correct\n");
-  fprintf(fptempread,"%.15e\t%.15e\t%.15e\t%6d\t%6d\t%6d\t%8e\t%.15e\t%.15e\t%.15e\n",
+  fprintf(fptempread,"#t_tmp\tt_sys\tt_ene\tglobal_n_p\tglobal_n\ti_sys\tn_col\tstep\tE_tot_0\tabs_L_0\tdE_correct\n");
+  fprintf(fptempread,"%.15e\t%.15e\t%.15e\t%6d\t%6d\t%6d\t%6d\t%8e\t%.15e\t%.15e\t%.15e\n",
 	  t_tmp,
 	  t_sys,
 	  t_ene,
 	  global_n_p,
 	  global_n,
 	  i_sys,
+	  n_col,
 	  step,
 	  E_tot_0,
 	  abs_L_0,
@@ -1879,12 +1908,7 @@ int main(void){
 
 
 #if DT_LOG
-  for(i=0;i<TIME_INTERVAL_MAX;i++){
-    printf("t_ene[%d]\t= %e[yr]\n",
-	   i,
-	   t_ene[i]/2.0/M_PI
-	   );
-  }
+  printf("dt_ene\t= %e[yr]\ngeometric ratio\t= %s\n",DT_ENE/2.0/M_PI,STR(GEOMETRIC_RATIO));
 #else
   printf("dt_ene\t= %e[yr]\n",DT_ENE/2.0/M_PI);
 #endif

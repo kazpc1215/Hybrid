@@ -19,12 +19,15 @@
 
 //#define CONST const
 //constでエラーが出るため
-#if __GNUC__ == 4
+#if __GNUC__ == 7
+#define CONST const
+#define ALWAYS_INLINE __attribute__((always_inline))
+#elif __GNUC__ == 4
 #define CONST
 #define ALWAYS_INLINE
 #else
 #define CONST const
-#define ALWAYS_INLINE __attribute__((always_inline))
+#define ALWAYS_INLINE
 #endif
 
 
@@ -150,14 +153,12 @@ Mean Longitude (deg)               100.46435
 #define T_MAX (2.0*M_PI*2.0E1)  //20yr 全計算時間.
 #define DT_LOG false  //true: t_eneをlogでとる. false: t_eneをlinearでとる.
 
-#if DT_LOG
-/*  log 用 */
-//#define TIME_INTERVAL 2.0*M_PI*1.0E0,2.0*M_PI*1.0E1,2.0*M_PI*1.0E2,2.0*M_PI*1.0E3,2.0*M_PI*1.0E4,2.0*M_PI*1.0E5,2.0*M_PI*1.0E6,2.0*M_PI*1.0E7,T_MAX  //t_ene配列の中身.
-#define TIME_INTERVAL 2.0*M_PI*1.0E0,2.0*M_PI*1.0E1,2.0*M_PI*1.0E2,2.0*M_PI*1.0E3,T_MAX  //t_ene配列の中身.
-#define TIME_INTERVAL_MAX 5 //t_ene配列の要素数.
-#else
-/*  linear 用 */
+/* linear では 初項 DT_ENE，公差 DT_ENE の等差数列 */
 #define DT_ENE (2.0*M_PI*1.0E0)  //dt_ene = 1yr
+
+#if DT_LOG
+/* log では 初項 DT_ENE，公比 GEOMETRIC_RATIO の等比数列 */
+#define GEOMETRIC_RATIO (sqrt(sqrt(sqrt(10.0)))) //10**(1/8)
 #endif
 //////////////////////////////////////////////////
 
