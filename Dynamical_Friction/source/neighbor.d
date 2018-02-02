@@ -43,7 +43,6 @@ neighbor.o: neighbor.c hybrid.h /usr/include/stdlib.h \
  /usr/include/sys/_types/_filesec_t.h /usr/include/time.h \
  /usr/include/sys/_types/_clock_t.h \
  /opt/local/lib/gcc49/gcc/x86_64-apple-darwin15/4.9.4/include/stdbool.h \
- /opt/local/lib/gcc49/gcc/x86_64-apple-darwin15/4.9.4/include/omp.h \
  /usr/include/sys/time.h /usr/include/sys/_types/_fd_def.h \
  /usr/include/sys/_types/_timeval64.h \
  /usr/include/sys/_types/_suseconds_t.h \

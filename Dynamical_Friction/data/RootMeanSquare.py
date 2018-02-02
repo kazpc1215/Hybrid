@@ -13,7 +13,7 @@ plt.figure(figsize=(10, 8), dpi=100)
 
 
 ######################################################################
-path = "/Users/isoya.kazuhide/Dynamical_Friction/data/Ntr1E3_t1E4yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_rand3//"
+path = "/Users/isoya.kazuhide/Dynamical_Friction/data/Ntr1E3_t1E4yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_rand4//"
 
 LINE = 10001
 
@@ -117,6 +117,7 @@ plt.title(r"$N_{\rm tr}=1000,M_{\rm tot}=10 {\rm M_{\oplus}}$", fontsize=18)
 plt.tight_layout()
 
 plt.show()
+
 """
 arr2 = np.empty([LINE, 5], dtype=float)
 arr2[:, 0] = time[1, :]

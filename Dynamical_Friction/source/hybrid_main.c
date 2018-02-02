@@ -54,7 +54,7 @@ int main(void){
   struct stat st;  //ファイル存在確認用.
 
 
-  int i=0,j=0,i_sys=0,k=0,ite=0,i_col=0,j_col=0;
+  int i=0,j=0,i_sys=0,k=0,ite=0,i_col=0,j_col=0,n_col=0;
   double t_sys=0.0,t_tmp=0.0,step=0.0;
   static double t_[N_p+N_tr+1]={},dt_[N_p+N_tr+1]={},Dt[N_p+N_tr+1]={};
   static double x_0[N_p+N_tr+1][4]={},r_0[N_p+N_tr+1]={},v_0[N_p+N_tr+1][4]={},v2_0[N_p+N_tr+1]={};
@@ -111,7 +111,6 @@ int main(void){
 #endif
 
 
-  int n_col=0;
 #if COLLISION
   double dE_heat=0.0,dE_grav=0.0,dE_c=0.0,v_imp=0.0;
 #if COLLISION_FILE
@@ -353,6 +352,10 @@ int main(void){
     */
 
 
+    ele[1].axis = PLANET_AXIS * (1.0/DELTA_AXIS - 0.5*cbrt(2.0*PLANET_MASS/3.0))/(1.0/DELTA_AXIS + 0.5*cbrt(2.0*PLANET_MASS/3.0));  //2を中心に相互DELTA_AXISヒル内側へ離す
+    ele[2].axis = PLANET_AXIS;
+    ele[3].axis = PLANET_AXIS * (1.0/DELTA_AXIS + 0.5*cbrt(2.0*PLANET_MASS/3.0))/(1.0/DELTA_AXIS - 0.5*cbrt(2.0*PLANET_MASS/3.0));  //2を中心に相互DELTA_AXISヒル外側へ離す
+
     for(i=1;i<=global_n_p;++i){  //惑星.
       Initial_OrbitalElements_Planet(i,ele);  //初期軌道要素.
       InitialCondition(i,x_0,v_0,v2_0,r_dot_v,r_0,ele);  //初期位置、速度計算.
@@ -503,13 +506,25 @@ int main(void){
 
 
 #if ORBITING_SMALL_PARTICLE
+    for(i=global_n_p+1;i<=global_n_p+1000;++i){  //微惑星.
+      Initial_OrbitalElements_Tracer(i,ele,1);  //初期軌道要素.
+    }
+    for(i=global_n_p+1001;i<=global_n_p+2000;++i){  //微惑星.
+      Initial_OrbitalElements_Tracer(i,ele,2);  //初期軌道要素.
+    }
+    for(i=global_n_p+2001;i<=global_n_p+3000;++i){  //微惑星.
+      Initial_OrbitalElements_Tracer(i,ele,3);  //初期軌道要素.
+    }
     for(i=global_n_p+1;i<=global_n;++i){  //微惑星.
-      Initial_OrbitalElements_Tracer(i,ele);  //初期軌道要素.
       InitialCondition(i,x_0,v_0,v2_0,r_dot_v,r_0,ele);  //初期位置、速度計算.
     }
 #endif
 
-#endif  /*N_tr != 0 */
+#endif  /*N_tr != 0*/
+
+
+    ////////////////////////////////////ここまでで初期条件//////////////////////////////////////
+
 
 #if POSI_VELO_FILE
     //初期位置、速度をファイルへ書き出し.
@@ -796,50 +811,6 @@ int main(void){
 #endif  /*N_tr != 0 */
 
 
-    fpinitial = fopen(initialfile,"w");
-    if(fpinitial==NULL){
-      printf("initialfile error\n");
-      return -1;
-    }
-    fprintf(fpinitial,"#t_tmp\tt_sys\ti_sys\tE_tot_0\tabs_L_0\tdE_correct\n");
-    fprintf(fpinitial,"%.15e\t%.15e\t%6d\t\t%.15e\t%.15e\t%.15e\n",
-	    t_tmp,
-	    t_sys,
-	    i_sys,
-	    E_tot_0,
-	    abs_L_0,
-	    dE_correct
-	    );
-    fprintf(fpinitial,"\n\n");
-    fprintf(fpinitial,"#number\tx[AU]\ty[AU]\tz[AU]\t|r|[AU]\tvx[2piAU/yr]\tvy[2piAU/yr]\tvz[2piAU/yr]\t|v|[2piAU/yr]\tdt[yr]\tmass[Msun]\n");
-    for(i=1;i<=global_n;++i){
-      fprintf(fpinitial,"%6d\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%e\t%e\n",
-	      i,
-	      x_0[i][1],
-	      x_0[i][2],
-	      x_0[i][3],
-	      r_0[i],
-	      v_0[i][1],
-	      v_0[i][2],
-	      v_0[i][3],
-	      sqrt(v2_0[i]),
-	      dt_[i]/2.0/M_PI,
-	      ele[i].mass
-	      );
-    }
-    fclose(fpinitial);
-
-
-    ////////////////////////////ここまででファイルを上書きオープン/////////////////////////
-
-
-  }
-
-
-  ////////////////////////////////////ここまでで初期条件//////////////////////////////////////
-
-
-  if(stat(tempreadfile,&st)!=0){  //読み込むファイルがない場合.
 
     //#pragma omp parallel for private(j,k,abs_r,r_dot_v_ij)
     for(i=1;i<=global_n;++i){
@@ -875,11 +846,47 @@ int main(void){
       //printf("initial dt_[%d]=%e\n",i,dt_[i]);
     }
 
+    /////////////////////////////ここまでで加速度，タイムステップ計算//////////////////////////////
+
+
+    fpinitial = fopen(initialfile,"w");
+    if(fpinitial==NULL){
+      printf("initialfile error\n");
+      return -1;
+    }
+    fprintf(fpinitial,"#t_tmp\tt_sys\ti_sys\tE_tot_0\tabs_L_0\tdE_correct\n");
+    fprintf(fpinitial,"%.15e\t%.15e\t%6d\t\t%.15e\t%.15e\t%.15e\n",
+	    t_tmp,
+	    t_sys,
+	    i_sys,
+	    E_tot_0,
+	    abs_L_0,
+	    dE_correct
+	    );
+    fprintf(fpinitial,"\n\n");
+    fprintf(fpinitial,"#number\tx[AU]\ty[AU]\tz[AU]\t|r|[AU]\tvx[2piAU/yr]\tvy[2piAU/yr]\tvz[2piAU/yr]\t|v|[2piAU/yr]\tdt[yr]\tmass[Msun]\n");
+    for(i=1;i<=global_n;++i){
+      fprintf(fpinitial,"%6d\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%e\t%e\n",
+	      i,
+	      x_0[i][1],
+	      x_0[i][2],
+	      x_0[i][3],
+	      r_0[i],
+	      v_0[i][1],
+	      v_0[i][2],
+	      v_0[i][3],
+	      sqrt(v2_0[i]),
+	      dt_[i]/2.0/M_PI,
+	      ele[i].mass
+	      );
+    }
+    fclose(fpinitial);
+
   }
 
 
-  /////////////////////////////ここまでで加速度，タイムステップ計算//////////////////////////////
 
+  ////////////////////////////ここまでですべてのファイルを上書きオープン/////////////////////////
 
 #if EXECUTION_TIME
   gettimeofday(&realtime_start,NULL);

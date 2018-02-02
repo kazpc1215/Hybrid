@@ -31,7 +31,7 @@
 #endif
 
 
-#define DIRECTORY ../data/Ntr1E2_t2E1yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_all_rand1/  //ファイル保存用のディレクトリ.
+#define DIRECTORY ../data/Ntr3E3_t1E4yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_rand1/  //ファイル保存用のディレクトリ.
 
 
 #define STR_(str) #str
@@ -45,11 +45,11 @@
 
 
 //////////////////////////////////////////////////
-#define N_tr 100  //初期のトレーサーの数.
-#define N_p 1  //初期の原始惑星の数.
+#define N_tr 3000  //初期のトレーサーの数.
+#define N_p 3  //初期の原始惑星の数.
 #define RAND_SEED 1  //乱数の種.
 #define STEP_INTERVAL 1.0E5  //何ステップごとに標準出力するか
-#define BREAK_TIME 100.0  //4h = 14400sec
+#define BREAK_TIME 14200.0  //4h = 14400sec
 
 EXTERN int global_n;  //グローバル変数.
 EXTERN int global_n_p;  //グローバル変数.
@@ -71,8 +71,8 @@ EXTERN int global_n_p;  //グローバル変数.
 
 
 //////////////////////////////////////////////////
-#define INTERACTION_ALL true  //全粒子同士の重力相互作用.
-#define INTERACTION_PLANET_TRACER false  //惑星とトレーサー間の相互作用（惑星に影響を与え，かつ惑星から影響を受ける）.
+#define INTERACTION_ALL false  //全粒子同士の重力相互作用.
+#define INTERACTION_PLANET_TRACER true  //惑星とトレーサー間の相互作用（惑星に影響を与え，かつ惑星から影響を受ける）.
 #define INTERACTION_TEST_PARTICLE false  //トレーサーをテスト粒子として扱う（惑星に影響を与えないが惑星から影響を受ける）.
 #define INDIRECT_TERM true  //中心星が動く.
 #define FRAGMENTATION false  //破壊 近傍粒子探索と質量フラックス計算.
@@ -105,14 +105,14 @@ EXTERN int global_n_p;  //グローバル変数.
 
 
 //////////////////////////////////////////////////
-#define PLANET_NO 1
+//#define PLANET_NO 1  //注目する惑星
 #define PLANET_MASS 3.0E-6  //地球サイズ.
-#define PLANET_ECC 0.01
-#define PLANET_INC 0.005
+#define PLANET_ECC 0.1
+#define PLANET_INC 0.05
 #define PLANET_DENSITY 3.0  //[g/cc]
 #define PLANET_AXIS 1.0
 //#define PLANET_INNER_AXIS 0.5
-//#define DELTA_AXIS 10.0
+#define DELTA_AXIS 10.0
 /*
 Earth Mean Orbital Elements (J2000)
 Semimajor axis (AU)                  1.00000011
@@ -128,7 +128,7 @@ Mean Longitude (deg)               100.46435
 
 #if N_tr != 0
 //////////////////////////////////////////////////
-#define M_TOT 3.0E-5  //10M_E  //トレーサーの総質量.
+#define M_TOT (3.0E-5*N_p)  //10M_E * N_p  //トレーサーの総質量.
 
 #if EJECTION
 #define EJECTION_CONE_ANGLE M_PI/180.0*30.0  //30度.
@@ -137,8 +137,8 @@ Mean Longitude (deg)               100.46435
 #if ORBITING_SMALL_PARTICLE
 //#define INNER_AXIS 0.5  //トレーサーの長軸半径 下限.
 //#define OUTER_AXIS 1.5  //トレーサーの長軸半径 上限.
-#define ECC_RMS 0.01  //トレーサーの離心率の二乗平均平方根.  //Rayleigh分布.
-#define INC_RMS 0.005  //トレーサーの軌道傾斜角の二乗平均平方根.  //Rayleigh分布.
+#define ECC_RMS 0.1  //トレーサーの離心率の二乗平均平方根.  //Rayleigh分布.
+#define INC_RMS 0.05  //トレーサーの軌道傾斜角の二乗平均平方根.  //Rayleigh分布.
 #endif
 
 #if FRAGMENTATION
