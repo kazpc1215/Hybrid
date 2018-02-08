@@ -32,11 +32,12 @@ void Initial_OrbitalElements_Planet(int i,struct orbital_elements *ele_p){
 /*トレーサーの初期軌道要素*/
 void Initial_OrbitalElements_Tracer(int i,struct orbital_elements *ele_p,int planet_no){
 
-  double tmp;
+  double tmp[N_p+1]={};
+  int j=0,flag=0;
 
   sprintf((ele_p+i)->name,"tracer%06d",i-global_n_p);
   (ele_p+i)->mass = M_TOT/(double)(global_n-global_n_p);  //質量.
-  (ele_p+i)->axis = ((double)rand())/((double)RAND_MAX+1.0)*10.0*((ele_p+planet_no)->r_h) + ((ele_p+planet_no)->axis) - 5.0*((ele_p+planet_no)->r_h);  //惑星から+/-5Hill半径までに分布.
+  (ele_p+i)->axis = ((double)rand())/((double)RAND_MAX+1.0)*DELTA_AXIS*((ele_p+planet_no)->r_h) + ((ele_p+planet_no)->axis) - 0.5*DELTA_AXIS*((ele_p+planet_no)->r_h);  //惑星から+/-0.5*DELTA_AXIS Hill半径までに分布.
   (ele_p+i)->ecc = sqrt(-log(((double)rand())/((double)RAND_MAX+1.0)))*ECC_RMS;  //離心率  //Rayleigh分布
   (ele_p+i)->inc = sqrt(-log(((double)rand())/((double)RAND_MAX+1.0)))*INC_RMS;  //軌道傾斜角  //Rayleigh分布
   (ele_p+i)->omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
@@ -44,11 +45,21 @@ void Initial_OrbitalElements_Tracer(int i,struct orbital_elements *ele_p,int pla
   //(ele_p+i)->omega = 0.0;
   //(ele_p+i)->Omega = 0.0;
 
+
   do{
+    flag = 0;
     (ele_p+i)->u = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
-    tmp = fabs( (((ele_p+i)->u) + ((ele_p+i)->omega) + ((ele_p+i)->Omega)) - (((ele_p+planet_no)->u) + ((ele_p+planet_no)->omega) + ((ele_p+planet_no)->Omega)) );
-    tmp = fmod(tmp,2.0*M_PI)/M_PI;
-  }while(tmp < 1.0/12.0 || tmp > 23.0/12.0);  //惑星の+/-15度以内のときはuを振り直し.
+
+    for(j=1;j<=global_n_p;++j){
+      tmp[j] = fabs( (((ele_p+i)->u) + ((ele_p+i)->omega) + ((ele_p+i)->Omega)) - (((ele_p+j)->u) + ((ele_p+j)->omega) + ((ele_p+j)->Omega)) );
+      tmp[j] = fmod(tmp[j],2.0*M_PI)/M_PI;
+      if(tmp[j] < 1.0/12.0 || tmp[j] > 23.0/12.0){  //惑星の+/-15度以内のときはuを振り直し.
+        flag += 0;
+      }else{
+	flag += 1;
+      }
+    }
+  }while(flag < global_n_p);  //global_n_p個全ての惑星の周りにいない場合のみ抜け出せるループ.
 
 
 #ifndef M_0

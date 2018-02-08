@@ -76,10 +76,10 @@ EXTERN int global_n_p;  //グローバル変数.
 #define INTERACTION_TEST_PARTICLE false  //トレーサーをテスト粒子として扱う（惑星に影響を与えないが惑星から影響を受ける）.
 #define INDIRECT_TERM true  //中心星が動く.
 #define FRAGMENTATION false  //破壊 近傍粒子探索と質量フラックス計算.
-#define COLLISION false  //衝突.
+#define COLLISION true  //衝突.
 #if COLLISION
 #define COALESCENCE false  //衝突後に合体.
-#define RELOCATE_PARTICLE false  //衝突後に粒子を再配置.
+#define RELOCATE_PARTICLE true  //衝突後に粒子を再配置.
 #endif
 #define EJECTION false  //破片をコーン状に放出する.
 #define ORBITING_SMALL_PARTICLE true  //微惑星を初期にケプラー運動させておく.

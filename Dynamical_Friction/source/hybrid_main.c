@@ -506,13 +506,13 @@ int main(void){
 
 
 #if ORBITING_SMALL_PARTICLE
-    for(i=global_n_p+1;i<=global_n_p+1000;++i){  //微惑星.
+    for(i=global_n_p+1;i<=global_n_p+(int)(N_tr/N_p);++i){  //微惑星.
       Initial_OrbitalElements_Tracer(i,ele,1);  //初期軌道要素.
     }
-    for(i=global_n_p+1001;i<=global_n_p+2000;++i){  //微惑星.
+    for(i=global_n_p+(int)(N_tr/N_p)+1;i<=global_n_p+2*(int)(N_tr/N_p);++i){  //微惑星.
       Initial_OrbitalElements_Tracer(i,ele,2);  //初期軌道要素.
     }
-    for(i=global_n_p+2001;i<=global_n_p+3000;++i){  //微惑星.
+    for(i=global_n_p+2*(int)(N_tr/N_p)+1;i<=global_n;++i){  //微惑星.
       Initial_OrbitalElements_Tracer(i,ele,3);  //初期軌道要素.
     }
     for(i=global_n_p+1;i<=global_n;++i){  //微惑星.
@@ -1105,7 +1105,7 @@ int main(void){
 
 #if RELOCATE_PARTICLE
 	if(j_col>global_n_p){
-	  Initial_OrbitalElements_Tracer(j_col,ele);  //衝突後に粒子を再配置.
+	  Initial_OrbitalElements_Tracer(j_col,ele,i_sys);  //惑星i_sysに衝突後に，その周りに粒子を再配置.
 	  InitialCondition(i,x_0,v_0,v2_0,r_dot_v,r_0,ele);
 	}
 #endif
