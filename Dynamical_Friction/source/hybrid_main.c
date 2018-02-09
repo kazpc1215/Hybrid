@@ -1105,8 +1105,8 @@ int main(void){
 
 #if RELOCATE_PARTICLE
 	if(j_col>global_n_p){
-	  Initial_OrbitalElements_Tracer(j_col,ele,i_sys);  //惑星i_sysに衝突後に，その周りに粒子を再配置.
-	  InitialCondition(i,x_0,v_0,v2_0,r_dot_v,r_0,ele);
+	  Initial_OrbitalElements_Tracer(j_col,ele,i_col);  //惑星i_sysに衝突後に，その周りに粒子を再配置.
+	  InitialCondition(j_col,x_0,v_0,v2_0,r_dot_v,r_0,ele);
 	}
 #endif
 
