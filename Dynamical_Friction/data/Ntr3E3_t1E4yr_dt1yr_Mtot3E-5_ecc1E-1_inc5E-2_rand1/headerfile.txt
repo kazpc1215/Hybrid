@@ -12,8 +12,6 @@
 
 #ifdef _OPENMP
 #include <omp.h>
-#define OMP_SCHEDULE static
-//#define GOMP_CPU_AFFINITY 0 2
 #endif
 
 
@@ -76,10 +74,10 @@ EXTERN int global_n_p;  //グローバル変数.
 #define INTERACTION_TEST_PARTICLE false  //トレーサーをテスト粒子として扱う（惑星に影響を与えないが惑星から影響を受ける）.
 #define INDIRECT_TERM true  //中心星が動く.
 #define FRAGMENTATION false  //破壊 近傍粒子探索と質量フラックス計算.
-#define COLLISION false  //衝突.
+#define COLLISION true  //衝突.
 #if COLLISION
 #define COALESCENCE false  //衝突後に合体.
-#define RELOCATE_PARTICLE false  //衝突後に粒子を再配置.
+#define RELOCATE_PARTICLE true  //衝突後に粒子を再配置.
 #endif
 #define EJECTION false  //破片をコーン状に放出する.
 #define ORBITING_SMALL_PARTICLE true  //微惑星を初期にケプラー運動させておく.
@@ -150,7 +148,7 @@ Mean Longitude (deg)               100.46435
 
 
 //////////////////////////////////////////////////
-#define T_MAX (2.0*M_PI*2.0E1)  //20yr 全計算時間.
+#define T_MAX (2.0*M_PI*1.0E4)  //10000yr 全計算時間.
 #define DT_LOG false  //true: t_eneをlogでとる. false: t_eneをlinearでとる.
 
 /* linear では 初項 DT_ENE，公差 DT_ENE の等差数列 */

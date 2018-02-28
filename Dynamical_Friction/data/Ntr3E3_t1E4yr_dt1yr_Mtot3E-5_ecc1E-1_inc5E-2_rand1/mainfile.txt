@@ -812,7 +812,7 @@ int main(void){
 
 
 
-    //#pragma omp parallel for private(j,k,abs_r,r_dot_v_ij)
+#pragma omp parallel for private(j,k,abs_r,r_dot_v_ij)
     for(i=1;i<=global_n;++i){
       for(j=1;j<=
 #if INTERACTION_ALL
@@ -942,7 +942,7 @@ int main(void){
       gettimeofday(&realtime_start,NULL);
       getrusage(RUSAGE_SELF,&usage_start);
 #endif
-      //#pragma omp parallel for schedule(runtime)
+#pragma omp parallel for
       for(i=1;i<=global_n;++i){
 	Dt[i] = t_sys - t_[i];
 	Predictor(i,x_0,v_0,a_0,adot_0,x_p,v_p,r_p,v2_p,r_dot_v,Dt);  //予測子 t_sysにおけるすべての粒子を計算.
@@ -1105,8 +1105,8 @@ int main(void){
 
 #if RELOCATE_PARTICLE
 	if(j_col>global_n_p){
-	  Initial_OrbitalElements_Tracer(j_col,ele);  //衝突後に粒子を再配置.
-	  InitialCondition(i,x_0,v_0,v2_0,r_dot_v,r_0,ele);
+	  Initial_OrbitalElements_Tracer(j_col,ele,i_col);  //惑星i_colに衝突後に，その周りに粒子を再配置.
+	  InitialCondition(j_col,x_0,v_0,v2_0,r_dot_v,r_0,ele);
 	}
 #endif
 
@@ -1230,7 +1230,7 @@ int main(void){
 	getrusage(RUSAGE_SELF,&usage_start);
 #endif
 
-	//#pragma omp parallel for private(k) schedule(runtime)
+#pragma omp parallel for private(k)
 	for(i=1;i<=global_n;++i){
 	  if(i!=i_sys){
 	    //i_sys以外の粒子は予測子を使う.
