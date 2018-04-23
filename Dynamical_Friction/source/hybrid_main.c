@@ -352,9 +352,9 @@ int main(void){
     */
 
 
-    ele[1].axis = PLANET_AXIS * (1.0/DELTA_AXIS - 0.5*cbrt(2.0*PLANET_MASS/3.0))/(1.0/DELTA_AXIS + 0.5*cbrt(2.0*PLANET_MASS/3.0));  //2を中心に相互DELTA_AXISヒル内側へ離す
+    ele[1].axis = PLANET_AXIS / MutualHillRadius_to_SemimajorAxis(DELTA_HILL) ;  //2を中心に相互DELTA_HILLヒル内側へ離す
     ele[2].axis = PLANET_AXIS;
-    ele[3].axis = PLANET_AXIS * (1.0/DELTA_AXIS + 0.5*cbrt(2.0*PLANET_MASS/3.0))/(1.0/DELTA_AXIS - 0.5*cbrt(2.0*PLANET_MASS/3.0));  //2を中心に相互DELTA_AXISヒル外側へ離す
+    ele[3].axis = PLANET_AXIS * MutualHillRadius_to_SemimajorAxis(DELTA_HILL);  //2を中心に相互DELTA_HILLヒル外側へ離す
 
     for(i=1;i<=global_n_p;++i){  //惑星.
       Initial_OrbitalElements_Planet(i,ele);  //初期軌道要素.

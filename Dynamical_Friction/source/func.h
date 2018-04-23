@@ -24,9 +24,11 @@ double Calculate_Energy(CONST struct orbital_elements *ele_p,CONST double x_c[][
 #endif
 			CONST double r_c[]);
 
+double MutualHillRadius_to_SemimajorAxis(double ratio);
+
 void Initial_OrbitalElements_Planet(int i,struct orbital_elements *ele_p);
 
-void Initial_OrbitalElements_Tracer(int i,struct orbital_elements *ele_p,int planet_no);
+void Initial_OrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements *ele_p);
 
 void InitialCondition(int i,double x_0[][4],double v_0[][4],double v2_0[],double r_dot_v[],double r_0[],CONST struct orbital_elements *ele_p);
 

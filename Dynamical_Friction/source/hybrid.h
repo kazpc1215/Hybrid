@@ -112,7 +112,7 @@ EXTERN int global_n_p;  //グローバル変数.
 #define PLANET_DENSITY 3.0  //[g/cc]
 #define PLANET_AXIS 1.0
 //#define PLANET_INNER_AXIS 0.5
-#define DELTA_AXIS 10.0
+#define DELTA_HILL 10.0
 /*
 Earth Mean Orbital Elements (J2000)
 Semimajor axis (AU)                  1.00000011

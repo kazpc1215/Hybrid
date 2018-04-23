@@ -2,6 +2,30 @@
 #include "func.h"
 
 
+/*P計算*/
+double Calculate_P(int i,int k,CONST struct orbital_elements *ele_p){
+  if(k==1){
+    return cos(((ele_p+i)->omega))*cos(((ele_p+i)->Omega)) - sin(((ele_p+i)->omega))*sin(((ele_p+i)->Omega))*cos(((ele_p+i)->inc));
+  }else if(k==2){
+    return cos(((ele_p+i)->omega))*sin(((ele_p+i)->Omega)) + sin(((ele_p+i)->omega))*cos(((ele_p+i)->Omega))*cos(((ele_p+i)->inc));
+  }else{
+    return sin(((ele_p+i)->omega))*sin(((ele_p+i)->inc));
+  }
+}
+
+
+/*Q計算*/
+double Calculate_Q(int i,int k,CONST struct orbital_elements *ele_p){
+  if(k==1){
+    return -sin(((ele_p+i)->omega))*cos(((ele_p+i)->Omega)) - cos(((ele_p+i)->omega))*sin(((ele_p+i)->Omega))*cos(((ele_p+i)->inc));
+  }else if(k==2){
+    return -sin(((ele_p+i)->omega))*sin(((ele_p+i)->Omega)) + cos(((ele_p+i)->omega))*cos(((ele_p+i)->Omega))*cos(((ele_p+i)->inc));
+  }else{
+    return cos(((ele_p+i)->omega))*sin(((ele_p+i)->inc));
+  }
+}
+
+
 /*惑星の初期軌道要素*/
 void Initial_OrbitalElements_Planet(int i,struct orbital_elements *ele_p){
 
@@ -30,36 +54,47 @@ void Initial_OrbitalElements_Planet(int i,struct orbital_elements *ele_p){
 
 
 /*トレーサーの初期軌道要素*/
-void Initial_OrbitalElements_Tracer(int i,struct orbital_elements *ele_p,int planet_no){
+void Initial_OrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements *ele_p){
 
-  double tmp[N_p+1]={};
-  int j=0,flag=0;
+  double tmp_r=0.0,tmp_r_rel[N_p+1]={};
+  double orbital_r_min = ((ele_p+1)->axis)/MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
+  double orbital_r_max = ((ele_p+3)->axis)*MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
+  int j=0,k=0,flag=0;
 
   sprintf((ele_p+i)->name,"tracer%06d",i-global_n_p);
   (ele_p+i)->mass = M_TOT/(double)(global_n-global_n_p);  //質量.
-  (ele_p+i)->axis = ((double)rand())/((double)RAND_MAX+1.0)*DELTA_AXIS*((ele_p+planet_no)->r_h) + ((ele_p+planet_no)->axis) - 0.5*DELTA_AXIS*((ele_p+planet_no)->r_h);  //惑星から+/-0.5*DELTA_AXIS Hill半径までに分布.
+  (ele_p+i)->axis = ((double)rand())/((double)RAND_MAX+1.0)*(orbital_r_max - orbital_r_min) + orbital_r_min;  //惑星1より内側に相互(0.5*DELTA_HILL)ヒルの位置 から 惑星3より外側に相互(0.5*DELTA_HILL)ヒルの位置 に分布.
   (ele_p+i)->ecc = sqrt(-log(((double)rand())/((double)RAND_MAX+1.0)))*ECC_RMS;  //離心率  //Rayleigh分布
   (ele_p+i)->inc = sqrt(-log(((double)rand())/((double)RAND_MAX+1.0)))*INC_RMS;  //軌道傾斜角  //Rayleigh分布
-  (ele_p+i)->omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
-  (ele_p+i)->Omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
-  //(ele_p+i)->omega = 0.0;
-  //(ele_p+i)->Omega = 0.0;
 
 
   do{
     flag = 0;
-    (ele_p+i)->u = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
 
-    for(j=1;j<=global_n_p;++j){
-      tmp[j] = fabs( (((ele_p+i)->u) + ((ele_p+i)->omega) + ((ele_p+i)->Omega)) - (((ele_p+j)->u) + ((ele_p+j)->omega) + ((ele_p+j)->Omega)) );
-      tmp[j] = fmod(tmp[j],2.0*M_PI)/M_PI;
-      if(tmp[j] < 1.0/12.0 || tmp[j] > 23.0/12.0){  //惑星の+/-15度以内のときはuを振り直し.
-        flag += 0;
-      }else{
-	flag += 1;
+    (ele_p+i)->u = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
+    (ele_p+i)->omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
+    (ele_p+i)->Omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
+
+    for(k=1;k<=3;++k){
+      x_0[i][k] = ((ele_p+i)->axis)*Calculate_P(i,k,ele_p)*(cos(((ele_p+i)->u))-((ele_p+i)->ecc)) + ((ele_p+i)->axis)*sqrt(1.0-((ele_p+i)->ecc)*((ele_p+i)->ecc))*Calculate_Q(i,k,ele_p)*sin(((ele_p+i)->u));
+    }
+
+    tmp_r = RadiusFromCenter(i,x_0);
+
+    if(tmp_r>orbital_r_min && tmp_r<orbital_r_max){  //orbital_r_minからorbital_r_maxの範囲にいる場合.
+      for(j=1;j<=global_n_p;++j){
+	if(i!=j){
+	  tmp_r_rel[j] = RelativeDistance(i,j,x_0);
+	  if(tmp_r_rel[j]<3.0*((ele_p+j)->r_h)){  //それぞれの惑星から3ヒル以内の場合.
+	    flag += 0;
+	  }else{
+	    flag += 1;
+	  }
+	}
       }
     }
-  }while(flag < global_n_p);  //global_n_p個全ての惑星の周りにいない場合のみ抜け出せるループ.
+
+  } while(flag < global_n_p);  //global_n_p個全ての惑星の周り3ヒル以内にいない場合のみ抜け出せるループ.
 
 
 #ifndef M_0
@@ -249,30 +284,6 @@ void Calculate_OrbitalElements(int i,CONST double x_c[][4],CONST double v_c[][4]
 
 
   return;
-}
-
-
-/*P計算*/
-double Calculate_P(int i,int k,CONST struct orbital_elements *ele_p){
-  if(k==1){
-    return cos(((ele_p+i)->omega))*cos(((ele_p+i)->Omega)) - sin(((ele_p+i)->omega))*sin(((ele_p+i)->Omega))*cos(((ele_p+i)->inc));
-  }else if(k==2){
-    return cos(((ele_p+i)->omega))*sin(((ele_p+i)->Omega)) + sin(((ele_p+i)->omega))*cos(((ele_p+i)->Omega))*cos(((ele_p+i)->inc));
-  }else{
-    return sin(((ele_p+i)->omega))*sin(((ele_p+i)->inc));
-  }
-}
-
-
-/*Q計算*/
-double Calculate_Q(int i,int k,CONST struct orbital_elements *ele_p){
-  if(k==1){
-    return -sin(((ele_p+i)->omega))*cos(((ele_p+i)->Omega)) - cos(((ele_p+i)->omega))*sin(((ele_p+i)->Omega))*cos(((ele_p+i)->inc));
-  }else if(k==2){
-    return -sin(((ele_p+i)->omega))*sin(((ele_p+i)->Omega)) + cos(((ele_p+i)->omega))*cos(((ele_p+i)->Omega))*cos(((ele_p+i)->inc));
-  }else{
-    return cos(((ele_p+i)->omega))*sin(((ele_p+i)->inc));
-  }
 }
 
 
