@@ -27,11 +27,11 @@ double Calculate_Q(int i,int k,CONST struct orbital_elements *ele_p){
 
 
 /*惑星の初期軌道要素*/
-void Initial_OrbitalElements_Planet(int i,struct orbital_elements *ele_p){
+void InitialOrbitalElements_Planet(int i,struct orbital_elements *ele_p){
 
   sprintf((ele_p+i)->name,"Planet%02d",i);
   (ele_p+i)->mass = PLANET_MASS;
-  //(ele_p+i)->axis = PLANET_AXIS;
+  //(ele_p+i)->axis = PLANET_AXIS;  //軌道長半径axisはすでに求めてある.
   (ele_p+i)->ecc = PLANET_ECC;
   (ele_p+i)->inc = PLANET_INC;
   (ele_p+i)->u = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
@@ -53,9 +53,11 @@ void Initial_OrbitalElements_Planet(int i,struct orbital_elements *ele_p){
 }
 
 
+#if ORBITING_SMALL_PARTICLE
 /*トレーサーの初期軌道要素*/
-void Initial_OrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements *ele_p){
+void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements *ele_p){
 
+  //惑星の位置x_0[][4]はすでに求めてあることが前提.
   double tmp_r=0.0,tmp_r_rel[N_p+1]={};
   double orbital_r_min = ((ele_p+1)->axis)/MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
   double orbital_r_max = ((ele_p+3)->axis)*MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
@@ -85,16 +87,14 @@ void Initial_OrbitalElements_Tracer(int i,double x_0[][4],struct orbital_element
       for(j=1;j<=global_n_p;++j){
 	if(i!=j){
 	  tmp_r_rel[j] = RelativeDistance(i,j,x_0);
-	  if(tmp_r_rel[j]<3.0*((ele_p+j)->r_h)){  //それぞれの惑星から3ヒル以内の場合.
-	    flag += 0;
-	  }else{
+	  if(tmp_r_rel[j]>3.0*((ele_p+j)->r_h)){  //それぞれの惑星から3ヒル以上離れている場合.
 	    flag += 1;
 	  }
 	}
       }
     }
 
-  } while(flag < global_n_p);  //global_n_p個全ての惑星の周り3ヒル以内にいない場合のみ抜け出せるループ.
+  } while(flag < global_n_p);  //global_n_p個の全ての惑星から3ヒル以上離れている場合のみ抜け出せるループ.
 
 
 #ifndef M_0
@@ -108,6 +108,119 @@ void Initial_OrbitalElements_Tracer(int i,double x_0[][4],struct orbital_element
 
   return;
 }
+#endif  /*ORBITING_SMALL_PARTICLE*/
+
+
+#if EJECTION
+void EjectionOfTracerFromPlanet(double x_0[][4],double v_0[][4],double v2_0[],double r_dot_v[],double r_0[],CONST struct orbital_elements *ele_p){
+  static double x_eject[N_p+N_tr+1][4]={};
+  static double v_eject[N_p+N_tr+1][4]={};
+  int i,k;
+  double tmp_x=0.0,tmp_y=0.0,tmp_r=0.0,tmp_v=0.0,tmp_theta=0.0,tmp_rand=0.0;
+#ifndef G
+  double ejection_velocity = sqrt(2.0*((ele_p+PLANET_OF_EJECTION)->mass)/((ele_p+PLANET_OF_EJECTION)->radius));
+#else
+  double ejection_velocity = sqrt(2.0*G*((ele_p+PLANET_OF_EJECTION)->mass)/((ele_p+PLANET_OF_EJECTION)->radius));
+#endif
+
+  for(i=global_n_p+1;i<=global_n;++i){
+
+    sprintf((ele_p+i)->name,"tracer%06d",i-global_n_p);
+    (ele_p+i)->mass = M_TOT/(double)N_tr;
+    (ele_p+i)->orinum = i;
+
+
+    //coneを作る.
+    //位置.
+    tmp_r = ((ele_p+PLANET_OF_EJECTION)->radius)*(1.0 + 0.1*(int)((double)(i-global_n_p-1)/100.0));
+    tmp_rand = 2.0*M_PI/100.0*(double)(i-global_n_p-1);
+    x_eject[i][1] = tmp_r*cos(EJECTION_CONE_ANGLE);  //破片のx座標.
+    x_eject[i][2] = tmp_r*sin(EJECTION_CONE_ANGLE)*cos(tmp_rand);  //破片のy座標.
+    x_eject[i][3] = tmp_r*sin(EJECTION_CONE_ANGLE)*sin(tmp_rand);  //破片のz座標.
+    //速度.
+    tmp_v = ejection_velocity*(0.9+0.1*tmp_r/((ele_p+PLANET_OF_EJECTION)->radius));
+    tmp_theta = EJECTION_CONE_ANGLE*tmp_r/((ele_p+PLANET_OF_EJECTION)->radius);
+    v_eject[i][1] = tmp_v*cos(tmp_theta);  //破片の速度x成分.
+    v_eject[i][2] = tmp_v*sin(tmp_theta)*cos(tmp_rand);  //破片の速度y成分.
+    v_eject[i][3] = tmp_v*sin(tmp_theta)*sin(tmp_rand);  //破片の速度z成分.
+
+
+
+    //z軸周りに回転.
+    //位置. 回転させないとouter.
+    //Rotation_3D_zaxis(i,x_eject,M_PI);  //180度回転. inner.
+    //Rotation_3D_zaxis(i,x_eject,M_PI/2.0);  //90度回転. front.
+    Rotation_3D_zaxis(i,x_eject,-M_PI/2.0);  //-90度回転. back.
+    //速度. 回転させないとouter.
+    //Rotation_3D_zaxis(i,v_eject,M_PI);  //180度回転. inner.
+    //Rotation_3D_zaxis(i,v_eject,M_PI/2.0);  //90度回転. front.
+    Rotation_3D_zaxis(i,v_eject,-M_PI/2.0);  //-90度回転. back.
+
+
+
+    //printf("%s\tx_eject[%d][1]=%f\tx_eject[%d][2]=%f\tx_eject[%d][3]=%f\n",ele[i].name,i,x_eject[i][1],i,x_eject[i][2],i,x_eject[i][3]);
+    //printf("%s\tv_eject[%d][1]=%f\tv_eject[%d][2]=%f\tv_eject[%d][3]=%f\n",ele[i].name,i,v_eject[i][1],i,v_eject[i][2],i,v_eject[i][3]);
+
+
+    //////////////////ここまでで、惑星中心、xyは軌道面上、x軸は太陽から惑星の方向/////////////////////
+
+
+    //x軸が惑星の近日点を向くようにz軸周りに回転.
+    //位置.
+    tmp_x = x_eject[i][1];
+    tmp_y = x_eject[i][2];
+
+    x_eject[i][1] = cos((((ele_p+PLANET_OF_EJECTION)->u)-((ele_p+PLANET_OF_EJECTION)->ecc))/(1.0-((ele_p+PLANET_OF_EJECTION)->ecc)*cos(((ele_p+PLANET_OF_EJECTION)->u))))*tmp_x - sin((sqrt(1.0-((ele_p+PLANET_OF_EJECTION)->ecc)*((ele_p+PLANET_OF_EJECTION)->ecc))*sin(((ele_p+PLANET_OF_EJECTION)->u)))/(1.0-((ele_p+PLANET_OF_EJECTION)->ecc)*cos(((ele_p+PLANET_OF_EJECTION)->u))))*tmp_y;
+
+    x_eject[i][2] = sin((sqrt(1.0-((ele_p+PLANET_OF_EJECTION)->ecc)*((ele_p+PLANET_OF_EJECTION)->ecc))*sin(((ele_p+PLANET_OF_EJECTION)->u)))/(1.0-((ele_p+PLANET_OF_EJECTION)->ecc)*cos(((ele_p+PLANET_OF_EJECTION)->u))))*tmp_x + cos((((ele_p+PLANET_OF_EJECTION)->u)-((ele_p+PLANET_OF_EJECTION)->ecc))/(1.0-((ele_p+PLANET_OF_EJECTION)->ecc)*cos(((ele_p+PLANET_OF_EJECTION)->u))))*tmp_y;
+
+    //速度.
+    tmp_x = v_eject[i][1];
+    tmp_y = v_eject[i][2];
+
+    v_eject[i][1] = cos((((ele_p+PLANET_OF_EJECTION)->u)-((ele_p+PLANET_OF_EJECTION)->ecc))/(1.0-((ele_p+PLANET_OF_EJECTION)->ecc)*cos(((ele_p+PLANET_OF_EJECTION)->u))))*tmp_x - sin((sqrt(1.0-((ele_p+PLANET_OF_EJECTION)->ecc)*((ele_p+PLANET_OF_EJECTION)->ecc))*sin(((ele_p+PLANET_OF_EJECTION)->u)))/(1.0-((ele_p+PLANET_OF_EJECTION)->ecc)*cos(((ele_p+PLANET_OF_EJECTION)->u))))*tmp_y;
+
+    v_eject[i][2] = sin((sqrt(1.0-((ele_p+PLANET_OF_EJECTION)->ecc)*((ele_p+PLANET_OF_EJECTION)->ecc))*sin(((ele_p+PLANET_OF_EJECTION)->u)))/(1.0-((ele_p+PLANET_OF_EJECTION)->ecc)*cos(((ele_p+PLANET_OF_EJECTION)->u))))*tmp_x + cos((((ele_p+PLANET_OF_EJECTION)->u)-((ele_p+PLANET_OF_EJECTION)->ecc))/(1.0-((ele_p+PLANET_OF_EJECTION)->ecc)*cos(((ele_p+PLANET_OF_EJECTION)->u))))*tmp_y;
+
+
+    //////////////////ここまでで、惑星中心、xyは軌道面上、x軸は惑星の近日点の方向/////////////////////
+
+
+    //基準系と平行になるようにオイラー回転.
+    //位置.
+    Rotation_3D_zaxis(i,x_eject,((ele_p+PLANET_OF_EJECTION)->Omega));
+    Rotation_3D_xaxis(i,x_eject,((ele_p+PLANET_OF_EJECTION)->inc));
+    Rotation_3D_zaxis(i,x_eject,((ele_p+PLANET_OF_EJECTION)->omega));
+
+    //速度.
+    Rotation_3D_zaxis(i,v_eject,((ele_p+PLANET_OF_EJECTION)->Omega));
+    Rotation_3D_xaxis(i,v_eject,((ele_p+PLANET_OF_EJECTION)->inc));
+    Rotation_3D_zaxis(i,v_eject,((ele_p+PLANET_OF_EJECTION)->omega));
+
+
+    //////////////////ここまでで、惑星中心に平行移動した基準系/////////////////////
+
+
+    //太陽中心の基準系に平行移動.
+    for(k=1;k<=3;++k){
+      x_0[i][k] = x_0[PLANET_OF_EJECTION][k] + x_eject[i][k];
+      v_0[i][k] = v_0[PLANET_OF_EJECTION][k] + v_eject[i][k];
+    }
+
+
+    //////////////////ここまでで、基準系/////////////////////
+
+
+    r_0[i] = RadiusFromCenter(i,x_0);  //中心星からの距離.
+    v2_0[i] = SquareOfVelocity(i,v_0);  //速度の2乗.
+    r_dot_v[i] = InnerProduct(i,x_0,v_0);  //r_i,v_iの内積.
+
+  }
+
+  return;
+}
+#endif  /*EJECTION*/
+
 
 /*軌道要素計算*/
 void Calculate_OrbitalElements(int i,CONST double x_c[][4],CONST double v_c[][4],struct orbital_elements *ele_p,CONST double r_c[],CONST double v2_c[],CONST double r_dot_v[]){
@@ -309,14 +422,14 @@ void InitialCondition(int i,double x_0[][4],double v_0[][4],double v2_0[],double
 #endif
 
   int k;
-  static double P[N_p+N_tr+1][4]={},Q[N_p+N_tr+1][4]={};
+  static double P[4]={},Q[4]={};
 
 
   for(k=1;k<=3;k++){
-    P[i][k] = Calculate_P(i,k,ele_p);
-    Q[i][k] = Calculate_Q(i,k,ele_p);
+    P[k] = Calculate_P(i,k,ele_p);
+    Q[k] = Calculate_Q(i,k,ele_p);
 
-    x_0[i][k] = ((ele_p+i)->axis)*P[i][k]*(cos(((ele_p+i)->u))-((ele_p+i)->ecc)) + ((ele_p+i)->axis)*sqrt(1.0-((ele_p+i)->ecc)*((ele_p+i)->ecc))*Q[i][k]*sin(((ele_p+i)->u));
+    x_0[i][k] = ((ele_p+i)->axis)*P[k]*(cos(((ele_p+i)->u))-((ele_p+i)->ecc)) + ((ele_p+i)->axis)*sqrt(1.0-((ele_p+i)->ecc)*((ele_p+i)->ecc))*Q[k]*sin(((ele_p+i)->u));
   }
   //printf("x=%f\ty=%f\tz=%f\n",x_0[i][1],x_0[i][2],x_0[i][3]);
 
@@ -324,7 +437,7 @@ void InitialCondition(int i,double x_0[][4],double v_0[][4],double v2_0[],double
 
 
   for(k=1;k<=3;++k){
-    v_0[i][k] = sqrt(mu/((ele_p+i)->axis))/r_0[i]*(-((ele_p+i)->axis)*P[i][k]*sin(((ele_p+i)->u)) + ((ele_p+i)->axis)*sqrt(1.0-((ele_p+i)->ecc)*((ele_p+i)->ecc))*Q[i][k]*cos(((ele_p+i)->u)));
+    v_0[i][k] = sqrt(mu/((ele_p+i)->axis))/r_0[i]*(-((ele_p+i)->axis)*P[k]*sin(((ele_p+i)->u)) + ((ele_p+i)->axis)*sqrt(1.0-((ele_p+i)->ecc)*((ele_p+i)->ecc))*Q[k]*cos(((ele_p+i)->u)));
   }
 
   r_dot_v[i] = InnerProduct(i,x_0,v_0);  //r_i,v_iの内積.
