@@ -58,17 +58,18 @@ void InitialOrbitalElements_Planet(int i,struct orbital_elements *ele_p){
 void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements *ele_p){
 
   //惑星の位置x_0[][4]はすでに求めてあることが前提.
-  double tmp_r=0.0,tmp_r_rel[N_p+1]={};
+  double tmp_r_rel[N_p+1]={};
   double orbital_r_min = ((ele_p+1)->axis)/MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
   double orbital_r_max = ((ele_p+3)->axis)*MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
   int j=0,k=0,flag=0;
 
+  //printf("orbital_r_min=%.15e\torbital_r_max=%.15e\n",orbital_r_min,orbital_r_max);
+
   sprintf((ele_p+i)->name,"tracer%06d",i-global_n_p);
   (ele_p+i)->mass = M_TOT/(double)(global_n-global_n_p);  //質量.
   (ele_p+i)->axis = ((double)rand())/((double)RAND_MAX+1.0)*(orbital_r_max - orbital_r_min) + orbital_r_min;  //惑星1より内側に相互(0.5*DELTA_HILL)ヒルの位置 から 惑星3より外側に相互(0.5*DELTA_HILL)ヒルの位置 に分布.
-  (ele_p+i)->ecc = sqrt(-log(((double)rand())/((double)RAND_MAX+1.0)))*ECC_RMS;  //離心率  //Rayleigh分布
-  (ele_p+i)->inc = sqrt(-log(((double)rand())/((double)RAND_MAX+1.0)))*INC_RMS;  //軌道傾斜角  //Rayleigh分布
-
+  (ele_p+i)->ecc = sqrt(-log(((double)rand())/((double)RAND_MAX+1.0)))*ECC_RMS;  //離心率.  //Rayleigh分布.
+  (ele_p+i)->inc = sqrt(-log(((double)rand())/((double)RAND_MAX+1.0)))*INC_RMS;  //軌道傾斜角.  //Rayleigh分布.
 
   do{
     flag = 0;
@@ -81,9 +82,8 @@ void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements
       x_0[i][k] = ((ele_p+i)->axis)*Calculate_P(i,k,ele_p)*(cos(((ele_p+i)->u))-((ele_p+i)->ecc)) + ((ele_p+i)->axis)*sqrt(1.0-((ele_p+i)->ecc)*((ele_p+i)->ecc))*Calculate_Q(i,k,ele_p)*sin(((ele_p+i)->u));
     }
 
-    tmp_r = RadiusFromCenter(i,x_0);
 
-    if(tmp_r>orbital_r_min && tmp_r<orbital_r_max){  //orbital_r_minからorbital_r_maxの範囲にいる場合.
+    if(RadiusFromCenter(i,x_0)>orbital_r_min && RadiusFromCenter(i,x_0)<orbital_r_max){  //orbital_r_minからorbital_r_maxの範囲にいる場合.
       for(j=1;j<=global_n_p;++j){
 	if(i!=j){
 	  tmp_r_rel[j] = RelativeDistance(i,j,x_0);

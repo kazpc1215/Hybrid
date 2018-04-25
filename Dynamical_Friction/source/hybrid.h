@@ -32,7 +32,7 @@
 
 
 //#define DIRECTORY ../data/Ntr3E3_t1E4yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_rand1/  //ファイル保存用のディレクトリ.
-#define DIRECTORY ../data/test/  //ファイル保存用のディレクトリ.
+#define DIRECTORY ../data/Ntr3E3_t1E3yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_frag/  //ファイル保存用のディレクトリ.
 
 
 #define STR_(str) #str
@@ -49,8 +49,8 @@
 #define N_tr 3000  //初期のトレーサーの数.
 #define N_p 3  //初期の原始惑星の数.
 #define RAND_SEED 1  //乱数の種.
-#define STEP_INTERVAL 1.0E5  //何ステップごとに標準出力するか
-#define BREAK_TIME 14200.0  //4h = 14400sec
+#define STEP_INTERVAL 1.0E5  //何ステップごとに標準出力するか.
+#define BREAK_TIME 432000.0  //4h = 14400sec, 5days = 432000sec.
 
 EXTERN int global_n;  //グローバル変数.
 EXTERN int global_n_p;  //グローバル変数.
@@ -76,7 +76,7 @@ EXTERN int global_n_p;  //グローバル変数.
 #define INTERACTION_PLANET_TRACER true  //惑星とトレーサー間の相互作用（惑星に影響を与え，かつ惑星から影響を受ける）.
 #define INTERACTION_TEST_PARTICLE false  //トレーサーをテスト粒子として扱う（惑星に影響を与えないが惑星から影響を受ける）.
 #define INDIRECT_TERM true  //中心星が動く効果を補正.
-#define FRAGMENTATION false  //破壊 近傍粒子探索と質量フラックス計算.
+#define FRAGMENTATION true  //破壊 近傍粒子探索と質量フラックス計算.
 #define COLLISION true  //衝突.
 #if COLLISION
 #define COALESCENCE false  //衝突後に合体.
@@ -141,14 +141,14 @@ Mean Longitude (deg)               100.46435
 
 #if FRAGMENTATION
 #define DELTA_R 0.010  //Hill 近傍粒子探索用.
-#define DELTA_THETA 0.5*M_PI  //近傍粒子探索用.
+#define DELTA_THETA 0.25*M_PI  //近傍粒子探索用.
 #endif
 //////////////////////////////////////////////////
 #endif
 
 
 //////////////////////////////////////////////////
-#define T_MAX (2.0*M_PI*2.0E1)  //20yr 全計算時間.
+#define T_MAX (2.0*M_PI*1.0E3)  //1000yr 全計算時間.
 #define DT_LOG false  //true: t_eneをlogでとる. false: t_eneをlinearでとる.
 
 /* linear では 初項 DT_ENE，公差 DT_ENE の等差数列 */

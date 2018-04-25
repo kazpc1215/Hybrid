@@ -627,8 +627,8 @@ int main(void){
       printf("posimassfile 0 error\n");
       return -1;
     }
-    fprintf(fpposimass,"#t[yr]\ti\tx\ty\tz\tr_0(3D)\tr_0(2D)\tmass\tdelta_r\tsigma\tn_s\tneighbornumber\n");
-    for(i=1;i<=global_n;i++){
+    fprintf(fpposimass,"#t[yr]\ti\tx\ty\tz\tr_0(3D)\tr_0(2D)\tmass\tdelta_r_out\tdelta_r_in\tsigma\tn_s\tneighbornumber\n");
+    for(i=global_n_p+1;i<=global_n;i++){
       fprintf(fpposimass,"%.15e\t%4d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%d\n",
 	      0.0,
 	      i,
@@ -1490,7 +1490,7 @@ int main(void){
 	printf("posimassfile error\n");
 	return -1;
       }
-      for(i=1;i<=global_n;i++){
+      for(i=global_n_p+1;i<=global_n;i++){
 	fprintf(fpposimass,"%.15e\t%04d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%d\n",
 		(t_sys+t_tmp)/2.0/M_PI,
 		i,

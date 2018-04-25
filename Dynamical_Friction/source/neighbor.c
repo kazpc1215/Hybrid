@@ -18,7 +18,7 @@ void NeighborSearch(int i,CONST struct orbital_elements *ele_p,struct fragmentat
   theta[i] = atan2(x_0[i][2],x_0[i][1]);  //[-pi:pi]
 
 
-  m=1;
+  m = 1;
   do{
 
     for(l=1;l<=NEIGHBOR_MAX;l++){
@@ -55,8 +55,8 @@ void NeighborSearch(int i,CONST struct orbital_elements *ele_p,struct fragmentat
   }while(((frag_p+i)->neighbornumber)<10);  //近傍粒子が10個未満なら、10個以上になるまでdelta_rをm倍に広げる.
 
 
-  v=0.0;
-  M=((ele_p+i)->mass);  //ターゲットiの質量も含める.
+  v = 0.0;
+  M = ((ele_p+i)->mass);  //ターゲットiの質量も含める.
   if(((frag_p+i)->neighbornumber)!=0){
     for(j=1;j<=((frag_p+i)->neighbornumber);j++){
       v += RandomVelocity(i,((frag_p+i)->neighborlist[j]),ele_p);
@@ -78,7 +78,7 @@ void NeighborSearch(int i,CONST struct orbital_elements *ele_p,struct fragmentat
     //printf("i=%d\tM=%e\n",i,M);
 
     ((frag_p+i)->sigma) = M/S;  //領域iの表面密度.
-    ((frag_p+i)->n_s) = ((frag_p+i)->neighbornumber)/S;  //領域iの表面密度.
+    ((frag_p+i)->n_s) = ((frag_p+i)->neighbornumber)/S;  //領域iの個数密度.
   }else{
     ((frag_p+i)->v_ave) = 0.0;
     ((frag_p+i)->sigma) = 0.0;
@@ -137,7 +137,7 @@ double RandomVelocity(int i,int j,CONST struct orbital_elements *ele_p){
   if(isnan((ele_p+i)->axis)){
     printf("i=%d\taxis is nan. (in RandomVelocity)\taxis=%f\n",i,((ele_p+i)->axis));
   }
-  
+
 
   if(
 #if !defined(G) && !defined(M_0)
