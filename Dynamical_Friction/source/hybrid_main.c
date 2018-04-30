@@ -36,7 +36,7 @@ int main(void){
 
   gettimeofday(&realtime_start_main,NULL);
   getrusage(RUSAGE_SELF,&usage_start_main);
-#endif
+#endif  /*EXECUTION_TIME*/
 
 
 #ifdef _OPENMP
@@ -48,7 +48,7 @@ int main(void){
     printf(". ");
   }
   printf("\n");
-#endif
+#endif  /*_OPENMP*/
 
 
   struct stat st;  //ファイル存在確認用.
@@ -80,14 +80,17 @@ int main(void){
 
 #if FRAGMENTATION
   static struct fragmentation frag[N_p+N_tr+1]={};
-  double t_check=2.0*M_PI*0.1;
+  int n_fragcheck=0;
+  double t_fragcheck=2.0*M_PI*0.1;
+  double sigma_all=0.0,flux_all=0.0,v_ave_all=0.0,tau_dep_all=0.0;
+  double orbital_r_min=0.0,orbital_r_max=0.0;
   double mass_tot_all;
   struct parameter para;
   FILE *fpfrag;  //初期総質量をファイルへ書き出し.
   char fragfile[200]={};
   FILE *fpposimass;  //初期位置、質量などをファイルへ書き出し.
   char posimassfile[200]={};
-#endif
+#endif  /*FRAGMENTATION*/
 
 
 #if ENERGY_FILE
@@ -116,7 +119,7 @@ int main(void){
   FILE *fpcollision;
   char collisionfile[200]={};
 #endif
-#endif
+#endif  /*COLLISION*/
 
 
 #if ORBITALELEMENTS_FILE
@@ -149,7 +152,7 @@ int main(void){
     system(mkdir_command);
     printf("making directory (%s)\n",dirname);
   */
-#endif
+#endif  /*DIRECTORY*/
 
 
 #if ENERGY_FILE
@@ -160,7 +163,7 @@ int main(void){
 	  dirname
 #endif
 	  );
-#endif
+#endif  /*ENERGY_FILE*/
 
 
 #if POSI_VELO_FILE
@@ -171,7 +174,7 @@ int main(void){
 	  dirname
 #endif
 	  );
-#endif
+#endif  /*POSI_VELO_FILE*/
 
 
 #if FRAGMENTATION
@@ -182,15 +185,7 @@ int main(void){
 	  dirname
 #endif
 	  );
-
-    sprintf(posimassfile,"%sPosi_Mass.dat",
-#ifdef DIRECTORY
-	    STR(DIRECTORY)
-#elif DIRECTORY_FILE
-	    dirname
-#endif
-	    );
-#endif
+#endif  /*FRAGMENTATION*/
 
 
   sprintf(initialfile,"%sinitial.dat",
@@ -294,7 +289,77 @@ int main(void){
   }else{
 
 
-    printf("file: '%s' does not exist.\n",tempreadfile);
+    printf("file: '%s' does not exist. Start the initialization.\n",tempreadfile);
+
+    printf("-----\n");
+    printf("DIRECTORY\t%s\n",STR(DIRECTORY));
+    printf("N_tr\t%s\n",STR(N_tr));
+    printf("N_p\t%s\n",STR(N_p));
+    printf("RAND_SEED\t%s\n",STR(RAND_SEED));
+    printf("STEP_INTERVAL\t%s\n",STR(STEP_INTERVAL));
+    printf("BREAK_TIME\t%s\n",STR(BREAK_TIME));
+    printf("ENERGY_FILE\t%s\n",STR(ENERGY_FILE));
+    printf("ORBITALELEMENTS_FILE\t%s\n",STR(ORBITALELEMENTS_FILE));
+    printf("POSI_VELO_FILE\t%s\n",STR(POSI_VELO_FILE));
+    printf("POSI_VELO_ROT_FILE\t%s\n",STR(POSI_VELO_ROT_FILE));
+    printf("COLLISION_FILE\t%s\n",STR(COLLISION_FILE));
+    printf("EXECUTION_TIME\t%s\n",STR(EXECUTION_TIME));
+    printf("INTERACTION_ALL\t%s\n",STR(INTERACTION_ALL));
+    printf("INTERACTION_PLANET_TRACER\t%s\n",STR(INTERACTION_PLANET_TRACER));
+    printf("INTERACTION_TEST_PARTICLE\t%s\n",STR(INTERACTION_TEST_PARTICLE));
+    printf("INDIRECT_TERM\t%s\n",STR(INDIRECT_TERM));
+    printf("FRAGMENTATION\t%s\n",STR(FRAGMENTATION));
+    printf("COLLISION\t%s\n",STR(COLLISION));
+#if COLLISION
+    printf("COALESCENCE\t%s\n",STR(COALESCENCE));
+    printf("RELOCATE_PARTICLE\t%s\n",STR(RELOCATE_PARTICLE));
+#endif
+    printf("EJECTION\t%s\n",STR(EJECTION));
+    printf("ORBITING_SMALL_PARTICLE\t%s\n",STR(ORBITING_SMALL_PARTICLE));
+    printf("ELIMINATE_PARTICLE\t%s\n",STR(ELIMINATE_PARTICLE));
+    printf("ETA\t%s\n",STR(ETA));
+    printf("ITE_MAX\t%s\n",STR(ITE_MAX));
+#if ELIMINATE_PARTICLE
+    printf("SOLAR_RADIUS\t%s\n",STR(SOLAR_RADIUS));
+    printf("SOLAR_SYSTEM_LIMIT\t%s\n",STR(SOLAR_SYSTEM_LIMIT));
+#endif
+    printf("PLANET_MASS\t%s\n",STR(PLANET_MASS));
+    printf("PLANET_AXIS\t%s\n",STR(PLANET_AXIS));
+    printf("PLANET_ECC\t%s\n",STR(PLANET_ECC));
+    printf("PLANET_INC\t%s\n",STR(PLANET_INC));
+    printf("PLANET_DENSITY\t%s\n",STR(PLANET_DENSITY));
+#if N_tr != 0
+    printf("M_TOT\t%s\n",STR(M_TOT));
+#if EJECTION
+    printf("PLANET_OF_EJECTION\t%s\n",STR(PLANET_OF_EJECTION));
+    printf("EJECTION_CONE_ANGLE\t%s\n",STR(EJECTION_CONE_ANGLE));
+#endif
+#if ORBITING_SMALL_PARTICLE
+    printf("ECC_RMS\t%s\n",STR(ECC_RMS));
+    printf("INC_RMS\t%s\n",STR(INC_RMS));
+    printf("DELTA_HILL\t%s\n",STR(DELTA_HILL));
+#endif
+#if FRAGMENTATION
+    printf("DELTA_R\t%s\n",STR(DELTA_R));
+    printf("DELTA_THETA\t%s\n",STR(DELTA_THETA));
+    printf("NEIGHBOR_MAX\t%s\n",STR(NEIGHBOR_MAX));
+    printf("DEPLETION_TIME_EXPLICIT\t%s\n",STR(DEPLETION_TIME_EXPLICIT));
+    printf("RHO\t%s\n",STR(RHO));
+    printf("EPSILON_FRAG\t%s\n",STR(EPSILON_FRAG));
+    printf("B_FRAG\t%s\n",STR(B_FRAG));
+    printf("Q_0_FRAG\t%s\n",STR(Q_0_FRAG));
+    printf("P_FRAG\t%s\n",STR(P_FRAG));
+    printf("XI\t%s\n",STR(XI));
+    printf("M_MAX\t%s\n",STR(M_MAX));
+#endif
+#endif  /*N_tr != 0*/
+    printf("T_MAX\t%s\n",STR(T_MAX));
+    printf("DT_LOG\t%s\n",STR(DT_LOG));
+    printf("DT_ENE\t%s\n",STR(DT_ENE));
+#if DT_LOG
+    printf("GEOMETRIC_RATIO\t%s\n",STR(GEOMETRIC_RATIO));
+#endif
+    printf("-----\n");
 
 
     char cat_header[200]={};
@@ -341,6 +406,19 @@ int main(void){
 
 #if N_tr != 0
 
+#if EJECTION
+    EjectionOfTracerFromPlanet(x_0,v_0,v2_0,r_dot_v,r_0,ele);
+#endif
+
+
+#if ORBITING_SMALL_PARTICLE
+    for(i=global_n_p+1;i<=global_n;++i){  //微惑星.
+      InitialOrbitalElements_Tracer(i,x_0,ele);  //初期軌道要素.
+      InitialCondition(i,x_0,v_0,v2_0,r_dot_v,r_0,ele);  //初期位置、速度計算.
+    }
+#endif
+
+
 #if FRAGMENTATION
     para.alpha = (11.0 + 3.0*P_FRAG)/(6.0 + 3.0*P_FRAG);
     para.s_1 = s_1_FRAG(&para);
@@ -355,19 +433,6 @@ int main(void){
 	   para.s_2,
 	   para.s_3
 	   );
-#endif
-
-
-#if EJECTION
-    EjectionOfTracerFromPlanet(x_0,v_0,v2_0,r_dot_v,r_0,ele);
-#endif
-
-
-#if ORBITING_SMALL_PARTICLE
-    for(i=global_n_p+1;i<=global_n;++i){  //微惑星.
-      InitialOrbitalElements_Tracer(i,x_0,ele);  //初期軌道要素.
-      InitialCondition(i,x_0,v_0,v2_0,r_dot_v,r_0,ele);  //初期位置、速度計算.
-    }
 #endif
 
 #endif  /*N_tr != 0*/
@@ -560,15 +625,18 @@ int main(void){
     getrusage(RUSAGE_SELF,&usage_start);
 #endif
 
+    n_fragcheck = 0;
     mass_tot_all = 0.0;
     for(i=global_n_p+1;i<=global_n;++i){
 
       frag[i].fragtimes = 0;
       NeighborSearch(i,ele,frag,x_0);  //近傍(扇形領域に入った)粒子探索.
+      /*
       printf("i=%d\tneighbornumber=%d\n",
 	     i,
 	     frag[i].neighbornumber
 	     );
+      */
       /*
 	for(j=1;j<=frag[i].neighbornumber;j++){
 	printf("\tneighborlist[%d]=%d\n",j,frag[i].neighborlist[j]);
@@ -579,6 +647,7 @@ int main(void){
       MassFlux(i,ele,frag,&para);  //質量フラックス計算.
       frag[i].dt_frag = Depletion_Time(i,frag);  //統計的計算のタイムスケール.
       frag[i].t_frag = frag[i].dt_frag;
+      /*
       printf("\tinitial\tF[%d]=%e\tsigma[%d]=%e\tdt_frag[%d]=%e[yr]\tdt_[%d]=%e[yr]\n",
 	     i,
 	     frag[i].flux,
@@ -598,6 +667,7 @@ int main(void){
 	     frag[i].delta_r_out,
 	     frag[i].delta_r_in
 	     );
+      */
       mass_tot_all += ele[i].mass;
     }
 
@@ -607,14 +677,29 @@ int main(void){
     //printf("t=%e[yr]\tfrag calculation time = %f [sec]\n",t_sys/2.0/M_PI,(double)(end-start)/CLOCKS_PER_SEC);
 
 
+    //統計的計算で破壊タイムスケールの見積もり.
+    orbital_r_min = ele[1].axis / MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
+    orbital_r_max = ele[3].axis * MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
+    sigma_all = mass_tot_all / (M_PI * (orbital_r_max*orbital_r_max - orbital_r_min*orbital_r_min));
+#if !defined(G) && !defined(M_0)
+    v_ave_all = sqrt(2.0*(ECC_RMS*ECC_RMS + INC_RMS*INC_RMS) / PLANET_AXIS);
+    flux_all = - (2.0 - para.alpha)*(2.0 - para.alpha) / cbrt(M_MAX) * sigma_all*sigma_all * sqrt(1.0/PLANET_AXIS/PLANET_AXIS/PLANET_AXIS) * para.h_0 * pow(v_ave_all*v_ave_all*0.5/para.Q_D,para.alpha-1.0) * ((- log(EPSILON_FRAG) + 1.0/(2.0-B_FRAG))*para.s_1 + para.s_2 + para.s_3);
+#else
+    v_ave_0 = sqrt(2.0*(ECC_RMS*ECC_RMS + INC_RMS*INC_RMS) * G*M_0/PLANET_AXIS);
+    flux_0 = - (2.0 - para.alpha)*(2.0 - para.alpha) / cbrt(M_MAX) * sigma_0*sigma_0 * sqrt(G*M_0/PLANET_AXIS/PLANET_AXIS/PLANET_AXIS) * para.h_0 * pow(v_ave_0*v_ave_0*0.5/para.Q_D,para.alpha-1.0) * ((- log(EPSILON_FRAG) + 1.0/(2.0-B_FRAG))*para.s_1 + para.s_2 + para.s_3);
+#endif
+    tau_dep_all = - sigma_all / flux_all;
+    printf("initial mass depletion timescale =\t%e [yr]\n",tau_dep_all/2.0/M_PI);
+
 
     fpfrag = fopen(fragfile,"w");
     if(fpfrag==NULL){
       printf("fragfile 0 error\n");
       return -1;
     }
+    fprintf(fpfrag,"#initial mass depletion timescale =\t%e [yr]\n",tau_dep_all/2.0/M_PI);
     fprintf(fpfrag,"#t[yr]\tmass_tot_all\tM_TOT\n");
-    fprintf(fpfrag,"%.15e\t%.15f\t%.15f\n",
+    fprintf(fpfrag,"%.15e\t%.15e\t%.15e\n",
 	    0.0,
 	    mass_tot_all,
 	    M_TOT
@@ -622,14 +707,22 @@ int main(void){
     fclose(fpfrag);
 
 
+    sprintf(posimassfile,"%sPosi_Mass_%02d.dat",
+#ifdef DIRECTORY
+	    STR(DIRECTORY)
+#elif DIRECTORY_FILE
+	    dirname
+#endif
+	    ,n_fragcheck
+	    );
     fpposimass= fopen(posimassfile,"w");
     if(fpposimass==NULL){
       printf("posimassfile 0 error\n");
       return -1;
     }
-    fprintf(fpposimass,"#t[yr]\ti\tx\ty\tz\tr_0(3D)\tr_0(2D)\tmass\tdelta_r_out\tdelta_r_in\tsigma\tn_s\tneighbornumber\n");
+    fprintf(fpposimass,"#t[yr]\ti\tx\ty\tz\tr_0(3D)\tr_0(2D)\tmass\tdelta_r_out\tdelta_r_in\tsigma\tn_s\tneighbornumber\tdt_frag[yr]\n");
     for(i=global_n_p+1;i<=global_n;i++){
-      fprintf(fpposimass,"%.15e\t%4d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%d\n",
+      fprintf(fpposimass,"%.15e\t%4d\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%4d\t%.15e\n",
 	      0.0,
 	      i,
 	      x_0[i][1],
@@ -642,11 +735,12 @@ int main(void){
 	      frag[i].delta_r_in,
 	      frag[i].sigma,
 	      frag[i].n_s,
-	      frag[i].neighbornumber
+	      frag[i].neighbornumber,
+	      frag[i].dt_frag/2.0/M_PI
 	      );
     }
-    fprintf(fpposimass,"\n\n");
     fclose(fpposimass);
+
 
 #if EXECUTION_TIME
     gettimeofday(&realtime_end,NULL);
@@ -819,8 +913,9 @@ int main(void){
 
 	n_col++;
 
-	printf("collision No.%d\ti=%d, j=%d\tr_ij=%.15e\tradius[%d]+radius[%d]=%.15e\n",
+	printf("collision No.%d\t%e[yr]\ti=%d, j=%d\tr_ij=%.15e\tradius[%d]+radius[%d]=%.15e\n",
 	       n_col,
+	       (t_sys+t_tmp)/2.0/M_PI,
 	       i_col,
 	       j_col,
 	       abs_r[j_col],
@@ -894,7 +989,7 @@ int main(void){
 	exetime.Energy[1] += Cal_time(usage_start.ru_utime,usage_end.ru_utime);
 	exetime.Energy[2] += Cal_time(usage_start.ru_stime,usage_end.ru_stime);
 #endif
-#endif
+#endif  /*COALESCENCE*/
 
 
 #if COLLISION_FILE
@@ -909,7 +1004,7 @@ int main(void){
 		);
 	fpcollision= fopen(collisionfile,"w");
 	if(fpcollision==NULL){
-	  printf("collisionfile 0 error\n");
+	  printf("collisionfile error\n");
 	  exit(-1);
 	}
 	fprintf(fpcollision,"#i_col=%d\tj_col=%d\tr_ij=%.15e\tradius[%d]+radius[%d]=%.15e\n",
@@ -945,7 +1040,7 @@ int main(void){
 		  );
 	}
 	fclose(fpcollision);
-#endif
+#endif  /*COLLISION_FILE*/
 
 
 #if COALESCENCE
@@ -954,8 +1049,11 @@ int main(void){
 
 
 #if RELOCATE_PARTICLE
-	if(j_col>global_n_p){
-	  InitialOrbitalElements_Tracer(j_col,x_0,ele);  //惑星i_sysに衝突後に，その周りに粒子を再配置.
+	if(j_col>global_n_p){  //惑星i_sysに衝突後に，その周りに粒子を再配置.
+	  //InitialOrbitalElements_Tracer(j_col,x_0,ele);
+	  ele[j_col].u = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
+	  ele[j_col].omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
+	  ele[j_col].Omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
 	  InitialCondition(j_col,x_0,v_0,v2_0,r_dot_v,r_0,ele);
 	}
 #endif
@@ -1040,7 +1138,7 @@ int main(void){
 	exetime.Energy[2] += Cal_time(usage_start.ru_stime,usage_end.ru_stime);
 #endif
 
-#endif
+#endif  /*ENERGY_FILE*/
 
 
 	//#pragma omp parallel for private(j,k,abs_r,r_dot_v_ij)
@@ -1070,7 +1168,7 @@ int main(void){
 	  }
 	}
 	//////////////////////////////////////////////////////////////
-#endif
+#endif  /*COLLISION*/
 
       }else{
 
@@ -1473,25 +1571,36 @@ int main(void){
     //printf("t=%e[yr]\tfrag calculation time = %f [sec]\n",t_sys/2.0/M_PI,(double)(end-start)/CLOCKS_PER_SEC);
 
 
-    if(t_sys + t_tmp > t_check){
+    if(t_sys + t_tmp > t_fragcheck){
+      n_fragcheck++;
       fpfrag = fopen(fragfile,"a");  //総質量をファイルへ書き出し.
       if(fpfrag==NULL){
 	printf("fragfile error\n");
 	return -1;
       }
-      fprintf(fpfrag,"%.15e\t%.15f\t%.15f\n",
+      fprintf(fpfrag,"%.15e\t%.15e\t%.15e\n",
 	      (t_sys+t_tmp)/2.0/M_PI,
 	      mass_tot_all,
 	      M_TOT);
       fclose(fpfrag);
 
-      fpposimass = fopen(posimassfile,"a");  //位置、質量などをファイルへ書き出し.
+
+      sprintf(posimassfile,"%sPosi_Mass_%02d.dat",
+#ifdef DIRECTORY
+	    STR(DIRECTORY)
+#elif DIRECTORY_FILE
+	    dirname
+#endif
+	    ,n_fragcheck
+	    );
+      fpposimass = fopen(posimassfile,"w");  //位置、質量などをファイルへ書き出し.
       if(fpposimass==NULL){
 	printf("posimassfile error\n");
 	return -1;
       }
+      fprintf(fpposimass,"#t[yr]\ti\tx\ty\tz\tr_0(3D)\tr_0(2D)\tmass\tdelta_r_out\tdelta_r_in\tsigma\tn_s\tneighbornumber\tdt_frag[yr]\n");
       for(i=global_n_p+1;i<=global_n;i++){
-	fprintf(fpposimass,"%.15e\t%04d\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%.15f\t%d\n",
+	fprintf(fpposimass,"%.15e\t%4d\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%4d\t%.15e\n",
 		(t_sys+t_tmp)/2.0/M_PI,
 		i,
 		x_c[i][1],
@@ -1504,13 +1613,14 @@ int main(void){
 		frag[i].delta_r_in,
 		frag[i].sigma,
 		frag[i].n_s,
-		frag[i].neighbornumber
+		frag[i].neighbornumber,
+		frag[i].dt_frag/2.0/M_PI
 		);
       }
-      fprintf(fpposimass,"\n\n");
       fclose(fpposimass);
 
-      t_check *= sqrt(sqrt(sqrt(10.0)));  //logでは10を8分割.
+
+      t_fragcheck *= sqrt(sqrt(sqrt(10.0)));  //logでは10を8分割.
     }
 
 #if EXECUTION_TIME

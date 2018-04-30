@@ -31,8 +31,8 @@
 #endif
 
 
-//#define DIRECTORY ../data/Ntr3E3_t1E4yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_rand1/  //ファイル保存用のディレクトリ.
-#define DIRECTORY ../data/Ntr3E3_t1E3yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_frag/  //ファイル保存用のディレクトリ.
+//#define DIRECTORY ../data/test/  //ファイル保存用のディレクトリ.
+#define DIRECTORY ../data/Ntr3E3_t1E3yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_frag_rand1/  //ファイル保存用のディレクトリ.
 
 
 #define STR_(str) #str
@@ -82,9 +82,9 @@ EXTERN int global_n_p;  //グローバル変数.
 #define COALESCENCE false  //衝突後に合体.
 #define RELOCATE_PARTICLE true  //衝突後に粒子を再配置.
 #endif
-#define EJECTION false  //破片をコーン状に放出する.
-#define ORBITING_SMALL_PARTICLE true  //微惑星を初期にケプラー運動させておく.
-#define ELIMINATE_PARTICLE false  //太陽、惑星に飲みこまれるか系外へ出て行くかで粒子を消す.
+#define EJECTION false  //初期に破片（トレーサー）を放出する.
+#define ORBITING_SMALL_PARTICLE true  //初期に微惑星をケプラー運動させておく.
+#define ELIMINATE_PARTICLE false  //太陽に飲みこまれるか系外へ出て行くかで粒子を消す.
 //////////////////////////////////////////////////
 
 
@@ -93,7 +93,7 @@ EXTERN int global_n_p;  //グローバル変数.
 //#define M_0 1.0  //主星の質量.
 //#define EPSILON 0.0  //ソフトニングパラメーター.
 #define ETA 1.0E-2  //刻み幅調整.
-#define ITE_MAX 2  //イテレーション回数（修正子計算の回数は+1）.
+#define ITE_MAX 2  //イテレーション回数（修正子計算の回数はITE_MAX+1）.
 //////////////////////////////////////////////////
 
 
@@ -107,10 +107,10 @@ EXTERN int global_n_p;  //グローバル変数.
 
 //////////////////////////////////////////////////
 #define PLANET_MASS 3.0E-6  //地球質量M_E.
-#define PLANET_AXIS 1.0  //[AU]
+#define PLANET_AXIS 1.0  //[AU].
 #define PLANET_ECC 0.1
 #define PLANET_INC 0.05
-#define PLANET_DENSITY 3.0  //[g/cc]
+#define PLANET_DENSITY 3.0  //[g/cc].
 /*
 Earth Mean Orbital Elements (J2000)
 Semimajor axis (AU)                  1.00000011
@@ -142,9 +142,18 @@ Mean Longitude (deg)               100.46435
 #if FRAGMENTATION
 #define DELTA_R 0.010  //Hill 近傍粒子探索用.
 #define DELTA_THETA 0.25*M_PI  //近傍粒子探索用.
+#define NEIGHBOR_MAX 200  //近傍粒子リスト配列の最大値.
+#define DEPLETION_TIME_EXPLICIT false  //true: 質量減少タイムスケールの計算でexplicit *(1-XI)を使う. false: implicit /(1+XI)を使う.
+#define RHO 3.0  // [g/cc]  微惑星の物質密度.
+#define EPSILON_FRAG 0.2
+#define B_FRAG (5.0/3.0)
+#define Q_0_FRAG 9.5E8 // [erg/g]  Q_D = Q_0*(rho/3[g/cc])^0.55*(m/10^21[g])^p
+#define P_FRAG 0.453
+#define XI 0.01 //統計的計算のタイムステップがタイムスケールの"XI"倍.
+#define M_MAX 5.00E-15  //最大微惑星質量. 1E19 g
 #endif
 //////////////////////////////////////////////////
-#endif
+#endif  /*N_tr != 0*/
 
 
 //////////////////////////////////////////////////
@@ -160,21 +169,6 @@ Mean Longitude (deg)               100.46435
 #endif
 //////////////////////////////////////////////////
 
-
-#if FRAGMENTATION
-//////////////////////////////////////////////////
-#define NEIGHBOR_MAX N_tr  //近傍粒子リスト配列の最大値.
-#define DEPLETION_TIME_EXPLICIT false  //true: 質量減少タイムスケールの計算でexplicit *(1-XI)を使う. false: implicit /(1+XI)を使う.
-
-#define RHO 3.0  // [g/cc]  微惑星の物質密度.
-#define EPSILON_FRAG 0.2
-#define B_FRAG (5.0/3.0)
-#define Q_0_FRAG 9.5E8 // [erg/g]  Q_D = Q_0*(rho/3[g/cc])^0.55*(m/10^21[g])^p
-#define P_FRAG 0.453
-#define XI 0.01 //統計的計算のタイムステップがタイムスケールの"XI"倍.
-#define M_MAX 5.00E-15  //最大微惑星質量. 1E19 g
-//////////////////////////////////////////////////
-#endif
 
 
 struct orbital_elements{

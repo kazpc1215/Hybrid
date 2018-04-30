@@ -58,9 +58,8 @@ void InitialOrbitalElements_Planet(int i,struct orbital_elements *ele_p){
 void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements *ele_p){
 
   //惑星の位置x_0[][4]はすでに求めてあることが前提.
-  double tmp_r_rel[N_p+1]={};
-  double orbital_r_min = ((ele_p+1)->axis)/MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
-  double orbital_r_max = ((ele_p+3)->axis)*MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
+  double orbital_r_min = ((ele_p+1)->axis) / MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
+  double orbital_r_max = ((ele_p+3)->axis) * MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
   int j=0,k=0,flag=0;
 
   //printf("orbital_r_min=%.15e\torbital_r_max=%.15e\n",orbital_r_min,orbital_r_max);
@@ -86,8 +85,7 @@ void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements
     if(RadiusFromCenter(i,x_0)>orbital_r_min && RadiusFromCenter(i,x_0)<orbital_r_max){  //orbital_r_minからorbital_r_maxの範囲にいる場合.
       for(j=1;j<=global_n_p;++j){
 	if(i!=j){
-	  tmp_r_rel[j] = RelativeDistance(i,j,x_0);
-	  if(tmp_r_rel[j]>3.0*((ele_p+j)->r_h)){  //それぞれの惑星から3ヒル以上離れている場合.
+	  if(RelativeDistance(i,j,x_0)>3.0*((ele_p+j)->r_h)){  //それぞれの惑星から3ヒル以上離れている場合.
 	    flag += 1;
 	  }
 	}
