@@ -11,9 +11,9 @@ import numpy as np
 
 
 ######################################################################
-path = "/Users/isoya.kazuhide/Dynamical_Friction/data/Ntr3E3_t1E4yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_rand1//"
+path = "/Users/isoya.kazuhide/Dynamical_Friction/data/Ntr3E3_t1E3yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_frag_rand4//"
 
-LINE = 10001
+LINE = 1001
 
 N_p = 3
 N_tr = 3000
@@ -100,8 +100,8 @@ plt.plot(time[1, :], ecc[3, :], color="y", label=r"$e_{\rm p,3}$")
 plt.plot(time[1, :], ecc_rms_tr, color="b", label=r"$e_{\rm tr,rms}$")
 
 
-plt.xlim([0, 10000])
-plt.ylim([0, 0.12])
+plt.xlim([0, 1000])
+plt.ylim([0.08, 0.12])
 plt.xticks(fontsize=15)
 plt.yticks(fontsize=15)
 
@@ -126,8 +126,8 @@ plt.plot(time[1, :], inc[2, :], color="m", label=r"$i_{\rm p,2}$")
 plt.plot(time[1, :], inc[3, :], color="y", label=r"$i_{\rm p,3}$")
 plt.plot(time[1, :], inc_rms_tr, color="b", label=r"$i_{\rm tr,rms}$")
 
-plt.xlim([0, 10000])
-plt.ylim([0, 0.07])
+plt.xlim([0, 1000])
+plt.ylim([0.02, 0.07])
 plt.xticks(fontsize=15)
 plt.yticks(fontsize=15)
 
