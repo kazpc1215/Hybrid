@@ -13,7 +13,7 @@ import numpy as np
 
 
 ######################################################################
-path = "/Users/isoya.kazuhide/Dynamical_Friction/data/Ntr3E3_t1E3yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_frag_rand4//"
+path = "/Users/isoya.kazuhide/Dynamical_Friction/data/Ntr3E3_t1E3yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_nofrag_rand5//"
 
 LINE = 1001
 
@@ -66,12 +66,14 @@ for n in range(N_p+1, N_p+N_tr+1):
 
 for T in range(0, LINE):
     plt.figure(figsize=(10, 8), dpi=100)
+    # plt.xlim([0.8, 1.2])
     plt.xlim([0.75, 1.3])
-    # plt.ylim([0, 0.1])
-    plt.ylim([0, 0.35])
+    # plt.ylim([0, 0.35])
+    plt.ylim([0, 0.2])
     plt.xlabel('semi-major axis [AU]', fontsize=25)
     plt.ylabel('ecc', fontsize=25)
     plt.title(r"$N_{\rm tr}=3000,M_{\rm tot}=30 {\rm M_{\oplus}},{\rm time}: %05.0f {\rm yr}$" % time[1, T], fontsize=18)
+    # plt.title(r"$N_{\rm tr}=1000,M_{\rm tot}=10 {\rm M_{\oplus}},{\rm time}: %05.0f {\rm yr}$" % time[1, T], fontsize=18)
     plt.xticks(fontsize=15)
     plt.yticks(fontsize=15)
     plt.grid(True)
@@ -79,17 +81,19 @@ for T in range(0, LINE):
     plt.scatter(axis[1:N_p+1, T], ecc[1:N_p+1, T], color="r", s=20, label="Planet")
     plt.legend(loc="upper left", fontsize=15)
     plt.tight_layout()
-    filename = "../image/Ntr3E3_t1E3yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_frag_rand4/axis_ecc_T%05.0fyr.png" % time[1, T]
+    filename = "../image/Ntr3E3_t1E3yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_nofrag_rand5/axis_ecc_T%05.0fyr.png" % time[1, T]
     plt.savefig(filename)
     plt.close()
 
     plt.figure(figsize=(10, 8), dpi=100)
+    # plt.xlim([0.8, 1.2])
     plt.xlim([0.75, 1.3])
-    # plt.ylim([0, 0.05])
-    plt.ylim([0, 0.16])
+    # plt.ylim([0, 0.16])
+    plt.ylim([0, 0.1])
     plt.xlabel('semi-major axis [AU]', fontsize=25)
     plt.ylabel('inc [rad]', fontsize=25)
     plt.title(r"$N_{\rm tr}=3000,M_{\rm tot}=30 {\rm M_{\oplus}},{\rm time}: %05.0f {\rm yr}$" % time[1, T], fontsize=18)
+    # plt.title(r"$N_{\rm tr}=1000,M_{\rm tot}=10 {\rm M_{\oplus}},{\rm time}: %05.0f {\rm yr}$" % time[1, T], fontsize=18)
     plt.xticks(fontsize=15)
     plt.yticks(fontsize=15)
     plt.grid(True)
@@ -97,7 +101,7 @@ for T in range(0, LINE):
     plt.scatter(axis[1:N_p+1, T], inc[1:N_p+1, T], color="r", s=20, label="Planet")
     plt.legend(loc="upper left", fontsize=15)
     plt.tight_layout()
-    filename = "../image/Ntr3E3_t1E3yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_frag_rand4/axis_inc_T%05.0fyr.png" % time[1, T]
+    filename = "../image/Ntr3E3_t1E3yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_nofrag_rand5/axis_inc_T%05.0fyr.png" % time[1, T]
     plt.savefig(filename)
     plt.close()
 

@@ -160,7 +160,7 @@ int main(void){
 #ifdef DIRECTORY
 	  STR(DIRECTORY)
 #elif DIRECTORY_FILE
-	  dirname
+	    dirname
 #endif
 	  );
 #endif  /*ENERGY_FILE*/
@@ -171,18 +171,18 @@ int main(void){
 #ifdef DIRECTORY
 	  STR(DIRECTORY)
 #elif DIRECTORY_FILE
-	  dirname
+	    dirname
 #endif
 	  );
 #endif  /*POSI_VELO_FILE*/
 
 
 #if FRAGMENTATION
-    sprintf(fragfile,"%sTotalMass.dat",
+  sprintf(fragfile,"%sTotalMass.dat",
 #ifdef DIRECTORY
 	  STR(DIRECTORY)
 #elif DIRECTORY_FILE
-	  dirname
+	    dirname
 #endif
 	  );
 #endif  /*FRAGMENTATION*/
@@ -192,7 +192,7 @@ int main(void){
 #ifdef DIRECTORY
 	  STR(DIRECTORY)
 #elif DIRECTORY_FILE
-	  dirname
+	    dirname
 #endif
 	  );
 
@@ -201,7 +201,7 @@ int main(void){
 #ifdef DIRECTORY
 	  STR(DIRECTORY)
 #elif DIRECTORY_FILE
-	  dirname
+	    dirname
 #endif
 	  );
 
@@ -230,7 +230,7 @@ int main(void){
 	   &step,
 	   &E_tot_0,
 	   &abs_L_0,
-	   &dE_correct
+	      &dE_correct
 	   );
 
     fgets(buf,sizeof(buf),fptempread);  //読み飛ばし.
@@ -255,7 +255,7 @@ int main(void){
 	       &adot_0[i][3],
 	       &t_[i],
 	       &dt_[i],
-	       &ele[i].mass
+	              &ele[i].mass
 	       );
 
 	t_[i] = 2.0*M_PI*t_[i];
@@ -270,7 +270,7 @@ int main(void){
       }else{
 	printf("%s: i=%d line is NULL.\n",
 	       tempreadfile,
-	       i
+	              i
 	       );
       }
     }
@@ -369,7 +369,7 @@ int main(void){
 #ifdef DIRECTORY
 	    STR(DIRECTORY)
 #elif DIRECTORY_FILE
-	    dirname
+	        dirname
 #endif
 	    );
     system(cat_header);  //headerファイルをテキストとしてdataに残す
@@ -382,7 +382,7 @@ int main(void){
 #ifdef DIRECTORY
 	    STR(DIRECTORY)
 #elif DIRECTORY_FILE
-	    dirname
+	        dirname
 #endif
 	    );
     system(cat_main);  //mainファイルをテキストとしてdataに残す
@@ -431,7 +431,7 @@ int main(void){
 	   para.alpha,
 	   para.s_1,
 	   para.s_2,
-	   para.s_3
+	      para.s_3
 	   );
 #endif
 
@@ -490,7 +490,7 @@ int main(void){
 #ifdef DIRECTORY
 	    STR(DIRECTORY)
 #elif DIRECTORY_FILE
-	    dirname
+	        dirname
 #endif
 	    ,ele[PLANETESIMAL_NO].name);
     fpposi_rot = fopen(posi_rot,"w");
@@ -513,7 +513,7 @@ int main(void){
 	    r_xy[PLANET_NO],
 	    atan2(x_rot[PLANET_NO][2],x_rot[PLANET_NO][1]),
 	    ele[PLANET_NO].radius,
-	    ele[PLANET_NO].r_h
+	        ele[PLANET_NO].r_h
 	    );
     fclose(fpposi_rot);
 #endif
@@ -531,7 +531,7 @@ int main(void){
 #ifdef DIRECTORY
 	      STR(DIRECTORY)
 #elif DIRECTORY_FILE
-	      dirname
+	            dirname
 #endif
 	      ,ele[i].name);
       fporbit = fopen(orbit,"w");
@@ -551,7 +551,7 @@ int main(void){
 	      ele[i].omega,
 	      ele[i].r_h,
 	      ele[i].radius,
-	      ele[i].mass
+	            ele[i].mass
 	      );
       fclose(fporbit);
     }
@@ -598,7 +598,7 @@ int main(void){
 	    E_tot_0,
 	    0.0,
 	    dE_correct/fabs(E_tot_0),
-	    0.0
+	        0.0
 	    );
     fclose(fpEne);
 
@@ -633,9 +633,9 @@ int main(void){
       NeighborSearch(i,ele,frag,x_0);  //近傍(扇形領域に入った)粒子探索.
       /*
       printf("i=%d\tneighbornumber=%d\n",
-	     i,
-	     frag[i].neighbornumber
-	     );
+           i,
+	        frag[i].neighbornumber
+		     );
       */
       /*
 	for(j=1;j<=frag[i].neighbornumber;j++){
@@ -649,24 +649,24 @@ int main(void){
       frag[i].t_frag = frag[i].dt_frag;
       /*
       printf("\tinitial\tF[%d]=%e\tsigma[%d]=%e\tdt_frag[%d]=%e[yr]\tdt_[%d]=%e[yr]\n",
-	     i,
-	     frag[i].flux,
-	     i,
-	     frag[i].sigma,
-	     i,
-	     frag[i].dt_frag/2.0/M_PI,
-	     i,
-	     dt_[i]/2.0/M_PI
-	     );
+           i,
+	        frag[i].flux,
+		     i,
+		          frag[i].sigma,
+			       i,
+			            frag[i].dt_frag/2.0/M_PI,
+				         i,
+					      dt_[i]/2.0/M_PI
+					           );
       printf("\ti=%d\tv_ave=%f\tsigma=%f\tecc=%f\tr_0=%f\tdelta_r_out=%f\tdelta_r_in=%f\n",
-	     i,
-	     frag[i].v_ave,
-	     frag[i].sigma,
-	     ele[i].ecc,
-	     r_0[i],
-	     frag[i].delta_r_out,
-	     frag[i].delta_r_in
-	     );
+           i,
+	        frag[i].v_ave,
+		     frag[i].sigma,
+		          ele[i].ecc,
+			       r_0[i],
+			            frag[i].delta_r_out,
+				         frag[i].delta_r_in
+					      );
       */
       mass_tot_all += ele[i].mass;
     }
@@ -685,8 +685,8 @@ int main(void){
     v_ave_all = sqrt(2.0*(ECC_RMS*ECC_RMS + INC_RMS*INC_RMS) / PLANET_AXIS);
     flux_all = - (2.0 - para.alpha)*(2.0 - para.alpha) / cbrt(M_MAX) * sigma_all*sigma_all * sqrt(1.0/PLANET_AXIS/PLANET_AXIS/PLANET_AXIS) * para.h_0 * pow(v_ave_all*v_ave_all*0.5/para.Q_D,para.alpha-1.0) * ((- log(EPSILON_FRAG) + 1.0/(2.0-B_FRAG))*para.s_1 + para.s_2 + para.s_3);
 #else
-    v_ave_all = sqrt(2.0*(ECC_RMS*ECC_RMS + INC_RMS*INC_RMS) * G*M_0/PLANET_AXIS);
-    flux_all = - (2.0 - para.alpha)*(2.0 - para.alpha) / cbrt(M_MAX) * sigma_all*sigma_all * sqrt(G*M_0/PLANET_AXIS/PLANET_AXIS/PLANET_AXIS) * para.h_0 * pow(v_ave_all*v_ave_all*0.5/para.Q_D,para.alpha-1.0) * ((- log(EPSILON_FRAG) + 1.0/(2.0-B_FRAG))*para.s_1 + para.s_2 + para.s_3);
+    v_ave_0 = sqrt(2.0*(ECC_RMS*ECC_RMS + INC_RMS*INC_RMS) * G*M_0/PLANET_AXIS);
+    flux_0 = - (2.0 - para.alpha)*(2.0 - para.alpha) / cbrt(M_MAX) * sigma_0*sigma_0 * sqrt(G*M_0/PLANET_AXIS/PLANET_AXIS/PLANET_AXIS) * para.h_0 * pow(v_ave_0*v_ave_0*0.5/para.Q_D,para.alpha-1.0) * ((- log(EPSILON_FRAG) + 1.0/(2.0-B_FRAG))*para.s_1 + para.s_2 + para.s_3);
 #endif
     tau_dep_all = - sigma_all / flux_all;
     printf("initial mass depletion timescale =\t%e [yr]\n",tau_dep_all/2.0/M_PI);
@@ -702,7 +702,7 @@ int main(void){
     fprintf(fpfrag,"%.15e\t%.15e\t%.15e\n",
 	    0.0,
 	    mass_tot_all,
-	    M_TOT
+	        M_TOT
 	    );
     fclose(fpfrag);
 
@@ -711,7 +711,7 @@ int main(void){
 #ifdef DIRECTORY
 	    STR(DIRECTORY)
 #elif DIRECTORY_FILE
-	    dirname
+	        dirname
 #endif
 	    ,n_fragcheck
 	    );
@@ -736,7 +736,7 @@ int main(void){
 	      frag[i].sigma,
 	      frag[i].n_s,
 	      frag[i].neighbornumber,
-	      frag[i].dt_frag/2.0/M_PI
+	            frag[i].dt_frag/2.0/M_PI
 	      );
     }
     fclose(fpposimass);
@@ -760,11 +760,11 @@ int main(void){
     for(i=1;i<=global_n;++i){
       for(j=1;j<=
 #if INTERACTION_ALL
-	    global_n
+	        global_n
 #elif INTERACTION_PLANET_TRACER
-	    global_n
+	        global_n
 #elif INTERACTION_TEST_PARTICLE
-	    global_n_p
+	        global_n_p
 #endif
 	    ;++j){
 	if(i!=j){
@@ -805,7 +805,7 @@ int main(void){
 	    i_sys,
 	    E_tot_0,
 	    abs_L_0,
-	    dE_correct
+	        dE_correct
 	    );
     fprintf(fpinitial,"\n\n");
     fprintf(fpinitial,"#number\tx[AU]\ty[AU]\tz[AU]\t|r|[AU]\tvx[2piAU/yr]\tvy[2piAU/yr]\tvz[2piAU/yr]\t|v|[2piAU/yr]\tdt[yr]\tmass[Msun]\n");
@@ -821,7 +821,7 @@ int main(void){
 	      v_0[i][3],
 	      sqrt(v2_0[i]),
 	      dt_[i]/2.0/M_PI,
-	      ele[i].mass
+	            ele[i].mass
 	      );
     }
     fclose(fpinitial);
@@ -858,7 +858,7 @@ int main(void){
 	 i_sys,
 	 dt_[i_sys]/2.0/M_PI,
 	 t_tmp/2.0/M_PI,
-	 t_sys/2.0/M_PI
+	  t_sys/2.0/M_PI
 	 );
 
   ////////////////////////////////////////////////////////////////////////////////////
@@ -904,7 +904,7 @@ int main(void){
 #if COLLISION
 	 (i_sys <= global_n_p) && Collision_Judgement(i_sys,ele,x_p,abs_r,&i_col,&j_col)
 #else
-	 false
+	  false
 #endif
 	 ){  //予測子を用いた衝突判定.
 
@@ -921,7 +921,7 @@ int main(void){
 	       abs_r[j_col],
 	       i_col,
 	       j_col,
-	       ele[i_col].radius + ele[j_col].radius
+	              ele[i_col].radius + ele[j_col].radius
 	       );
 
 
@@ -1036,7 +1036,7 @@ int main(void){
 		  v_c[i][3],
 		  sqrt(v_c[i][1]*v_c[i][1]+v_c[i][2]*v_c[i][2]+v_c[i][3]*v_c[i][3]),
 		  ele[i].r_h,
-		  ele[i].radius
+		    ele[i].radius
 		  );
 	}
 	fclose(fpcollision);
@@ -1347,7 +1347,7 @@ int main(void){
 	      E_tot,
 	      (E_tot-E_tot_0)/fabs(E_tot_0),
 	      dE_correct/fabs(E_tot_0),
-	      step
+	            step
 	      );
       fclose(fpEne);
 
@@ -1428,7 +1428,7 @@ int main(void){
 	      step,
 	      E_tot_0,
 	      abs_L_0,
-	      dE_correct
+	            dE_correct
 	      );
       fprintf(fptempread,"\n\n");
       fprintf(fptempread,"#name\tx[AU]\ty[AU]\tz[AU]\t|r|[AU]\tvx[AU(2pi/yr)]\tvy[AU(2pi/yr)]\tvz[AU(2pi/yr)]\t|v|[AU(2pi/yr)]\tax[AU(2pi/yr)^2]\tay[AU(2pi/yr)^2]\taz[AU(2pi/yr)^2]\tadotx[AU(2pi/yr)^3]\tadoty[AU(2pi/yr)^3]\tadotz[AU(2pi/yr)^3]\tt_i[yr]\tdt_i[yr]\tmass[Msun]\n");
@@ -1507,9 +1507,9 @@ int main(void){
 
 	//printf("i=%d\tneighbornumber=%d\n",i,frag[i].neighbornumber);
 	/*
-	  for(j=1;j<=frag[i].neighbornumber;j++){
-	  printf("\tneighborlist[%d]=%d\n",j,frag[i].neighborlist[j]);
-	  }
+	    for(j=1;j<=frag[i].neighbornumber;j++){
+	      printf("\tneighborlist[%d]=%d\n",j,frag[i].neighborlist[j]);
+	        }
 	*/
 	//printf("i=%d\tv_ave=%f\tsigma=%f\tecc=%f\tr_c=%f\tdelta_r=%f\n",i,frag[i].v_ave,frag[i].sigma,ele[i].ecc,r_c[i],frag[i].delta_r);
 
@@ -1521,12 +1521,12 @@ int main(void){
 	  printf("time=%.15e[yr]\tfrag[%d].neighbornumber=%d\n",
 		 (t_sys+t_tmp)/2.0/M_PI,
 		 i,
-		 frag[i].neighbornumber
+		  frag[i].neighbornumber
 		 );
 	  /*
-	    for(j=1;j<=frag[i].neighbornumber;j++){
-	    printf("\tneighborlist[%d]=%d\n",j,frag[i].neighborlist[j]);
-	    }
+	        for(j=1;j<=frag[i].neighbornumber;j++){
+		    printf("\tneighborlist[%d]=%d\n",j,frag[i].neighborlist[j]);
+		        }
 	  */
 	  printf("i=%d\tv_ave=%f\tsigma=%f\tecc=%f\tr_c=%f\tdelta_r_out=%f\tdelta_r_in=%f\n",
 		 i,
@@ -1535,7 +1535,7 @@ int main(void){
 		 ele[i].ecc,
 		 r_c[i],
 		 frag[i].delta_r_out,
-		 frag[i].delta_r_in
+		  frag[i].delta_r_in
 		 );
 	  printf("axis=%e\tecc=%e\tinc=%e\tu=%e\tOmega=%e\tomega=%e\n",
 		 ele[i].axis,
@@ -1543,12 +1543,12 @@ int main(void){
 		 ele[i].inc,
 		 ele[i].u,
 		 ele[i].Omega,
-		 ele[i].omega
+		  ele[i].omega
 		 );
 	  printf("x=%f\ty=%f\tz=%f\n",
 		 x_c[i][1],
 		 x_c[i][2],
-		 x_c[i][3]
+		  x_c[i][3]
 		 );
 	  return -1;
 	}
@@ -1587,12 +1587,12 @@ int main(void){
 
       sprintf(posimassfile,"%sPosi_Mass_%02d.dat",
 #ifdef DIRECTORY
-	    STR(DIRECTORY)
+	      STR(DIRECTORY)
 #elif DIRECTORY_FILE
-	    dirname
+	          dirname
 #endif
-	    ,n_fragcheck
-	    );
+	      ,n_fragcheck
+	      );
       fpposimass = fopen(posimassfile,"w");  //位置、質量などをファイルへ書き出し.
       if(fpposimass==NULL){
 	printf("posimassfile error\n");
@@ -1670,7 +1670,7 @@ int main(void){
 	      r_xy[PLANET_NO],
 	      atan2(x_rot[PLANET_NO][2],x_rot[PLANET_NO][1]),
 	      ele[PLANET_NO].radius,
-	      ele[PLANET_NO].r_h
+	            ele[PLANET_NO].r_h
 	      );
       fclose(fpposi_rot);
     }
@@ -1778,7 +1778,7 @@ int main(void){
     }else{
       printf("Collision Judgement error\ti_col=%d\tj_col=%d\n",
 	     i_col,
-	     j_col
+	          j_col
 	     );
       exit(-1);
     }
@@ -1795,7 +1795,7 @@ int main(void){
 	     i_sys,
 	     dt_[i_sys]/2.0/M_PI,
 	     t_tmp/2.0/M_PI,
-	     t_sys/2.0/M_PI
+	          t_sys/2.0/M_PI
 	     );
 
 #if EXECUTION_TIME
@@ -1830,7 +1830,7 @@ int main(void){
 	  step,
 	  E_tot_0,
 	  abs_L_0,
-	  dE_correct
+	    dE_correct
 	  );
   fprintf(fptempread,"\n\n");
   fprintf(fptempread,"#name\tx[AU]\ty[AU]\tz[AU]\t|r|[AU]\tvx[AU(2pi/yr)]\tvy[AU(2pi/yr)]\tvz[AU(2pi/yr)]\t|v|[AU(2pi/yr)]\tax[AU(2pi/yr)^2]\tay[AU(2pi/yr)^2]\taz[AU(2pi/yr)^2]\tadotx[AU(2pi/yr)^3]\tadoty[AU(2pi/yr)^3]\tadotz[AU(2pi/yr)^3]\tt_i[yr]\tdt_i[yr]\tmass[Msun]\n");
@@ -1853,7 +1853,7 @@ int main(void){
 	    adot_0[i][3],
 	    t_[i]/2.0/M_PI,
 	    dt_[i]/2.0/M_PI,
-	    ele[i].mass
+	        ele[i].mass
 	    );
   }
   fclose(fptempread);
@@ -1896,3 +1896,4 @@ int main(void){
   return 0;
 }
 
+		

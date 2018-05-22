@@ -393,10 +393,13 @@ int main(void){
 
     srand(RAND_SEED);  //乱数の種.
 
-
+    /*
     ele[1].axis = PLANET_AXIS / MutualHillRadius_to_SemimajorAxis(DELTA_HILL) ;  //惑星2を中心に相互DELTA_HILLヒル内側へ離す.
     ele[2].axis = PLANET_AXIS;
     ele[3].axis = PLANET_AXIS * MutualHillRadius_to_SemimajorAxis(DELTA_HILL);  //惑星2を中心に相互DELTA_HILLヒル外側へ離す.
+    */
+
+    ele[1].axis = PLANET_AXIS;  //Np=1, Ntr=1000用.
 
     for(i=1;i<=global_n_p;++i){  //惑星.
       InitialOrbitalElements_Planet(i,ele);  //初期軌道要素.
@@ -886,7 +889,7 @@ int main(void){
       gettimeofday(&realtime_start,NULL);
       getrusage(RUSAGE_SELF,&usage_start);
 #endif
-      //#pragma omp parallel for schedule(runtime)
+#pragma omp parallel for
       for(i=1;i<=global_n;++i){
 	Dt[i] = t_sys - t_[i];
 	Predictor(i,x_0,v_0,a_0,adot_0,x_p,v_p,r_p,v2_p,r_dot_v,Dt);  //予測子 t_sysにおけるすべての粒子を計算.
@@ -1178,7 +1181,7 @@ int main(void){
 	getrusage(RUSAGE_SELF,&usage_start);
 #endif
 
-	//#pragma omp parallel for private(k) schedule(runtime)
+#pragma omp parallel for private(k)
 	for(i=1;i<=global_n;++i){
 	  if(i!=i_sys){
 	    //i_sys以外の粒子は予測子を使う.

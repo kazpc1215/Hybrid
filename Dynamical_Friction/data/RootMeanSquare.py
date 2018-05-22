@@ -11,7 +11,7 @@ import numpy as np
 
 
 ######################################################################
-path = "/Users/isoya.kazuhide/Dynamical_Friction/data/Ntr3E3_t1E3yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_frag_rand4//"
+path = "/Users/isoya.kazuhide/Dynamical_Friction/data/Ntr3E3_t1E3yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_nofrag_rand5//"
 
 LINE = 1001
 
@@ -94,6 +94,7 @@ inc_rms_tr = np.sqrt(inc_2_mean)
 plt.figure(figsize=(10, 8), dpi=100)
 
 plt.plot(time[1, :], ecc_rms_p, color="g", label=r"$e_{\rm p,rms}$")
+# plt.plot(time[1, :], ecc_rms_p, color="g", label=r"$e_{\rm p}$")
 plt.plot(time[1, :], ecc[1, :], color="c", label=r"$e_{\rm p,1}$")  # N3E3用に付け足し
 plt.plot(time[1, :], ecc[2, :], color="m", label=r"$e_{\rm p,2}$")
 plt.plot(time[1, :], ecc[3, :], color="y", label=r"$e_{\rm p,3}$")
@@ -101,7 +102,7 @@ plt.plot(time[1, :], ecc_rms_tr, color="b", label=r"$e_{\rm tr,rms}$")
 
 
 plt.xlim([0, 1000])
-plt.ylim([0.08, 0.12])
+# plt.ylim([0.03, 0.12])
 plt.xticks(fontsize=15)
 plt.yticks(fontsize=15)
 
@@ -111,6 +112,7 @@ plt.grid(True)
 plt.legend(loc="upper left", fontsize=15)
 
 plt.title(r"$N_{\rm tr}=3000,M_{\rm tot}=30 {\rm M_{\oplus}}$", fontsize=18)
+# plt.title(r"$N_{\rm tr}=1000,M_{\rm tot}=10 {\rm M_{\oplus}}$", fontsize=18)
 plt.tight_layout()
 
 plt.show()
@@ -121,13 +123,14 @@ plt.close()
 plt.figure(figsize=(10, 8), dpi=100)
 
 plt.plot(time[1, :], inc_rms_p, color="g", label=r"$i_{\rm p,rms}$")
+# plt.plot(time[1, :], inc_rms_p, color="g", label=r"$i_{\rm p}$")
 plt.plot(time[1, :], inc[1, :], color="c", label=r"$i_{\rm p,1}$")  # N3E3用に付け足し
 plt.plot(time[1, :], inc[2, :], color="m", label=r"$i_{\rm p,2}$")
 plt.plot(time[1, :], inc[3, :], color="y", label=r"$i_{\rm p,3}$")
 plt.plot(time[1, :], inc_rms_tr, color="b", label=r"$i_{\rm tr,rms}$")
 
 plt.xlim([0, 1000])
-plt.ylim([0.02, 0.07])
+# plt.ylim([0.03, 0.06])
 plt.xticks(fontsize=15)
 plt.yticks(fontsize=15)
 
@@ -137,6 +140,7 @@ plt.grid(True)
 plt.legend(loc="upper left", fontsize=15)
 
 plt.title(r"$N_{\rm tr}=3000,M_{\rm tot}=30 {\rm M_{\oplus}}$", fontsize=18)
+# plt.title(r"$N_{\rm tr}=1000,M_{\rm tot}=10 {\rm M_{\oplus}}$", fontsize=18)
 plt.tight_layout()
 
 plt.show()
