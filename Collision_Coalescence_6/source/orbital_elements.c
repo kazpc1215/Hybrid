@@ -30,7 +30,7 @@ double Calculate_Q(int i,int k,CONST struct orbital_elements *ele_p){
 void InitialOrbitalElements_Planet(int i,struct orbital_elements *ele_p){
 
   sprintf((ele_p+i)->name,"Planet%02d",i);
-  (ele_p+i)->mass = PLANET_MASS;
+  //(ele_p+i)->mass = PLANET_MASS;  //質量massはすでに求めてある。
   //(ele_p+i)->axis = PLANET_AXIS;  //軌道長半径axisはすでに求めてある.
   (ele_p+i)->ecc = PLANET_ECC;
   (ele_p+i)->inc = PLANET_INC;

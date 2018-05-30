@@ -69,8 +69,13 @@ void CenterOfGravity(CONST double x_0[][4],CONST double v_0[][4],double x_G[],do
 }
 
 
-double MutualHillRadius_to_SemimajorAxis(double ratio){
-  return (1.0/ratio + 0.5*cbrt(2.0*PLANET_MASS/3.0))/(1.0/ratio - 0.5*cbrt(2.0*PLANET_MASS/3.0));
+double MutualHillRadius_to_SemimajorAxis(double ratio,double mass){
+  return (1.0/ratio + 0.5*cbrt(2.0*mass/3.0))/(1.0/ratio - 0.5*cbrt(2.0*mass/3.0));
+}
+
+
+double Isolation_Mass(double axis,double ratio,double sigma_0,double alpha){
+  return 4.85E-7*pow(ratio/10.,1.5)*pow(sigma_0/10.,1.5)*pow(axis,1.5*(2.-alpha));
 }
 
 
