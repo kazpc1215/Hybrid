@@ -26,6 +26,26 @@ double Calculate_Q(int i,int k,CONST struct orbital_elements *ele_p){
 }
 
 
+/*惑星の初期軌道長半径をイテレーションで決定する*/
+double Iteration_of_InitialAxis(double axis_1,double m_1,double ratio,double sigma_0, double alpha){
+
+  double axis_2 = axis_1 * MutualHillRadius_to_SemimajorAxis(m_1,m_1,ratio);  //小さめの見積もり.
+  double m_2 = IsolationMass(axis_2,ratio,sigma_0,alpha);  //小さめの見積もり（alpha < 2の場合）.
+  double tmp = axis_1 * MutualHillRadius_to_SemimajorAxis(m_1,m_2,ratio) - axis_2;  //m_2を使った相互ヒル半径との比較.
+  double eps = 1.0E-15;
+
+  while(fabs(tmp)/axis_2 > eps){
+    axis_2 += tmp;
+    m_2 = IsolationMass(axis_2,ratio,sigma_0,alpha);
+    tmp = axis_1 * MutualHillRadius_to_SemimajorAxis(m_1,m_2,ratio) - axis_2;  //m_2を使った相互ヒル半径との比較.
+  }
+
+  //printf("10R_H,M = %.15e,\tdelta_a = %.15e\n",(axis_1+axis_2)*0.5*cbrt((m_1+m_2)/3.0),axis_1 * MutualHillRadius_to_SemimajorAxis(m_1,m_2,ratio) - axis_1);
+
+  return axis_2;
+}
+
+
 /*惑星の初期軌道要素*/
 void InitialOrbitalElements_Planet(int i,struct orbital_elements *ele_p){
 

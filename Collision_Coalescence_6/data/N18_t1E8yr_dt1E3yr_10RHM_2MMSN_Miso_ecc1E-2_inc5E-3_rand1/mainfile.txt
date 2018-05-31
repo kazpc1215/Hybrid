@@ -395,11 +395,21 @@ int main(void){
 
 
     ele[1].axis = PLANET_INNER_AXIS;
-    ele[1].mass = Isolation_Mass(ele[1].axis,DELTA_HILL,SIGMA_SOLID,ALPHA_SOLID);
+    ele[1].mass = IsolationMass(ele[1].axis,DELTA_HILL,SIGMA_SOLID,ALPHA_SOLID);
     for(i=2;i<=global_n_p;++i){
-      ele[i].axis = ele[i-1].axis * MutualHillRadius_to_SemimajorAxis(DELTA_HILL,ele[i-1].mass);
-      ele[i].mass = Isolation_Mass(ele[i].axis,DELTA_HILL,SIGMA_SOLID,ALPHA_SOLID);
+      ele[i].axis = Iteration_of_InitialAxis(ele[i-1].axis,ele[i-1].mass,DELTA_HILL,SIGMA_SOLID,ALPHA_SOLID);
+      //ele[i].axis = ele[i-1].axis * MutualHillRadius_to_SemimajorAxis(ele[i-1].mass,ele[i-1].mass,DELTA_HILL);
+      ele[i].mass = IsolationMass(ele[i].axis,DELTA_HILL,SIGMA_SOLID,ALPHA_SOLID);
     }
+
+
+    double mass_tot=0.0;
+    for(i=1;i<=global_n_p;++i){
+      mass_tot += ele[i].mass;
+      printf("axis%02d = %e[AU],\tmass%02d = %e[M_Sun]\n",i,ele[i].axis,i,ele[i].mass);
+    }
+    printf("mass_tot = %e[M_Sun] = %e[M_Earth]\n",mass_tot,mass_tot/3.0E-6);
+
 
     for(i=1;i<=global_n_p;++i){  //惑星.
       InitialOrbitalElements_Planet(i,ele);  //初期軌道要素.

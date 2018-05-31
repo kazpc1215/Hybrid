@@ -24,9 +24,11 @@ double Calculate_Energy(CONST struct orbital_elements *ele_p,CONST double x_c[][
 #endif
 			CONST double r_c[]);
 
-double MutualHillRadius_to_SemimajorAxis(double ratio,double mass);
+double MutualHillRadius_to_SemimajorAxis(double m_1,double m_2,double ratio);
 
-double Isolation_Mass(double axis,double ratio,double sigma_0,double alpha);
+double IsolationMass(double axis,double ratio,double sigma_0,double alpha);
+
+double Iteration_of_InitialAxis(double axis_1,double m_1,double ratio,double sigma_0, double alpha);
 
 void InitialOrbitalElements_Planet(int i,struct orbital_elements *ele_p);
 
