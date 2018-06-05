@@ -31,8 +31,8 @@
 #endif
 
 
-#define DIRECTORY ../data/test/  //ファイル保存用のディレクトリ.
-//#define DIRECTORY ../data/Ntr1E3_t1E3yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_frag_rand1/  //ファイル保存用のディレクトリ.
+//#define DIRECTORY ../data/test/  //ファイル保存用のディレクトリ.
+#define DIRECTORY ../data/Ntr1E3_t1E3yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_frag_rand1/  //ファイル保存用のディレクトリ.
 
 
 #define STR_(str) #str
@@ -46,12 +46,12 @@
 
 
 //////////////////////////////////////////////////
-#define N_tr 3000  //初期のトレーサーの数.
-#define N_p 3  //初期の原始惑星の数.
+#define N_tr 1000  //初期のトレーサーの数.
+#define N_p 1  //初期の原始惑星の数.
 #define RAND_SEED 1  //乱数の種.
 #define STEP_INTERVAL 1.0E5  //何ステップごとに標準出力するか.
-//#define BREAK_TIME 432000.0  //4h = 14400sec, 5days = 432000sec.
-#define BREAK_TIME 60.0  //4h = 14400sec, 5days = 432000sec.
+#define BREAK_TIME 14100.0  //4h = 14400sec, 12h = 43200sec.
+
 
 EXTERN int global_n;  //グローバル変数.
 EXTERN int global_n_p;  //グローバル変数.

@@ -459,10 +459,13 @@ int main(void){
 
     srand(RAND_SEED);  //乱数の種.
 
-
+#if N_p == 3
     ele[1].axis = PLANET_AXIS / MutualHillRadius_to_SemimajorAxis(DELTA_HILL) ;  //惑星2を中心に相互DELTA_HILLヒル内側へ離す.
     ele[2].axis = PLANET_AXIS;
     ele[3].axis = PLANET_AXIS * MutualHillRadius_to_SemimajorAxis(DELTA_HILL);  //惑星2を中心に相互DELTA_HILLヒル外側へ離す.
+#elif N_p == 1
+    ele[1].axis = PLANET_AXIS;
+#endif
 
     for(i=1;i<=global_n_p;++i){  //惑星.
       InitialOrbitalElements_Planet(i,ele);  //初期軌道要素.

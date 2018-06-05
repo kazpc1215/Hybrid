@@ -58,8 +58,14 @@ void InitialOrbitalElements_Planet(int i,struct orbital_elements *ele_p){
 void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements *ele_p){
 
   //惑星の位置x_0[][4]はすでに求めてあることが前提.
+#if N_p == 3
   double orbital_r_min = ((ele_p+1)->axis) / MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
   double orbital_r_max = ((ele_p+3)->axis) * MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
+#elif N_p == 1
+  double orbital_r_min = ((ele_p+1)->axis) / MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
+  double orbital_r_max = ((ele_p+1)->axis) * MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
+#endif
+
   int j=0,k=0,flag=0;
 
   //printf("orbital_r_min=%.15e\torbital_r_max=%.15e\n",orbital_r_min,orbital_r_max);
