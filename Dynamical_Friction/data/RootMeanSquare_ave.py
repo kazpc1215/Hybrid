@@ -15,11 +15,11 @@ def Mutual_Hill(x):
 
 
 ######################################################################
-path = "/Users/isoya.kazuhide/Dynamical_Friction/data/Ntr1E3_t1E4yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_nofrag_rand1//"
+path = "/Users/isoya.kazuhide/Dynamical_Friction/data/Ntr3E3_t1E3yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_frag_rand4//"
 
-LINE = 10001
-N_p = 1
-N_tr = 1000
+LINE = 1001
+N_p = 3
+N_tr = 3000
 
 T_ave_range_ratio = 0.5
 

@@ -459,10 +459,13 @@ int main(void){
 
     srand(RAND_SEED);  //乱数の種.
 
-
+#if N_p == 3
     ele[1].axis = PLANET_AXIS / MutualHillRadius_to_SemimajorAxis(DELTA_HILL) ;  //惑星2を中心に相互DELTA_HILLヒル内側へ離す.
     ele[2].axis = PLANET_AXIS;
     ele[3].axis = PLANET_AXIS * MutualHillRadius_to_SemimajorAxis(DELTA_HILL);  //惑星2を中心に相互DELTA_HILLヒル外側へ離す.
+#elif N_p == 1
+    ele[1].axis = PLANET_AXIS;
+#endif
 
     for(i=1;i<=global_n_p;++i){  //惑星.
       InitialOrbitalElements_Planet(i,ele);  //初期軌道要素.
@@ -1963,12 +1966,19 @@ int main(void){
 	  para.Q_D
 	  );
   fprintf(fptempfragread,"\n\n");
-  fprintf(fptempfragread,"#i\tfragtimes\tt_frag[yr]\tdt_frag[yr]\n");
+  fprintf(fptempfragread,"#i\tfragtimes\tneighbornumber\tdelta_r_out\tdelta_r_in\tsigma\tn_s\tv_ave\tflux\tt_frag[yr]\tdt_frag[yr]\n");
 
   for(i=global_n_p+1;i<=global_n;++i){
-    fprintf(fptempfragread,"%d\t%d\t%.15e\t%.15e\n",
+    fprintf(fptempfragread,"%d\t%d\t%d\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\t%.15e\n",
 	    i,
 	    frag[i].fragtimes,
+	    frag[i].neighbornumber,
+	    frag[i].delta_r_out,
+	    frag[i].delta_r_in,
+	    frag[i].sigma,
+	    frag[i].n_s,
+	    frag[i].v_ave,
+	    frag[i].flux,
 	    frag[i].t_frag/2.0/M_PI,
 	    frag[i].dt_frag/2.0/M_PI
 	    );

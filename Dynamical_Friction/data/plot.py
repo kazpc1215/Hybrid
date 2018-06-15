@@ -14,7 +14,7 @@ def Jacobi(axis):
 
 ######################################################################
 # path = "/Users/isoya.kazuhide/Dynamical_Friction/data//"
-directory = "Ntr3E3_t1E3yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_frag_rand1//"
+directory = "Ntr3E3_t1E3yr_dt1yr_Mtot3E-5_ecc1E-2_inc5E-3_frag_rand4//"
 
 LINE = 1001
 
@@ -83,8 +83,8 @@ for T in range(0, LINE):
         plt.title(r"$N_{\rm tr}=3000,M_{\rm tot}=30 {\rm M_{\oplus}},{\rm time}: %05.0f {\rm yr}$" % time[1, T], fontsize=18)
         plt.xlim([0.75, 1.3])
 
-    plt.ylim([0, 0.35])
-    # plt.ylim([0, 0.2])
+    # plt.ylim([0, 0.35])
+    plt.ylim([0, 0.2])
     plt.xlabel('semi-major axis [AU]', fontsize=25)
     plt.ylabel('ecc', fontsize=25)
 
@@ -114,8 +114,8 @@ for T in range(0, LINE):
         plt.title(r"$N_{\rm tr}=3000,M_{\rm tot}=30 {\rm M_{\oplus}},{\rm time}: %05.0f {\rm yr}$" % time[1, T], fontsize=18)
         plt.xlim([0.75, 1.3])
 
-    plt.ylim([0, 0.16])
-    # plt.ylim([0, 0.1])
+    # plt.ylim([0, 0.16])
+    plt.ylim([0, 0.1])
     plt.xlabel('semi-major axis [AU]', fontsize=25)
     plt.ylabel('inc [rad]', fontsize=25)
 
