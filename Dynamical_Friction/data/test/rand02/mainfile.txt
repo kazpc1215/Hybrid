@@ -377,7 +377,7 @@ int main(int argc, char **argv){
 		 );
 
 	  frag[i].t_frag = 2.0*M_PI*frag[i].t_frag;
-	  frag[i].dt_frag = 2.0*M_PI*frag[i].dt_frag;
+	  frag[i].t_frag = 2.0*M_PI*frag[i].t_frag;
 
 	}else{
 	  fprintf(fplog,"%s: i=%d line is NULL.\n",

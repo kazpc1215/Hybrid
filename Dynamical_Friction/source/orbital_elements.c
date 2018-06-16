@@ -34,9 +34,9 @@ void InitialOrbitalElements_Planet(int i,struct orbital_elements *ele_p){
   //(ele_p+i)->axis = PLANET_AXIS;  //軌道長半径axisはすでに求めてある.
   (ele_p+i)->ecc = PLANET_ECC;
   (ele_p+i)->inc = PLANET_INC;
-  (ele_p+i)->u = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
-  (ele_p+i)->omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
-  (ele_p+i)->Omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
+  (ele_p+i)->u = rand_func()*2.0*M_PI;
+  (ele_p+i)->omega = rand_func()*2.0*M_PI;
+  (ele_p+i)->Omega = rand_func()*2.0*M_PI;
   //(ele_p+i)->omega = 0.0;
   //(ele_p+i)->Omega = 0.0;
 
@@ -67,28 +67,31 @@ void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements
 #endif
 
   int j=0,k=0,flag=0;
+  double peri=0.0,apo=0.0;
 
-  //printf("orbital_r_min=%.15e\torbital_r_max=%.15e\n",orbital_r_min,orbital_r_max);
+  //fprintf(fplog,"orbital_r_min=%.15e\torbital_r_max=%.15e\n",orbital_r_min,orbital_r_max);
 
   sprintf((ele_p+i)->name,"tracer%06d",i-global_n_p);
   (ele_p+i)->mass = M_TOT/(double)(global_n-global_n_p);  //質量.
-  (ele_p+i)->axis = ((double)rand())/((double)RAND_MAX+1.0)*(orbital_r_max - orbital_r_min) + orbital_r_min;  //惑星1より内側に相互(0.5*DELTA_HILL)ヒルの位置 から 惑星3より外側に相互(0.5*DELTA_HILL)ヒルの位置 に分布.
-  (ele_p+i)->ecc = sqrt(-log(((double)rand())/((double)RAND_MAX+1.0)))*ECC_RMS;  //離心率.  //Rayleigh分布.
-  (ele_p+i)->inc = sqrt(-log(((double)rand())/((double)RAND_MAX+1.0)))*INC_RMS;  //軌道傾斜角.  //Rayleigh分布.
 
   do{
     flag = 0;
 
-    (ele_p+i)->u = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
-    (ele_p+i)->omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
-    (ele_p+i)->Omega = ((double)rand())/((double)RAND_MAX+1.0)*2.0*M_PI;
+    (ele_p+i)->axis = rand_func()*(orbital_r_max - orbital_r_min) + orbital_r_min;  //惑星1より内側に相互(0.5*DELTA_HILL)ヒルの位置 から 惑星3より外側に相互(0.5*DELTA_HILL)ヒルの位置 に分布.
+    (ele_p+i)->ecc = sqrt(-log(rand_func()))*ECC_RMS;  //離心率.  //Rayleigh分布.
+    (ele_p+i)->inc = sqrt(-log(rand_func()))*INC_RMS;  //軌道傾斜角.  //Rayleigh分布.
+    (ele_p+i)->u = rand_func()*2.0*M_PI;
+    (ele_p+i)->omega = rand_func()*2.0*M_PI;
+    (ele_p+i)->Omega = rand_func()*2.0*M_PI;
 
     for(k=1;k<=3;++k){
       x_0[i][k] = ((ele_p+i)->axis)*Calculate_P(i,k,ele_p)*(cos(((ele_p+i)->u))-((ele_p+i)->ecc)) + ((ele_p+i)->axis)*sqrt(1.0-((ele_p+i)->ecc)*((ele_p+i)->ecc))*Calculate_Q(i,k,ele_p)*sin(((ele_p+i)->u));
     }
 
+    peri = ((ele_p+i)->axis)*(1.0 - (ele_p+i)->ecc);
+    apo = ((ele_p+i)->axis)*(1.0 + (ele_p+i)->ecc);
 
-    if(RadiusFromCenter(i,x_0)>orbital_r_min && RadiusFromCenter(i,x_0)<orbital_r_max){  //orbital_r_minからorbital_r_maxの範囲にいる場合.
+    if(peri>orbital_r_min && apo<orbital_r_max){  //orbital_r_minからorbital_r_maxの範囲にいる場合.
       for(j=1;j<=global_n_p;++j){
 	if(i!=j){
 	  if(RelativeDistance(i,j,x_0)>3.0*((ele_p+j)->r_h)){  //それぞれの惑星から3ヒル以上離れている場合.
@@ -162,8 +165,8 @@ void EjectionOfTracerFromPlanet(double x_0[][4],double v_0[][4],double v2_0[],do
 
 
 
-    //printf("%s\tx_eject[%d][1]=%f\tx_eject[%d][2]=%f\tx_eject[%d][3]=%f\n",ele[i].name,i,x_eject[i][1],i,x_eject[i][2],i,x_eject[i][3]);
-    //printf("%s\tv_eject[%d][1]=%f\tv_eject[%d][2]=%f\tv_eject[%d][3]=%f\n",ele[i].name,i,v_eject[i][1],i,v_eject[i][2],i,v_eject[i][3]);
+    //fprintf(fplog,"%s\tx_eject[%d][1]=%f\tx_eject[%d][2]=%f\tx_eject[%d][3]=%f\n",ele[i].name,i,x_eject[i][1],i,x_eject[i][2],i,x_eject[i][3]);
+    //fprintf(fplog,"%s\tv_eject[%d][1]=%f\tv_eject[%d][2]=%f\tv_eject[%d][3]=%f\n",ele[i].name,i,v_eject[i][1],i,v_eject[i][2],i,v_eject[i][3]);
 
 
     //////////////////ここまでで、惑星中心、xyは軌道面上、x軸は太陽から惑星の方向/////////////////////
@@ -262,19 +265,19 @@ void Calculate_OrbitalElements(int i,CONST double x_c[][4],CONST double v_c[][4]
 
   /*
   if(isnan(x_c[i][1])||isnan(x_c[i][2])||isnan(x_c[i][3])){
-    printf("i=%d\tx is nan.\t[1]=%f\t[2]=%f\t[3]=%f\n",i,x_c[i][1],x_c[i][2],x_c[i][3]);
+    fprintf(fplog,"i=%d\tx is nan.\t[1]=%f\t[2]=%f\t[3]=%f\n",i,x_c[i][1],x_c[i][2],x_c[i][3]);
   }
   if(isnan(v_c[i][1])||isnan(v_c[i][2])||isnan(v_c[i][3])){
-    printf("i=%d\tx is nan.\t[1]=%f\t[2]=%f\t[3]=%f\n",i,v_c[i][1],v_c[i][2],v_c[i][3]);
+    fprintf(fplog,"i=%d\tx is nan.\t[1]=%f\t[2]=%f\t[3]=%f\n",i,v_c[i][1],v_c[i][2],v_c[i][3]);
   }
   if(isnan(r_c[i])){
-    printf("i=%d\tr is nan.\n",i);
+    fprintf(fplog,"i=%d\tr is nan.\n",i);
   }
   if(isnan(v2_c[i])){
-    printf("i=%d\tv2 is nan.\n",i);
+    fprintf(fplog,"i=%d\tv2 is nan.\n",i);
   }
   if(isnan(r_dot_v[i])){
-    printf("i=%d\tr_dot_v is nan.\n",i);
+    fprintf(fplog,"i=%d\tr_dot_v is nan.\n",i);
   }
   */
 
@@ -282,12 +285,12 @@ void Calculate_OrbitalElements(int i,CONST double x_c[][4],CONST double v_c[][4]
 
 
   if(isnan((ele_p+i)->axis)){
-    printf("i=%d\taxis is nan.\n",i);
+    fprintf(fplog,"i=%d\taxis is nan.\n",i);
   }
 
 
   if(((ele_p+i)->axis)<0.0){
-    printf("i=%d\taxis=%e < 0 hyperbola orbit.\n",i,((ele_p+i)->axis));
+    fprintf(fplog,"i=%d\taxis=%e < 0 hyperbola orbit.\n",i,((ele_p+i)->axis));
     ((ele_p+i)->ecc) = NAN;
     ((ele_p+i)->u) = NAN;
     ((ele_p+i)->inc) = NAN;
@@ -295,16 +298,16 @@ void Calculate_OrbitalElements(int i,CONST double x_c[][4],CONST double v_c[][4]
     ((ele_p+i)->Omega) = NAN;
     ((ele_p+i)->r_h) = NAN;
 
-    //printf("\tr=%f[AU]\tR_planet=%f\n",sqrt((x_c[i][1]-x_c[PLANET_NO][1])*(x_c[i][1]-x_c[PLANET_NO][1])+(x_c[i][2]-x_c[PLANET_NO][2])*(x_c[i][2]-x_c[PLANET_NO][2])+(x_c[i][3]-x_c[PLANET_NO][3])*(x_c[i][3]-x_c[PLANET_NO][3])),PLANET_RADIUS);
+    //fprintf(fplog,"\tr=%f[AU]\tR_planet=%f\n",sqrt((x_c[i][1]-x_c[PLANET_NO][1])*(x_c[i][1]-x_c[PLANET_NO][1])+(x_c[i][2]-x_c[PLANET_NO][2])*(x_c[i][2]-x_c[PLANET_NO][2])+(x_c[i][3]-x_c[PLANET_NO][3])*(x_c[i][3]-x_c[PLANET_NO][3])),PLANET_RADIUS);
   }
 
 
   ((ele_p+i)->ecc) = sqrt((1.0-r_c[i]/((ele_p+i)->axis))*(1.0-r_c[i]/((ele_p+i)->axis)) + r_dot_v[i]*r_dot_v[i]/mu/((ele_p+i)->axis));
 
 
-  //printf("i=%d\tecc=%f\n",i,ele[i].ecc);
+  //fprintf(fplog,"i=%d\tecc=%f\n",i,ele[i].ecc);
   if(isnan((ele_p+i)->ecc)){
-    printf("i=%d\tecc is nan.\n",i);
+    fprintf(fplog,"i=%d\tecc is nan.\n",i);
   }
 
 
@@ -324,7 +327,7 @@ void Calculate_OrbitalElements(int i,CONST double x_c[][4],CONST double v_c[][4]
 
   /*
   if(isnan(ele[i].u)){
-    printf("i=%d\tu is nan.\n",i);
+    fprintf(fplog,"i=%d\tu is nan.\n",i);
   }
   */
 
@@ -337,10 +340,10 @@ void Calculate_OrbitalElements(int i,CONST double x_c[][4],CONST double v_c[][4]
 
 
   if(isnan(P[i][1])||isnan(P[i][2])||isnan(P[i][3])){
-    printf("i=%d\tP is nan.\t[1]=%f\t[2]=%f\t[3]=%f\n",i,P[i][1],P[i][2],P[i][3]);
+    fprintf(fplog,"i=%d\tP is nan.\t[1]=%f\t[2]=%f\t[3]=%f\n",i,P[i][1],P[i][2],P[i][3]);
   }
   if(isnan(Q[i][1])||isnan(Q[i][2])||isnan(Q[i][3])){
-    printf("i=%d\tQ is nan.\t[1]=%f\t[2]=%f\t[3]=%f\n",i,Q[i][1],Q[i][2],Q[i][3]);
+    fprintf(fplog,"i=%d\tQ is nan.\t[1]=%f\t[2]=%f\t[3]=%f\n",i,Q[i][1],Q[i][2],Q[i][3]);
   }
 
 
@@ -390,15 +393,47 @@ void Calculate_OrbitalElements(int i,CONST double x_c[][4],CONST double v_c[][4]
 
 
   if(isnan((ele_p+i)->inc)){
-    printf("i=%d\tinc is nan.\n",i);
+    fprintf(fplog,"i=%d\tinc is nan.\n",i);
   }
   if(isnan((ele_p+i)->omega)){
-    printf("i=%d\tomega is nan.\n",i);
+    fprintf(fplog,"i=%d\tomega is nan.\n",i);
   }
   if(isnan((ele_p+i)->Omega)){
-    printf("i=%d\tOmega is nan.\n",i);
+    fprintf(fplog,"i=%d\tOmega is nan.\n",i);
   }
 
+
+  return;
+}
+
+
+void Calculate_RMS(CONST struct orbital_elements *ele_p,double *ecc_p_rms,double *ecc_tr_rms,double *inc_p_rms,double *inc_tr_rms){
+
+  int i;
+  double ecc_2,ecc_2_mean,inc_2,inc_2_mean;
+
+  ecc_2 = 0.0;
+  inc_2 = 0.0;
+  for(i=1;i<=global_n_p;++i){
+    ecc_2 += ((ele_p+i)->ecc)*((ele_p+i)->ecc);
+    inc_2 += ((ele_p+i)->inc)*((ele_p+i)->inc);
+  }
+  ecc_2_mean = ecc_2/((double)global_n_p);
+  inc_2_mean = inc_2/((double)global_n_p);
+  *ecc_p_rms = sqrt(ecc_2_mean);
+  *inc_p_rms = sqrt(inc_2_mean);
+
+
+  ecc_2 = 0.0;
+  inc_2 = 0.0;
+  for(i=global_n_p+1;i<=global_n;++i){
+    ecc_2 += ((ele_p+i)->ecc)*((ele_p+i)->ecc);
+    inc_2 += ((ele_p+i)->inc)*((ele_p+i)->inc);
+  }
+  ecc_2_mean = ecc_2/((double)(global_n-global_n_p));
+  inc_2_mean = inc_2/((double)(global_n-global_n_p));
+  *ecc_tr_rms = sqrt(ecc_2_mean);
+  *inc_tr_rms = sqrt(inc_2_mean);
 
   return;
 }
@@ -435,7 +470,7 @@ void InitialCondition(int i,double x_0[][4],double v_0[][4],double v2_0[],double
 
     x_0[i][k] = ((ele_p+i)->axis)*P[k]*(cos(((ele_p+i)->u))-((ele_p+i)->ecc)) + ((ele_p+i)->axis)*sqrt(1.0-((ele_p+i)->ecc)*((ele_p+i)->ecc))*Q[k]*sin(((ele_p+i)->u));
   }
-  //printf("x=%f\ty=%f\tz=%f\n",x_0[i][1],x_0[i][2],x_0[i][3]);
+  //fprintf(fplog,"x=%f\ty=%f\tz=%f\n",x_0[i][1],x_0[i][2],x_0[i][3]);
 
   r_0[i] = RadiusFromCenter(i,x_0);  //中心星からの距離.
 
@@ -446,7 +481,7 @@ void InitialCondition(int i,double x_0[][4],double v_0[][4],double v2_0[],double
 
   r_dot_v[i] = InnerProduct(i,x_0,v_0);  //r_i,v_iの内積.
   v2_0[i] = SquareOfVelocity(i,v_0);  //速度の2乗.
-  //printf("vx=%f\tvy=%f\tvz=%f\n",v_0[i][1],v_0[i][2],v_0[i][3]);
+  //fprintf(fplog,"vx=%f\tvy=%f\tvz=%f\n",v_0[i][1],v_0[i][2],v_0[i][3]);
 
   return;
 }

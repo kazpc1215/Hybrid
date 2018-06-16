@@ -29,8 +29,8 @@
 #endif
 
 
-//#define DIRECTORY ../data/test/  //ディレクトリ.
-#define DIRECTORY ../data/Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc1E-2_frag_acc/  //ディレクトリ.
+#define DIRECTORY ../data/test/  //ディレクトリ.
+//#define DIRECTORY ../data/Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc1E-2_frag/  //ディレクトリ.
 #define SUBDIRECTORY rand  //子ディレクトリ. rand%02d
 
 #define STR_(str) #str

@@ -16,6 +16,8 @@ double All_dAcceleration(int i,int k,CONST struct orbital_elements *ele_p,CONST 
 
 void Calculate_OrbitalElements(int i,CONST double x_c[][4],CONST double v_c[][4],struct orbital_elements *ele_p,CONST double r_c[],CONST double v2_c[],CONST double r_dot_v[]);
 
+void Calculate_RMS(CONST struct orbital_elements *ele_p,double *ecc_p_rms,double *ecc_tr_rms,double *inc_p_rms,double *inc_tr_rms);
+
 double Calculate_Energy(CONST struct orbital_elements *ele_p,CONST double x_c[][4],
 #if INDIRECT_TERM
 			CONST double v_c[][4],CONST double v_G[],
@@ -38,13 +40,21 @@ void Corrector_sys(int i_sys,CONST struct orbital_elements *ele_p,CONST double x
 
 void Iteration_sys(int i_sys,CONST struct orbital_elements *ele_p,CONST double x_p[][4],CONST double v_p[][4],double x_c[][4],double v_c[][4],double r_c[],double v2_c[],double r_dot_v[],CONST double a_0[][4],CONST double adot_0[][4],double a[][4],double adot[][4],double adot2_dt2[][4],double adot3_dt3[][4],CONST double dt_[]);
 
+double rand_func();
+
 #if COLLISION
 bool Collision_Judgement(int i_sys,CONST struct orbital_elements *ele_p,CONST double x_p[][4],double abs_r[],int *i_col, int *j_col);
 
 void Energy_Correction(int i_col,int j_col,CONST double x_0[][4],CONST double v_0[][4],CONST struct orbital_elements *ele_p,double *dE_heat,double *dE_grav,double *dE_c,double *v_imp);
 
-void Coalescence(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbital_elements *ele_p);
+#if COALESCENCE
+void Coalescence(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbital_elements *ele_p
+#if FRAGMENTATION
+		 ,struct fragmentation *frag_p
 #endif
+		 );
+#endif  /*COALESCENCE*/
+#endif  /*COLLISION*/
 
 #if FRAGMENTATION
 void NeighborSearch(int i,CONST struct orbital_elements *ele_p,struct fragmentation *frag_p,CONST double x_0[][4]);

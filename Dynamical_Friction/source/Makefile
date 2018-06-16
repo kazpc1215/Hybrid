@@ -19,21 +19,21 @@ endif
 
 
 ifeq ($(MODE),SINGLE)
-	CFLAGS = $(LEVEL)
+	CFLAGS = $(LEVEL) -I/usr/local/include/ -L/usr/local/lib/openmpi/ -lmpi
 ifeq ($(CC),cc)
 	CFLAGS += -h noomp
 endif
 endif
 
 ifeq ($(MODE),DEBUG)
-	CFLAGS = -g -O0
+	CFLAGS = -g -O0 -I/usr/local/include/ -L/usr/local/lib/openmpi/ -lmpi
 ifeq ($(CC),cc)
 	CFLAGS += -h noomp
 endif
 endif
 
 ifeq ($(MODE),OMP)
-	CFLAGS = $(OMPOP) $(LEVEL)
+	CFLAGS = $(OMPOP) $(LEVEL) -I/usr/local/include/ -L/usr/local/lib/openmpi/ -lmpi
 endif
 
 ifeq ($(CC),gcc)

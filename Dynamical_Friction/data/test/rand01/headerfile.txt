@@ -8,17 +8,15 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <stdbool.h>
+#include <mpi.h>
 
 
 #ifdef _OPENMP
 #include <omp.h>
 #define OMP_SCHEDULE static
-//#define GOMP_CPU_AFFINITY 0 2
 #endif
 
 
-//#define CONST const
-//constでエラーが出るため
 #if __GNUC__ == 7
 #define CONST const
 #define ALWAYS_INLINE __attribute__((always_inline))
@@ -26,14 +24,14 @@
 #define CONST
 #define ALWAYS_INLINE
 #else
-#define CONST const
+#define CONST
 #define ALWAYS_INLINE
 #endif
 
 
-#define DIRECTORY ../data/test/  //ファイル保存用のディレクトリ.
-//#define DIRECTORY ../data/Ntr1E3_t1E3yr_dt1yr_Mtot3E-5_ecc1E-1_inc5E-2_frag_rand1/  //ファイル保存用のディレクトリ.
-
+#define DIRECTORY ../data/test/  //ディレクトリ.
+//#define DIRECTORY ../data/Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc1E-2_frag/  //ディレクトリ.
+#define SUBDIRECTORY rand  //子ディレクトリ. rand%02d
 
 #define STR_(str) #str
 #define STR(str) STR_(str)
@@ -48,14 +46,16 @@
 //////////////////////////////////////////////////
 #define N_tr 1000  //初期のトレーサーの数.
 #define N_p 1  //初期の原始惑星の数.
-#define RAND_SEED 1  //乱数の種.
+#define ECC_RATIO 1.0  //ecc=0.01の何倍か. inc=ecc/2.
+//#define RAND_SEED 1  //乱数の種.
 #define STEP_INTERVAL 1.0E5  //何ステップごとに標準出力するか.
 //#define BREAK_TIME 14100.0  //4h = 14400sec, 12h = 43200sec.
-#define BREAK_TIME 100.0  //4h = 14400sec, 12h = 43200sec.
+#define BREAK_TIME 300.0  //4h = 14400sec, 12h = 43200sec.
 
 
 EXTERN int global_n;  //グローバル変数.
-EXTERN int global_n_p;  //グローバル変数.
+EXTERN int global_n_p;
+EXTERN FILE *fplog;
 //////////////////////////////////////////////////
 
 
@@ -64,7 +64,7 @@ EXTERN int global_n_p;  //グローバル変数.
 #define ORBITALELEMENTS_FILE true  //軌道要素計算&ファイル作成.
 #define POSI_VELO_FILE false  //位置速度ファイル作成.
 #define POSI_VELO_ROT_FILE false  //回転座標系の位置速度ファイル作成.
-#define COLLISION_FILE false  //衝突直前の位置速度ファイル作成.
+#define COLLISION_FILE true  //衝突直前の位置速度ファイル作成.
 #define EXECUTION_TIME true  //実行時間測定.
 #if EXECUTION_TIME
 #include <sys/time.h>
@@ -74,15 +74,15 @@ EXTERN int global_n_p;  //グローバル変数.
 
 
 //////////////////////////////////////////////////
-#define INTERACTION_ALL false  //全粒子同士の重力相互作用.
-#define INTERACTION_PLANET_TRACER true  //惑星とトレーサー間の相互作用（惑星に影響を与え，かつ惑星から影響を受ける）.
-#define INTERACTION_TEST_PARTICLE false  //トレーサーをテスト粒子として扱う（惑星に影響を与えないが惑星から影響を受ける）.
+#define INTERACTION_ALL true  //全粒子同士の重力相互作用.
+#define INTERACTION_PLANET_TRACER false  //惑星とトレーサー間の相互作用.
+#define INTERACTION_TEST_PARTICLE false  //トレーサーをテスト粒子として扱う.
 #define INDIRECT_TERM true  //中心星が動く効果を補正.
 #define FRAGMENTATION true  //破壊 近傍粒子探索と質量フラックス計算.
 #define COLLISION true  //衝突.
 #if COLLISION
-#define COALESCENCE false  //衝突後に合体.
-#define RELOCATE_PARTICLE true  //衝突後に粒子を再配置.
+#define COALESCENCE true  //衝突後に合体.
+#define RELOCATE_PARTICLE false  //衝突後に粒子を再配置.
 #endif
 #define EJECTION false  //初期に破片（トレーサー）を放出する.
 #define ORBITING_SMALL_PARTICLE true  //初期に微惑星をケプラー運動させておく.
@@ -110,8 +110,8 @@ EXTERN int global_n_p;  //グローバル変数.
 //////////////////////////////////////////////////
 #define PLANET_MASS 3.0E-6  //地球質量M_E.
 #define PLANET_AXIS 1.0  //[AU].
-#define PLANET_ECC 0.1
-#define PLANET_INC 0.05
+#define PLANET_ECC (0.01*ECC_RATIO)
+#define PLANET_INC (PLANET_ECC*0.5)
 #define PLANET_DENSITY 3.0  //[g/cc].
 /*
 Earth Mean Orbital Elements (J2000)
@@ -136,8 +136,8 @@ Mean Longitude (deg)               100.46435
 #endif
 
 #if ORBITING_SMALL_PARTICLE
-#define ECC_RMS 0.1  //トレーサーの離心率の二乗平均平方根.  //Rayleigh分布.
-#define INC_RMS 0.05  //トレーサーの軌道傾斜角の二乗平均平方根.  //Rayleigh分布.
+#define ECC_RMS (0.01*ECC_RATIO)  //トレーサーの離心率の二乗平均平方根.  //Rayleigh分布.
+#define INC_RMS (ECC_RMS*0.5)  //トレーサーの軌道傾斜角の二乗平均平方根.  //Rayleigh分布.
 #define DELTA_HILL 10.0  //相互ヒル半径の何倍か.
 #endif
 
@@ -159,11 +159,11 @@ Mean Longitude (deg)               100.46435
 
 
 //////////////////////////////////////////////////
-#define T_MAX (2.0*M_PI*1.0E3)  //1000yr 全計算時間.
-#define DT_LOG false  //true: t_eneをlogでとる. false: t_eneをlinearでとる.
+#define T_MAX (2.0*M_PI*1.0E4)  //10000yr 全計算時間.
+#define DT_LOG true  //true: t_eneをlogでとる. false: t_eneをlinearでとる.
 
 /* linear では 初項 DT_ENE，公差 DT_ENE の等差数列 */
-#define DT_ENE (2.0*M_PI*1.0E0)  //dt_ene = 1yr
+#define DT_ENE (2.0*M_PI*1.0E-1)  //dt_ene = 0.1yr
 
 #if DT_LOG
 /* log では 初項 DT_ENE，公比 GEOMETRIC_RATIO の等比数列 */

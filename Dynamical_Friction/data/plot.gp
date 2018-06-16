@@ -184,9 +184,10 @@ plot 1.0/(1.0 + x/1.335678e+02),\
 
 
 set auto
+set key
 set xr [1:10]
 #set yr [0.01:0.2]
 set yl "sigma/sigma_0"
 plot 1.0/(1.0 + x/1.306925e+02),\
-"test/Sigma_dep.dat" u 1:(($4)/3.778376367544035e-05) w l t "test"
+"test/rand00/Sigma_dep.dat" u 1:(($4)/3.778376367544034e-05) w l t "test"
 pause

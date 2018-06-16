@@ -16,7 +16,7 @@ double Timestep_i_0(int i,CONST double a_0[][4],CONST double adot_0[][4]){
   abs_a = sqrt(abs_a);
   abs_adot = sqrt(abs_adot);
 
-  //printf("abs_a[%d]=%f\tabs_adot[%d]=%f\n",i,abs_a[i],i,abs_adot[i]);
+  //fprintf(fplog,"abs_a[%d]=%f\tabs_adot[%d]=%f\n",i,abs_a[i],i,abs_adot[i]);
   return ETA*abs_a/abs_adot;
 }
 

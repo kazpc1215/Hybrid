@@ -106,7 +106,7 @@ double s_1_FRAG(struct parameter *para_p){
     for(n=0;n<n_max;n++){
       sum += s_1_FRAG_trapezoid(n, dx, ini, para_p);
     }
-    //printf("n_max=%d\n",n_max);
+    //fprintf(fplog,"n_max=%d\n",n_max);
     n_max *= 2;
   }while(fabs(sum_pre-sum)>eps);
 
@@ -130,7 +130,7 @@ double s_2_FRAG(struct parameter *para_p){
     for(n=0;n<n_max;n++){
       sum += s_2_FRAG_trapezoid(n, dx, ini, para_p);
     }
-    //printf("n_max=%d\n",n_max);
+    //fprintf(fplog,"n_max=%d\n",n_max);
     n_max *= 2;
   }while(fabs(sum_pre-sum)>eps);
 
@@ -154,7 +154,7 @@ double s_3_FRAG(struct parameter *para_p){
     for(n=0;n<n_max;n++){
       sum += s_3_FRAG_trapezoid(n, dx, ini, para_p);
     }
-    //printf("n_max=%d\n",n_max);
+    //fprintf(fplog,"n_max=%d\n",n_max);
     n_max *= 2;
   }while(fabs(sum_pre-sum)>eps);
 
