@@ -94,14 +94,14 @@ void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements
     if(peri>orbital_r_min && apo<orbital_r_max){  //orbital_r_minからorbital_r_maxの範囲にいる場合.
       for(j=1;j<=global_n_p;++j){
 	if(i!=j){
-	  if(RelativeDistance(i,j,x_0)>3.0*((ele_p+j)->r_h)){  //それぞれの惑星から3ヒル以上離れている場合.
+	  if(RelativeDistance(i,j,x_0)>SEPARATE_HILL*((ele_p+j)->r_h)){  //それぞれの惑星からSEPARATE_HILLヒル以上離れている場合.
 	    flag += 1;
 	  }
 	}
       }
     }
 
-  } while(flag < global_n_p);  //global_n_p個の全ての惑星から3ヒル以上離れている場合のみ抜け出せるループ.
+  } while(flag < global_n_p);  //orbital_r_minからorbital_r_maxの範囲にいる場合，かつglobal_n_p個の全ての惑星からSEPARATE_HILLヒル以上離れている場合のみ抜け出せるループ.
 
 
 #ifndef M_0

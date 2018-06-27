@@ -30,7 +30,7 @@
 
 
 //#define DIRECTORY ../data/test/  //ディレクトリ.
-#define DIRECTORY ../data/Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc1E-2_frag_acc/  //ディレクトリ.
+#define DIRECTORY ../data/Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-15_sep5_ecc1E-2_frag_acc/  //ディレクトリ.
 #define SUBDIRECTORY rand  //子ディレクトリ. rand%02d
 
 #define STR_(str) #str
@@ -44,13 +44,13 @@
 
 
 //////////////////////////////////////////////////
-#define N_tr 1000  //初期のトレーサーの数.
-#define N_p 1  //初期の原始惑星の数.
+#define N_tr 3000  //初期のトレーサーの数.
+#define N_p 3  //初期の原始惑星の数.
 #define ECC_RATIO 1.0  //ecc=0.01の何倍か. inc=ecc/2.
 //#define RAND_SEED 1  //乱数の種.
-#define STEP_INTERVAL 1.0E5  //何ステップごとに標準出力するか.
-//#define BREAK_TIME 14100.0  //4h = 14400sec, 12h = 43200sec.
-#define BREAK_TIME 300.0  //4h = 14400sec, 12h = 43200sec.
+#define STEP_INTERVAL 1.0E6  //何ステップごとに標準出力するか.
+#define BREAK_TIME 14100.0  //4h = 14400sec, 12h = 43200sec.
+//#define BREAK_TIME 300.0  //4h = 14400sec, 12h = 43200sec.
 
 
 EXTERN int global_n;  //グローバル変数.
@@ -138,7 +138,8 @@ Mean Longitude (deg)               100.46435
 #if ORBITING_SMALL_PARTICLE
 #define ECC_RMS (0.01*ECC_RATIO)  //トレーサーの離心率の二乗平均平方根.  //Rayleigh分布.
 #define INC_RMS (ECC_RMS*0.5)  //トレーサーの軌道傾斜角の二乗平均平方根.  //Rayleigh分布.
-#define DELTA_HILL 10.0  //相互ヒル半径の何倍か.
+#define DELTA_HILL 10.0  //惑星を「相互」ヒル半径の何倍離すか（軌道長半径）.
+#define SEPARATE_HILL 5.0  //初期に惑星とトレーサーをヒル半径の何倍以上離すか（相対距離）．
 #endif
 
 #if FRAGMENTATION
@@ -159,7 +160,7 @@ Mean Longitude (deg)               100.46435
 
 
 //////////////////////////////////////////////////
-#define T_MAX (2.0*M_PI*1.0E4)  //10000yr 全計算時間.
+#define T_MAX (2.0*M_PI*1.0E3)  //1000yr 全計算時間.
 #define DT_LOG true  //true: t_eneをlogでとる. false: t_eneをlinearでとる.
 
 /* linear では 初項 DT_ENE，公差 DT_ENE の等差数列 */
