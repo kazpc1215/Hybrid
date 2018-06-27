@@ -28,7 +28,7 @@ elif(N_p == 3):
 
 
 for subnum in range(1, SUBDIR_NUM+1):
-    subdirctory = "rand%02d/" % subnum
+    subdirectory = "rand%02d/" % subnum
 
     time = np.empty([N_p+N_tr, LINE], dtype=float)  # (ファイル番号,行数)
     num = np.empty([N_p+N_tr, LINE], dtype=float)
@@ -44,7 +44,7 @@ for subnum in range(1, SUBDIR_NUM+1):
     # theta = np.empty([N_p+N_tr], dtype=float)
 
     for T in range(LINE):
-        arr = np.genfromtxt(directory + subdirctory + "Posi_Mass_%02d.dat" % T, dtype=np.float, delimiter="\t")
+        arr = np.genfromtxt(directory + subdirectory + "Posi_Mass_%02d.dat" % T, dtype=np.float, delimiter="\t")
         if(N_p+N_tr - arr.shape[0] > 0):
             print(T, "padding")
             arr = np.pad(arr, [(0, N_p+N_tr - arr.shape[0]), (0, 0)], 'constant', constant_values=0.0)
@@ -131,7 +131,7 @@ for subnum in range(1, SUBDIR_NUM+1):
 
         # plt.tight_layout()
         ax.legend()
-        filename = "../image/" + directory + subdirctory + "Sigma_T%02d.png" % T
+        filename = "../image/" + directory + subdirectory + "Sigma_T%02d.png" % T
         plt.savefig(filename, format="png", dpi=100)
         # plt.show()
         plt.close()

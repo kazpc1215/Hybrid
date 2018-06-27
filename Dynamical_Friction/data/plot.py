@@ -37,7 +37,7 @@ x, y = np.meshgrid(x, y)
 
 
 for subnum in range(SUBDIR_NUM, SUBDIR_NUM+1):
-    subdirctory = "rand%02d/" % subnum
+    subdirectory = "rand%02d/" % subnum
 
     time = np.empty([N_p+N_tr+1, LINE], dtype=float)  # (ファイル番号,行数)
     ecc = np.empty([N_p+N_tr+1, LINE], dtype=float)
@@ -51,7 +51,7 @@ for subnum in range(SUBDIR_NUM, SUBDIR_NUM+1):
     mass = np.empty([N_p+N_tr+1, LINE], dtype=float)
     #####
     for n in range(1, N_p+1):
-        arr = np.genfromtxt(directory + subdirctory + "Planet%02d.dat" % n, dtype=np.float, delimiter="\t")
+        arr = np.genfromtxt(directory + subdirectory + "Planet%02d.dat" % n, dtype=np.float, delimiter="\t")
         if(LINE - arr.shape[0] > 0):
             print(n, "padding")
             arr = np.pad(arr, [(0, LINE - arr.shape[0]), (0, 0)], 'constant', constant_values=np.nan)
@@ -71,7 +71,7 @@ for subnum in range(SUBDIR_NUM, SUBDIR_NUM+1):
 
     #####
     for n in range(N_p+1, N_p+N_tr+1):
-        arr = np.genfromtxt(directory + subdirctory + "tracer%06d.dat" % (n-N_p), dtype=np.float, delimiter="\t")
+        arr = np.genfromtxt(directory + subdirectory + "tracer%06d.dat" % (n-N_p), dtype=np.float, delimiter="\t")
         if(LINE - arr.shape[0] > 0):
             print(n, "padding")
             arr = np.pad(arr, [(0, LINE - arr.shape[0]), (0, 0)], 'constant', constant_values=np.nan)
@@ -144,7 +144,7 @@ for subnum in range(SUBDIR_NUM, SUBDIR_NUM+1):
         plt.scatter(axis[1:N_p+1, T], inc[1:N_p+1, T], color="r", s=20, label="Planet")
         plt.legend(loc="upper left", fontsize=15)
         plt.tight_layout()
-        filename = "../image/" + directory + subdirctory + "axis_inc_T%02d.png" % T
+        filename = "../image/" + directory + subdirectory + "axis_inc_T%02d.png" % T
         plt.savefig(filename)
         plt.close()
         #####

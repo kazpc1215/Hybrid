@@ -674,7 +674,7 @@ int main(int argc, char **argv){
       exit(-1);
     }
 
-    fprintf(fprms,"t[yr]\t");
+    fprintf(fprms,"#t[yr]\t");
     for(i=1;i<=global_n_p;++i){
       fprintf(fprms,"e_%d\t",i);
     }
