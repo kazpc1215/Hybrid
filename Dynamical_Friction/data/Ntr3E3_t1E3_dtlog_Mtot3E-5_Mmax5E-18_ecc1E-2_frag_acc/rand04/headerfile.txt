@@ -30,7 +30,8 @@
 
 
 //#define DIRECTORY ../data/test/  //ディレクトリ.
-#define DIRECTORY ../data/Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-15_sep5_ecc1E-2_frag_acc/  //ディレクトリ.
+#define DIRECTORY ../data/Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_frag_acc/  //ディレクトリ.
+//#define DIRECTORY ../data/Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-15_ecc5E-2_frag_acc/  //ディレクトリ. 
 #define SUBDIRECTORY rand  //子ディレクトリ. rand%02d
 
 #define STR_(str) #str
@@ -82,8 +83,8 @@ EXTERN FILE *fplog;
 
 
 //////////////////////////////////////////////////
-#define INTERACTION_ALL true  //全粒子同士の重力相互作用.
-#define INTERACTION_PLANET_TRACER false  //惑星とトレーサー間の相互作用.
+#define INTERACTION_ALL false  //全粒子同士の重力相互作用.
+#define INTERACTION_PLANET_TRACER true  //惑星とトレーサー間の相互作用.
 #define INTERACTION_TEST_PARTICLE false  //トレーサーをテスト粒子として扱う.
 #define INDIRECT_TERM true  //中心星が動く効果を補正.
 #define EJECTION false  //初期に破片（トレーサー）を放出する.
@@ -141,7 +142,7 @@ Mean Longitude (deg)               100.46435
 #define ECC_RMS (0.01*ECC_RATIO)  //トレーサーの離心率の二乗平均平方根.  //Rayleigh分布.
 #define INC_RMS (ECC_RMS*0.5)  //トレーサーの軌道傾斜角の二乗平均平方根.  //Rayleigh分布.
 #define DELTA_HILL 10.0  //惑星を「相互」ヒル半径の何倍離すか（軌道長半径）.
-#define SEPARATE_HILL 5.0  //初期に惑星とトレーサーをヒル半径の何倍以上離すか（相対距離）.
+#define SEPARATE_HILL 3.0  //初期に惑星とトレーサーをヒル半径の何倍以上離すか（相対距離）.
 #endif
 
 #if FRAGMENTATION
@@ -155,8 +156,8 @@ Mean Longitude (deg)               100.46435
 #define Q_0_FRAG 9.5E8 // [erg/g]  Q_D = Q_0*(rho/3[g/cc])^0.55*(m/10^21[g])^p
 #define P_FRAG 0.453
 #define XI 0.01 //統計的計算のタイムステップがタイムスケールの"XI"倍.
-#define M_MAX 5.00E-15  //最大微惑星質量. 1E19 g = 10kmサイズ.
-//#define M_MAX 5.00E-18  //最大微惑星質量. 1E16 g = 1kmサイズ.
+//#define M_MAX 5.00E-15  //最大微惑星質量. 1E19 g = 10kmサイズ.
+#define M_MAX 5.00E-18  //最大微惑星質量. 1E16 g = 1kmサイズ.
 #endif
 //////////////////////////////////////////////////
 #endif  /*N_tr != 0*/
