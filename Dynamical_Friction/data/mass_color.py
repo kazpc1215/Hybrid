@@ -12,7 +12,7 @@ def delta_axis(ratio):
 
 ######################################################################
 # path = "/Users/isoya.kazuhide/Dynamical_Friction/data/"
-directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc3E-2_frag_noacc/"
+directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc5E-2_frag_noacc/"
 
 
 N_p = 3
@@ -27,7 +27,8 @@ elif(N_p == 3):
     SUBDIR_NUM = 13
 
 
-for subnum in range(1, SUBDIR_NUM+1):
+# for subnum in range(1, SUBDIR_NUM+1):
+for subnum in range(1, 2):
     subdirectory = "rand%02d/" % subnum
 
     time = np.empty([N_p+N_tr, LINE], dtype=float)  # (ファイル番号,行数)

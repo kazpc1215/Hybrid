@@ -12,7 +12,7 @@ import numpy as np
 
 ######################################################################
 # path = "/Users/isoya.kazuhide/Dynamical_Friction/data/"
-directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc3E-2_nofrag_noacc/"
+directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc5E-2_frag_noacc/"
 
 
 N_p = 3

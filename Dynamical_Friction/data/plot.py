@@ -14,11 +14,11 @@ def Jacobi(axis):
 
 ######################################################################
 # path = "/Users/isoya.kazuhide/Dynamical_Friction/data/"
-directory = "Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc3E-2_nofrag_noacc/"
+directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc5E-2_frag_noacc/"
 
 
-N_p = 1
-N_tr = 1000
+N_p = 3
+N_tr = 3000
 
 
 if(N_p == 1):
@@ -36,7 +36,8 @@ y = [i/Y_MESH for i in range(int(0.2*Y_MESH)+1)]
 x, y = np.meshgrid(x, y)
 
 
-for subnum in range(SUBDIR_NUM, SUBDIR_NUM+1):
+# for subnum in range(SUBDIR_NUM, SUBDIR_NUM+1):
+for subnum in range(1, 2):
     subdirectory = "rand%02d/" % subnum
 
     time = np.empty([N_p+N_tr+1, LINE], dtype=float)  # (ファイル番号,行数)
@@ -118,7 +119,7 @@ for subnum in range(SUBDIR_NUM, SUBDIR_NUM+1):
         plt.scatter(axis[1:N_p+1, T], ecc[1:N_p+1, T], color="r", s=20, label="Planet")
         plt.legend(loc="upper left", fontsize=15)
         plt.tight_layout()
-        filename = "../image/" + directory + subdirctory + "axis_ecc_T%02d.png" % T
+        filename = "../image/" + directory + subdirectory + "axis_ecc_T%02d.png" % T
         plt.savefig(filename)
         plt.close()
         #####
