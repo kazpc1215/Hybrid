@@ -132,11 +132,12 @@ RUN1 u 1:20:21 w yerrorlines lw 2 dt 2 lt 1 ps 0.5 t "protoplanet r.m.s., no fra
 RUN3 u 1:20:21 w yerrorlines lw 2 dt 2 lt 2 ps 0.5 t "protoplanet r.m.s., frag., 10^{19}g",\
 RUN4 u 1:20:21 w yerrorlines lw 2 dt 2 lt 3 ps 0.5 t "protoplanet r.m.s., frag., 10^{16}g"
 
-pause
+
 
 ###############################
 
 set key left top box width 0 spacing 1.0 font "Times-Roman,20"
+set auto
 unset log
 set log x
 set format y "%g"
@@ -156,38 +157,50 @@ set format y "%g"
 #RUN5 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc3E-2_frag_acc/axis_evo.dat"
 #RUN6 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc3E-2_frag_acc/axis_evo.dat"
 
-RUN1 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_nofrag_noacc/axis_evo.dat"
-RUN2 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_nofrag_acc/axis_evo.dat"
-RUN3 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_frag_noacc/axis_evo.dat"
-RUN4 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc5E-2_frag_noacc/axis_evo.dat"
-RUN5 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_frag_acc/axis_evo.dat"
-RUN6 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc5E-2_frag_acc/axis_evo.dat"
+#RUN1 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_nofrag_noacc/axis_evo.dat"
+#RUN2 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_nofrag_acc/axis_evo.dat"
+#RUN3 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_frag_noacc/axis_evo.dat"
+#RUN4 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc5E-2_frag_noacc/axis_evo.dat"
+#RUN5 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_frag_acc/axis_evo.dat"
+#RUN6 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc5E-2_frag_acc/axis_evo.dat"
 
 
-set yl "normalized migration distance" offset 2,0
-plot RUN1 u 1:($8/$14):($9/$14) w yerrorlines lw 2 lt 1 ps 0.5 t "Planet1",\
-RUN1 u 1:($10/$16):($11/$16) w yerrorlines lw 2 lt 2 ps 0.5 t "Planet2",\
-RUN1 u 1:($12/$18):($13/$18) w yerrorlines lw 2 lt 3 ps 0.5 t "Planet3"
+#RUN1 = "Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc1E-2_nofrag_noacc/axis_evo.dat"
+#RUN2 = "Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc1E-2_nofrag_acc/axis_evo.dat"
+#RUN3 = "Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc1E-2_frag_noacc/axis_evo.dat"
+#RUN4 = "Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc1E-2_frag_acc/axis_evo.dat"
+
+RUN1 = "Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc3E-2_nofrag_noacc/axis_evo.dat"
+RUN2 = "Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc3E-2_nofrag_acc/axis_evo.dat"
+RUN3 = "Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc3E-2_frag_noacc/axis_evo.dat"
+RUN4 = "Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc3E-2_frag_acc/axis_evo.dat"
 
 
-set yl "semi-major axis [AU]" offset 3,0
-set yr [0.8:1.2]
-plot RUN1 u 1:2:3 w yerrorlines lw 2 lt 1 ps 0.5 t "Planet1",\
-RUN1 u 1:4:5 w yerrorlines lw 2 lt 2 ps 0.5 t "Planet2",\
-RUN1 u 1:6:7 w yerrorlines lw 2 lt 3 ps 0.5 t "Planet3"
+#set yl "normalized migration distance" offset 2,0
+#plot RUN1 u 1:($8/$14):($9/$14) w yerrorlines lw 2 lt 1 ps 0.5 t "Planet1",\
+#RUN1 u 1:($10/$16):($11/$16) w yerrorlines lw 2 lt 2 ps 0.5 t "Planet2",\
+#RUN1 u 1:($12/$18):($13/$18) w yerrorlines lw 2 lt 3 ps 0.5 t "Planet3"
+
+
+#set yl "semi-major axis [AU]" offset 3,0
+#set yr [0.8:1.2]
+#plot RUN1 u 1:2:3 w yerrorlines lw 2 lt 1 ps 0.5 t "Planet1",\
+#RUN1 u 1:4:5 w yerrorlines lw 2 lt 2 ps 0.5 t "Planet2",\
+#RUN1 u 1:6:7 w yerrorlines lw 2 lt 3 ps 0.5 t "Planet3"
+
+
+set key left bottom box width 0 spacing 1.0 font "Times-Roman,20"
+set key box width -7
+set yl "normalized migration distance" offset 3,0
+plot RUN1 u 1:($4/$6):($5/$6) w yerrorlines lw 2 lt 1 ps 0.5 t "no frag., no acc.",\
+RUN2 u 1:($4/$6):($5/$6) w yerrorlines lw 2 lt 2 ps 0.5 t "no frag.,      acc."
+
+#pause
+
+plot RUN3 u 1:($4/$6):($5/$6) w yerrorlines lw 2 lt 3 ps 0.5 t "frag., no acc.",\
+RUN4 u 1:($4/$6):($5/$6) w yerrorlines lw 2 lt 4 ps 0.5 t "frag.,      acc.",\
 
 pause
-
-#plot RUN1 u 1:($10/$16):($11/$16) w yerrorlines lw 2 lt 1 ps 0.5 t "no frag., no acc.",\
-#RUN2 u 1:($10/$16):($11/$16) w yerrorlines lw 2 lt 2 ps 0.5 t "no frag.,      acc."
-
-pause
-
-plot RUN3 u 1:($10/$16):($11/$16) w yerrorlines lw 2 lt 3 ps 0.5 t "w/ frag, w/o acc, 10^{19}g",\
-RUN4 u 1:($10/$16):($11/$16) w yerrorlines lw 2 lt 4 ps 0.5 t "w/ frag, w/o acc, 10^{16}g",\
-RUN5 u 1:($10/$16):($11/$16) w yerrorlines lw 2 lt 5 ps 0.5 t "w/ frag, w/ acc, 10^{19}g",\
-RUN6 u 1:($10/$16):($11/$16) w yerrorlines lw 2 lt 6 ps 0.5 t "w/ frag, w/ acc, 10^{16}g",\
-
 
 ###############################
 
