@@ -14,15 +14,15 @@ import numpy as np
 # directory = "N15_t1E8yr_dt1E3yr_10RHM_3MMSN_Miso_ecc1E-2_inc5E-3_rand1/"
 # directory = "N16_t1E8yr_dt1E3yr_10RHM_2.5MMSN_Miso_ecc1E-2_inc5E-3_rand1/"
 # directory = "N18_t1E8yr_dt1E3yr_10RHM_2MMSN_Miso_ecc1E-2_inc5E-3_rand1/"
-# directory = "N21_t1E8yr_dt1E3yr_10RHM_1.5MMSN_Miso_ecc1E-2_inc5E-3_rand1/"
-directory = "N25_t1E8yr_dt1E3yr_10RHM_1MMSN_Miso_ecc1E-2_inc5E-3_rand1/"
+directory = "N21_t1E8yr_dt1E3yr_10RHM_1.5MMSN_Miso_ecc1E-2_inc5E-3_rand1/"
+# directory = "N25_t1E8yr_dt1E3yr_10RHM_1MMSN_Miso_ecc1E-2_inc5E-3_rand1/"
 
 subdirectory = "orbit/"
 
 if not (os.path.isdir(directory + subdirectory)):
     os.mkdir(directory + subdirectory)
 
-N_p = 25
+N_p = 21
 
 
 LINE = 100001  # 10^8yr
@@ -51,6 +51,11 @@ Z = np.empty([N_p+1, LINE], dtype=float)
 orbit_X = np.empty([N_p+1, LINE, 100], dtype=float)
 orbit_Y = np.empty([N_p+1, LINE, 100], dtype=float)
 orbit_Z = np.empty([N_p+1, LINE, 100], dtype=float)
+
+WeightedAverageEcc = np.empty(LINE, dtype=float)
+WeightedAverageInc = np.empty(LINE, dtype=float)
+WeightedAverageRMS = np.empty(LINE, dtype=float)
+TotalNumber = np.empty(LINE, dtype=float)
 #####
 
 
@@ -244,6 +249,14 @@ if (N_p == 18):
     Qz[17, LINE-1] = Qz[17, LINE-2]
 
 
+for T in range(0, LINE):
+    WeightedAverageEcc[T] = np.average(ecc[~np.isnan(ecc[:, T]), T], axis=0, weights=mass[~np.isnan(mass[:, T]), T])
+    WeightedAverageInc[T] = np.average(inc[~np.isnan(inc[:, T]), T], axis=0, weights=mass[~np.isnan(mass[:, T]), T])
+    WeightedAverageRMS[T] = np.average(np.sqrt(ecc[~np.isnan(ecc[:, T]), T]**2 + inc[~np.isnan(inc[:, T]), T]**2), axis=0, weights=mass[~np.isnan(mass[:, T]), T])
+    TotalNumber[T] = np.count_nonzero(~np.isnan(mass[1:, T]))
+    print(T, WeightedAverageEcc[T], WeightedAverageInc[T], WeightedAverageRMS[T], TotalNumber[T], np.count_nonzero(~np.isnan(mass[1:, T])))
+
+
 # 100個(10^5yr)ごと
 """
 for T in range(0, LINE, 100):
@@ -257,12 +270,12 @@ for T in range(0, LINE, 100):
         orbit_Z[n, T, :] = axis[n, T] * Pz[n, T] * (np.cos(np.linspace(0.0, 2.0*np.pi, 100)) - ecc[n, T]) + axis[n, T] * np.sqrt(1.0 - ecc[n, T]*ecc[n, T]) * Qz[n, T] * np.sin(np.linspace(0.0, 2.0*np.pi, 100))
 
         with open(directory + subdirectory + "Planet_orbit.dat.%04d" % int(T/100), 'ab') as fp:
-            arr3 = np.empty([100, 4], dtype=float)
-            arr3[:, 0] = np.repeat([float(n)], 100)
-            arr3[:, 1] = orbit_X[n, T, :]
-            arr3[:, 2] = orbit_Y[n, T, :]
-            arr3[:, 3] = orbit_Z[n, T, :]
-            np.savetxt(fp, arr3, fmt="%.15f", delimiter="\t", newline="\n")
+            arr2 = np.empty([100, 4], dtype=float)
+            arr2[:, 0] = np.repeat([float(n)], 100)
+            arr2[:, 1] = orbit_X[n, T, :]
+            arr2[:, 2] = orbit_Y[n, T, :]
+            arr2[:, 3] = orbit_Z[n, T, :]
+            np.savetxt(fp, arr2, fmt="%.15f", delimiter="\t", newline="\n")
 
         with open(directory + subdirectory + "Planet_orbit.dat.%04d" % int(T/100), 'a') as fp:
             fp.write("\n\n")
@@ -270,6 +283,7 @@ for T in range(0, LINE, 100):
     print(T)
 """
 
+"""
 # logっぽく
 timelist = list(range(0, 10, 1))
 timelist += list(range(10, 100, 10))
@@ -288,55 +302,69 @@ for T in timelist:
         orbit_Z[n, T, :] = axis[n, T] * Pz[n, T] * (np.cos(np.linspace(0.0, 2.0*np.pi, 100)) - ecc[n, T]) + axis[n, T] * np.sqrt(1.0 - ecc[n, T]*ecc[n, T]) * Qz[n, T] * np.sin(np.linspace(0.0, 2.0*np.pi, 100))
 
         with open(directory + subdirectory + "Planet_orbit.dat.%06d" % T, 'ab') as fp:
-            arr3 = np.empty([100, 4], dtype=float)
-            arr3[:, 0] = np.repeat([float(n)], 100)
-            arr3[:, 1] = orbit_X[n, T, :]
-            arr3[:, 2] = orbit_Y[n, T, :]
-            arr3[:, 3] = orbit_Z[n, T, :]
-            np.savetxt(fp, arr3, fmt="%.15f", delimiter="\t", newline="\n")
+            arr2 = np.empty([100, 4], dtype=float)
+            arr2[:, 0] = np.repeat([float(n)], 100)
+            arr2[:, 1] = orbit_X[n, T, :]
+            arr2[:, 2] = orbit_Y[n, T, :]
+            arr2[:, 3] = orbit_Z[n, T, :]
+            np.savetxt(fp, arr2, fmt="%.15f", delimiter="\t", newline="\n")
 
         with open(directory + subdirectory + "Planet_orbit.dat.%06d" % T, 'a') as fp:
             fp.write("\n\n")
 
     print(T)
-
-"""
-for T in range(0, LINE):
-    #####
-    plt.figure(figsize=(10, 8), dpi=100)
-    # plt.title(r"$N_{\rm tr}=1000,M_{\rm tot}=10 {\rm M_{\oplus}},{\rm time}: %.3e {\rm yr}$" % time[1, T], fontsize=18)
-    # plt.xlim([0.8, 1.2])
-    # plt.ylim([0, 0.35])
-
-    plt.xlabel('x [AU]', fontsize=25)
-    plt.ylabel('y [AU]', fontsize=25)
-
-    plt.xticks(fontsize=15)
-    plt.yticks(fontsize=15)
-    plt.grid(True)
-
-    for n in range(1, N_p+1):
-        plt.scatter(X[n, T], Y[n, T], color="b", s=20, label="Planet%02d" % n)
-    plt.legend(loc="upper left", fontsize=15)
-    # plt.tight_layout()
-
-    print(time[1, T])
-    plt.show()
-
-    filename = "../image/" + directory + "orbit_T%06d.png" % T
-    plt.savefig(filename)
-    plt.close()
-    #####
 """
 
 
+
+#####
+plt.figure(figsize=(10, 8), dpi=100)
+# plt.title(r"$N_{\rm tr}=1000,M_{\rm tot}=10 {\rm M_{\oplus}},{\rm time}: %.3e {\rm yr}$" % time[1, T], fontsize=18)
+plt.xlim([1E3, 1E8])
+# plt.ylim([0, 0.35])
+
+plt.xlabel('time [yr]', fontsize=25)
+# plt.ylabel('y [AU]', fontsize=25)
+
+plt.xticks(fontsize=15)
+plt.yticks(fontsize=15)
+plt.grid(True)
+
+plt.xscale("log")
+plt.yscale("log")
+
+plt.plot(np.linspace(0.0, 1.0E8, LINE), WeightedAverageEcc, color="r", label=r"weighted mean $e$")
+plt.plot(np.linspace(0.0, 1.0E8, LINE), WeightedAverageInc, color="b", label=r"weighted mean $i$")
+plt.plot(np.linspace(0.0, 1.0E8, LINE), WeightedAverageRMS, color="g", label=r"weighted mean $\sqrt{e^2 + i^2}$")
+plt.plot(np.linspace(0.0, 1.0E8, LINE), TotalNumber/250.0, color="k", label=r"number of protoplanet")
+plt.legend(loc="upper left", fontsize=15)
+# plt.tight_layout()
+
+plt.show()
+
+# filename = "../image/" + directory + "orbit_T%06d.png" % T
+# plt.savefig(filename)
+plt.close()
+#####
+
+
+"""
 for n in range(1, N_p+1):
-    arr2 = np.empty([LINE, 7], dtype=float)
-    arr2[:, 0] = np.linspace(0.0, 1.0E8, LINE)
-    arr2[:, 1] = X[n, :]
-    arr2[:, 2] = Y[n, :]
-    arr2[:, 3] = Z[n, :]
-    arr2[:, 4] = r_h[n, :]
-    arr2[:, 5] = radius[n, :]
-    arr2[:, 6] = mass[n, :]
+    arr3 = np.empty([LINE, 7], dtype=float)
+    arr3[:, 0] = np.linspace(0.0, 1.0E8, LINE)
+    arr3[:, 1] = X[n, :]
+    arr3[:, 2] = Y[n, :]
+    arr3[:, 3] = Z[n, :]
+    arr3[:, 4] = r_h[n, :]
+    arr3[:, 5] = radius[n, :]
+    arr3[:, 6] = mass[n, :]
     np.savetxt(directory + "Planet%02d_position.dat" % n, arr2, fmt="%.15e", delimiter="\t", newline="\n", header="time\tx\ty\tz\tr_h\tradius\tmass")
+"""
+
+arr4 = np.empty([LINE, 5], dtype=float)
+arr4[:, 0] = np.linspace(0.0, 1.0E8, LINE)
+arr4[:, 1] = WeightedAverageEcc
+arr4[:, 2] = WeightedAverageInc
+arr4[:, 3] = WeightedAverageRMS
+arr4[:, 4] = TotalNumber
+np.savetxt(directory + "WeightedAverage.dat", arr4, fmt="%.15e", delimiter="\t", newline="\n", header="time\tecc\tinc\t(e^2+i^2)^(1/2)\tN")
