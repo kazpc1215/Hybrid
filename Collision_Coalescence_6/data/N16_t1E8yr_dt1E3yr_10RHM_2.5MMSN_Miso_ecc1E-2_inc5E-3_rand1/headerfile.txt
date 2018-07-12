@@ -32,7 +32,7 @@
 
 
 //#define DIRECTORY ../data/test/  //ファイル保存用のディレクトリ.
-#define DIRECTORY ../data/N16_t1E8yr_dt1E3yr_10RHM_2.5MMSN_Miso_ecc1E-2_inc5E-3_rand1/  //ファイル保存用のディレクトリ.
+#define DIRECTORY ../data/N15_t1E8yr_dt1E3yr_10RHM_3MMSN_Miso_ecc1E-2_inc5E-3_rand1/  //ファイル保存用のディレクトリ.
 
 
 #define STR_(str) #str
@@ -47,7 +47,7 @@
 
 //////////////////////////////////////////////////
 #define N_tr 0  //初期のトレーサーの数.
-#define N_p 16  //初期の原始惑星の数.
+#define N_p 15  //初期の原始惑星の数.
 #define RAND_SEED 1  //乱数の種.
 #define STEP_INTERVAL 5.0E7  //何ステップごとに標準出力するか.
 #define BREAK_TIME 432000.0  //4h = 14400sec, 5days = 432000sec.
@@ -113,7 +113,7 @@ EXTERN int global_n_p;  //グローバル変数.
 #define PLANET_DENSITY 3.0  //[g/cc].
 #define PLANET_INNER_AXIS 0.4  //[AU].
 #define DELTA_HILL 10.0  //相互ヒル半径の何倍か.
-#define SIGMA_SOLID 17.75  //[g/cm^2]. //固体面密度（MMSN->7.1）. 1.5MMSN=10.65, 2MMSN=14.2, 2.5MMSN=17.75, 3MMSN=21.3.
+#define SIGMA_SOLID 21.3  //[g/cm^2]. //固体面密度（MMSN->7.1）. 1.5MMSN=10.65, 2MMSN=14.2, 2.5MMSN=17.75, 3MMSN=21.3.
 #define ALPHA_SOLID 1.5  //面密度分布での軌道長半径のべき（MMSN->1.5）
 /*
 Earth Mean Orbital Elements (J2000)
