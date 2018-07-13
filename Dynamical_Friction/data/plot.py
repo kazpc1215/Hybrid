@@ -14,6 +14,21 @@ def Jacobi(axis):
 
 ######################################################################
 # path = "/Users/isoya.kazuhide/Dynamical_Friction/data/"
+# directory = "Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc3E-2_frag_acc/"
+# directory = "Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc3E-2_frag_noacc/"
+# directory = "Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc3E-2_nofrag_acc/"
+# directory = "Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc3E-2_nofrag_noacc/"
+
+# directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_frag_acc/"
+# directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_frag_noacc/"
+# directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_nofrag_acc/"
+# directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_nofrag_noacc/"
+
+# directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_frag_acc/"
+# directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_frag_noacc/"
+# directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc3E-2_frag_acc/"
+# directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc3E-2_frag_noacc/"
+# directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc5E-2_frag_acc/"
 directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc5E-2_frag_noacc/"
 
 
@@ -36,8 +51,8 @@ y = [i/Y_MESH for i in range(int(0.2*Y_MESH)+1)]
 x, y = np.meshgrid(x, y)
 
 
-# for subnum in range(SUBDIR_NUM, SUBDIR_NUM+1):
-for subnum in range(1, 2):
+for subnum in range(1, SUBDIR_NUM+1):
+    # for subnum in range(1, 2):
     subdirectory = "rand%02d/" % subnum
 
     time = np.empty([N_p+N_tr+1, LINE], dtype=float)  # (ファイル番号,行数)
@@ -54,7 +69,7 @@ for subnum in range(1, 2):
     for n in range(1, N_p+1):
         arr = np.genfromtxt(directory + subdirectory + "Planet%02d.dat" % n, dtype=np.float, delimiter="\t")
         if(LINE - arr.shape[0] > 0):
-            print(n, "padding")
+            print(subnum, n, "padding")
             arr = np.pad(arr, [(0, LINE - arr.shape[0]), (0, 0)], 'constant', constant_values=np.nan)
             # print(arr)
 
@@ -68,13 +83,13 @@ for subnum in range(1, 2):
         # r_h[n, :] = arr[:, 7]
         # radius[n, :] = arr[:, 8]
         # mass[n, :] = arr[:, 9]
-        print(n, time[n, 1], axis[n, 1], ecc[n, 1], inc[n, 1])
+        # print(n, time[n, 1], axis[n, 1], ecc[n, 1], inc[n, 1])
 
     #####
     for n in range(N_p+1, N_p+N_tr+1):
         arr = np.genfromtxt(directory + subdirectory + "tracer%06d.dat" % (n-N_p), dtype=np.float, delimiter="\t")
         if(LINE - arr.shape[0] > 0):
-            print(n, "padding")
+            print(subnum, n, "padding")
             arr = np.pad(arr, [(0, LINE - arr.shape[0]), (0, 0)], 'constant', constant_values=np.nan)
             # print(arr)
 
@@ -88,36 +103,37 @@ for subnum in range(1, 2):
         # r_h[n, :] = arr[:, 7]
         # radius[n, :] = arr[:, 8]
         # mass[n, :] = arr[:, 9]
-        print(n, time[n, 1], axis[n, 1], ecc[n, 1], inc[n, 1])
+        # print(n, time[n, 1], axis[n, 1], ecc[n, 1], inc[n, 1])
 
     #####
 
     for T in range(0, LINE):
         #####
         plt.figure(figsize=(10, 8), dpi=100)
+        plt.title(r"${\rm time}: %.3e {\rm yr}$" % time[1, T], fontsize=25)
         if(N_p == 1):
-            plt.title(r"$N_{\rm tr}=1000,M_{\rm tot}=10 {\rm M_{\oplus}},{\rm time}: %.3e {\rm yr}$" % time[1, T], fontsize=18)
+            # plt.title(r"$N_{\rm tr}=1000,M_{\rm tot}=10 {\rm M_{\oplus}},{\rm time}: %.3e {\rm yr}$" % time[1, T], fontsize=18)
             plt.xlim([0.8, 1.2])
         elif(N_p == 3):
-            plt.title(r"$N_{\rm tr}=3000,M_{\rm tot}=30 {\rm M_{\oplus}},{\rm time}: %.3e {\rm yr}$" % time[1, T], fontsize=18)
+            # plt.title(r"$N_{\rm tr}=3000,M_{\rm tot}=30 {\rm M_{\oplus}},{\rm time}: %.3e {\rm yr}$" % time[1, T], fontsize=18)
             plt.xlim([0.75, 1.3])
 
         # plt.ylim([0, 0.35])
         plt.ylim([0, 0.2])
-        plt.xlabel('semi-major axis [AU]', fontsize=25)
-        plt.ylabel('ecc', fontsize=25)
+        plt.xlabel('semi-major axis [AU]', fontsize=30)
+        plt.ylabel('ecc', fontsize=30)
 
-        plt.xticks(fontsize=15)
-        plt.yticks(fontsize=15)
-        plt.grid(True)
+        plt.xticks(fontsize=20)
+        plt.yticks(fontsize=20)
+        plt.grid(zorder=1)
 
-        plt.contour(x, y, Jacobi(axis[1, T]), colors=["g"], levels=[3.0], linestyles="dashed", linewidths=0.5)
+        plt.contour(x, y, Jacobi(axis[1, T]), colors=["g"], levels=[3.0], linestyles="dashed", linewidths=2, zorder=2)
         if(N_p == 3):
-            plt.contour(x, y, Jacobi(axis[2, T]), colors=["g"], levels=[3.0], linestyles="dashed", linewidths=0.5)
-            plt.contour(x, y, Jacobi(axis[3, T]), colors=["g"], levels=[3.0], linestyles="dashed", linewidths=0.5)
-        plt.scatter(axis[N_p+1:, T], ecc[N_p+1:, T], color="b", s=5, label="Tracer")
-        plt.scatter(axis[1:N_p+1, T], ecc[1:N_p+1, T], color="r", s=20, label="Planet")
-        plt.legend(loc="upper left", fontsize=15)
+            plt.contour(x, y, Jacobi(axis[2, T]), colors=["g"], levels=[3.0], linestyles="dashed", linewidths=2, zorder=2)
+            plt.contour(x, y, Jacobi(axis[3, T]), colors=["g"], levels=[3.0], linestyles="dashed", linewidths=2, zorder=2)
+        plt.scatter(axis[N_p+1:, T], ecc[N_p+1:, T], color="b", s=10, label="Tracer", alpha=0.5, zorder=3)
+        plt.scatter(axis[1:N_p+1, T], ecc[1:N_p+1, T], color="r", s=50, label="Planet", zorder=4)
+        plt.legend(loc="upper left", fontsize=25)
         plt.tight_layout()
         filename = "../image/" + directory + subdirectory + "axis_ecc_T%02d.png" % T
         plt.savefig(filename)
@@ -126,28 +142,31 @@ for subnum in range(1, 2):
 
         #####
         plt.figure(figsize=(10, 8), dpi=100)
+        plt.title(r"${\rm time}: %.3e {\rm yr}$" % time[1, T], fontsize=25)
         if(N_p == 1):
-            plt.title(r"$N_{\rm tr}=1000,M_{\rm tot}=10 {\rm M_{\oplus}},{\rm time}: %.3e {\rm yr}$" % time[1, T], fontsize=18)
+            # plt.title(r"$N_{\rm tr}=1000,M_{\rm tot}=10 {\rm M_{\oplus}},{\rm time}: %.3e {\rm yr}$" % time[1, T], fontsize=18)
+            plt.title(r"${\rm time}: %.3e {\rm yr}$" % time[1, T], fontsize=25)
             plt.xlim([0.8, 1.2])
         elif(N_p == 3):
-            plt.title(r"$N_{\rm tr}=3000,M_{\rm tot}=30 {\rm M_{\oplus}},{\rm time}: %.3e {\rm yr}$" % time[1, T], fontsize=18)
+            # plt.title(r"$N_{\rm tr}=3000,M_{\rm tot}=30 {\rm M_{\oplus}},{\rm time}: %.3e {\rm yr}$" % time[1, T], fontsize=18)
             plt.xlim([0.75, 1.3])
 
         # plt.ylim([0, 0.16])
         plt.ylim([0, 0.1])
-        plt.xlabel('semi-major axis [AU]', fontsize=25)
-        plt.ylabel('inc [rad]', fontsize=25)
+        plt.xlabel('semi-major axis [AU]', fontsize=30)
+        plt.ylabel('inc [rad]', fontsize=30)
 
-        plt.xticks(fontsize=15)
-        plt.yticks(fontsize=15)
-        plt.grid(True)
-        plt.scatter(axis[N_p+1:, T], inc[N_p+1:, T], color="b", s=5, label="Tracer")
-        plt.scatter(axis[1:N_p+1, T], inc[1:N_p+1, T], color="r", s=20, label="Planet")
-        plt.legend(loc="upper left", fontsize=15)
+        plt.xticks(fontsize=20)
+        plt.yticks(fontsize=20)
+        plt.grid(zorder=1)
+
+        plt.scatter(axis[N_p+1:, T], inc[N_p+1:, T], color="b", s=10, label="Tracer", alpha=0.5, zorder=2)
+        plt.scatter(axis[1:N_p+1, T], inc[1:N_p+1, T], color="r", s=50, label="Planet", zorder=3)
+        plt.legend(loc="upper left", fontsize=25)
         plt.tight_layout()
         filename = "../image/" + directory + subdirectory + "axis_inc_T%02d.png" % T
         plt.savefig(filename)
         plt.close()
         #####
-        print(time[1, T])
+        print(subnum, time[1, T])
         # plt.show()
