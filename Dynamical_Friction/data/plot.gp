@@ -66,71 +66,97 @@ RUN6 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc5E-2_frag_acc/RMS_randall.dat"
 
 set yl "ecc" offset 2,0
 set xr [0.1:1000]
-#set yr [0.0001:0.1]
-
-set key box width -5
-plot KOBAYASHI_NOFRAG u 1:8 w l lt -1 lw 2 dt 1 t "planet semi-analytic",\
-RUN1 u 1:4:5 w yerrorlines lw 2 dt 1 lt 1 ps 0.5 t "planet r.m.s.",\
-KOBAYASHI_NOFRAG u 1:6 w l lt -1 lw 2 dt 2 t "protoplanet semi-analytic",\
-RUN1 u 1:10:11 w yerrorlines lw 2 dt 2 lt 1 ps 0.5 t "protoplanet r.m.s."
+#set yr [0.001:0.1]
+#set yr [0.003:0.3]
+set yr [0.005:0.5]
 
 
+set multiplot
+set key left Left bottom box width -6 spacing 1.0 reverse font "Times-Roman,20"
+plot KOBAYASHI_NOFRAG u 1:8 w l lt -1 lw 2 dt 1 t "Planet, semi-analytic",\
+RUN1 u 1:4:5 w yerrorlines lw 2 dt 1 lt 1 ps 0.5 t "Planet, r.m.s."
+set key left Left top box width -8 spacing 1.0 reverse font "Times-Roman,20"
+plot KOBAYASHI_NOFRAG u 1:6 w l lt -1 lw 2 dt 2 t "Planetesimal, semi-analytic",\
+RUN1 u 1:10:11 w yerrorlines lw 2 dt 2 lt 1 ps 0.5 t "Planetesimal, r.m.s."
+unset multiplot
 
-set key box width -10
-plot KOBAYASHI_NOFRAG u 1:8 w l lt -1 lw 2 dt 1 t "planet semi-analytic",\
-RUN1 u 1:4:5 w yerrorlines lw 2 dt 1 lt 1 ps 0.5 t "planet r.m.s., no acc.",\
-RUN2 u 1:4:5 w yerrorlines lw 2 dt 1 lt 2 ps 0.5 t "planet r.m.s.,      acc.",\
-KOBAYASHI_NOFRAG u 1:6 w l lt -1 lw 2 dt 2 t "protoplanet semi-analytic",\
-RUN1 u 1:10:11 w yerrorlines lw 2 dt 2 lt 1 ps 0.5 t "protoplanet r.m.s., no acc.",\
-RUN2 u 1:10:11 w yerrorlines lw 2 dt 2 lt 2 ps 0.5 t "protoplanet r.m.s.,      acc."
-
-
-
-set key box width -10
-plot KOBAYASHI_NOFRAG u 1:8 w l lt -1 lw 2 dt 1 t "planet semi-analytic",\
-RUN1 u 1:4:5 w yerrorlines lw 2 dt 1 lt 1 ps 0.5 t "planet r.m.s., no frag.",\
-RUN3 u 1:4:5 w yerrorlines lw 2 dt 1 lt 2 ps 0.5 t "planet r.m.s., frag., 10^{19}g",\
-RUN4 u 1:4:5 w yerrorlines lw 2 dt 1 lt 3 ps 0.5 t "planet r.m.s., frag., 10^{16}g",\
-KOBAYASHI_NOFRAG u 1:6 w l lt -1 lw 2 dt 2 t "protoplanet semi-analytic",\
-RUN1 u 1:10:11 w yerrorlines lw 2 dt 2 lt 1 ps 0.5 t "protoplanet r.m.s., no frag.",\
-RUN3 u 1:10:11 w yerrorlines lw 2 dt 2 lt 2 ps 0.5 t "protoplanet r.m.s., frag., 10^{19}g",\
-RUN4 u 1:10:11 w yerrorlines lw 2 dt 2 lt 3 ps 0.5 t "protoplanet r.m.s., frag., 10^{16}g"
+#pause
 
 
+set multiplot
+set key left Left bottom box width -9 spacing 1.0 reverse font "Times-Roman,20"
+plot KOBAYASHI_NOFRAG u 1:8 w l lt -1 lw 2 dt 1 t "Planet, semi-analytic",\
+RUN1 u 1:4:5 w yerrorlines lw 2 dt 1 lt 1 ps 0.5 t "Planet, r.m.s., no acc.",\
+RUN2 u 1:4:5 w yerrorlines lw 2 dt 1 lt 2 ps 0.5 t "Planet, r.m.s.,      acc."
+set key left Left top box width -11 spacing 1.0 reverse font "Times-Roman,20"
+plot KOBAYASHI_NOFRAG u 1:6 w l lt -1 lw 2 dt 2 t "Planetesimal, semi-analytic",\
+RUN1 u 1:10:11 w yerrorlines lw 2 dt 2 lt 1 ps 0.5 t "Planetesimal, r.m.s., no acc.",\
+RUN2 u 1:10:11 w yerrorlines lw 2 dt 2 lt 2 ps 0.5 t "Planetesimal, r.m.s.,      acc."
+unset multiplot
 
+#pause
+
+set multiplot
+set key left Left bottom box width -12 spacing 1.0 reverse font "Times-Roman,20"
+plot KOBAYASHI_NOFRAG u 1:8 w l lt -1 lw 2 dt 1 t "Planet, semi-analytic",\
+RUN1 u 1:4:5 w yerrorlines lw 2 dt 1 lt 1 ps 0.5 t "Planet, r.m.s., no frag.",\
+RUN3 u 1:4:5 w yerrorlines lw 2 dt 1 lt 2 ps 0.5 t "Planet, r.m.s.,      frag., 10^{19}g",\
+RUN4 u 1:4:5 w yerrorlines lw 2 dt 1 lt 3 ps 0.5 t "Planet, r.m.s.,      frag., 10^{16}g"
+set key left Left top box width -13.5 spacing 1.0 reverse font "Times-Roman,20"
+plot KOBAYASHI_NOFRAG u 1:6 w l lt -1 lw 2 dt 2 t "Planetesimal, semi-analytic",\
+RUN1 u 1:10:11 w yerrorlines lw 2 dt 2 lt 1 ps 0.5 t "Planetesimal, r.m.s., no frag.",\
+RUN3 u 1:10:11 w yerrorlines lw 2 dt 2 lt 2 ps 0.5 t "Planetesimal, r.m.s.,      frag., 10^{19}g",\
+RUN4 u 1:10:11 w yerrorlines lw 2 dt 2 lt 3 ps 0.5 t "Planetesimal, r.m.s.,      frag., 10^{16}g"
+unset multiplot
+
+#pause
+
+#####################################
 
 set yl "inc [rad]" offset 2,0
 set xr [0.1:1000]
-#set yr [0.00001:0.1]
+#set yr [0.0005:0.05]
+#set yr [0.0015:0.15]
+set yr [0.0025:0.25]
 
-set key box width -5
-plot KOBAYASHI_NOFRAG u 1:9 w l lt -1 lw 2 dt 1 t "planet semi-analytic",\
-RUN1 u 1:14:15 w yerrorlines lw 2 dt 1 lt 1 ps 0.5 t "planet r.m.s.",\
-KOBAYASHI_NOFRAG u 1:7 w l lt -1 lw 2 dt 2 t "protoplanet semi-analytic",\
-RUN1 u 1:20:21 w yerrorlines lw 2 dt 2 lt 1 ps 0.5 t "protoplanet r.m.s."
+set multiplot
+set key left Left bottom box width -6 spacing 1.0 reverse font "Times-Roman,20"
+plot KOBAYASHI_NOFRAG u 1:9 w l lt -1 lw 2 dt 1 t "Planet, semi-analytic",\
+RUN1 u 1:14:15 w yerrorlines lw 2 dt 1 lt 1 ps 0.5 t "Planet, r.m.s."
+set key left Left top box width -8 spacing 1.0 reverse font "Times-Roman,20"
+plot KOBAYASHI_NOFRAG u 1:7 w l lt -1 lw 2 dt 2 t "Planetesimal, semi-analytic",\
+RUN1 u 1:20:21 w yerrorlines lw 2 dt 2 lt 1 ps 0.5 t "Planetesimal, r.m.s."
+unset multiplot
 
+#pause
 
+set multiplot
+set key left Left bottom box width -9 spacing 1.0 reverse font "Times-Roman,20"
+plot KOBAYASHI_NOFRAG u 1:9 w l lt -1 lw 2 dt 1 t "Planet, semi-analytic",\
+RUN1 u 1:14:15 w yerrorlines lw 2 dt 1 lt 1 ps 0.5 t "Planet, r.m.s., no acc.",\
+RUN2 u 1:14:15 w yerrorlines lw 2 dt 1 lt 2 ps 0.5 t "Planet, r.m.s.,      acc."
+set key left Left top box width -11 spacing 1.0 reverse font "Times-Roman,20"
+plot KOBAYASHI_NOFRAG u 1:7 w l lt -1 lw 2 dt 2 t "Planetesimal, semi-analytic",\
+RUN1 u 1:20:21 w yerrorlines lw 2 dt 2 lt 1 ps 0.5 t "Planetesimal, r.m.s., no acc.",\
+RUN2 u 1:20:21 w yerrorlines lw 2 dt 2 lt 2 ps 0.5 t "Planetesimal, r.m.s.,      acc."
+unset multiplot
 
+#pause
 
-set key box width -10
-plot KOBAYASHI_NOFRAG u 1:9 w l lt -1 lw 2 dt 1 t "planet semi-analytic",\
-RUN1 u 1:14:15 w yerrorlines lw 2 dt 1 lt 1 ps 0.5 t "planet r.m.s., no acc.",\
-RUN2 u 1:14:15 w yerrorlines lw 2 dt 1 lt 2 ps 0.5 t "planet r.m.s.,      acc.",\
-KOBAYASHI_NOFRAG u 1:7 w l lt -1 lw 2 dt 2 t "protoplanet semi-analytic",\
-RUN1 u 1:20:21 w yerrorlines lw 2 dt 2 lt 1 ps 0.5 t "protoplanet r.m.s., no acc.",\
-RUN2 u 1:20:21 w yerrorlines lw 2 dt 2 lt 2 ps 0.5 t "protoplanet r.m.s.,      acc."
+set multiplot
+set key left Left bottom box width -12 spacing 1.0 reverse font "Times-Roman,20"
+plot KOBAYASHI_NOFRAG u 1:9 w l lt -1 lw 2 dt 1 t "Planet, semi-analytic",\
+RUN1 u 1:14:15 w yerrorlines lw 2 dt 1 lt 1 ps 0.5 t "Planet, r.m.s., no frag.",\
+RUN3 u 1:14:15 w yerrorlines lw 2 dt 1 lt 2 ps 0.5 t "Planet, r.m.s.,      frag., 10^{19}g",\
+RUN4 u 1:14:15 w yerrorlines lw 2 dt 1 lt 3 ps 0.5 t "Planet, r.m.s.,      frag., 10^{16}g"
+set key left Left top box width -13.5 spacing 1.0 reverse font "Times-Roman,20"
+plot KOBAYASHI_NOFRAG u 1:7 w l lt -1 lw 2 dt 2 t "Planetesimal, semi-analytic",\
+RUN1 u 1:20:21 w yerrorlines lw 2 dt 2 lt 1 ps 0.5 t "Planetesimal, r.m.s., no frag.",\
+RUN3 u 1:20:21 w yerrorlines lw 2 dt 2 lt 2 ps 0.5 t "Planetesimal, r.m.s.,      frag., 10^{19}g",\
+RUN4 u 1:20:21 w yerrorlines lw 2 dt 2 lt 3 ps 0.5 t "Planetesimal, r.m.s.,      frag., 10^{16}g"
+unset multiplot
 
-
-
-set key box width -10
-plot KOBAYASHI_NOFRAG u 1:9 w l lt -1 lw 2 dt 1 t "planet semi-analytic",\
-RUN1 u 1:14:15 w yerrorlines lw 2 dt 1 lt 1 ps 0.5 t "planet r.m.s., no frag.",\
-RUN3 u 1:14:15 w yerrorlines lw 2 dt 1 lt 2 ps 0.5 t "planet r.m.s., frag., 10^{19}g",\
-RUN4 u 1:14:15 w yerrorlines lw 2 dt 1 lt 3 ps 0.5 t "planet r.m.s., frag., 10^{16}g",\
-KOBAYASHI_NOFRAG u 1:7 w l lt -1 lw 2 dt 2 t "protoplanet semi-analytic",\
-RUN1 u 1:20:21 w yerrorlines lw 2 dt 2 lt 1 ps 0.5 t "protoplanet r.m.s., no frag.",\
-RUN3 u 1:20:21 w yerrorlines lw 2 dt 2 lt 2 ps 0.5 t "protoplanet r.m.s., frag., 10^{19}g",\
-RUN4 u 1:20:21 w yerrorlines lw 2 dt 2 lt 3 ps 0.5 t "protoplanet r.m.s., frag., 10^{16}g"
+pause
 
 
 
