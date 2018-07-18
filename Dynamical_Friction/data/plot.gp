@@ -1,6 +1,6 @@
 reset
 
-set term aqua dashed font "Times-Roman,30"
+set term aqua dashed font "Times-Roman,30" enhanced
 
 PAUSE = 1
 
@@ -156,7 +156,7 @@ RUN3 u 1:20:21 w yerrorlines lw 2 dt 2 lt 2 ps 0.5 t "Planetesimal, r.m.s.,     
 RUN4 u 1:20:21 w yerrorlines lw 2 dt 2 lt 3 ps 0.5 t "Planetesimal, r.m.s.,      frag., 10^{16}g"
 unset multiplot
 
-pause
+#pause
 
 
 
@@ -226,46 +226,44 @@ RUN2 u 1:($4/$6):($5/$6) w yerrorlines lw 2 lt 2 ps 0.5 t "no frag.,      acc."
 plot RUN3 u 1:($4/$6):($5/$6) w yerrorlines lw 2 lt 3 ps 0.5 t "frag., no acc.",\
 RUN4 u 1:($4/$6):($5/$6) w yerrorlines lw 2 lt 4 ps 0.5 t "frag.,      acc.",\
 
-pause
+#pause
 
 ###############################
 
 
-unset key
+set log
+set format "10^{%L}"
 set auto
-set xr [1:10000]
-#set yr [0.01:0.2]
-set yl "sigma/sigma_0"
+set xr [0.1:1000]
+#set yr [:1]
+set yr [:1.01]
+set yl "{/Symbol S}/{/Symbol S}_0" offset 2,0
 
 #####
 
-plot 1.0/(1.0 + x/1.306925e+02) lt -1 lw 2,\
-for [i=1:40] sprintf("Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc1E-2_frag_noacc/rand%02d/Sigma_dep.dat", i) u 1:(($4)/3.778376367544035e-05) w l t sprintf("rand%02d",i)
+#RUN1 = "Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc3E-2_frag_noacc/Sigma_randall.dat"
+#RUN2 = "Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc3E-2_frag_acc/Sigma_randall.dat"
+
+RUN1 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_frag_noacc/Sigma_randall.dat"
+RUN2 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_frag_acc/Sigma_randall.dat"
+
+RUN3 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc5E-2_frag_noacc/Sigma_randall.dat"
+RUN4 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc5E-2_frag_acc/Sigma_randall.dat"
 
 
-plot 1.0/(1.0 + x/1.306925e+02) lt -1 lw 2,\
-for [i=1:40] sprintf("Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc1E-2_frag_noacc/rand%02d/Sigma_dep.dat", i) u 1:(($4)/3.778376367544035e-05*1000.0/($5)) w l t sprintf("rand%02d",i)
+set key left Left bottom box width -1 spacing 1.0 reverse font "Times-Roman,20"
+plot RUN1 u 1:6:7 w yerrorlines lw 2 ps 0.5 t "no acc.",\
+RUN2 u 1:6:7 w yerrorlines lw 2 ps 0.5 t "acc."
 
-#####
+#pause
 
-plot 1.0/(1.0 + x/1.306925e+02) lt -1 lw 2,\
-for [i=1:40] sprintf("Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc1E-2_frag_acc/rand%02d/Sigma_dep.dat", i) u 1:(($4)/3.778376367544035e-05) w l t sprintf("rand%02d",i)
+set key left Left bottom box width -1 spacing 1.0 reverse font "Times-Roman,20"
+plot RUN3 u 1:6:7 w yerrorlines lw 2 ps 0.5 t "no acc.",\
+RUN4 u 1:6:7 w yerrorlines lw 2 ps 0.5 t "acc."
 
-plot 1.0/(1.0 + x/1.306925e+02) lt -1 lw 2,\
-for [i=1:40] sprintf("Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc1E-2_frag_acc/rand%02d/Sigma_dep.dat", i) u 1:(($4)/3.778376367544035e-05*1000.0/($5)) w l t sprintf("rand%02d",i)
-
-#####
-
-plot 1.0/(1.0 + x/1.190277e+02) lt -1 lw 2,\
-for [i=1:40] sprintf("Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc1E-2_frag_noacc/rand%02d/Sigma_dep.dat", i) u 1:(($4)/4.148657251563326e-05) w l t sprintf("rand%02d",i)
 pause
-plot 1.0/(1.0 + x/1.190277e+02) lt -1 lw 2,\
-for [i=1:40] sprintf("Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc1E-2_frag_noacc/rand%02d/Sigma_dep.dat", i) u 1:(($4)/4.148657251563326e-05*1098.0/($5)) w l t sprintf("rand%02d",i)
 
-#####
 
-plot 1.0/(1.0 + x/1.190277e+02) lt -1 lw 2,\
-for [i=1:40] sprintf("Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc1E-2_frag_acc/rand%02d/Sigma_dep.dat", i) u 1:(($4)/4.148657251563326e-05) w l t sprintf("rand%02d",i)
-
-plot 1.0/(1.0 + x/1.190277e+02) lt -1 lw 2,\
-for [i=1:40] sprintf("Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc1E-2_frag_acc/rand%02d/Sigma_dep.dat", i) u 1:(($4)/4.148657251563326e-05*1098.0/($5)) w l t sprintf("rand%02d",i)
+set key left Left bottom box width 0 spacing 1.2 reverse font "Times-Roman,20"
+plot RUN1 u 1:6:7 w yerrorlines lw 2 lt 2 ps 0.5 t "m_{max}=10^{19}g",\
+RUN3 u 1:6:7 w yerrorlines lw 2 lt 3 ps 0.5 t "m_{max}=10^{16}g"

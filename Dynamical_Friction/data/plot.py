@@ -22,12 +22,12 @@ def Jacobi(axis):
 # directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_frag_acc/"
 # directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_frag_noacc/"
 # directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_nofrag_acc/"
-directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_nofrag_noacc/"
+# directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_nofrag_noacc/"
 
 # directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_frag_acc/"
 # directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_frag_noacc/"
 # directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc3E-2_frag_acc/"
-# directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc3E-2_frag_noacc/"
+directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc3E-2_frag_noacc/"
 # directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc5E-2_frag_acc/"
 # directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc5E-2_frag_noacc/"
 
@@ -52,7 +52,7 @@ x, y = np.meshgrid(x, y)
 
 
 # for subnum in range(1, SUBDIR_NUM+1):
-for subnum in range(4, 5):
+for subnum in range(8, 9):
     subdirectory = "rand%02d/" % subnum
 
     time = np.empty([N_p+N_tr+1, LINE], dtype=float)  # (ファイル番号,行数)
