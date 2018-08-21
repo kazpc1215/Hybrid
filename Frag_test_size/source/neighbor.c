@@ -55,7 +55,7 @@ void NeighborSearch(int i,CONST struct orbital_elements *ele_p,struct fragmentat
     m++;
 
     //}while(((frag_p+i)->neighbornumber)<10);  //近傍粒子が10個未満なら、10個以上になるまでdelta_rをm倍に広げる.
-  }while(false);
+  }while(((frag_p+i)->neighbornumber)<1);
 
 
   v = 0.0;

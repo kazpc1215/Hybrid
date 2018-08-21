@@ -30,7 +30,7 @@
 
 
 //#define DIRECTORY ../data/test/  //ディレクトリ.
-#define DIRECTORY ../data/Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc1E-2_frag_drmin2E-3_dthetamin0.125pi/  //ディレクトリ.
+#define DIRECTORY ../data/Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_frag_drmin2E-3_dthetamin0.125pi/  //ディレクトリ.
 #define SUBDIRECTORY dr  //子ディレクトリ1.
 #define SUBDIRECTORY_2 dtheta  //子ディレクトリ2.
 
@@ -132,7 +132,8 @@ Mean Longitude (deg)               100.46435
 
 #if N_tr != 0
 //////////////////////////////////////////////////
-#define M_TOT (3.0E-5*N_p)  //10M_E * N_p  //トレーサーの総質量.
+//#define M_TOT (3.0E-5*N_p)  //10M_E * N_p  //トレーサーの総質量.
+#define M_TOT (3.0E-5*N_tr/1000.0)  //トレーサーの総質量.
 
 #if EJECTION
 #define PLANET_OF_EJECTION 1
@@ -149,7 +150,7 @@ Mean Longitude (deg)               100.46435
 #if FRAGMENTATION
 #define DELTA_R 0.002  //Hill 近傍粒子探索用.
 #define DELTA_THETA 0.125*M_PI  //近傍粒子探索用. pi/8
-#define NEIGHBOR_MAX 1000  //近傍粒子リスト配列の最大値.
+#define NEIGHBOR_MAX 300  //近傍粒子リスト配列の最大値.
 #define DEPLETION_TIME_EXPLICIT false  //true: 質量減少タイムスケールの計算でexplicit *(1-XI)を使う. false: implicit /(1+XI)を使う.
 #define RHO 3.0  // [g/cc]  微惑星の物質密度.
 #define EPSILON_FRAG 0.2
@@ -157,15 +158,15 @@ Mean Longitude (deg)               100.46435
 #define Q_0_FRAG 9.5E8 // [erg/g]  Q_D = Q_0*(rho/3[g/cc])^0.55*(m/10^21[g])^p
 #define P_FRAG 0.453
 #define XI 0.01 //統計的計算のタイムステップがタイムスケールの"XI"倍.
-#define M_MAX 5.00E-15  //最大微惑星質量. 1E19 g = 10kmサイズ.
-//#define M_MAX 5.00E-18  //最大微惑星質量. 1E16 g = 1kmサイズ.
+//#define M_MAX 5.00E-15  //最大微惑星質量. 1E19 g = 10kmサイズ.
+#define M_MAX 5.00E-18  //最大微惑星質量. 1E16 g = 1kmサイズ.
 #endif
 //////////////////////////////////////////////////
 #endif  /*N_tr != 0*/
 
 
 //////////////////////////////////////////////////
-#define T_MAX (2.0*M_PI*1.0E3)  //1000yr 全計算時間.
+#define T_MAX (2.0*M_PI*1.0E2)  //100yr 全計算時間.
 #define DT_LOG true  //true: t_eneをlogでとる. false: t_eneをlinearでとる.
 
 /* linear では 初項 DT_ENE，公差 DT_ENE の等差数列 */
