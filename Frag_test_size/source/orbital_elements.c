@@ -65,8 +65,8 @@ void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements
   double orbital_r_min = ((ele_p+1)->axis) / MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
   double orbital_r_max = ((ele_p+1)->axis) * MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
 #elif N_p == 0
-  double orbital_r_min = PLANET_AXIS / MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL) / MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
-  double orbital_r_max = PLANET_AXIS * MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL) * MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
+  double orbital_r_min = PLANET_AXIS / MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL) / MutualHillRadius_to_SemimajorAxis(DELTA_HILL);
+  double orbital_r_max = PLANET_AXIS * MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL) * MutualHillRadius_to_SemimajorAxis(DELTA_HILL);
 #endif
 
   int j=0,k=0,flag=0;
