@@ -149,7 +149,7 @@ int main(int argc, char **argv){
 
 
   //srand(global_myid+1);  //乱数の種をmyidで決める.
-  srand(1);
+  srand(RAND_SEED);
 
 
 #ifdef DIRECTORY
