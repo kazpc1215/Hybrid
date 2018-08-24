@@ -100,10 +100,15 @@ double RandomVelocity(int i,int j,CONST struct orbital_elements *ele_p){
   double eij2;
   double iij2;
 
+#if OMEGA_EQUAL_ZERO
+  eij2 = ((ele_p+i)->ecc)*((ele_p+i)->ecc) + ((ele_p+j)->ecc)*((ele_p+j)->ecc);
+
+  iij2 = ((ele_p+i)->inc)*((ele_p+i)->inc) + ((ele_p+j)->inc)*((ele_p+j)->inc);
+#else
   eij2 = fabs(((ele_p+i)->ecc)*((ele_p+i)->ecc) + ((ele_p+j)->ecc)*((ele_p+j)->ecc) - 2.0*((ele_p+i)->ecc)*((ele_p+j)->ecc)*cos(((ele_p+i)->omega) + ((ele_p+i)->Omega) - ((ele_p+j)->omega) - ((ele_p+j)->Omega)));
 
   iij2 = fabs(((ele_p+i)->inc)*((ele_p+i)->inc) + ((ele_p+j)->inc)*((ele_p+j)->inc) - 2.0*((ele_p+i)->inc)*((ele_p+j)->inc)*cos(((ele_p+i)->Omega) - ((ele_p+j)->Omega)));
-
+#endif
 
   if(isnan((ele_p+i)->ecc)){
     fprintf(fplog,"i=%d\tecc is nan. (in RandomVelocity)\n",i);

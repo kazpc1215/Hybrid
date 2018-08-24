@@ -29,7 +29,7 @@
 #endif
 
 
-#define DIRECTORY ../data/Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_Rayleigh_frag_drmin5E-3_dthetamin0.125pi_rand01/  //ディレクトリ.
+#define DIRECTORY ../data/Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_Uniform_OmegaZero_frag_drmin5E-3_dthetamin0.125pi_rand01/  //ディレクトリ.
 #define SUBDIRECTORY dr  //子ディレクトリ1.
 #define SUBDIRECTORY_2 dtheta  //子ディレクトリ2.
 
@@ -59,8 +59,8 @@
 #define RELOCATE_PARTICLE false  //衝突後に粒子を再配置.  <--どっちか.
 #endif
 
-#define RAYLEIGH_DISTRIBUTION true //離心率や軌道傾斜角の分布 true : Rayleigh, false : Uniform.
-
+#define RAYLEIGH_DISTRIBUTION false  //離心率や軌道傾斜角の分布 true : Rayleigh, false : Uniform.
+#define OMEGA_EQUAL_ZERO true  //相対速度計算で近点経度の差を0にセット.
 
 EXTERN int global_n;  //グローバル変数.
 EXTERN int global_n_p;
