@@ -41,10 +41,43 @@ set yl "{/Symbol S}/{/Symbol S}_0" offset 2,0
 #####
 
 
-### sigma ###
-
 set key left Left bottom box width -10 spacing 1.0 reverse font "Times-Roman,20"
 
-plot for [i=1:5] for [j=1:8] sprintf("./Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_frag_drmin2E-3_dthetamin0.125pi/dr%02d_dtheta%02d/Sigma_dep.dat",i,j) u 1:(($4)/3.695252087458064e-05) w l lw 2 t sprintf("%02d,%02d",i,j), 1.0/(1.0 + x/1.594236) lw 2
+### Uniform Distriution ###
 
-# plot for [i=1:5] for [j=1:8] sprintf("./Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_frag_drmin2E-3_dthetamin0.125pi/dr%02d_dtheta%02d/Sigma_dep.dat",i,j) u 1:(($2)/9.0E-5) w l lw 2 t sprintf("%02d,%02d",i,j), 1.0/(1.0 + x/1.594236) lw 2
+### ecc = 0.01 ###
+plot for [i=1:5] for [j=1:8] sprintf("./Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_Uniform_frag_drmin5E-3_dthetamin0.125pi_rand01/dr%02d_dtheta%02d/Sigma_dep.dat",i,j) u 1:(($4)/3.774597991176490e-05) w l lw 2 t sprintf("%02d,%02d",i,j), 1.0/(1.0 + x/1.308233e+02) lw 2
+
+### ecc = 0.03 ###
+plot for [i=1:5] for [j=1:8] sprintf("./Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc3E-2_Uniform_frag_drmin5E-3_dthetamin0.125pi_rand01/dr%02d_dtheta%02d/Sigma_dep.dat",i,j) u 1:(($4)/3.748149356603682e-05) w l lw 2 t sprintf("%02d,%02d",i,j), 1.0/(1.0 + x/2.960658e+01) lw 2
+
+### ecc = 0.05 ###
+plot for [i=1:5] for [j=1:8] sprintf("./Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc5E-2_Uniform_frag_drmin5E-3_dthetamin0.125pi_rand01/dr%02d_dtheta%02d/Sigma_dep.dat",i,j) u 1:(($4)/3.782154743911579e-05) w l lw 2 t sprintf("%02d,%02d",i,j), 1.0/(1.0 + x/1.465548e+01) lw 2
+
+
+
+
+### Rayleigh Distriution ###
+
+### ecc = 0.01 ###
+plot for [i=1:5] for [j=1:8] sprintf("./Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_Rayleigh_frag_drmin5E-3_dthetamin0.125pi_rand01/dr%02d_dtheta%02d/Sigma_dep.dat",i,j) u 1:(($4)/3.695252087458064e-05) w l lw 2 t sprintf("%02d,%02d",i,j), 1.0/(1.0 + x/1.336324e+02) lw 2
+
+### ecc = 0.03 ###
+plot for [i=1:5] for [j=1:8] sprintf("./Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc3E-2_Rayleigh_frag_drmin5E-3_dthetamin0.125pi_rand01/dr%02d_dtheta%02d/Sigma_dep.dat",i,j) u 1:(($4)/3.740592603868593e-05) w l lw 2 t sprintf("%02d,%02d",i,j), 1.0/(1.0 + x/2.966639e+01) lw 2
+
+### ecc = 0.05 ###
+plot for [i=1:5] for [j=1:8] sprintf("./Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc5E-2_Rayleigh_frag_drmin5E-3_dthetamin0.125pi_rand01/dr%02d_dtheta%02d/Sigma_dep.dat",i,j) u 1:(($4)/3.612127807372093e-05) w l lw 2 t sprintf("%02d,%02d",i,j), 1.0/(1.0 + x/1.534533e+01) lw 2
+
+
+
+
+### Rayleigh & Omega Zero ###
+
+### ecc = 0.01 ###
+plot for [i=1:5] for [j=1:8] sprintf("./Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_Rayleigh_OmegaZero_frag_drmin5E-3_dthetamin0.125pi_rand01/dr%02d_dtheta%02d/Sigma_dep.dat",i,j) u 1:(($4)/3.695252087458064e-05) w l lw 2 t sprintf("%02d,%02d",i,j), 1.0/(1.0 + x/1.336324e+02) lw 2
+
+### ecc = 0.03 ###
+plot for [i=1:5] for [j=1:8] sprintf("./Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc3E-2_Rayleigh_OmegaZero_frag_drmin5E-3_dthetamin0.125pi_rand01/dr%02d_dtheta%02d/Sigma_dep.dat",i,j) u 1:(($4)/3.740592603868593e-05) w l lw 2 t sprintf("%02d,%02d",i,j), 1.0/(1.0 + x/2.966639e+01) lw 2
+
+### ecc = 0.05 ###
+# plot for [i=1:5] for [j=1:8] sprintf("./Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc5E-2_Rayleigh_OmegaZero_frag_drmin5E-3_dthetamin0.125pi_rand01/dr%02d_dtheta%02d/Sigma_dep.dat",i,j) u 1:(($4)/3.612127807372093e-05) w l lw 2 t sprintf("%02d,%02d",i,j), 1.0/(1.0 + x/1.534533e+01) lw 2
