@@ -262,18 +262,18 @@ step	= 1.880000000000000e+08
 dt_ene	= 1.000000e-01[yr]
 geometric ratio	= (sqrt(sqrt(sqrt(10.0))))
 -----
-real time	= 14189.652619[s]
-user time	= 13086.904000[s]
-system time	= 967.584000[s]
-Execution Time	(total	= 1.418965e+04 [s])
-Corrector		= 5.918708e+03 [s]	41.71 [%]
-Predictor		= 4.295103e+03 [s]	30.27 [%]
-Fragmentation		= 2.526892e+03 [s]	17.81 [%]
-Iteration		= 1.636504e+02 [s]	 1.15 [%]
-Orbital_Elements	= 5.764563e+01 [s]	 0.41 [%]
-Energy			= 1.335534e+00 [s]	 0.01 [%]
+real time	= 14155.968469[s]
+user time	= 12884.532000[s]
+system time	= 967.792000[s]
+Execution Time	(total	= 1.415597e+04 [s])
+Corrector		= 5.904436e+03 [s]	41.71 [%]
+Predictor		= 4.167543e+03 [s]	29.44 [%]
+Fragmentation		= 2.480717e+03 [s]	17.52 [%]
+Orbital_Elements	= 3.155146e+02 [s]	 2.23 [%]
+Iteration		= 1.636999e+02 [s]	 1.16 [%]
+Energy			= 1.428354e+00 [s]	 0.01 [%]
 Collision_Judgement	= 0.000000e+00 [s]	 0.00 [%]
-Others			= 1.226319e+03 [s]	 8.64 [%]
+Others			= 1.122629e+03 [s]	 7.93 [%]
 -----
 myid = 36	numprocs = 40
 OMP_NUM_THREADS: 1
@@ -286,3 +286,25 @@ file: '../data/Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc5E-2_Rayleigh_OmegaZero_f
 1.880000e+08	  0	  3000	  2634	1.765920025055756e-03	7.498942093324548e+01	2.352560281703998e+01
 1.890000e+08	  0	  3000	  1394	1.313825043099326e-03	7.498942093324548e+01	2.404836897670492e+01
 1.900000e+08	  0	  3000	  2826	1.274465321798467e-03	7.498942093324548e+01	2.457190451885898e+01
+-----
+dt_[2032]	= 2.261959e-03
+E_error	= 8.248877860442716e-01
+L_error	= 1.019320781261759e+13
+dE_correct	= 0.000000000000000e+00
+step	= 1.908361770000000e+08
+dt_ene	= 1.000000e-01[yr]
+geometric ratio	= (sqrt(sqrt(sqrt(10.0))))
+-----
+real time	= 234.824889[s]
+user time	= 188.304000[s]
+system time	= 14.532000[s]
+Execution Time	(total	= 2.348249e+02 [s])
+Corrector		= 8.763444e+01 [s]	37.32 [%]
+Predictor		= 6.104387e+01 [s]	26.00 [%]
+Fragmentation		= 3.410621e+01 [s]	14.52 [%]
+Orbital_Elements	= 3.255678e+01 [s]	13.86 [%]
+Iteration		= 2.464246e+00 [s]	 1.05 [%]
+Energy			= 2.484900e-02 [s]	 0.01 [%]
+Collision_Judgement	= 0.000000e+00 [s]	 0.00 [%]
+Others			= 1.699450e+01 [s]	 7.24 [%]
+-----

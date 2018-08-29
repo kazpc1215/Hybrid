@@ -29,7 +29,7 @@
 #endif
 
 
-#define DIRECTORY ../data/Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc5E-2_Rayleigh_OmegaZero_frag_drmin5E-3_dthetamin0.125pi_rand04/  //ディレクトリ.
+#define DIRECTORY ../data/Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc5E-2_Rayleigh_OmegaZero_frag_drmin5E-3_dthetamin0.125pi_rand03/  //ディレクトリ.
 #define SUBDIRECTORY dr  //子ディレクトリ1.
 #define SUBDIRECTORY_2 dtheta  //子ディレクトリ2.
 
@@ -47,7 +47,7 @@
 #define N_tr 3000  //初期のトレーサーの数.
 #define N_p 0  //初期の原始惑星の数.
 #define ECC_RATIO 5.0  //ecc=0.01の何倍か. inc=ecc/2.
-#define RAND_SEED 4  //乱数の種.
+#define RAND_SEED 3  //乱数の種.
 #define STEP_INTERVAL 1.0E6  //何ステップごとに標準出力するか.
 #define BREAK_TIME 14100.0  //4h = 14400sec, 12h = 43200sec.
 //#define BREAK_TIME 42900.0  //4h = 14400sec, 12h = 43200sec.

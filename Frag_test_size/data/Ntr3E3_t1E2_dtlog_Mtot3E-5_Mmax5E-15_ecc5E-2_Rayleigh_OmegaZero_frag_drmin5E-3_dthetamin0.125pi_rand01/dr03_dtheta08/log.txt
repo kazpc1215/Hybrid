@@ -250,30 +250,32 @@ initial mass depletion timescale =1.534533e+01 [yr] (center)
 1.860000e+08	  0	  3000	  2721	1.859915913487005e-03	7.498942093324548e+01	2.247751903093894e+01
 1.870000e+08	  0	  3000	  2169	1.086184846901160e-03	7.498942093324548e+01	2.300161173888553e+01
 1.880000e+08	  0	  3000	  2634	1.765920025055756e-03	7.498942093324548e+01	2.352560281703999e+01
+1.890000e+08	  0	  3000	   775	1.479265871708342e-03	7.498942093324548e+01	2.404985718143915e+01
+1.900000e+08	  0	  3000	   223	1.016158797236373e-03	7.498942093324548e+01	2.457333566761493e+01
 -----
 real time > 14100 [s]
 Timer expired. Ending this program.
 -----
-dt_[2634]	= 1.109560e-02
+dt_[223]	= 6.384714e-03
 E_error	= 7.822821035408710e-01
 L_error	= 7.643729930159264e+12
 dE_correct	= 0.000000000000000e+00
-step	= 1.880000000000000e+08
+step	= 1.900000000000000e+08
 dt_ene	= 1.000000e-01[yr]
 geometric ratio	= (sqrt(sqrt(sqrt(10.0))))
 -----
-real time	= 14186.022267[s]
-user time	= 12868.616000[s]
-system time	= 994.992000[s]
-Execution Time	(total	= 1.418602e+04 [s])
-Corrector		= 5.880728e+03 [s]	41.45 [%]
-Predictor		= 4.228407e+03 [s]	29.81 [%]
-Fragmentation		= 2.416602e+03 [s]	17.04 [%]
-Iteration		= 1.645090e+02 [s]	 1.16 [%]
-Orbital_Elements	= 6.280646e+01 [s]	 0.44 [%]
-Energy			= 1.398110e+00 [s]	 0.01 [%]
+real time	= 14137.483714[s]
+user time	= 12819.748000[s]
+system time	= 971.004000[s]
+Execution Time	(total	= 1.413748e+04 [s])
+Corrector		= 5.948228e+03 [s]	42.07 [%]
+Predictor		= 4.141317e+03 [s]	29.29 [%]
+Fragmentation		= 2.378788e+03 [s]	16.83 [%]
+Orbital_Elements	= 3.586370e+02 [s]	 2.54 [%]
+Iteration		= 1.665457e+02 [s]	 1.18 [%]
+Energy			= 1.576800e+00 [s]	 0.01 [%]
 Collision_Judgement	= 0.000000e+00 [s]	 0.00 [%]
-Others			= 1.431571e+03 [s]	10.09 [%]
+Others			= 1.142392e+03 [s]	 8.08 [%]
 -----
 myid = 23	numprocs = 40
 OMP_NUM_THREADS: 1
@@ -283,6 +285,26 @@ file: '../data/Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc5E-2_Rayleigh_OmegaZero_f
 file: '../data/Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc5E-2_Rayleigh_OmegaZero_frag_drmin5E-3_dthetamin0.125pi_rand01/dr03_dtheta08/tempfragread.dat' exists.
 -----
 #step		Np	Ntr	i_sys	dt[i_sys]		t_tmp[yr]		t_sys[yr]
-1.880000e+08	  0	  3000	  2634	1.765920025055756e-03	7.498942093324548e+01	2.352560281703998e+01
-1.890000e+08	  0	  3000	  1394	1.313825043099326e-03	7.498942093324548e+01	2.404836897670492e+01
-1.900000e+08	  0	  3000	  2826	1.274465321798467e-03	7.498942093324548e+01	2.457190451885898e+01
+1.900000e+08	  0	  3000	   223	1.016158797236373e-03	7.498942093324548e+01	2.457333566761493e+01
+-----
+dt_[824]	= 1.636226e-04
+E_error	= 8.244629327547306e-01
+L_error	= 1.019321635007133e+13
+dE_correct	= 0.000000000000000e+00
+step	= 1.908363430000000e+08
+dt_ene	= 1.000000e-01[yr]
+geometric ratio	= (sqrt(sqrt(sqrt(10.0))))
+-----
+real time	= 88.816662[s]
+user time	= 56.556000[s]
+system time	= 4.928000[s]
+Execution Time	(total	= 8.881666e+01 [s])
+Orbital_Elements	= 2.795310e+01 [s]	31.47 [%]
+Corrector		= 2.599707e+01 [s]	29.27 [%]
+Predictor		= 1.846971e+01 [s]	20.80 [%]
+Fragmentation		= 1.052854e+01 [s]	11.85 [%]
+Iteration		= 7.280280e-01 [s]	 0.82 [%]
+Energy			= 2.387200e-02 [s]	 0.03 [%]
+Collision_Judgement	= 0.000000e+00 [s]	 0.00 [%]
+Others			= 5.116335e+00 [s]	 5.76 [%]
+-----
