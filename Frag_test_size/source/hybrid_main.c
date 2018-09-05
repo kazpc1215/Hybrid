@@ -56,9 +56,10 @@ int main(int argc, char **argv){
   double abs_L=0.0,abs_L_0=0.0;
   double ecc_p_rms=0.0,inc_p_rms=0.0,ecc_tr_rms=0.0,inc_tr_rms=0.0;
 
-
   double t_ene=DT_ENE;
 
+  int tracerlist[N_c+1] = {};  //中心のトレーサーの数. これらの質量変化を追い面密度を計算.
+  int tracerlistnumber = 0;
 
 #if INDIRECT_TERM
   double x_G[4]={},v_G[4]={};
@@ -82,6 +83,10 @@ int main(int argc, char **argv){
   char posimassfile[200]={};
   FILE *fptempfragread;
   char tempfragreadfile[200]={};
+  FILE *fptaudep;
+  char taudepfile[200]={};
+  FILE *fptracerlist;
+  char tracerlistfile[200]={};
 #endif  /*FRAGMENTATION*/
 
 
@@ -148,8 +153,8 @@ int main(int argc, char **argv){
   /////////////////////////////ここまでOpenMpとMPIの準備//////////////////////////////
 
 
-  //srand(global_myid+1);  //乱数の種をmyidで決める.
-  srand(RAND_SEED);
+  srand(global_myid+1);  //乱数の種をmyidで決める.
+  //srand(RAND_SEED);
 
 
 #ifdef DIRECTORY
@@ -158,7 +163,8 @@ int main(int argc, char **argv){
 
 
 #ifdef SUBDIRECTORY
-  sprintf(dirname,"%s%s%02d_%s%02d/",STR(DIRECTORY),STR(SUBDIRECTORY),(int)(global_myid/8.0 + 1.0),STR(SUBDIRECTORY_2),(int)(fmod(global_myid,8.0) + 1.0));
+  //sprintf(dirname,"%s%s%02d_%s%02d/",STR(DIRECTORY),STR(SUBDIRECTORY),(int)(global_myid/8.0 + 1.0),STR(SUBDIRECTORY_2),(int)(fmod(global_myid,8.0) + 1.0));
+  sprintf(dirname,"%s%s%02d/",STR(DIRECTORY),STR(SUBDIRECTORY),global_myid+1);
   mkdir(dirname, 0755);  //子ディレクトリを作成. 755 = rwxr-xr-x.
 #endif  /*SUBDIRECTORY*/
 
@@ -208,6 +214,24 @@ int main(int argc, char **argv){
 
 
   sprintf(tempfragreadfile,"%stempfragread.dat",
+#ifdef SUBDIRECTORY
+	  dirname
+#else
+	  STR(DIRECTORY)
+#endif
+	  );
+
+
+  sprintf(taudepfile,"%sTau_dep.dat",
+#ifdef SUBDIRECTORY
+	  dirname
+#else
+	  STR(DIRECTORY)
+#endif
+	  );
+
+
+  sprintf(tracerlistfile,"%stracerlist.dat",
 #ifdef SUBDIRECTORY
 	  dirname
 #else
@@ -498,6 +522,7 @@ int main(int argc, char **argv){
     ///////////////////////////////ここまで初期処理//////////////////////////////////
 
 
+#if N_p != 0
 
 #if N_p == 3
     ele[1].axis = PLANET_AXIS / MutualHillRadius_to_SemimajorAxis(DELTA_HILL) ;  //惑星2を中心に相互DELTA_HILLヒル内側へ離す.
@@ -511,6 +536,7 @@ int main(int argc, char **argv){
       InitialOrbitalElements_Planet(i,ele);  //初期軌道要素.
       InitialCondition(i,x_0,v_0,v2_0,r_dot_v,r_0,ele);  //初期位置、速度計算.
     }
+#endif  /*N_p != 0*/
 
 
 #if N_tr != 0
@@ -522,8 +548,14 @@ int main(int argc, char **argv){
 
 #if ORBITING_SMALL_PARTICLE
     for(i=global_n_p+1;i<=global_n;++i){  //微惑星.
-      InitialOrbitalElements_Tracer(i,x_0,ele);  //初期軌道要素.
+      InitialOrbitalElements_Tracer(i,x_0,ele,tracerlist,&tracerlistnumber);  //初期軌道要素.
       InitialCondition(i,x_0,v_0,v2_0,r_dot_v,r_0,ele);  //初期位置、速度計算.
+
+      if(tracerlistnumber >= N_c){
+	global_n = i;
+	fprintf(fplog,"tracer list number = %d\tglobal_n = %d\n",tracerlistnumber,global_n);
+	break;
+      }
     }
 #endif
 
@@ -770,12 +802,15 @@ int main(int argc, char **argv){
 
     n_fragcheck = 0;
 
-    orbital_r_min = PLANET_AXIS / MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
-    orbital_r_max = PLANET_AXIS * MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
+    //orbital_r_min = PLANET_AXIS / MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
+    //orbital_r_max = PLANET_AXIS * MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
+    orbital_r_min = 0.95;
+    orbital_r_max = 1.05;
 
     mass_tot_all = 0.0;
     mass_tot_center = 0.0;
     n_center = 0;
+
     for(i=global_n_p+1;i<=global_n;++i){
 
       frag[i].fragtimes = 0;
@@ -784,12 +819,14 @@ int main(int argc, char **argv){
       frag[i].dt_frag = Depletion_Time(i,frag);  //統計的計算のタイムスケール.
       frag[i].t_frag = frag[i].dt_frag;
 
-      if(r_0[i]>orbital_r_min && r_0[i]<orbital_r_max){
-	mass_tot_center += ele[i].mass;
-	n_center++;
-      }
       mass_tot_all += ele[i].mass;
     }
+
+    for(i=1;i<=tracerlistnumber;++i){
+      mass_tot_center += ele[i].mass;
+      n_center++;
+    }
+
 
     //統計的計算で破壊タイムスケールの見積もり.
     sigma_center = mass_tot_center / (M_PI * (orbital_r_max*orbital_r_max - orbital_r_min*orbital_r_min));
@@ -802,6 +839,28 @@ int main(int argc, char **argv){
 #endif
     tau_dep_center = - sigma_center / flux_center;
     fprintf(fplog,"initial mass depletion timescale =%e [yr] (center)\n",tau_dep_center/2.0/M_PI);
+
+
+    fptaudep = fopen(taudepfile,"w");
+    if(fptaudep==NULL){
+      fprintf(fplog,"taudepfile 0 error\n");
+      return -1;
+    }
+    fprintf(fptaudep,"#initial mass depletion timescale [yr]\n");
+    fprintf(fptaudep,"%e\n",tau_dep_center/2.0/M_PI);
+    fclose(fptaudep);
+
+
+    fptracerlist = fopen(tracerlistfile,"w");
+    if(fptracerlist==NULL){
+      fprintf(fplog,"fragfile 0 error\n");
+      return -1;
+    }
+    fprintf(fptracerlist,"#tracer list\n");
+    for(i=1;i<=tracerlistnumber;++i){
+      fprintf(fptracerlist,"%d\n",tracerlist[i]);
+    }
+    fclose(fptracerlist);
 
 
     fpfrag = fopen(fragfile,"w");
@@ -1742,18 +1801,22 @@ int main(int argc, char **argv){
     if(t_sys + t_tmp > t_fragcheck){
       n_fragcheck++;
 
-      orbital_r_min = PLANET_AXIS / MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
-      orbital_r_max = PLANET_AXIS * MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
+      //orbital_r_min = PLANET_AXIS / MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
+      //orbital_r_max = PLANET_AXIS * MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
+      orbital_r_min = 0.95;
+      orbital_r_max = 1.05;
 
       mass_tot_all = 0.0;
       mass_tot_center = 0.0;
       n_center = 0;
+
       for(i=global_n_p+1;i<=global_n;++i){
-	if(r_c[i]>orbital_r_min && r_c[i]<orbital_r_max){
-	  mass_tot_center += ele[i].mass;
-	  n_center++;
-	}
 	mass_tot_all += ele[i].mass;
+      }
+
+      for(i=1;i<=tracerlistnumber;++i){
+	mass_tot_center += ele[i].mass;
+	n_center++;
       }
 
       sigma_center = mass_tot_center / (M_PI * (orbital_r_max*orbital_r_max - orbital_r_min*orbital_r_min));

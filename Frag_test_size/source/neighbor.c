@@ -27,9 +27,13 @@ void NeighborSearch(int i,CONST struct orbital_elements *ele_p,struct fragmentat
     }
     ((frag_p+i)->neighbornumber) = 0;
 
-    ((frag_p+i)->delta_r_out) = (double)m * DELTA_R * (int)(global_myid/8.0 + 1.0);  //外側.
-    ((frag_p+i)->delta_r_in) = (double)m * DELTA_R * (int)(global_myid/8.0 + 1.0) ;  //内側.
-    delta_theta = DELTA_THETA * (fmod(global_myid,8.0) + 1.0);
+    ((frag_p+i)->delta_r_out) = (double)m * DELTA_R;  //外側.
+    ((frag_p+i)->delta_r_in) = (double)m * DELTA_R;  //内側.
+    //((frag_p+i)->delta_r_out) = (double)m * DELTA_R * (int)(global_myid/8.0 + 1.0);  //外側.
+    //((frag_p+i)->delta_r_in) = (double)m * DELTA_R * (int)(global_myid/8.0 + 1.0);  //内側.
+
+    delta_theta = DELTA_THETA;
+    //delta_theta = DELTA_THETA * (fmod(global_myid,8.0) + 1.0);
 
     S = 2.0*(((frag_p+i)->delta_r_out) + ((frag_p+i)->delta_r_in))*radius[i]*delta_theta;
 

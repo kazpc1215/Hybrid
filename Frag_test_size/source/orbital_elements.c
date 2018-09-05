@@ -55,7 +55,10 @@ void InitialOrbitalElements_Planet(int i,struct orbital_elements *ele_p){
 
 #if ORBITING_SMALL_PARTICLE
 /*トレーサーの初期軌道要素*/
-void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements *ele_p){
+void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements *ele_p,int tracerlist[],int *tracerlistnumber){
+
+  double orbital_r_min_center = 0.95;
+  double orbital_r_max_center = 1.05;
 
   //惑星の位置x_0[][4]はすでに求めてあることが前提.
 #if N_p == 3
@@ -65,8 +68,8 @@ void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements
   double orbital_r_min = ((ele_p+1)->axis) / MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
   double orbital_r_max = ((ele_p+1)->axis) * MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
 #elif N_p == 0
-  double orbital_r_min = PLANET_AXIS / MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL) / MutualHillRadius_to_SemimajorAxis(DELTA_HILL);
-  double orbital_r_max = PLANET_AXIS * MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL) * MutualHillRadius_to_SemimajorAxis(DELTA_HILL);
+  double orbital_r_min = orbital_r_min_center - DELTA_R - 3.0*ECC_RMS;
+  double orbital_r_max = orbital_r_max_center + DELTA_R + 3.0*ECC_RMS;
 #endif
 
   int k=0,flag=0;
@@ -80,13 +83,14 @@ void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements
   do{
     flag = 0;
 
-    (ele_p+i)->axis = rand_func()*(orbital_r_max - orbital_r_min) + orbital_r_min;  //惑星1より内側に相互(0.5*DELTA_HILL)ヒルの位置 から 惑星3より外側に相互(0.5*DELTA_HILL)ヒルの位置 に分布.
+    //(ele_p+i)->axis = rand_func()*(orbital_r_max - orbital_r_min) + orbital_r_min;  //惑星1より内側に相互(0.5*DELTA_HILL)ヒルの位置 から 惑星3より外側に相互(0.5*DELTA_HILL)ヒルの位置 に分布.
+    (ele_p+i)->axis = pow((pow(orbital_r_max,-1.5) - pow(orbital_r_min,-1.5)) * rand_func() + pow(orbital_r_min,-1.5), -2.0/3.0);  //x^{5/2} べき分布.
 #if RAYLEIGH_DISTRIBUTION
     (ele_p+i)->ecc = sqrt(-log(rand_func()))*ECC_RMS;  //離心率.  //Rayleigh分布.
     (ele_p+i)->inc = sqrt(-log(rand_func()))*INC_RMS;  //軌道傾斜角.  //Rayleigh分布.
 #else
-    (ele_p+i)->ecc = ECC_RMS;  //離心率.  //Rayleigh分布.
-    (ele_p+i)->inc = INC_RMS;  //軌道傾斜角.  //Rayleigh分布.
+    (ele_p+i)->ecc = ECC_RMS * sqrt((ele_p+i)->axis);  //離心率.  //v_relが軌道長半径によらず一定な分布.
+    (ele_p+i)->inc = INC_RMS * sqrt((ele_p+i)->axis);  //軌道傾斜角.  //v_relが軌道長半径によらず一定な分布.
 #endif
     (ele_p+i)->u = rand_func()*2.0*M_PI;
     (ele_p+i)->omega = rand_func()*2.0*M_PI;
@@ -102,6 +106,12 @@ void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements
     if(peri>orbital_r_min && apo<orbital_r_max){  //orbital_r_minからorbital_r_maxの範囲にいる場合.
 #if N_p == 0
       flag += 1;
+
+      if(peri>orbital_r_min_center && apo<orbital_r_max_center){  //centerにいる場合.
+	*tracerlistnumber += 1;
+	tracerlist[*tracerlistnumber] = i;
+      }
+
 #else
       int j;
 
@@ -115,7 +125,7 @@ void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements
 #endif
     }
 
-  } while(flag < global_n_p);  //orbital_r_minからorbital_r_maxの範囲にいる場合，かつglobal_n_p個の全ての惑星からSEPARATE_HILLヒル以上離れている場合のみ抜け出せるループ.
+  }while(flag < global_n_p);  //orbital_r_minからorbital_r_maxの範囲にいる場合，かつglobal_n_p個の全ての惑星からSEPARATE_HILLヒル以上離れている場合のみ抜け出せるループ.
 
 
 #ifndef M_0

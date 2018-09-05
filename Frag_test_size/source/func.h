@@ -30,7 +30,7 @@ double MutualHillRadius_to_SemimajorAxis(double ratio);
 
 void InitialOrbitalElements_Planet(int i,struct orbital_elements *ele_p);
 
-void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements *ele_p);
+void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements *ele_p,int tracerlist[],int *tracerlistnumber);
 
 void EjectionOfTracerFromPlanet(double x_0[][4],double v_0[][4],double v2_0[],double r_dot_v[],double r_0[],CONST struct orbital_elements *ele_p);
 
