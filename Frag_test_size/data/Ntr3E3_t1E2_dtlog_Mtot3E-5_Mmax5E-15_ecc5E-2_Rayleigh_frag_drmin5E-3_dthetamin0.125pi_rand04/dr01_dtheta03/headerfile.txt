@@ -29,10 +29,9 @@
 #endif
 
 
-#define DIRECTORY ../data/Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust_frag_dr2E-3_dtheta0.125pi/  //ディレクトリ.
-// #define SUBDIRECTORY dr  //子ディレクトリ1.
-// #define SUBDIRECTORY_2 dtheta  //子ディレクトリ2.
-#define SUBDIRECTORY rand  //子ディレクトリ. rand%02d
+#define DIRECTORY ../data/Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc5E-2_Rayleigh_frag_drmin5E-3_dthetamin0.125pi_rand04/  //ディレクトリ.
+#define SUBDIRECTORY dr  //子ディレクトリ1.
+#define SUBDIRECTORY_2 dtheta  //子ディレクトリ2.
 
 #define STR_(str) #str
 #define STR(str) STR_(str)
@@ -45,14 +44,13 @@
 
 
 //////////////////////////////////////////////////
-#define N_tr 6000  //初期のトレーサーの数.
+#define N_tr 3000  //初期のトレーサーの数.
 #define N_p 0  //初期の原始惑星の数.
-#define N_c 1000  //中心のトレーサーの数. これらの質量変化を追い面密度を計算.
-#define ECC_RATIO 1.0  //ecc=0.01の何倍か. inc=ecc/2.
-// #define RAND_SEED 1  //乱数の種.
+#define ECC_RATIO 5.0  //ecc=0.01の何倍か. inc=ecc/2.
+#define RAND_SEED 4  //乱数の種.
 #define STEP_INTERVAL 1.0E6  //何ステップごとに標準出力するか.
 #define BREAK_TIME 14100.0  //4h = 14400sec, 12h = 43200sec.
-// #define BREAK_TIME 42900.0  //4h = 14400sec, 12h = 43200sec.
+//#define BREAK_TIME 42900.0  //4h = 14400sec, 12h = 43200sec.
 
 #define FRAGMENTATION true  //破壊 近傍粒子探索と質量フラックス計算.  <--
 #define COLLISION true  //衝突.
@@ -61,7 +59,7 @@
 #define RELOCATE_PARTICLE false  //衝突後に粒子を再配置.  <--どっちか.
 #endif
 
-#define RAYLEIGH_DISTRIBUTION false  //離心率や軌道傾斜角の分布 true : Rayleigh, false : v_relが軌道長半径によらず一定.
+#define RAYLEIGH_DISTRIBUTION true  //離心率や軌道傾斜角の分布 true : Rayleigh, false : Uniform.
 #define OMEGA_EQUAL_ZERO false  //相対速度計算で近点経度の差を0にセット.
 
 EXTERN int global_n;  //グローバル変数.
@@ -97,9 +95,9 @@ EXTERN FILE *fplog;
 
 
 //////////////////////////////////////////////////
-// #define G 1.0  //重力定数.
-// #define M_0 1.0  //主星の質量.
-// #define EPSILON 0.0  //ソフトニングパラメーター.
+//#define G 1.0  //重力定数.
+//#define M_0 1.0  //主星の質量.
+//#define EPSILON 0.0  //ソフトニングパラメーター.
 #define ETA 1.0E-2  //刻み幅調整.
 #define ITE_MAX 2  //イテレーション回数（修正子計算の回数はITE_MAX+1）.
 //////////////////////////////////////////////////
@@ -150,9 +148,9 @@ Mean Longitude (deg)               100.46435
 #endif
 
 #if FRAGMENTATION
-#define DELTA_R 0.002  //Hill 近傍粒子探索用.
+#define DELTA_R 0.005  //Hill 近傍粒子探索用.
 #define DELTA_THETA 0.125*M_PI  //近傍粒子探索用. pi/8
-#define NEIGHBOR_MAX 200  //近傍粒子リスト配列の最大値.
+#define NEIGHBOR_MAX 500  //近傍粒子リスト配列の最大値.
 #define DEPLETION_TIME_EXPLICIT false  //true: 質量減少タイムスケールの計算でexplicit *(1-XI)を使う. false: implicit /(1+XI)を使う.
 #define RHO 3.0  // [g/cc]  微惑星の物質密度.
 #define EPSILON_FRAG 0.2
@@ -161,7 +159,7 @@ Mean Longitude (deg)               100.46435
 #define P_FRAG 0.453
 #define XI 0.01 //統計的計算のタイムステップがタイムスケールの"XI"倍.
 #define M_MAX 5.00E-15  //最大微惑星質量. 1E19 g = 10kmサイズ.
-// #define M_MAX 5.00E-18  //最大微惑星質量. 1E16 g = 1kmサイズ.
+//#define M_MAX 5.00E-18  //最大微惑星質量. 1E16 g = 1kmサイズ.
 #endif
 //////////////////////////////////////////////////
 #endif  /*N_tr != 0*/
