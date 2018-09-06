@@ -100,14 +100,14 @@ void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements
       x_0[i][k] = ((ele_p+i)->axis)*Calculate_P(i,k,ele_p)*(cos(((ele_p+i)->u))-((ele_p+i)->ecc)) + ((ele_p+i)->axis)*sqrt(1.0-((ele_p+i)->ecc)*((ele_p+i)->ecc))*Calculate_Q(i,k,ele_p)*sin(((ele_p+i)->u));
     }
 
-    peri = ((ele_p+i)->axis)*(1.0 - (ele_p+i)->ecc);
-    apo = ((ele_p+i)->axis)*(1.0 + (ele_p+i)->ecc);
+    //peri = ((ele_p+i)->axis)*(1.0 - (ele_p+i)->ecc);
+    //apo = ((ele_p+i)->axis)*(1.0 + (ele_p+i)->ecc);
 
-    if(peri>orbital_r_min && apo<orbital_r_max){  //orbital_r_minからorbital_r_maxの範囲にいる場合.
+    if(((ele_p+i)->axis)>orbital_r_min && ((ele_p+i)->axis)<orbital_r_max){  //orbital_r_minからorbital_r_maxの範囲にいる場合.
 #if N_p == 0
       flag += 1;
 
-      if(peri>orbital_r_min_center && apo<orbital_r_max_center){  //centerにいる場合.
+      if(((ele_p+i)->axis)>orbital_r_min_center && ((ele_p+i)->axis)<orbital_r_max_center){  //centerにいる場合.
 	*tracerlistnumber += 1;
 	tracerlist[*tracerlistnumber] = i;
       }

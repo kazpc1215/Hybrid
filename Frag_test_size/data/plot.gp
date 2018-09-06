@@ -51,6 +51,13 @@ replot "Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_Uniform_frag_drmin5E-3_dthe
 
 
 
+set key right bottom box width 0 spacing 1.0 font "Times-Roman,20"
+set yr [1E-2:1]
+plot "Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust_OmegaZero_frag_sigma_error.dat" u 1:3:($1-$2):($1+$2):4:5 w xyerrorbars lw 1 lt 1 lc rgb "red" t "adjust"
+
+# pause
+
+
 ### ecc 3E-2 ###
 set yr [1E-2:1]
 set key right bottom box width -4 spacing 1.0 font "Times-Roman,20"
@@ -113,7 +120,7 @@ set key left Left bottom box width -10 spacing 1.0 reverse font "Times-Roman,20"
 ### ecc = 0.01 ###
 plot for [i=5:5] for [j=8:8] sprintf("./Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_Uniform_frag_drmin5E-3_dthetamin0.125pi_rand01/dr%02d_dtheta%02d/Sigma_dep.dat",i,j) u 1:(($4)/3.774597991176490e-05) w l lw 2 t sprintf("%02d,%02d",i,j), 1.0/(1.0 + x/1.308233e+02) lw 2
 
-pause
+
 
 ### ecc = 0.03 ###
 plot for [i=1:5] for [j=1:8] sprintf("./Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc3E-2_Uniform_frag_drmin5E-3_dthetamin0.125pi_rand01/dr%02d_dtheta%02d/Sigma_dep.dat",i,j) u 1:(($4)/3.748149356603682e-05) w l lw 2 t sprintf("%02d,%02d",i,j), 1.0/(1.0 + x/2.960658e+01) lw 2
@@ -147,3 +154,11 @@ plot for [i=1:5] for [j=1:8] sprintf("./Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc
 
 ### ecc = 0.05 ###
 # plot for [i=1:5] for [j=1:8] sprintf("./Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc5E-2_Rayleigh_OmegaZero_frag_drmin1E-3_dthetamin0.125pi_rand01/dr%02d_dtheta%02d/Sigma_dep.dat",i,j) u 1:(($4)/3.612127807372093e-05) w l lw 2 t sprintf("%02d,%02d",i,j), 1.0/(1.0 + x/1.534533e+01) lw 2
+
+
+plot 1.0/(1.0 + x/85.0) lw 2 lc rgb "black"
+replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust_OmegaZero_frag_dr2E-3_dtheta0.125pi/rand%02d/Sigma_dep.dat",i) u 1:(($3)/3.000000000000000e-05) w l lw 2 lc rgb "orange" notitle
+replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust_OmegaZero_frag_dr4E-3_dtheta0.125pi/rand%02d/Sigma_dep.dat",i) u 1:(($3)/3.000000000000000e-05) w l lw 2 lc rgb "gray" notitle
+replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust_OmegaZero_frag_dr8E-3_dtheta0.125pi/rand%02d/Sigma_dep.dat",i) u 1:(($3)/3.000000000000000e-05) w l lw 2 lc rgb "blue" notitle
+replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust_OmegaZero_frag_dr2E-2_dtheta0.125pi/rand%02d/Sigma_dep.dat",i) u 1:(($3)/3.000000000000000e-05) w l lw 2 lc rgb "green" notitle
+
