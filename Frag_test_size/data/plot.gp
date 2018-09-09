@@ -23,81 +23,54 @@ set log
 set format "10^{%L}"
 set auto
 set xr [1:1000]
-set yr [1E-3:1E-1]
+#set yr [1E-3:1E-1]
 set xl "N_{neighbor}" offset 0,1
 set yl "relative error" offset 2,0
 
 
 ### ecc 1E-2 ###
-set key right bottom box width -4 spacing 1.0 font "Times-Roman,20"
-plot "Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_Rayleigh_OmegaZero_frag_drmin1E-3_dthetamin0.125pi_sigma_error.dat" u 3:5:($3-$4):($3+$4):6:7 with xyerrorbars lw 1 lt 2 lc rgb "red" t "Rayleigh (adjust)"
 
-replot "Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_Rayleigh_OmegaZero_frag_drmin5E-3_dthetamin0.125pi_sigma_error.dat" u 3:5:($3-$4):($3+$4):6:7 with xyerrorbars lw 1 lt 2 lc rgb "red" notitle
+### drを変化 ###
+set key right top box width -7 spacing 1.0 font "Times-Roman,20"
+#set yr [1E-2:1]
+plot "Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_OmegaZero_frag_dtheta0.125pi_sigma_error.dat" u 1:3:($1-$2):($1+$2):4:5 w xyerrorbars lw 1 lt 1 lc rgb "red" t "adjust, cos term ignored"
 
+# pause
 
-
-set key right bottom box width -1 spacing 1.0 font "Times-Roman,20"
-plot "Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_Rayleigh_frag_drmin1E-3_dthetamin0.125pi_sigma_error.dat" u 3:5:($3-$4):($3+$4):6:7 with xyerrorbars lw 1 lt 4 lc rgb "forest-green" t "Rayleigh"
-
-replot "Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_Rayleigh_frag_drmin5E-3_dthetamin0.125pi_sigma_error.dat" u 3:5:($3-$4):($3+$4):6:7 with xyerrorbars lw 1 lt 4 lc rgb "forest-green" notitle
-
-
-
-set key right bottom box width 0 spacing 1.0 font "Times-Roman,20"
-plot "Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_Uniform_frag_drmin1E-3_dthetamin0.125pi_sigma_error.dat" u 3:5:($3-$4):($3+$4):6:7 with xyerrorbars lw 1 lt 5 lc rgb "dark-blue" t "Uniform"
-
-replot "Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_Uniform_frag_drmin5E-3_dthetamin0.125pi_sigma_error.dat" u 3:5:($3-$4):($3+$4):6:7 with xyerrorbars lw 1 lt 5 lc rgb "dark-blue" notitle
-
-
-
-
-set key right bottom box width 0 spacing 1.0 font "Times-Roman,20"
-set yr [1E-2:1]
-plot "Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust_OmegaZero_frag_sigma_error.dat" u 1:3:($1-$2):($1+$2):4:5 w xyerrorbars lw 1 lt 1 lc rgb "red" t "adjust"
+set key right top box width 0 spacing 1.0 font "Times-Roman,20"
+#set yr [1E-2:1]
+plot "Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_frag_dtheta0.125pi_sigma_error.dat" u 1:3:($1-$2):($1+$2):4:5 w xyerrorbars lw 1 lt 1 lc rgb "red" t "adjust"
 
 # pause
 
 
-### ecc 3E-2 ###
-set yr [1E-2:1]
-set key right bottom box width -4 spacing 1.0 font "Times-Roman,20"
-plot "Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc3E-2_Rayleigh_OmegaZero_frag_drmin1E-3_dthetamin0.125pi_sigma_error.dat" u 3:5:($3-$4):($3+$4):6:7 with xyerrorbars lw 1 lt 2 lc rgb "red" t "Rayleigh (adjust)"
+set key right top box width -7 spacing 1.0 font "Times-Roman,20"
+plot "Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_OmegaZero_frag_dtheta0.125pi_sigma_error.dat" u 1:3:($1-$2):($1+$2):4:5 w xyerrorbars lw 1 lt 1 t "adjust, cos term ignored",\
+"Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust_frag_dtheta0.125pi_sigma_error.dat" u 1:3:($1-$2):($1+$2):4:5 w xyerrorbars lw 1 lt 2 t "adjust"
 
-replot "Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc3E-2_Rayleigh_OmegaZero_frag_drmin5E-3_dthetamin0.125pi_sigma_error.dat" u 3:5:($3-$4):($3+$4):6:7 with xyerrorbars  lw 1 lt 2 lc rgb "red" notitle
-
+# pause
 
 
-set key right bottom box width -1 spacing 1.0 font "Times-Roman,20"
-plot "Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc3E-2_Rayleigh_frag_drmin1E-3_dthetamin0.125pi_sigma_error.dat" u 3:5:($3-$4):($3+$4):6:7 with xyerrorbars lw 1 lt 4 lc rgb "forest-green" t "Rayleigh"
+### dthetaを変化 ###
 
-replot "Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc3E-2_Rayleigh_frag_drmin5E-3_dthetamin0.125pi_sigma_error.dat" u 3:5:($3-$4):($3+$4):6:7 with xyerrorbars lw 1 lt 4 lc rgb "forest-green" notitle
+set key right top box width -7 spacing 1.0 font "Times-Roman,20"
+#set yr [1E-2:1]
+plot "Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_OmegaZero_frag_dr4E-3_sigma_error.dat" u 1:3:($1-$2):($1+$2):4:5 w xyerrorbars lw 1 lt 1 lc rgb "red" t "adjust, cos term ignored"
 
+# pause
 
+set key right top box width 0 spacing 1.0 font "Times-Roman,20"
+#set yr [1E-2:1]
+plot "Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_frag_dr4E-3_sigma_error.dat" u 1:3:($1-$2):($1+$2):4:5 w xyerrorbars lw 1 lt 1 lc rgb "red" t "adjust"
 
-
-set key right bottom box width 0 spacing 1.0 font "Times-Roman,20"
-plot "Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc3E-2_Uniform_frag_drmin1E-3_dthetamin0.125pi_sigma_error.dat" u 3:5:($3-$4):($3+$4):6:7 with xyerrorbars lw 1 lt 5 lc rgb "dark-blue" t "Uniform"
-
-replot "Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc3E-2_Uniform_frag_drmin5E-3_dthetamin0.125pi_sigma_error.dat" u 3:5:($3-$4):($3+$4):6:7 with xyerrorbars lw 1 lt 5 lc rgb "dark-blue" notitle
-
-
-
-### ecc 5E-2 ###
-plot "Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc5E-2_Rayleigh_OmegaZero_frag_drmin1E-3_dthetamin0.125pi_sigma_error.dat" u 3:5:($3-$4):($3+$4):6:7 with xyerrorbars
-
-replot "Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc5E-2_Rayleigh_OmegaZero_frag_drmin5E-3_dthetamin0.125pi_sigma_error.dat" u 3:5:($3-$4):($3+$4):6:7 with xyerrorbars
+# pause
 
 
-plot "Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc5E-2_Rayleigh_frag_drmin1E-3_dthetamin0.125pi_sigma_error.dat" u 3:5:($3-$4):($3+$4):6:7 with xyerrorbars
+set key right top box width -7 spacing 1.0 font "Times-Roman,20"
+plot "Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_OmegaZero_frag_dr4E-3_sigma_error.dat" u 1:3:($1-$2):($1+$2):4:5 w xyerrorbars lw 1 lt 1 t "adjust, cos term ignored",\
+"Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust_frag_dr4E-3_sigma_error.dat" u 1:3:($1-$2):($1+$2):4:5 w xyerrorbars lw 1 lt 2 t "adjust"
 
-replot "Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc5E-2_Rayleigh_frag_drmin5E-3_dthetamin0.125pi_sigma_error.dat" u 3:5:($3-$4):($3+$4):6:7 with xyerrorbars
-
-
-plot "Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc5E-2_Uniform_frag_drmin1E-3_dthetamin0.125pi_sigma_error.dat" u 3:5:($3-$4):($3+$4):6:7 with xyerrorbars
-
-replot "Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc5E-2_Uniform_frag_drmin5E-3_dthetamin0.125pi_sigma_error.dat" u 3:5:($3-$4):($3+$4):6:7 with xyerrorbars
-
-
+# pause
 
 
 
@@ -113,52 +86,73 @@ set yl "{/Symbol S}/{/Symbol S}_0" offset 2,0
 #####
 
 
-set key left Left bottom box width -10 spacing 1.0 reverse font "Times-Roman,20"
 
-### Uniform Distriution ###
+set key right bottom box width 0 spacing 1.0 font "Times-Roman,20"
+plot 1.0/(1.0 + x/103.4223) lw 1 lc rgb "black" t "analytic"
+replot 1.0/(1.0 + x/103.045447809) lw 1 lc rgb "red" t "analytic hosei"
 
-### ecc = 0.01 ###
-plot for [i=5:5] for [j=8:8] sprintf("./Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_Uniform_frag_drmin5E-3_dthetamin0.125pi_rand01/dr%02d_dtheta%02d/Sigma_dep.dat",i,j) u 1:(($4)/3.774597991176490e-05) w l lw 2 t sprintf("%02d,%02d",i,j), 1.0/(1.0 + x/1.308233e+02) lw 2
+# pause
 
+set key right bottom box width 0 spacing 1.0 font "Times-Roman,20"
+plot 1.0/(1.0 + x/103.4223) lw 2 lc rgb "black" t "analytic"
+# plot 1.0/(1.0 + x/103.045447809) lw 2 lc rgb "black" t "analytic"
+pause 1
+replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_OmegaZero_frag_dr2E-3_dtheta0.125pi/rand%02d/Sigma_dep.dat",i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lc rgb "orange" notitle
+pause 1
+replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_OmegaZero_frag_dr4E-3_dtheta0.125pi/rand%02d/Sigma_dep.dat",i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lc rgb "gray" notitle
+pause 1
+replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_OmegaZero_frag_dr8E-3_dtheta0.125pi/rand%02d/Sigma_dep.dat",i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lc rgb "blue" notitle
+pause 1
+replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_OmegaZero_frag_dr2E-2_dtheta0.125pi/rand%02d/Sigma_dep.dat",i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lc rgb "green" notitle
+pause 1
+replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_OmegaZero_frag_dr4E-2_dtheta0.125pi/rand%02d/Sigma_dep.dat",i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lc rgb "red" notitle
 
-
-### ecc = 0.03 ###
-plot for [i=1:5] for [j=1:8] sprintf("./Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc3E-2_Uniform_frag_drmin5E-3_dthetamin0.125pi_rand01/dr%02d_dtheta%02d/Sigma_dep.dat",i,j) u 1:(($4)/3.748149356603682e-05) w l lw 2 t sprintf("%02d,%02d",i,j), 1.0/(1.0 + x/2.960658e+01) lw 2
-
-### ecc = 0.05 ###
-plot for [i=1:5] for [j=1:8] sprintf("./Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc5E-2_Uniform_frag_drmin1E-3_dthetamin0.125pi_rand01/dr%02d_dtheta%02d/Sigma_dep.dat",i,j) u 1:(($4)/3.782154743911579e-05) w l lw 2 t sprintf("%02d,%02d",i,j), 1.0/(1.0 + x/1.465548e+01) lw 2
-
-
-
-### Rayleigh Distriution ###
-
-### ecc = 0.01 ###
-plot for [i=1:5] for [j=1:8] sprintf("./Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_Rayleigh_frag_drmin5E-3_dthetamin0.125pi_rand01/dr%02d_dtheta%02d/Sigma_dep.dat",i,j) u 1:(($4)/3.695252087458064e-05) w l lw 2 t sprintf("%02d,%02d",i,j), 1.0/(1.0 + x/1.336324e+02) lw 2
-
-### ecc = 0.03 ###
-plot for [i=1:5] for [j=1:8] sprintf("./Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc3E-2_Rayleigh_frag_drmin5E-3_dthetamin0.125pi_rand01/dr%02d_dtheta%02d/Sigma_dep.dat",i,j) u 1:(($4)/3.740592603868593e-05) w l lw 2 t sprintf("%02d,%02d",i,j), 1.0/(1.0 + x/2.966639e+01) lw 2
-
-### ecc = 0.05 ###
-plot for [i=1:5] for [j=1:8] sprintf("./Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc5E-2_Rayleigh_frag_drmin1E-3_dthetamin0.125pi_rand01/dr%02d_dtheta%02d/Sigma_dep.dat",i,j) u 1:(($4)/3.612127807372093e-05) w l lw 2 t sprintf("%02d,%02d",i,j), 1.0/(1.0 + x/1.534533e+01) lw 2
+# pause
 
 
+plot 1.0/(1.0 + x/103.4223) lw 2 lc rgb "black" t "analytic"
+# plot 1.0/(1.0 + x/103.045447809) lw 2 lc rgb "black" t "analytic"
+pause 1
+replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_frag_dr2E-3_dtheta0.125pi/rand%02d/Sigma_dep.dat",i) u 1:(($4)/4.774648292756859e-05) w l lw 2 lc rgb "orange" notitle
+pause 1
+replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_frag_dr4E-3_dtheta0.125pi/rand%02d/Sigma_dep.dat",i) u 1:(($4)/4.774648292756859e-05) w l lw 2 lc rgb "gray" notitle
+pause 1
+replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_frag_dr8E-3_dtheta0.125pi/rand%02d/Sigma_dep.dat",i) u 1:(($4)/4.774648292756859e-05) w l lw 2 lc rgb "blue" notitle
+pause 1
+replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_frag_dr2E-2_dtheta0.125pi/rand%02d/Sigma_dep.dat",i) u 1:(($4)/4.774648292756859e-05) w l lw 2 lc rgb "green" notitle
+pause 1
+replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_frag_dr4E-2_dtheta0.125pi/rand%02d/Sigma_dep.dat",i) u 1:(($4)/4.774648292756859e-05) w l lw 2 lc rgb "red" notitle
+
+# pause
 
 
-### Rayleigh & Omega Zero ###
 
-### ecc = 0.01 ###
-plot for [i=1:5] for [j=1:8] sprintf("./Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_Rayleigh_OmegaZero_frag_drmin1E-3_dthetamin0.125pi_rand01/dr%02d_dtheta%02d/Sigma_dep.dat",i,j) u 1:(($4)/3.695252087458064e-05) w l lw 2 t sprintf("%02d,%02d",i,j), 1.0/(1.0 + x/1.336324e+02) lw 2
+set key right bottom box width 0 spacing 1.0 font "Times-Roman,20"
+plot 1.0/(1.0 + x/103.4223) lw 2 lc rgb "black" t "analytic"
+# plot 1.0/(1.0 + x/103.045447809) lw 2 lc rgb "black" t "analytic"
+pause 1
+replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_OmegaZero_frag_dr4E-3_dtheta0.0625pi/rand%02d/Sigma_dep.dat",i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lc rgb "orange" notitle
+pause 1
+replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_OmegaZero_frag_dr4E-3_dtheta0.125pi/rand%02d/Sigma_dep.dat",i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lc rgb "gray" notitle
+pause 1
+replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_OmegaZero_frag_dr4E-3_dtheta0.25pi/rand%02d/Sigma_dep.dat",i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lc rgb "blue" notitle
+pause 1
+replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_OmegaZero_frag_dr4E-3_dtheta0.5pi/rand%02d/Sigma_dep.dat",i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lc rgb "green" notitle
+pause 1
+replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_OmegaZero_frag_dr4E-3_dtheta1.0pi/rand%02d/Sigma_dep.dat",i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lc rgb "red" notitle
 
-### ecc = 0.03 ###
-# plot for [i=1:5] for [j=1:8] sprintf("./Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc3E-2_Rayleigh_OmegaZero_frag_drmin1E-3_dthetamin0.125pi_rand01/dr%02d_dtheta%02d/Sigma_dep.dat",i,j) u 1:(($4)/3.740592603868593e-05) w l lw 2 t sprintf("%02d,%02d",i,j), 1.0/(1.0 + x/2.966639e+01) lw 2
-
-### ecc = 0.05 ###
-# plot for [i=1:5] for [j=1:8] sprintf("./Ntr3E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc5E-2_Rayleigh_OmegaZero_frag_drmin1E-3_dthetamin0.125pi_rand01/dr%02d_dtheta%02d/Sigma_dep.dat",i,j) u 1:(($4)/3.612127807372093e-05) w l lw 2 t sprintf("%02d,%02d",i,j), 1.0/(1.0 + x/1.534533e+01) lw 2
+# pause
 
 
-plot 1.0/(1.0 + x/85.0) lw 2 lc rgb "black"
-replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust_OmegaZero_frag_dr2E-3_dtheta0.125pi/rand%02d/Sigma_dep.dat",i) u 1:(($3)/3.000000000000000e-05) w l lw 2 lc rgb "orange" notitle
-replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust_OmegaZero_frag_dr4E-3_dtheta0.125pi/rand%02d/Sigma_dep.dat",i) u 1:(($3)/3.000000000000000e-05) w l lw 2 lc rgb "gray" notitle
-replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust_OmegaZero_frag_dr8E-3_dtheta0.125pi/rand%02d/Sigma_dep.dat",i) u 1:(($3)/3.000000000000000e-05) w l lw 2 lc rgb "blue" notitle
-replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust_OmegaZero_frag_dr2E-2_dtheta0.125pi/rand%02d/Sigma_dep.dat",i) u 1:(($3)/3.000000000000000e-05) w l lw 2 lc rgb "green" notitle
-
+plot 1.0/(1.0 + x/103.4223) lw 2 lc rgb "black" t "analytic"
+# plot 1.0/(1.0 + x/103.045447809) lw 2 lc rgb "black" t "analytic"
+pause 1
+replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_frag_dr4E-3_dtheta0.0625pi/rand%02d/Sigma_dep.dat",i) u 1:(($4)/4.774648292756859e-05) w l lw 2 lc rgb "orange" notitle
+pause 1
+replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_frag_dr4E-3_dtheta0.125pi/rand%02d/Sigma_dep.dat",i) u 1:(($4)/4.774648292756859e-05) w l lw 2 lc rgb "gray" notitle
+pause 1
+replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_frag_dr4E-3_dtheta0.25pi/rand%02d/Sigma_dep.dat",i) u 1:(($4)/4.774648292756859e-05) w l lw 2 lc rgb "blue" notitle
+pause 1
+replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_frag_dr4E-3_dtheta0.5pi/rand%02d/Sigma_dep.dat",i) u 1:(($4)/4.774648292756859e-05) w l lw 2 lc rgb "green" notitle
+pause 1
+replot for [i=1:40] sprintf("./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_frag_dr4E-3_dtheta1.0pi/rand%02d/Sigma_dep.dat",i) u 1:(($4)/4.774648292756859e-05) w l lw 2 lc rgb "red" notitle

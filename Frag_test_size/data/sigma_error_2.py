@@ -4,23 +4,26 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+def hosei(da, Beta):
+    Lambda = -2.0 * Beta - 1.5
+    return (2.0+Lambda) / (2.0-Beta) / ((1.0+0.5*da)**(2.0+Lambda) - (1.0-0.5*da)**(2.0+Lambda)) * ((1.0+0.5*da)**(2.0-Beta) - (1.0-0.5*da)**(2.0-Beta))
 
 ######################################################################
 ### ecc 1E-2 ###
-directory = "Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust_OmegaZero_frag"
-directory_list = ["_dr2E-3_dtheta0.125pi", "_dr4E-3_dtheta0.125pi", "_dr8E-3_dtheta0.125pi", "_dr2E-2_dtheta0.125pi", "_dr4E-2_dtheta0.125pi"]
+# directory = "Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_frag"
+directory = "Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_OmegaZero_frag"
 
-outputfile = directory + "_sigma_error.dat"
+# outputfile = directory + "_dtheta0.125pi_sigma_error.dat"
+# directory_list = ["_dr2E-3_dtheta0.125pi", "_dr4E-3_dtheta0.125pi", "_dr8E-3_dtheta0.125pi", "_dr2E-2_dtheta0.125pi", "_dr4E-2_dtheta0.125pi"]
+
+outputfile = directory + "_dr4E-3_sigma_error.dat"
+directory_list = ["_dr4E-3_dtheta0.0625pi", "_dr4E-3_dtheta0.125pi", "_dr4E-3_dtheta0.25pi", "_dr4E-3_dtheta0.5pi", "_dr4E-3_dtheta1.0pi"]
 
 
 LINE = 26
 
 RAND = 40
 
-N = 3500
-
-DR_MAX = 5
-DTHETA_MAX = 8
 
 with open(outputfile, mode="w") as f:
     print("#n_neighbor_mean\tn_neighbor_error\tsigma_error_mean\tsigma_error_min\tsigma_error_max", file=f)
@@ -51,9 +54,10 @@ for dirname in directory_list:
 
         ########################################
         arr3 = np.genfromtxt(directory + dirname + subdirectory + "Tau_dep.dat", dtype=np.float, delimiter="\t")
-        # print(rand, arr3.shape, arr3)
+        # print(rand, arr3.shape, arr3, hosei(0.1, 1.0), arr3 * hosei(0.1, 1.0))
 
-        sigma_error[:, rand] = abs(arr2[:, 3] / arr2[0, 3] * (1.0 + arr2[:, 0] / arr3) - 1)
+        # sigma_error[:, rand] = abs(arr2[:, 3] / arr2[0, 3] * (1.0 + arr2[:, 0] / arr3) - 1)
+        sigma_error[:, rand] = abs(arr2[:, 3] / arr2[0, 3] * (1.0 + arr2[:, 0] / (arr3 * hosei(0.1, 1.0))) - 1)
 
     # print(n_neighbor[:, 1:].mean(axis=0))
     # print(n_neighbor[:, 1:].std(axis=0, ddof=1))
