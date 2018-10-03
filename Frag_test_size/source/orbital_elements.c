@@ -57,8 +57,8 @@ void InitialOrbitalElements_Planet(int i,struct orbital_elements *ele_p){
 /*トレーサーの初期軌道要素*/
 void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements *ele_p,int tracerlist[],int *tracerlistnumber){
 
-  double orbital_r_min_center = 0.95;
-  double orbital_r_max_center = 1.05;
+  double orbital_r_min_center = 0.98;
+  double orbital_r_max_center = 1.02;
 
   //惑星の位置x_0[][4]はすでに求めてあることが前提.
 #if N_p == 3
@@ -74,6 +74,7 @@ void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements
 
   int k=0,flag=0;
   double peri=0.0,apo=0.0;
+  double radius=0.0;
 
   //fprintf(fplog,"orbital_r_min=%.15e\torbital_r_max=%.15e\n",orbital_r_min,orbital_r_max);
 
@@ -102,12 +103,13 @@ void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements
 
     //peri = ((ele_p+i)->axis)*(1.0 - (ele_p+i)->ecc);
     //apo = ((ele_p+i)->axis)*(1.0 + (ele_p+i)->ecc);
+    radius = RadiusFromCenter(i,x_0);
 
     if(((ele_p+i)->axis)>orbital_r_min && ((ele_p+i)->axis)<orbital_r_max){  //orbital_r_minからorbital_r_maxの範囲にいる場合.
 #if N_p == 0
       flag += 1;
 
-      if(((ele_p+i)->axis)>orbital_r_min_center && ((ele_p+i)->axis)<orbital_r_max_center){  //centerにいる場合.
+      if(radius>orbital_r_min_center && radius<orbital_r_max_center){  //centerにいる場合.
 	*tracerlistnumber += 1;
 	tracerlist[*tracerlistnumber] = i;
       }

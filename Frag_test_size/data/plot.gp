@@ -48,7 +48,7 @@ set key right top box width -7 spacing 1.0 font "Times-Roman,20"
 plot "Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_OmegaZero_frag_dtheta0.125pi_sigma_error.dat" u 1:3:($1-$2):($1+$2):4:5 w xyerrorbars lw 1 lt 1 t "adjust, cos term ignored",\
 "Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust_frag_dtheta0.125pi_sigma_error.dat" u 1:3:($1-$2):($1+$2):4:5 w xyerrorbars lw 1 lt 2 t "adjust"
 
-# pause
+pause
 
 
 ### dthetaを変化 ###
