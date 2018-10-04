@@ -29,7 +29,7 @@
 #endif
 
 
-#define DIRECTORY ../data/Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta0.125pi/  //ディレクトリ.
+#define DIRECTORY ../data/Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta0.125pi/  //ディレクトリ.
 // #define SUBDIRECTORY dr  //子ディレクトリ1.
 // #define SUBDIRECTORY_2 dtheta  //子ディレクトリ2.
 #define SUBDIRECTORY rand  //子ディレクトリ. rand%02d
@@ -45,9 +45,9 @@
 
 
 //////////////////////////////////////////////////
-#define N_tr 3000  //初期のトレーサーの数.
-#define N_p 0  //初期の原始惑星の数.
 #define N_c 1000  //中心のトレーサーの数. これらの質量変化を追い面密度を計算.
+#define N_tr (N_c*3)  //初期のトレーサーの数.
+#define N_p 0  //初期の原始惑星の数.
 #define ECC_RATIO 1.0  //ecc=0.01の何倍か. inc=ecc/2.
 // #define RAND_SEED 1  //乱数の種.
 #define STEP_INTERVAL 1.0E6  //何ステップごとに標準出力するか.
@@ -135,7 +135,7 @@ Mean Longitude (deg)               100.46435
 #if N_tr != 0
 //////////////////////////////////////////////////
 //#define M_TOT (3.0E-5*N_p)  //10M_E * N_p  //トレーサーの総質量.
-#define M_TOT (3.0E-5*N_tr/1000.0)  //トレーサーの総質量.
+#define M_TOT (3.0E-5*3.0)  //トレーサーの総質量.
 
 #if EJECTION
 #define PLANET_OF_EJECTION 1
@@ -160,8 +160,8 @@ Mean Longitude (deg)               100.46435
 #define Q_0_FRAG 9.5E8 // [erg/g]  Q_D = Q_0*(rho/3[g/cc])^0.55*(m/10^21[g])^p
 #define P_FRAG 0.453
 #define XI 0.01 //統計的計算のタイムステップがタイムスケールの"XI"倍.
-#define M_MAX 5.00E-15  //最大微惑星質量. 1E19 g = 10kmサイズ.
-// #define M_MAX 5.00E-18  //最大微惑星質量. 1E16 g = 1kmサイズ.
+// #define M_MAX 5.00E-15  //最大微惑星質量. 1E19 g = 10kmサイズ.
+#define M_MAX 5.00E-18  //最大微惑星質量. 1E16 g = 1kmサイズ.
 #endif
 //////////////////////////////////////////////////
 #endif  /*N_tr != 0*/
