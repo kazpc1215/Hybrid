@@ -27,11 +27,15 @@ int main(int argc, char **argv){
 
 #if EXECUTION_TIME
   //時間計測用.
-  struct timeval realtime_start,realtime_end,realtime_start_main,realtime_end_main;
-  struct rusage usage_start,usage_end,usage_start_main,usage_end_main;
+  struct timeval realtime_start_main,realtime_end_main;
+  struct rusage usage_start_main,usage_end_main;
+#if EXECUTION_TIME_FUNC
+  struct timeval realtime_start,realtime_end;
+  struct rusage usage_start,usage_end;
 #if FRAGMENTATION
   struct timeval realtime_start_2,realtime_end_2;
   struct rusage usage_start_2,usage_end_2;
+#endif
 #endif
 
   gettimeofday(&realtime_start_main,NULL);
@@ -630,7 +634,7 @@ int main(int argc, char **argv){
 
 #if ORBITALELEMENTS_FILE
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
     gettimeofday(&realtime_start,NULL);
     getrusage(RUSAGE_SELF,&usage_start);
 #endif
@@ -696,7 +700,7 @@ int main(int argc, char **argv){
 
     fclose(fprms);
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
     gettimeofday(&realtime_end,NULL);
     getrusage(RUSAGE_SELF,&usage_end);
     exetime.Orbital_Elements[0] += Cal_time(realtime_start,realtime_end);
@@ -713,7 +717,7 @@ int main(int argc, char **argv){
     CenterOfGravity(x_0,v_0,x_G,v_G,ele);  //重心計算.
 #endif
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
     gettimeofday(&realtime_start,NULL);
     getrusage(RUSAGE_SELF,&usage_start);
 #endif
@@ -746,7 +750,7 @@ int main(int argc, char **argv){
     //角運動量の大きさ計算.
     abs_L_0 = 0.0;
     abs_L_0 = AngularMomentum(i,ele,x_0,v_0);
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
     gettimeofday(&realtime_end,NULL);
     getrusage(RUSAGE_SELF,&usage_end);
     exetime.Energy[0] += Cal_time(realtime_start,realtime_end);
@@ -761,7 +765,7 @@ int main(int argc, char **argv){
 
 #if FRAGMENTATION
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
     gettimeofday(&realtime_start,NULL);
     getrusage(RUSAGE_SELF,&usage_start);
 #endif
@@ -855,7 +859,7 @@ int main(int argc, char **argv){
     fclose(fpposimass);
 
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
     gettimeofday(&realtime_end,NULL);
     getrusage(RUSAGE_SELF,&usage_end);
     exetime.Fragmentation[0] += Cal_time(realtime_start,realtime_end);
@@ -957,14 +961,14 @@ int main(int argc, char **argv){
 
   ////////////////////////////ここまでですべてのファイルを上書きオープン/////////////////////////
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
   gettimeofday(&realtime_start,NULL);
   getrusage(RUSAGE_SELF,&usage_start);
 #endif
   for(i=global_n_p+1;i<=global_n;++i){
     Calculate_OrbitalElements(i,x_0,v_0,ele,r_0,v2_0,r_dot_v);
   }
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
   gettimeofday(&realtime_end,NULL);
   getrusage(RUSAGE_SELF,&usage_end);
   exetime.Orbital_Elements[0] += Cal_time(realtime_start,realtime_end);
@@ -1011,7 +1015,7 @@ int main(int argc, char **argv){
 
       //individual timestep
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
       gettimeofday(&realtime_start,NULL);
       getrusage(RUSAGE_SELF,&usage_start);
 #endif
@@ -1020,7 +1024,7 @@ int main(int argc, char **argv){
 	Dt[i] = t_sys - t_[i];
 	Predictor(i,x_0,v_0,a_0,adot_0,x_p,v_p,r_p,v2_p,r_dot_v,Dt);  //予測子 t_sysにおけるすべての粒子を計算.
       }
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
       gettimeofday(&realtime_end,NULL);
       getrusage(RUSAGE_SELF,&usage_end);
       exetime.Predictor[0] += Cal_time(realtime_start,realtime_end);
@@ -1055,14 +1059,14 @@ int main(int argc, char **argv){
 
 
 	//t_sysで揃えるためDt[i]を使う.
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
 	gettimeofday(&realtime_start,NULL);
 	getrusage(RUSAGE_SELF,&usage_start);
 #endif
 	for(i=1;i<=global_n;++i){
 	  Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,r_dot_v,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,Dt);  //修正子 すべての粒子.
 	}
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
 	gettimeofday(&realtime_end,NULL);
 	getrusage(RUSAGE_SELF,&usage_end);
 	exetime.Corrector[0] += Cal_time(realtime_start,realtime_end);
@@ -1071,7 +1075,7 @@ int main(int argc, char **argv){
 #endif
 
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
 	gettimeofday(&realtime_start,NULL);
 	getrusage(RUSAGE_SELF,&usage_start);
 #endif
@@ -1080,7 +1084,7 @@ int main(int argc, char **argv){
 	    Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,r_dot_v,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,Dt);  //すべての粒子.
 	  }
 	}
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
 	gettimeofday(&realtime_end,NULL);
 	getrusage(RUSAGE_SELF,&usage_end);
 	exetime.Iteration[0] += Cal_time(realtime_start,realtime_end);
@@ -1105,13 +1109,13 @@ int main(int argc, char **argv){
 	}
 
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
 	gettimeofday(&realtime_start,NULL);
 	getrusage(RUSAGE_SELF,&usage_start);
 #endif
 	//衝突合体する際のエネルギーの補正量を計算
 	Energy_Correction(i_col,j_col,x_0,v_0,ele,&dE_heat,&dE_grav,&dE_c,&v_imp);
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
 	gettimeofday(&realtime_end,NULL);
 	getrusage(RUSAGE_SELF,&usage_end);
 	exetime.Energy[0] += Cal_time(realtime_start,realtime_end);
@@ -1199,14 +1203,14 @@ int main(int argc, char **argv){
 	  r_dot_v[i] = InnerProduct(i,x_0,v_0);  //r_i,v_iの内積.
 	}
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
 	gettimeofday(&realtime_start,NULL);
 	getrusage(RUSAGE_SELF,&usage_start);
 #endif
 	for(i=1;i<=global_n;++i){
 	  Calculate_OrbitalElements(i,x_0,v_0,ele,r_0,v2_0,r_dot_v);
 	}
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
 	gettimeofday(&realtime_end,NULL);
 	getrusage(RUSAGE_SELF,&usage_end);
 	exetime.Orbital_Elements[0] += Cal_time(realtime_start,realtime_end);
@@ -1222,7 +1226,7 @@ int main(int argc, char **argv){
 	//fprintf(fplog,"x_G=%.15e\ty_G=%.15e\tz_G=%.15e\tvx_G=%.15e\tvy_G=%.15e\tvz_G=%.15e\n",x_G[1],x_G[2],x_G[3],v_G[1],v_G[2],v_G[3]);
 #endif
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
 	gettimeofday(&realtime_start,NULL);
 	getrusage(RUSAGE_SELF,&usage_start);
 #endif
@@ -1263,7 +1267,7 @@ int main(int argc, char **argv){
 
 	abs_L = AngularMomentum(i,ele,x_0,v_0);
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
 	gettimeofday(&realtime_end,NULL);
 	getrusage(RUSAGE_SELF,&usage_end);
 	exetime.Energy[0] += Cal_time(realtime_start,realtime_end);
@@ -1306,7 +1310,7 @@ int main(int argc, char **argv){
       }else{
 
 	/////////////////////////衝突しない場合/////////////////////////
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
 	gettimeofday(&realtime_start,NULL);
 	getrusage(RUSAGE_SELF,&usage_start);
 #endif
@@ -1326,7 +1330,7 @@ int main(int argc, char **argv){
 	}
 
 	Corrector_sys(i_sys,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,r_dot_v,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,dt_);  //修正子. i_sys のみ.
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
 	gettimeofday(&realtime_end,NULL);
 	getrusage(RUSAGE_SELF,&usage_end);
 	exetime.Corrector[0] += Cal_time(realtime_start,realtime_end);
@@ -1335,14 +1339,14 @@ int main(int argc, char **argv){
 #endif
 
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
 	gettimeofday(&realtime_start,NULL);
 	getrusage(RUSAGE_SELF,&usage_start);
 #endif
 	for(ite=1;ite<=ITE_MAX;++ite){  //iteration.
 	  Iteration_sys(i_sys,ele,x_p,v_p,x_c,v_c,r_c,v2_c,r_dot_v,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,dt_);  //i_sysのみ.
 	}
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
 	gettimeofday(&realtime_end,NULL);
 	getrusage(RUSAGE_SELF,&usage_end);
 	exetime.Iteration[0] += Cal_time(realtime_start,realtime_end);
@@ -1370,14 +1374,14 @@ int main(int argc, char **argv){
       t_sys = 0.0;
 
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
       gettimeofday(&realtime_start,NULL);
       getrusage(RUSAGE_SELF,&usage_start);
 #endif
       for(i=1;i<=global_n;++i){
 	Predictor(i,x_0,v_0,a_0,adot_0,x_p,v_p,r_p,v2_p,r_dot_v,Dt);  //予測子. t_eneにおけるすべての粒子を計算.
       }
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
       gettimeofday(&realtime_end,NULL);
       getrusage(RUSAGE_SELF,&usage_end);
       exetime.Predictor[0] += Cal_time(realtime_start,realtime_end);
@@ -1386,14 +1390,14 @@ int main(int argc, char **argv){
 #endif
 
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
       gettimeofday(&realtime_start,NULL);
       getrusage(RUSAGE_SELF,&usage_start);
 #endif
       for(i=1;i<=global_n;++i){
 	Corrector_sys(i,ele,x_p,v_p,r_p,x_c,v_c,r_c,v2_c,r_dot_v,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,dt_);
       }
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
       gettimeofday(&realtime_end,NULL);
       getrusage(RUSAGE_SELF,&usage_end);
       exetime.Corrector[0] += Cal_time(realtime_start,realtime_end);
@@ -1402,7 +1406,7 @@ int main(int argc, char **argv){
 #endif
 
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
       gettimeofday(&realtime_start,NULL);
       getrusage(RUSAGE_SELF,&usage_start);
 #endif
@@ -1411,7 +1415,7 @@ int main(int argc, char **argv){
 	  Iteration_sys(i,ele,x_p,v_p,x_c,v_c,r_c,v2_c,r_dot_v,a_0,adot_0,a,adot,adot2_dt2,adot3_dt3,dt_);
 	}
       }
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
       gettimeofday(&realtime_end,NULL);
       getrusage(RUSAGE_SELF,&usage_end);
       exetime.Iteration[0] += Cal_time(realtime_start,realtime_end);
@@ -1454,7 +1458,7 @@ int main(int argc, char **argv){
       CenterOfGravity(x_c,v_c,x_G,v_G,ele);  //重心計算
 #endif
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
       gettimeofday(&realtime_start,NULL);
       getrusage(RUSAGE_SELF,&usage_start);
 #endif
@@ -1485,7 +1489,7 @@ int main(int argc, char **argv){
       fclose(fpEne);
 
       abs_L = AngularMomentum(i,ele,x_c,v_c);
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
       gettimeofday(&realtime_end,NULL);
       getrusage(RUSAGE_SELF,&usage_end);
       exetime.Energy[0] += Cal_time(realtime_start,realtime_end);
@@ -1498,7 +1502,7 @@ int main(int argc, char **argv){
 
 #if ORBITALELEMENTS_FILE
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
       gettimeofday(&realtime_start,NULL);
       getrusage(RUSAGE_SELF,&usage_start);
 #endif
@@ -1554,7 +1558,7 @@ int main(int argc, char **argv){
 
       fclose(fprms);
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
       gettimeofday(&realtime_end,NULL);
       getrusage(RUSAGE_SELF,&usage_end);
       exetime.Orbital_Elements[0] += Cal_time(realtime_start,realtime_end);
@@ -1668,7 +1672,7 @@ int main(int argc, char **argv){
 
 #if FRAGMENTATION
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
     gettimeofday(&realtime_start,NULL);
     getrusage(RUSAGE_SELF,&usage_start);
 #endif
@@ -1681,12 +1685,12 @@ int main(int argc, char **argv){
 	frag[i].fragtimes++;
 
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
 	gettimeofday(&realtime_start_2,NULL);
 	getrusage(RUSAGE_SELF,&usage_start_2);
 #endif
 	Calculate_OrbitalElements(i,x_c,v_c,ele,r_c,v2_c,r_dot_v);  //軌道要素計算.
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
 	gettimeofday(&realtime_end_2,NULL);
 	getrusage(RUSAGE_SELF,&usage_end_2);
 	exetime.Energy[0] += Cal_time(realtime_start_2,realtime_end_2);
@@ -1809,7 +1813,7 @@ int main(int argc, char **argv){
       t_fragcheck *= sqrt(sqrt(sqrt(10.0)));  //logでは10を8分割.
     }
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
     gettimeofday(&realtime_end,NULL);
     getrusage(RUSAGE_SELF,&usage_end);
     exetime.Fragmentation[0] += Cal_time(realtime_start,realtime_end);

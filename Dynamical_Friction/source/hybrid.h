@@ -30,7 +30,7 @@
 
 
 //#define DIRECTORY ../data/test/  //ディレクトリ.
-#define DIRECTORY ../data/Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc5E-2_frag_acc/  //ディレクトリ.
+#define DIRECTORY ../data/Ntr1E2_t1E8_dtlog_Mtot3E-7_Mmax5E-15_ecc1E-2_nofrag_acc/  //ディレクトリ.
 #define SUBDIRECTORY rand  //子ディレクトリ. rand%02d
 
 #define STR_(str) #str
@@ -44,15 +44,15 @@
 
 
 //////////////////////////////////////////////////
-#define N_tr 3000  //初期のトレーサーの数.
-#define N_p 3  //初期の原始惑星の数.
-#define ECC_RATIO 5.0  //ecc=0.01の何倍か. inc=ecc/2.
+#define N_tr 100  //初期のトレーサーの数.
+#define N_p 1  //初期の原始惑星の数.
+#define ECC_RATIO 1.0  //ecc=0.01の何倍か. inc=ecc/2.
 //#define RAND_SEED 1  //乱数の種.
-#define STEP_INTERVAL 1.0E6  //何ステップごとに標準出力するか.
-#define BREAK_TIME 14100.0  //4h = 14400sec, 12h = 43200sec.
-//#define BREAK_TIME 42900.0  //4h = 14400sec, 12h = 43200sec.
+#define STEP_INTERVAL 1.0E7  //何ステップごとに標準出力するか.
+//#define BREAK_TIME 14100.0  //4h = 14400sec, 12h = 43200sec.
+#define BREAK_TIME 42900.0  //4h = 14400sec, 12h = 43200sec.
 
-#define FRAGMENTATION true  //破壊 近傍粒子探索と質量フラックス計算.  <--
+#define FRAGMENTATION false  //破壊 近傍粒子探索と質量フラックス計算.  <--
 #define COLLISION true  //衝突.
 #if COLLISION
 #define COALESCENCE true  //衝突後に合体.  <--どっちか.
@@ -73,7 +73,8 @@ EXTERN FILE *fplog;
 #define POSI_VELO_FILE false  //位置速度ファイル作成.
 #define POSI_VELO_ROT_FILE false  //回転座標系の位置速度ファイル作成.
 #define COLLISION_FILE true  //衝突直前の位置速度ファイル作成.
-#define EXECUTION_TIME true  //実行時間測定.
+#define EXECUTION_TIME true  //mainの実行時間測定.
+#define EXECUTION_TIME_FUNC false  //mainかつ関数ごとの実行時間測定.
 #if EXECUTION_TIME
 #include <sys/time.h>
 #include <sys/resource.h>
@@ -96,7 +97,7 @@ EXTERN FILE *fplog;
 //#define G 1.0  //重力定数.
 //#define M_0 1.0  //主星の質量.
 //#define EPSILON 0.0  //ソフトニングパラメーター.
-#define ETA 1.0E-2  //刻み幅調整.
+#define ETA 5.0E-2  //刻み幅調整.
 #define ITE_MAX 2  //イテレーション回数（修正子計算の回数はITE_MAX+1）.
 //////////////////////////////////////////////////
 
@@ -130,7 +131,7 @@ Mean Longitude (deg)               100.46435
 
 #if N_tr != 0
 //////////////////////////////////////////////////
-#define M_TOT (3.0E-5*N_p)  //10M_E * N_p  //トレーサーの総質量.
+#define M_TOT (3.0E-7*N_p)  //0.1M_E * N_p  //トレーサーの総質量.
 
 #if EJECTION
 #define PLANET_OF_EJECTION 1
@@ -155,15 +156,15 @@ Mean Longitude (deg)               100.46435
 #define Q_0_FRAG 9.5E8 // [erg/g]  Q_D = Q_0*(rho/3[g/cc])^0.55*(m/10^21[g])^p
 #define P_FRAG 0.453
 #define XI 0.01 //統計的計算のタイムステップがタイムスケールの"XI"倍.
-//#define M_MAX 5.00E-15  //最大微惑星質量. 1E19 g = 10kmサイズ.
-#define M_MAX 5.00E-18  //最大微惑星質量. 1E16 g = 1kmサイズ.
+#define M_MAX 5.00E-15  //最大微惑星質量. 1E19 g = 10kmサイズ.
+//#define M_MAX 5.00E-18  //最大微惑星質量. 1E16 g = 1kmサイズ.
 #endif
 //////////////////////////////////////////////////
 #endif  /*N_tr != 0*/
 
 
 //////////////////////////////////////////////////
-#define T_MAX (2.0*M_PI*1.0E3)  //1000yr 全計算時間.
+#define T_MAX (2.0*M_PI*1.0E8)  //10^8yr 全計算時間.
 #define DT_LOG true  //true: t_eneをlogでとる. false: t_eneをlinearでとる.
 
 /* linear では 初項 DT_ENE，公差 DT_ENE の等差数列 */

@@ -6,7 +6,7 @@
 bool Collision_Judgement(int i_sys,CONST struct orbital_elements *ele_p,CONST double x_p[][4],double abs_r[],int *i_col,int *j_col){
 
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
   struct timeval realtime_start,realtime_end;
   struct rusage usage_start,usage_end;
   gettimeofday(&realtime_start,NULL);
@@ -23,7 +23,7 @@ bool Collision_Judgement(int i_sys,CONST struct orbital_elements *ele_p,CONST do
 	(*i_col) = Min_int(i_sys,j);
 	(*j_col) = Max_int(i_sys,j);
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
 	gettimeofday(&realtime_end,NULL);
 	getrusage(RUSAGE_SELF,&usage_end);
 	exetime.Collision_Judgement[0] += Cal_time(realtime_start,realtime_end);
@@ -37,7 +37,7 @@ bool Collision_Judgement(int i_sys,CONST struct orbital_elements *ele_p,CONST do
   }
 
 
-#if EXECUTION_TIME
+#if EXECUTION_TIME && EXECUTION_TIME_FUNC
   gettimeofday(&realtime_end,NULL);
   getrusage(RUSAGE_SELF,&usage_end);
   exetime.Collision_Judgement[0] += Cal_time(realtime_start,realtime_end);
