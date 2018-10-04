@@ -29,7 +29,7 @@
 #endif
 
 
-#define DIRECTORY ../data/Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust_frag_dr2E-3_dtheta0.125pi/  //ディレクトリ.
+#define DIRECTORY ../data/Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-15_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta0.125pi/  //ディレクトリ.
 // #define SUBDIRECTORY dr  //子ディレクトリ1.
 // #define SUBDIRECTORY_2 dtheta  //子ディレクトリ2.
 #define SUBDIRECTORY rand  //子ディレクトリ. rand%02d
@@ -45,7 +45,7 @@
 
 
 //////////////////////////////////////////////////
-#define N_tr 6000  //初期のトレーサーの数.
+#define N_tr 3000  //初期のトレーサーの数.
 #define N_p 0  //初期の原始惑星の数.
 #define N_c 1000  //中心のトレーサーの数. これらの質量変化を追い面密度を計算.
 #define ECC_RATIO 1.0  //ecc=0.01の何倍か. inc=ecc/2.
@@ -62,7 +62,7 @@
 #endif
 
 #define RAYLEIGH_DISTRIBUTION false  //離心率や軌道傾斜角の分布 true : Rayleigh, false : v_relが軌道長半径によらず一定.
-#define OMEGA_EQUAL_ZERO false  //相対速度計算で近点経度の差を0にセット.
+#define OMEGA_EQUAL_ZERO true  //相対速度計算で近点経度の差を0にセット.
 
 EXTERN int global_n;  //グローバル変数.
 EXTERN int global_n_p;
@@ -150,9 +150,9 @@ Mean Longitude (deg)               100.46435
 #endif
 
 #if FRAGMENTATION
-#define DELTA_R 0.002  //Hill 近傍粒子探索用.
+#define DELTA_R 0.01  //Hill 近傍粒子探索用.
 #define DELTA_THETA 0.125*M_PI  //近傍粒子探索用. pi/8
-#define NEIGHBOR_MAX 200  //近傍粒子リスト配列の最大値.
+#define NEIGHBOR_MAX N_c  //近傍粒子リスト配列の最大値.
 #define DEPLETION_TIME_EXPLICIT false  //true: 質量減少タイムスケールの計算でexplicit *(1-XI)を使う. false: implicit /(1+XI)を使う.
 #define RHO 3.0  // [g/cc]  微惑星の物質密度.
 #define EPSILON_FRAG 0.2

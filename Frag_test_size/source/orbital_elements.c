@@ -57,8 +57,8 @@ void InitialOrbitalElements_Planet(int i,struct orbital_elements *ele_p){
 /*トレーサーの初期軌道要素*/
 void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements *ele_p,int tracerlist[],int *tracerlistnumber){
 
-  double orbital_r_min_center = 0.98;
-  double orbital_r_max_center = 1.02;
+  double orbital_r_min_center = 0.95;
+  double orbital_r_max_center = 1.05;
 
   //惑星の位置x_0[][4]はすでに求めてあることが前提.
 #if N_p == 3
@@ -84,8 +84,8 @@ void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements
   do{
     flag = 0;
 
-    //(ele_p+i)->axis = rand_func()*(orbital_r_max - orbital_r_min) + orbital_r_min;  //惑星1より内側に相互(0.5*DELTA_HILL)ヒルの位置 から 惑星3より外側に相互(0.5*DELTA_HILL)ヒルの位置 に分布.
-    (ele_p+i)->axis = pow((pow(orbital_r_max,-1.5) - pow(orbital_r_min,-1.5)) * rand_func() + pow(orbital_r_min,-1.5), -2.0/3.0);  //x^{5/2} べき分布.
+    (ele_p+i)->axis = rand_func()*(orbital_r_max - orbital_r_min) + orbital_r_min;  //面密度がa^{-1}に比例する分布. ==> 面数密度が一様.
+    // (ele_p+i)->axis = pow((pow(orbital_r_max,-1.5) - pow(orbital_r_min,-1.5)) * rand_func() + pow(orbital_r_min,-1.5), -2.0/3.0);  //x^{5/2} べき分布.
 #if RAYLEIGH_DISTRIBUTION
     (ele_p+i)->ecc = sqrt(-log(rand_func()))*ECC_RMS;  //離心率.  //Rayleigh分布.
     (ele_p+i)->inc = sqrt(-log(rand_func()))*INC_RMS;  //軌道傾斜角.  //Rayleigh分布.
@@ -105,7 +105,7 @@ void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements
     //apo = ((ele_p+i)->axis)*(1.0 + (ele_p+i)->ecc);
     radius = RadiusFromCenter(i,x_0);
 
-    if(((ele_p+i)->axis)>orbital_r_min && ((ele_p+i)->axis)<orbital_r_max){  //orbital_r_minからorbital_r_maxの範囲にいる場合.
+    if(radius>orbital_r_min && radius<orbital_r_max){  //orbital_r_minからorbital_r_maxの範囲にいる場合.
 #if N_p == 0
       flag += 1;
 
