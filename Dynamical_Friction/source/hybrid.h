@@ -29,7 +29,7 @@
 #endif
 
 
-#define DIRECTORY ../data/Ntr1E2_t1E8_dtlog_Mtot3E-7_Mmax5E-15_ecc5E-2_frag_acc/  //ディレクトリ.
+#define DIRECTORY ../data/Ntr1E2_t1E8_dtlog_Mtot3E-7_Mmax5E-15_ecc1E-2_nofrag_acc/  //ディレクトリ.
 #define SUBDIRECTORY rand  //子ディレクトリ. rand%02d
 
 #define STR_(str) #str
@@ -45,13 +45,13 @@
 //////////////////////////////////////////////////
 #define N_tr 100  //初期のトレーサーの数.
 #define N_p 1  //初期の原始惑星の数.
-#define ECC_RATIO 5.0  //ecc=0.01の何倍か. inc=ecc/2.
+#define ECC_RATIO 1.0  //ecc=0.01の何倍か. inc=ecc/2.
 //#define RAND_SEED 1  //乱数の種.
 #define STEP_INTERVAL 1.0E7  //何ステップごとに標準出力するか.
 #define BREAK_TIME 14100.0  //4h = 14400sec, 12h = 43200sec.
 //#define BREAK_TIME 42900.0  //4h = 14400sec, 12h = 43200sec.
 
-#define FRAGMENTATION true  //破壊 近傍粒子探索と質量フラックス計算.  <--
+#define FRAGMENTATION false  //破壊 近傍粒子探索と質量フラックス計算.  <--
 #define COLLISION true  //衝突.
 #if COLLISION
 #define COALESCENCE true  //衝突後に合体.  <--どっちか.
@@ -88,7 +88,7 @@ EXTERN FILE *fplog;
 #define INDIRECT_TERM true  //中心星が動く効果を補正.
 #define EJECTION false  //初期に破片（トレーサー）を放出する.
 #define ORBITING_SMALL_PARTICLE true  //初期に微惑星をケプラー運動させておく.
-#define ELIMINATE_PARTICLE false  //太陽に飲みこまれるか系外へ出て行くかで粒子を消す.
+#define ELIMINATE_PARTICLE true  //太陽に飲みこまれるか系外へ出て行くかで粒子を消す.
 //////////////////////////////////////////////////
 
 
@@ -96,7 +96,7 @@ EXTERN FILE *fplog;
 //#define G 1.0  //重力定数.
 //#define M_0 1.0  //主星の質量.
 //#define EPSILON 0.0  //ソフトニングパラメーター.
-#define ETA 5.0E-2  //刻み幅調整.
+#define ETA 3.0E-2  //刻み幅調整.
 #define ITE_MAX 2  //イテレーション回数（修正子計算の回数はITE_MAX+1）.
 //////////////////////////////////////////////////
 
@@ -148,6 +148,9 @@ Mean Longitude (deg)               100.46435
 #define DELTA_R 0.010  //Hill 近傍粒子探索用.
 #define DELTA_THETA 1.0*M_PI  //近傍粒子探索用.
 #define NEIGHBOR_MAX 200  //近傍粒子リスト配列の最大値.
+/* t_fragcheck = 初項 DT_FRAGCHECK，公比 GEOMETRIC_RATIO_FRAG の等比数列 */
+#define DT_FRAGCHECK 2.0*M_PI*0.1  //0.1yr
+#define GEOMETRIC_RATIO_FRAG pow(10.0,1.0/8.0) //10**(1/8)
 #define DEPLETION_TIME_EXPLICIT false  //true: 質量減少タイムスケールの計算でexplicit *(1-XI)を使う. false: implicit /(1+XI)を使う.
 #define RHO 3.0  // [g/cc]  微惑星の物質密度.
 #define EPSILON_FRAG 0.2
@@ -171,7 +174,8 @@ Mean Longitude (deg)               100.46435
 
 #if DT_LOG
 /* log では 初項 DT_ENE，公比 GEOMETRIC_RATIO の等比数列 */
-#define GEOMETRIC_RATIO (sqrt(sqrt(sqrt(10.0)))) //10**(1/8)
+#define GEOMETRIC_RATIO pow(10.0,1.0/8.0) //10**(1/8)
+#define GEOMETRIC_RATIO_LONGTERM pow(10.0,1.0/128) //10**(1/128) 10^6yrを超える時用.
 #endif
 //////////////////////////////////////////////////
 

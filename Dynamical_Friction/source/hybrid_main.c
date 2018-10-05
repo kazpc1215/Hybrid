@@ -74,7 +74,7 @@ int main(int argc, char **argv){
 #if FRAGMENTATION
   static struct fragmentation frag[N_p+N_tr+1]={};
   int n_fragcheck=0,n_center=0;
-  double t_fragcheck=2.0*M_PI*0.1;
+  double t_fragcheck=DT_FRAGCHECK;
   double sigma_center=0.0,flux_center=0.0,v_ave=0.0,tau_dep_center=0.0;
   double orbital_r_min=0.0,orbital_r_max=0.0;
   double mass_tot_all=0.0,mass_tot_center=0.0;
@@ -1662,7 +1662,11 @@ int main(int argc, char **argv){
 
 
 #if DT_LOG
-      t_ene *= GEOMETRIC_RATIO;
+      if(t_ene<2.0*M_PI*1.0E6){
+	t_ene *= GEOMETRIC_RATIO;
+      }else{
+	t_ene *= GEOMETRIC_RATIO_LONGTERM;
+      }
 #else
       t_ene += DT_ENE;
 #endif
@@ -1810,7 +1814,7 @@ int main(int argc, char **argv){
       fclose(fpposimass);
 
 
-      t_fragcheck *= sqrt(sqrt(sqrt(10.0)));  //logでは10を8分割.
+      t_fragcheck *= GEOMETRIC_RATIO_FRAG;
     }
 
 #if EXECUTION_TIME && EXECUTION_TIME_FUNC
@@ -1879,61 +1883,97 @@ int main(int argc, char **argv){
 	       (t_sys+t_tmp)/2.0/M_PI
 	       );
 
-	//iとglobal_n_pを入れ替える.
-	ele[0] = ele[i];  //構造体のためSwap_double関数は使えない. 0番目の要素はコピーに使うだけ.
-	ele[i] = ele[global_n_p];
-	ele[global_n_p] = ele[0];
+	if(i<=global_n_p){
 
-	Swap_double(&t_[i],&t_[global_n_p]);
-	Swap_double(&dt_[i],&dt_[global_n_p]);
+	  //惑星を消す.
+	  //iとglobal_n_pを入れ替える.
+	  ele[0] = ele[i];  //構造体のためSwap_double関数は使えない. 0番目の要素はコピーに使うだけ.
+	  ele[i] = ele[global_n_p];
+	  ele[global_n_p] = ele[0];
 
-	for(k=1;k<=3;++k){
-	  Swap_double(&x_0[i][k],&x_0[global_n_p][k]);
-	  Swap_double(&x_c[i][k],&x_c[global_n_p][k]);
+	  Swap_double(&t_[i],&t_[global_n_p]);
+	  Swap_double(&dt_[i],&dt_[global_n_p]);
 
-	  Swap_double(&v_0[i][k],&v_0[global_n_p][k]);
-	  Swap_double(&v_c[i][k],&v_c[global_n_p][k]);
+	  for(k=1;k<=3;++k){
+	    Swap_double(&x_0[i][k],&x_0[global_n_p][k]);
+	    Swap_double(&x_c[i][k],&x_c[global_n_p][k]);
 
-	  Swap_double(&a_0[i][k],&a_0[global_n_p][k]);
-	  Swap_double(&a[i][k],&a[global_n_p][k]);
+	    Swap_double(&v_0[i][k],&v_0[global_n_p][k]);
+	    Swap_double(&v_c[i][k],&v_c[global_n_p][k]);
 
-	  Swap_double(&adot_0[i][k],&adot_0[global_n_p][k]);
-	  Swap_double(&adot[i][k],&adot[global_n_p][k]);
+	    Swap_double(&a_0[i][k],&a_0[global_n_p][k]);
+	    Swap_double(&a[i][k],&a[global_n_p][k]);
 
-	  Swap_double(&adot2_dt2[i][k],&adot2_dt2[global_n_p][k]);
-	  Swap_double(&adot3_dt3[i][k],&adot3_dt3[global_n_p][k]);
-	}
+	    Swap_double(&adot_0[i][k],&adot_0[global_n_p][k]);
+	    Swap_double(&adot[i][k],&adot[global_n_p][k]);
+
+	    Swap_double(&adot2_dt2[i][k],&adot2_dt2[global_n_p][k]);
+	    Swap_double(&adot3_dt3[i][k],&adot3_dt3[global_n_p][k]);
+	  }
 
 #if N_tr != 0
-	//global_n_pとglobal_nを入れ替える.
-	ele[0] = ele[global_n_p];  //構造体のためSwap_doubleは使えない. 0番目の要素はコピーに使うだけ.
-	ele[global_n_p] = ele[global_n];
-	ele[global_n] = ele[0];
+	  //global_n_pとglobal_nを入れ替える.
+	  ele[0] = ele[global_n_p];  //構造体のためSwap_doubleは使えない. 0番目の要素はコピーに使うだけ.
+	  ele[global_n_p] = ele[global_n];
+	  ele[global_n] = ele[0];
 
-	Swap_double(&t_[global_n_p],&t_[global_n]);
-	Swap_double(&dt_[global_n_p],&dt_[global_n]);
+	  Swap_double(&t_[global_n_p],&t_[global_n]);
+	  Swap_double(&dt_[global_n_p],&dt_[global_n]);
 
-	for(k=1;k<=3;++k){
-	  Swap_double(&x_0[global_n_p][k],&x_0[global_n][k]);
-	  Swap_double(&x_c[global_n_p][k],&x_c[global_n][k]);
+	  for(k=1;k<=3;++k){
+	    Swap_double(&x_0[global_n_p][k],&x_0[global_n][k]);
+	    Swap_double(&x_c[global_n_p][k],&x_c[global_n][k]);
 
-	  Swap_double(&v_0[global_n_p][k],&v_0[global_n][k]);
-	  Swap_double(&v_c[global_n_p][k],&v_c[global_n][k]);
+	    Swap_double(&v_0[global_n_p][k],&v_0[global_n][k]);
+	    Swap_double(&v_c[global_n_p][k],&v_c[global_n][k]);
 
-	  Swap_double(&a_0[global_n_p][k],&a_0[global_n][k]);
-	  Swap_double(&a[global_n_p][k],&a[global_n][k]);
+	    Swap_double(&a_0[global_n_p][k],&a_0[global_n][k]);
+	    Swap_double(&a[global_n_p][k],&a[global_n][k]);
 
-	  Swap_double(&adot_0[global_n_p][k],&adot_0[global_n][k]);
-	  Swap_double(&adot[global_n_p][k],&adot[global_n][k]);
+	    Swap_double(&adot_0[global_n_p][k],&adot_0[global_n][k]);
+	    Swap_double(&adot[global_n_p][k],&adot[global_n][k]);
 
-	  Swap_double(&adot2_dt2[global_n_p][k],&adot2_dt2[global_n][k]);
-	  Swap_double(&adot3_dt3[global_n_p][k],&adot3_dt3[global_n][k]);
-	}
+	    Swap_double(&adot2_dt2[global_n_p][k],&adot2_dt2[global_n][k]);
+	    Swap_double(&adot3_dt3[global_n_p][k],&adot3_dt3[global_n][k]);
+	  }
 #endif
 
-	//global_n_pを1つ減らす.
-	global_n_p--;
-	global_n = global_n_p + N_tr;
+	  //global_n_pを1つ減らす.
+	  global_n_p--;
+	  global_n--;
+
+	}else if(i>global_n_p){
+
+	  //微惑星を消す.
+	  //iとglobal_nを入れ替える.
+	  ele[0] = ele[i];  //構造体のためSwap_double関数は使えない. 0番目の要素はコピーに使うだけ.
+	  ele[i] = ele[global_n];
+	  ele[global_n] = ele[0];
+
+	  Swap_double(&t_[i],&t_[global_n]);
+	  Swap_double(&dt_[i],&dt_[global_n]);
+
+	  for(k=1;k<=3;++k){
+	    Swap_double(&x_0[i][k],&x_0[global_n][k]);
+	    Swap_double(&x_c[i][k],&x_c[global_n][k]);
+
+	    Swap_double(&v_0[i][k],&v_0[global_n][k]);
+	    Swap_double(&v_c[i][k],&v_c[global_n][k]);
+
+	    Swap_double(&a_0[i][k],&a_0[global_n][k]);
+	    Swap_double(&a[i][k],&a[global_n][k]);
+
+	    Swap_double(&adot_0[i][k],&adot_0[global_n][k]);
+	    Swap_double(&adot[i][k],&adot[global_n][k]);
+
+	    Swap_double(&adot2_dt2[i][k],&adot2_dt2[global_n][k]);
+	    Swap_double(&adot3_dt3[i][k],&adot3_dt3[global_n][k]);
+	  }
+
+	  //global_nを1つ減らす.
+	  global_n--;
+
+	}
       }
     }
 #endif
