@@ -29,7 +29,7 @@
 #endif
 
 
-#define DIRECTORY ../data/Ntr1E2_t1E8_dtlog_Mtot3E-7_Mmax5E-15_ecc1E-2_nofrag_acc/  //ディレクトリ.
+#define DIRECTORY ../data/Ntr1E2_t1E8_dtlog_Mtot3E-7_Mmax5E-15_ecc5E-2_frag_acc/  //ディレクトリ.
 #define SUBDIRECTORY rand  //子ディレクトリ. rand%02d
 
 #define STR_(str) #str
@@ -45,13 +45,13 @@
 //////////////////////////////////////////////////
 #define N_tr 100  //初期のトレーサーの数.
 #define N_p 1  //初期の原始惑星の数.
-#define ECC_RATIO 1.0  //ecc=0.01の何倍か. inc=ecc/2.
+#define ECC_RATIO 5.0  //ecc=0.01の何倍か. inc=ecc/2.
 //#define RAND_SEED 1  //乱数の種.
 #define STEP_INTERVAL 1.0E7  //何ステップごとに標準出力するか.
 #define BREAK_TIME 14100.0  //4h = 14400sec, 12h = 43200sec.
 //#define BREAK_TIME 42900.0  //4h = 14400sec, 12h = 43200sec.
 
-#define FRAGMENTATION false  //破壊 近傍粒子探索と質量フラックス計算.  <--
+#define FRAGMENTATION true  //破壊 近傍粒子探索と質量フラックス計算.  <--
 #define COLLISION true  //衝突.
 #if COLLISION
 #define COALESCENCE true  //衝突後に合体.  <--どっちか.
@@ -95,7 +95,11 @@ EXTERN FILE *fplog;
 //////////////////////////////////////////////////
 //#define G 1.0  //重力定数.
 //#define M_0 1.0  //主星の質量.
+#if COLLISION
 //#define EPSILON 0.0  //ソフトニングパラメーター.
+#else
+#define EPSILON 5.21495378928615e-05  //ソフトニングパラメーター. (3.0/4.0/pi*3.0E-6*1.989E33/3.0)**(1.0/3.0)/1.496E13.
+#endif
 #define ETA 3.0E-2  //刻み幅調整.
 #define ITE_MAX 2  //イテレーション回数（修正子計算の回数はITE_MAX+1）.
 //////////////////////////////////////////////////
@@ -103,8 +107,8 @@ EXTERN FILE *fplog;
 
 #if ELIMINATE_PARTICLE
 //////////////////////////////////////////////////
-#define SOLAR_RADIUS (6.957E10/1.496E13)
-#define SOLAR_SYSTEM_LIMIT 100.0
+#define SOLAR_RADIUS 0.00465040106951872  //[AU] 6.957E10/1.496E13.
+#define SOLAR_SYSTEM_LIMIT 100.0  //[AU]
 //////////////////////////////////////////////////
 #endif
 
@@ -175,7 +179,7 @@ Mean Longitude (deg)               100.46435
 #if DT_LOG
 /* log では 初項 DT_ENE，公比 GEOMETRIC_RATIO の等比数列 */
 #define GEOMETRIC_RATIO pow(10.0,1.0/8.0) //10**(1/8)
-#define GEOMETRIC_RATIO_LONGTERM pow(10.0,1.0/128) //10**(1/128) 10^6yrを超える時用.
+#define GEOMETRIC_RATIO_LONGTERM pow(10.0,1.0/128.0) //10**(1/128) 10^6yrを超える時用.
 #endif
 //////////////////////////////////////////////////
 

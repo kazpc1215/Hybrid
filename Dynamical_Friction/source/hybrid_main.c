@@ -1662,7 +1662,7 @@ int main(int argc, char **argv){
 
 
 #if DT_LOG
-      if(t_ene<2.0*M_PI*1.0E6){
+      if(t_tmp+t_sys<2.0*M_PI*1.0E6){
 	t_ene *= GEOMETRIC_RATIO;
       }else{
 	t_ene *= GEOMETRIC_RATIO_LONGTERM;
