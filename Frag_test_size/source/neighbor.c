@@ -3,7 +3,7 @@
 
 #if N_tr !=0
 #if FRAGMENTATION
-void NeighborSearch(int i,CONST struct orbital_elements *ele_p,struct fragmentation *frag_p,CONST double x_0[][4]){
+void NeighborSearch(int i,double t_dyn,CONST struct orbital_elements *ele_p,struct fragmentation *frag_p,CONST double x_0[][4]){
 
   int j,l,m;
   double radius[global_n+1];
@@ -11,7 +11,7 @@ void NeighborSearch(int i,CONST struct orbital_elements *ele_p,struct fragmentat
   double S;
   double M;
   double v;
-  //double delta_theta=DELTA_THETA;
+  //double v2;
   double delta_theta;
 
 
@@ -63,11 +63,19 @@ void NeighborSearch(int i,CONST struct orbital_elements *ele_p,struct fragmentat
 
 
   v = 0.0;
+  //v2 = 0.0;
+
   M = ((ele_p+i)->mass);  //ターゲットiの質量も含める.
   if(((frag_p+i)->neighbornumber)!=0){
     for(j=1;j<=((frag_p+i)->neighbornumber);j++){
       v += RandomVelocity(i,((frag_p+i)->neighborlist[j]),ele_p);
-      M += ((ele_p+((frag_p+i)->neighborlist[j]))->mass);  //領域iの総質量.
+      //v2 += RandomVelocity(i,((frag_p+i)->neighborlist[j]),ele_p) * RandomVelocity(i,((frag_p+i)->neighborlist[j]),ele_p);
+
+      if(fabs(t_dyn)<1.0E-10){
+	M += ((ele_p+((frag_p+i)->neighborlist[j]))->mass);  //領域iの総質量. 初期の面密度計算用.
+      }else{
+	M += MassDepletion(j,((ele_p+((frag_p+i)->neighborlist[j]))->mass),t_dyn,frag_p);  //領域iの総質量. 周りのトレーサーjの質量を予測してから足す.
+      }
 
       if(isnan(RandomVelocity(i,((frag_p+i)->neighborlist[j]),ele_p))){
 	fprintf(fplog,"i=%d,j=%d\tvij is nan.\n",i,((frag_p+i)->neighborlist[j]));
@@ -80,6 +88,7 @@ void NeighborSearch(int i,CONST struct orbital_elements *ele_p,struct fragmentat
       fprintf(fplog,"i=%d\tv_tot is nan.\n",i);
     }
     ((frag_p+i)->v_ave) = v/(double)((frag_p+i)->neighbornumber);  //領域iの平均速度.
+    //((frag_p+i)->v_ave) = sqrt(v2/(double)((frag_p+i)->neighbornumber));  //領域iの平均速度(RMS).
 
     //fprintf(fplog,"i=%d\tmass=%e\n",i,ele[i].mass);
     //fprintf(fplog,"i=%d\tM=%e\n",i,M);
