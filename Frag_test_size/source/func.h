@@ -57,7 +57,7 @@ void Coalescence(int i_col,int j_col,double x_0[][4],double v_0[][4],struct orbi
 #endif  /*COLLISION*/
 
 #if FRAGMENTATION
-void NeighborSearch(int i,CONST struct orbital_elements *ele_p,struct fragmentation *frag_p,CONST double x_0[][4]);
+void NeighborSearch(int i,double t_dyn,CONST struct orbital_elements *ele_p,struct fragmentation *frag_p,CONST double x_0[][4]);
 
 double RandomVelocity(int i,int j,CONST struct orbital_elements *ele_p);
 
@@ -65,7 +65,7 @@ void MassFlux(int i,CONST struct orbital_elements *ele_p,struct fragmentation *f
 
 double Depletion_Time(int i,CONST struct fragmentation *frag_p);
 
-double MassDepletion(int i,CONST struct orbital_elements *ele_p);
+double MassDepletion(int i,double mass,double t_dyn,CONST struct fragmentation *frag_p);
 
 double s_1_FRAG_trapezoid(int n,double dx,double ini,CONST struct parameter *para_p);
 
