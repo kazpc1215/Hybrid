@@ -73,8 +73,10 @@ void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements
 #endif
 
   int k=0,flag=0;
-  double peri=0.0,apo=0.0;
+  //double peri=0.0,apo=0.0;
   double radius=0.0;
+
+  //double index = 0.25;  //f(x) = C x^{-p}.
 
   //fprintf(fplog,"orbital_r_min=%.15e\torbital_r_max=%.15e\n",orbital_r_min,orbital_r_max);
 
@@ -85,7 +87,8 @@ void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements
     flag = 0;
 
     (ele_p+i)->axis = rand_func()*(orbital_r_max - orbital_r_min) + orbital_r_min;  //面密度がa^{-1}に比例する分布. ==> 面数密度が一様.
-    // (ele_p+i)->axis = pow((pow(orbital_r_max,-1.5) - pow(orbital_r_min,-1.5)) * rand_func() + pow(orbital_r_min,-1.5), -2.0/3.0);  //x^{5/2} べき分布.
+    //(ele_p+i)->axis = pow((pow(orbital_r_max,1.0-index) - pow(orbital_r_min,1.0-index)) * rand_func() + pow(orbital_r_min,1.0-index), 1.0/(1.0-index));  //べき分布.
+
 #if RAYLEIGH_DISTRIBUTION
     (ele_p+i)->ecc = sqrt(-log(rand_func()))*ECC_RMS;  //離心率.  //Rayleigh分布.
     (ele_p+i)->inc = sqrt(-log(rand_func()))*INC_RMS;  //軌道傾斜角.  //Rayleigh分布.
@@ -104,6 +107,7 @@ void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements
     //peri = ((ele_p+i)->axis)*(1.0 - (ele_p+i)->ecc);
     //apo = ((ele_p+i)->axis)*(1.0 + (ele_p+i)->ecc);
     radius = RadiusFromCenter(i,x_0);
+    //radius = (ele_p+i)->axis;
 
     if(radius>orbital_r_min && radius<orbital_r_max){  //orbital_r_minからorbital_r_maxの範囲にいる場合.
 #if N_p == 0
