@@ -24,7 +24,7 @@ double Calculate_Energy(CONST struct orbital_elements *ele_p,CONST double x_c[][
 #endif
 
 #else
-  E_tot = 0.0
+  E_tot = 0.0;
 #endif
 
   for(i=1;i<=global_n;++i){
