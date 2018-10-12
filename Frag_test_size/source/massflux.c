@@ -39,12 +39,10 @@ double Depletion_Time(int i,CONST struct fragmentation *frag_p){
 
 
 #if FRAGMENTATION
-double MassDepletion(int i,CONST struct orbital_elements *ele_p){
-#if DEPLETION_TIME_EXPLICIT
-  return (1.0 - XI)*((ele_p+i)->mass);
-#else
-  return ((ele_p+i)->mass)/(1.0 + XI);
-#endif
+double MassDepletion(int i,double mass,double t_dyn,CONST struct fragmentation *frag_p){
+  double t_frag = ((frag_p+i)->t_frag);
+  double tau_dep = - ((frag_p+i)->sigma)/((frag_p+i)->flux);
+  return mass / (1.0 + (t_dyn - t_frag) / tau_dep);
 }
 #endif
 
@@ -117,7 +115,7 @@ double s_1_FRAG(struct parameter *para_p){
 
 #if FRAGMENTATION
 double s_2_FRAG(struct parameter *para_p){
-    int n,n_max;
+  int n,n_max;
   double dx,sum=0.0,sum_pre=0.0;
   double ini=-36.0,fin=36.0;
   double eps=1.0E-7;
@@ -141,7 +139,7 @@ double s_2_FRAG(struct parameter *para_p){
 
 #if FRAGMENTATION
 double s_3_FRAG(struct parameter *para_p){
-    int n,n_max;
+  int n,n_max;
   double dx,sum=0.0,sum_pre=0.0;
   double ini=-36.0,fin=36.0;
   double eps=1.0E-7;
