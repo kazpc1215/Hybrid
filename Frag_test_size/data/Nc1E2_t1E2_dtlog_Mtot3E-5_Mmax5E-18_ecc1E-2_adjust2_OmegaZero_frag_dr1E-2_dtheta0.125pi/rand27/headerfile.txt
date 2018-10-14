@@ -28,8 +28,8 @@
 #define ALWAYS_INLINE
 #endif
 
-
-#define DIRECTORY ../data/Nc1E2_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta0.125pi/  //ディレクトリ.
+//#define DIRECTORY ../data/test/
+#define DIRECTORY ../data/Nc1E2_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta1.0pi/  //ディレクトリ.
 // #define SUBDIRECTORY dr  //子ディレクトリ1.
 // #define SUBDIRECTORY_2 dtheta  //子ディレクトリ2.
 #define SUBDIRECTORY rand  //子ディレクトリ. rand%02d
@@ -151,9 +151,9 @@ Mean Longitude (deg)               100.46435
 
 #if FRAGMENTATION
 #define DELTA_R 0.01  //Hill 近傍粒子探索用.
-#define DELTA_THETA 0.125*M_PI  //近傍粒子探索用. pi/8
+//#define DELTA_THETA 0.125*M_PI  //近傍粒子探索用. pi/8
+#define DELTA_THETA 1.0*M_PI  //近傍粒子探索用. pi/8
 #define NEIGHBOR_MAX N_c  //近傍粒子リスト配列の最大値.
-#define DEPLETION_TIME_EXPLICIT false  //true: 質量減少タイムスケールの計算でexplicit *(1-XI)を使う. false: implicit /(1+XI)を使う.
 #define RHO 3.0  // [g/cc]  微惑星の物質密度.
 #define EPSILON_FRAG 0.2
 #define B_FRAG (5.0/3.0)

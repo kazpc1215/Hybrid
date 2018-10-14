@@ -41,7 +41,6 @@ DELTA_HILL	10.0
 DELTA_R	0.01
 DELTA_THETA	0.125*3.14159265358979323846
 NEIGHBOR_MAX	200
-DEPLETION_TIME_EXPLICIT	0
 RHO	3.0
 EPSILON_FRAG	0.2
 B_FRAG	(5.0/3.0)
@@ -85,23 +84,23 @@ initial mass depletion timescale =1.233830e+00 [yr] (center)
 2.300000e+07	  0	   377	   368	1.555563431770726e-03	7.498942093324548e+01	2.185023193492722e+01
 -----
 dt_[318]	= 1.152511e-02
-E_error	= 9.885972480442499e-01
-L_error	= 2.735872703977773e+12
+E_error	= 9.884080721748187e-01
+L_error	= 2.772730460546527e+12
 dE_correct	= 0.000000000000000e+00
 step	= 2.375060500000000e+07
 dt_ene	= 1.000000e-01[yr]
 geometric ratio	= (sqrt(sqrt(sqrt(10.0))))
 -----
-real time	= 330.259877[s]
-user time	= 211.872000[s]
-system time	= 108.028000[s]
-Execution Time	(total	= 3.302599e+02 [s])
-Corrector		= 9.824904e+01 [s]	29.75 [%]
-Predictor		= 7.876402e+01 [s]	23.85 [%]
-Fragmentation		= 3.592555e+01 [s]	10.88 [%]
-Iteration		= 2.058303e+01 [s]	 6.23 [%]
-Orbital_Elements	= 1.225524e+01 [s]	 3.71 [%]
-Energy			= 3.048020e-01 [s]	 0.09 [%]
+real time	= 360.013921[s]
+user time	= 211.464000[s]
+system time	= 134.340000[s]
+Execution Time	(total	= 3.600139e+02 [s])
+Corrector		= 9.909008e+01 [s]	27.52 [%]
+Predictor		= 7.862909e+01 [s]	21.84 [%]
+Fragmentation		= 4.101417e+01 [s]	11.39 [%]
+Iteration		= 2.056628e+01 [s]	 5.71 [%]
+Orbital_Elements	= 1.661849e+01 [s]	 4.62 [%]
+Energy			= 3.745830e-01 [s]	 0.10 [%]
 Collision_Judgement	= 0.000000e+00 [s]	 0.00 [%]
-Others			= 8.417820e+01 [s]	25.49 [%]
+Others			= 1.037212e+02 [s]	28.81 [%]
 -----
