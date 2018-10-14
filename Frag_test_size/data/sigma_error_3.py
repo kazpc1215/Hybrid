@@ -16,7 +16,7 @@ def hosei(da, Beta):
 directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta1.0pi"
 
 outputfile = directory + "_sigma_error.dat"
-directory_list = ["Nc1E2_", "Nc2E2_", "Nc5E2_", "Nc1E3_"]
+directory_list = ["Nc1E2_", "Nc2E2_", "Nc5E2_", "Nc1E3_", "Nc2E3_"]
 
 
 LINE = 26
@@ -53,10 +53,10 @@ for dirname in directory_list:
 
         ########################################
         arr3 = np.genfromtxt(dirname + directory + subdirectory + "Tau_dep.dat", dtype=np.float, delimiter="\t")
-        print(rand, arr3.shape, arr3, hosei(0.1, 1.0), arr3 * hosei(0.1, 1.0))
+        print(rand, arr3.shape, arr3, hosei(0.1, -0.75), arr3 * hosei(0.1, -0.75))
 
         # sigma_error[:, rand] = abs(arr2[:, 3] / arr2[0, 3] * (1.0 + arr2[:, 0] / arr3) - 1)
-        sigma_error[:, rand] = abs(arr2[:, 3] / arr2[0, 3] * (1.0 + arr2[:, 0] / (arr3 * hosei(0.1, 1.0))) - 1)
+        sigma_error[:, rand] = abs(arr2[:, 3] / arr2[0, 3] * (1.0 + arr2[:, 0] / (arr3 * hosei(0.1, -0.75))) - 1)
 
     # print(n_neighbor[:, 1:].mean(axis=0))
     # print(n_neighbor[:, 1:].std(axis=0, ddof=1))
