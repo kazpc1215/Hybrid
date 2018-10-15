@@ -3,7 +3,7 @@ reset
 
 set term aqua dashed font "Times-Roman,30" enhanced
 
-PAUSE = 0
+PAUSE = -1
 
 set key left bottom box width -4 spacing 1.0 font "Times-Roman,20"
 set bmargin 2
@@ -53,41 +53,41 @@ set key left bottom box width -5 spacing 1.0 font "Times-Roman,20"
 
 # KOBAYASHI_NOFRAG = "M6E25_Mtot6E28_ecc3E-2_inc1.5E-2.dat"
 # KOBAYASHI_FRAG = "M6E25_Mtot6E28_ecc3E-2_inc1.5E-2_frag.dat"
-# OHTSUKI_NOFRAG_PLANET = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc3E-2_nofrag_dt/Planet.dat"
-# OHTSUKI_NOFRAG_PLANETESIMAL = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc3E-2_nofrag_dt/Planetesimal.dat"
-# OHTSUKI_FRAG_1E19_PLANET = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc3E-2_frag_dt/Planet.dat"
-# OHTSUKI_FRAG_1E19_PLANETESIMAL = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc3E-2_frag_dt/Planetesimal.dat"
-# OHTSUKI_FRAG_1E16_PLANET = "Meach3E-8_Mtot3E-5_Mmax5E-18_t1E3_dtlog_ecc3E-2_frag_dt/Planet.dat"
-# OHTSUKI_FRAG_1E16_PLANETESIMAL = "Meach3E-8_Mtot3E-5_Mmax5E-18_t1E3_dtlog_ecc3E-2_frag_dt/Planetesimal.dat"
-# RUN1 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc3E-2_nofrag_noacc/RMS_randall.dat"
-# RUN2 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc3E-2_nofrag_acc/RMS_randall.dat"
-# RUN3 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc3E-2_frag_noacc/RMS_randall.dat"
-# RUN4 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc3E-2_frag_noacc/RMS_randall.dat"
-# RUN5 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc3E-2_frag_acc/RMS_randall.dat"
-# RUN6 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc3E-2_frag_acc/RMS_randall.dat"
+ OHTSUKI_NOFRAG_PLANET = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc3E-2_nofrag_dt/Planet.dat"
+ OHTSUKI_NOFRAG_PLANETESIMAL = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc3E-2_nofrag_dt/Planetesimal.dat"
+ OHTSUKI_FRAG_1E19_PLANET = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc3E-2_frag_dt/Planet.dat"
+ OHTSUKI_FRAG_1E19_PLANETESIMAL = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc3E-2_frag_dt/Planetesimal.dat"
+ OHTSUKI_FRAG_1E16_PLANET = "Meach3E-8_Mtot3E-5_Mmax5E-18_t1E3_dtlog_ecc3E-2_frag_dt/Planet.dat"
+ OHTSUKI_FRAG_1E16_PLANETESIMAL = "Meach3E-8_Mtot3E-5_Mmax5E-18_t1E3_dtlog_ecc3E-2_frag_dt/Planetesimal.dat"
+ RUN1 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc3E-2_nofrag_noacc/RMS_randall.dat"
+ RUN2 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc3E-2_nofrag_acc/RMS_randall.dat"
+ RUN3 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc3E-2_frag_noacc/RMS_randall.dat"
+ RUN4 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc3E-2_frag_noacc/RMS_randall.dat"
+ RUN5 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc3E-2_frag_acc/RMS_randall.dat"
+ RUN6 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc3E-2_frag_acc/RMS_randall.dat"
 
 
 # KOBAYASHI_NOFRAG = "M6E25_Mtot6E28_ecc5E-2_inc2.5E-2.dat"
 # KOBAYASHI_FRAG = "M6E25_Mtot6E28_ecc5E-2_inc2.5E-2_frag.dat"
- OHTSUKI_NOFRAG_PLANET = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc5E-2_nofrag_dt/Planet.dat"
- OHTSUKI_NOFRAG_PLANETESIMAL = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc5E-2_nofrag_dt/Planetesimal.dat"
- OHTSUKI_FRAG_1E19_PLANET = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc5E-2_frag_dt/Planet.dat"
- OHTSUKI_FRAG_1E19_PLANETESIMAL = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc5E-2_frag_dt/Planetesimal.dat"
- OHTSUKI_FRAG_1E16_PLANET = "Meach3E-8_Mtot3E-5_Mmax5E-18_t1E3_dtlog_ecc5E-2_frag_dt/Planet.dat"
- OHTSUKI_FRAG_1E16_PLANETESIMAL = "Meach3E-8_Mtot3E-5_Mmax5E-18_t1E3_dtlog_ecc5E-2_frag_dt/Planetesimal.dat"
- RUN1 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_nofrag_noacc/RMS_randall.dat"
- RUN2 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_nofrag_acc/RMS_randall.dat"
- RUN3 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_frag_noacc/RMS_randall.dat"
- RUN4 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc5E-2_frag_noacc/RMS_randall.dat"
- RUN5 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_frag_acc/RMS_randall.dat"
- RUN6 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc5E-2_frag_acc/RMS_randall.dat"
+# OHTSUKI_NOFRAG_PLANET = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc5E-2_nofrag_dt/Planet.dat"
+# OHTSUKI_NOFRAG_PLANETESIMAL = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc5E-2_nofrag_dt/Planetesimal.dat"
+# OHTSUKI_FRAG_1E19_PLANET = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc5E-2_frag_dt/Planet.dat"
+# OHTSUKI_FRAG_1E19_PLANETESIMAL = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc5E-2_frag_dt/Planetesimal.dat"
+# OHTSUKI_FRAG_1E16_PLANET = "Meach3E-8_Mtot3E-5_Mmax5E-18_t1E3_dtlog_ecc5E-2_frag_dt/Planet.dat"
+# OHTSUKI_FRAG_1E16_PLANETESIMAL = "Meach3E-8_Mtot3E-5_Mmax5E-18_t1E3_dtlog_ecc5E-2_frag_dt/Planetesimal.dat"
+# RUN1 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_nofrag_noacc/RMS_randall.dat"
+# RUN2 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_nofrag_acc/RMS_randall.dat"
+# RUN3 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_frag_noacc/RMS_randall.dat"
+# RUN4 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc5E-2_frag_noacc/RMS_randall.dat"
+# RUN5 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_frag_acc/RMS_randall.dat"
+# RUN6 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc5E-2_frag_acc/RMS_randall.dat"
 
 
 set yl "ecc" offset 2,0
-set xr [0.1:1000]
-# set yr [0.001:0.1]
-# set yr [0.003:0.3]
- set yr [0.005:0.5]
+set xr [1:1000]
+#  set yr [0.001:0.1]
+ set yr [0.003:0.3]
+# set yr [0.005:0.5]
 
 
 
@@ -214,10 +214,10 @@ pause PAUSE
 #####################################
 
 set yl "inc [rad]" offset 2,0
-set xr [0.1:1000]
+set xr [1:1000]
 # set yr [0.0001:0.05]
-# set yr [0.001:0.15]
- set yr [0.0025:0.25]
+ set yr [0.001:0.15]
+# set yr [0.0025:0.25]
 
 
 ### nofrag_inc  ###
