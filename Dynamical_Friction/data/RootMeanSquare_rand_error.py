@@ -12,14 +12,15 @@ import numpy as np
 
 ######################################################################
 # path = "/Users/isoya.kazuhide/Dynamical_Friction/data/"
-directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc5E-2_frag_noacc/"
+directory = "Ntr1E2_t1E8_dtlog_Mtot3E-7_Mmax5E-15_ecc5E-2_nofrag_acc/"
 
 
-N_p = 3
-N_tr = 3000
+N_p = 1
+N_tr = 100
 
 if(N_p == 1):
-    LINE = 42  # 10000yr
+    # LINE = 42  # 10000yr
+    LINE = 299  # 1E8yr
     SUBDIR_NUM = 40
 elif(N_p == 3):
     LINE = 34  # 1000yr
@@ -44,7 +45,7 @@ if(N_p == 3):
 for subnum in range(1, SUBDIR_NUM+1):
     subdirectory = "rand%02d/" % subnum
 
-    arr = np.genfromtxt(directory + subdirectory + "RMS_Ntr%4d.dat" % N_tr, dtype=np.float, delimiter="\t")
+    arr = np.genfromtxt(directory + subdirectory + "RMS_Ntr%3d.dat" % N_tr, dtype=np.float, delimiter="\t")
     print(arr.shape)
 
     if(N_p == 1):
@@ -136,7 +137,7 @@ elif(N_p == 3):
 
 plt.xscale("log")
 plt.yscale("log")
-plt.xlim([0.1, 10000])
+plt.xlim([0.1, 1E8])
 # plt.ylim([0.03, 0.12])
 plt.xticks(fontsize=15)
 plt.yticks(fontsize=15)
@@ -177,7 +178,7 @@ elif(N_p == 3):
 
 plt.xscale("log")
 plt.yscale("log")
-plt.xlim([0.1, 10000])
+plt.xlim([0.1, 1E8])
 # plt.ylim([0.03, 0.06])
 plt.xticks(fontsize=15)
 plt.yticks(fontsize=15)
@@ -198,7 +199,7 @@ plt.close()
 
 
 if (N_p == 1):
-    np.savetxt(directory + "RMS_randall.dat", rand_rms.T, fmt="%.15e", delimiter="\t", newline="\n",
+    np.savetxt(directory + "RMS_randall.dat", rand_rms[:, [i for i in range(LINE) if i < 59 or (i >= 59 and i % 16 == 10)]].T, fmt="%.15e", delimiter="\t", newline="\n",
                header="time\tecc_1\tecc_1_error\tecc_p_rms\tecc_p_rms_error\tecc_tr_rms\tecc_tr_rms_error\tinc_1\tinc_1_error\tinc_p_rms\tinc_p_rms_error\tinc_tr_rms\tinc_tr_rms_error")
 elif (N_p == 3):
     np.savetxt(directory + "RMS_randall.dat", rand_rms.T, fmt="%.15e", delimiter="\t", newline="\n",

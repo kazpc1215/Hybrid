@@ -11,14 +11,15 @@ import numpy as np
 
 
 ######################################################################
-directory = "Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc3E-2_frag_noacc/"
+directory = "Ntr1E2_t1E8_dtlog_Mtot3E-7_Mmax5E-15_ecc5E-2_nofrag_acc/"
 
 
 N_p = 1
-N_tr = 1000
+# N_tr = 1000
 
 if(N_p == 1):
-    LINE = 42  # 10000yr
+    # LINE = 42  # 10000yr
+    LINE = 299  # 1E8yr
     SUBDIR_NUM = 40
 elif(N_p == 3):
     LINE = 34  # 1000yr
@@ -174,6 +175,6 @@ plt.close()
 """
 
 if (N_p == 1):
-    np.savetxt(directory + "axis_evo.dat", rand_error.T, fmt="%.15e", delimiter="\t", newline="\n", header="time\taxis_1_mean\taxis_1_error\taxis_1_dif_mean\taxis_1_dif_error\tr_h_1_mean\tr_h_1_error")
+    np.savetxt(directory + "axis_evo.dat", rand_error[:, [i for i in range(LINE) if i < 59 or (i >= 59 and i % 16 == 10)]].T, fmt="%.15e", delimiter="\t", newline="\n", header="time\taxis_1_mean\taxis_1_error\taxis_1_dif_mean\taxis_1_dif_error\tr_h_1_mean\tr_h_1_error")
 elif (N_p == 3):
     np.savetxt(directory + "axis_evo.dat", rand_error.T, fmt="%.15e", delimiter="\t", newline="\n", header="time\taxis_1_mean\taxis_1_error\taxis_2_mean\taxis_2_error\taxis_3_mean\taxis_3_error\taxis_1_dif_mean\taxis_1_dif_error\taxis_2_dif_mean\taxis_2_dif_error\taxis_3_dif_mean\taxis_3_dif_error\tr_h_1_mean\tr_h_1_error\tr_h_2_mean\tr_h_2_error\tr_h_3_mean\tr_h_3_error")

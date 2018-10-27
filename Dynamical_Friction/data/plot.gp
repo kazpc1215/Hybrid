@@ -26,17 +26,13 @@ set log
 
 # unset key
 
-#########################################
-
-#### Kobayashi data $6 : e_tr, $7 : i_tr, $8 : e_p, $9 : i_p ####
 
 #########################################
 
 
 set key left bottom box width -5 spacing 1.0 font "Times-Roman,20"
 
-# KOBAYASHI_NOFRAG = "M6E25_Mtot6E28_ecc1E-2_inc5E-3.dat"
-# KOBAYASHI_FRAG = "M6E25_Mtot6E28_ecc1E-2_inc5E-3_frag.dat"
+
 # OHTSUKI_NOFRAG_PLANET = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc1E-2_nofrag_dt/Planet.dat"
 # OHTSUKI_NOFRAG_PLANETESIMAL = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc1E-2_nofrag_dt/Planetesimal.dat"
 # OHTSUKI_FRAG_1E19_PLANET = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc1E-2_frag_dt/Planet.dat"
@@ -51,8 +47,7 @@ set key left bottom box width -5 spacing 1.0 font "Times-Roman,20"
 # RUN6 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_frag_acc/RMS_randall.dat"
 
 
-# KOBAYASHI_NOFRAG = "M6E25_Mtot6E28_ecc3E-2_inc1.5E-2.dat"
-# KOBAYASHI_FRAG = "M6E25_Mtot6E28_ecc3E-2_inc1.5E-2_frag.dat"
+
  OHTSUKI_NOFRAG_PLANET = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc3E-2_nofrag_dt/Planet.dat"
  OHTSUKI_NOFRAG_PLANETESIMAL = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc3E-2_nofrag_dt/Planetesimal.dat"
  OHTSUKI_FRAG_1E19_PLANET = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc3E-2_frag_dt/Planet.dat"
@@ -67,8 +62,7 @@ set key left bottom box width -5 spacing 1.0 font "Times-Roman,20"
  RUN6 = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc3E-2_frag_acc/RMS_randall.dat"
 
 
-# KOBAYASHI_NOFRAG = "M6E25_Mtot6E28_ecc5E-2_inc2.5E-2.dat"
-# KOBAYASHI_FRAG = "M6E25_Mtot6E28_ecc5E-2_inc2.5E-2_frag.dat"
+
 # OHTSUKI_NOFRAG_PLANET = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc5E-2_nofrag_dt/Planet.dat"
 # OHTSUKI_NOFRAG_PLANETESIMAL = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc5E-2_nofrag_dt/Planetesimal.dat"
 # OHTSUKI_FRAG_1E19_PLANET = "Meach3E-8_Mtot3E-5_t1E3_dtlog_ecc5E-2_frag_dt/Planet.dat"
@@ -84,7 +78,7 @@ set key left bottom box width -5 spacing 1.0 font "Times-Roman,20"
 
 
 set yl "ecc" offset 2,0
-set xr [1:1000]
+set xr [1:1E8]
 #  set yr [0.001:0.1]
  set yr [0.003:0.3]
 # set yr [0.005:0.5]

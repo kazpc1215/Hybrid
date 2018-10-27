@@ -13,31 +13,16 @@ def Jacobi(axis):
 
 
 ######################################################################
-# path = "/Users/isoya.kazuhide/Dynamical_Friction/data/"
-# directory = "Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc3E-2_frag_acc/"
-# directory = "Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc3E-2_frag_noacc/"
-# directory = "Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc3E-2_nofrag_acc/"
-# directory = "Ntr1E3_t1E4_dtlog_Mtot3E-5_ecc3E-2_nofrag_noacc/"
 
-# directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_frag_acc/"
-# directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_frag_noacc/"
-# directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_nofrag_acc/"
-# directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_ecc5E-2_nofrag_noacc/"
+directory = "Ntr1E2_t1E8_dtlog_Mtot3E-7_Mmax5E-15_ecc1E-2_nofrag_acc/"
 
-# directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_frag_acc/"
-# directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_frag_noacc/"
-# directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc3E-2_frag_acc/"
-directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc3E-2_frag_noacc/"
-# directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc5E-2_frag_acc/"
-# directory = "Ntr3E3_t1E3_dtlog_Mtot3E-5_Mmax5E-18_ecc5E-2_frag_noacc/"
-
-
-N_p = 3
-N_tr = 3000
+N_p = 1
+N_tr = 100
 
 
 if(N_p == 1):
-    LINE = 42  # 10000yr
+    # LINE = 42  # 10000yr
+    LINE = 299  # 1E8yr
     SUBDIR_NUM = 40
 elif(N_p == 3):
     LINE = 34  # 1000yr
@@ -52,7 +37,7 @@ x, y = np.meshgrid(x, y)
 
 
 # for subnum in range(1, SUBDIR_NUM+1):
-for subnum in range(8, 9):
+for subnum in range(9, 20):
     subdirectory = "rand%02d/" % subnum
 
     time = np.empty([N_p+N_tr+1, LINE], dtype=float)  # (ファイル番号,行数)
@@ -107,7 +92,10 @@ for subnum in range(8, 9):
 
     #####
 
-    for T in range(0, LINE):
+    LIST = [i for i in range(LINE) if i < 59 or (i >= 59 and i % 16 == 10)]
+    step = 1
+
+    for T in LIST:
         #####
         plt.figure(figsize=(10, 8), dpi=100)
         plt.title(r"${\rm time}: %.3e {\rm yr}$" % time[1, T], fontsize=25)
@@ -135,7 +123,7 @@ for subnum in range(8, 9):
         plt.scatter(axis[1:N_p+1, T], ecc[1:N_p+1, T], color="r", s=50, label="Planet", zorder=4)
         plt.legend(loc="upper left", fontsize=25)
         plt.tight_layout()
-        filename = "../image/" + directory + subdirectory + "axis_ecc_T%02d.png" % T
+        filename = "../image/" + directory + subdirectory + "axis_ecc_T%02d.png" % step
         plt.savefig(filename)
         plt.close()
         #####
@@ -164,9 +152,11 @@ for subnum in range(8, 9):
         plt.scatter(axis[1:N_p+1, T], inc[1:N_p+1, T], color="r", s=50, label="Planet", zorder=3)
         plt.legend(loc="upper left", fontsize=25)
         plt.tight_layout()
-        filename = "../image/" + directory + subdirectory + "axis_inc_T%02d.png" % T
+        filename = "../image/" + directory + subdirectory + "axis_inc_T%02d.png" % step
         plt.savefig(filename)
         plt.close()
         #####
         print(subnum, time[1, T])
         # plt.show()
+
+        step = step + 1
