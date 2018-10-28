@@ -13,10 +13,13 @@ def hosei(da, Beta):
 
 
 # directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta0.125pi"
-directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta1.0pi"
+# directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta1.0pi"
+# directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_frag_dr1E-2_dtheta0.125pi"
+directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_frag_dr1E-2_dtheta1.0pi"
 
 outputfile = directory + "_sigma_error.dat"
-directory_list = ["Nc1E2_", "Nc2E2_", "Nc5E2_", "Nc1E3_", "Nc2E3_"]
+directory_list = ["Nc1E1_", "Nc2E1_", "Nc5E1_", "Nc1E2_", "Nc2E2_", "Nc5E2_", "Nc1E3_", "Nc2E3_"]
+# directory_list = ["Nc1E2_", "Nc2E2_", "Nc5E2_", "Nc1E3_", "Nc2E3_"]
 
 
 LINE = 26
@@ -25,7 +28,7 @@ RAND = 40
 
 
 with open(outputfile, mode="w") as f:
-    print("#n_neighbor_mean\tn_neighbor_error\tsigma_error_mean\tsigma_error_min\tsigma_error_max", file=f)
+    print("#n_neighbor_mean\tn_neighbor_error\tsigma_error_mean\tsigma_error_std", file=f)
 
 for dirname in directory_list:
 
@@ -74,4 +77,4 @@ for dirname in directory_list:
     # print(sigma_error[25, 1:5].max())
 
     with open(outputfile, mode="a") as f:
-        print(n_neighbor_mean[1:RAND+1].mean(axis=0), root_mean_square, sigma_error[25, 1:RAND+1].mean(axis=0), sigma_error[25, 1:RAND+1].min(), sigma_error[25, 1:RAND+1].max(), file=f, sep="\t")
+        print(n_neighbor_mean[1:RAND+1].mean(axis=0), root_mean_square, sigma_error[25, 1:RAND+1].mean(axis=0), sigma_error[25, 1:RAND+1].std(axis=0, ddof=1), file=f, sep="\t")

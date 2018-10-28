@@ -35,23 +35,93 @@ set yl "relative error" offset 2,0
 ### Ncを変化 ###
 RUN1 = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta0.125pi_sigma_error.dat"
 RUN2 = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta1.0pi_sigma_error.dat"
+RUN3 = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_frag_dr1E-2_dtheta0.125pi_sigma_error.dat"
+RUN4 = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_frag_dr1E-2_dtheta1.0pi_sigma_error.dat"
+
 
 set key right top box width -7 spacing 1.0 font "Times-Roman,20"
-plot RUN1 u 1:3:($1-$2):($1+$2):4:5 w xyerrorbars lw 1 lt 1 lc rgb "red" t "adjust, cos term ignored"
+plot RUN1 u 1:3:($1-$2):($1+$2):($3-$4):($3+$4) w xyerrorbars lw 1 lt 1 lc rgb "red" t "adjust, cos term ignored"
 
-# pause -1
+ pause -1
 
 set key right top box width -7 spacing 1.0 font "Times-Roman,20"
-plot RUN2 u 1:3:($1-$2):($1+$2):4:5 w xyerrorbars lw 1 lt 1 lc rgb "red" t "adjust, cos term ignored"
+plot RUN2 u 1:3:($1-$2):($1+$2):($3-$4):($3+$4) w xyerrorbars lw 1 lt 1 lc rgb "red" t "adjust, cos term ignored"
 
-# pause -1
+ pause -1
 
 
 set key right top box width -12 spacing 1.0 font "Times-Roman,20"
-plot RUN1 u 1:3:($1-$2):($1+$2):4:5 w xyerrorbars lw 1 lt 1 t "adjust, cos term ignored, 0.125 {/Symbol p}",\
-RUN2 u 1:3:($1-$2):($1+$2):4:5 w xyerrorbars lw 1 lt 2 t "adjust, cos term ignored,     1.0 {/Symbol p}"
+plot RUN1 u 1:3:($1-$2):($1+$2):($3-$4):($3+$4) w xyerrorbars lw 1 lt 1 t "adjust, cos term ignored, 0.125 {/Symbol p}",\
+RUN2 u 1:3:($1-$2):($1+$2):($3-$4):($3+$4) w xyerrorbars lw 1 lt 2 t "adjust, cos term ignored,     1.0 {/Symbol p}"
 
-# pause
+ pause -1
+
+
+set key right top box width -1 spacing 1.0 font "Times-Roman,20"
+plot RUN3 u 1:3:($1-$2):($1+$2):($3-$4):($3+$4) w xyerrorbars lw 1 lt 1 lc rgb "red" t "adjust"
+
+ pause -1
+
+set key right top box width -1 spacing 1.0 font "Times-Roman,20"
+plot RUN4 u 1:3:($1-$2):($1+$2):($3-$4):($3+$4) w xyerrorbars lw 1 lt 1 lc rgb "red" t "adjust"
+
+ pause -1
+
+
+set key right top box width -6 spacing 1.0 font "Times-Roman,20"
+plot RUN3 u 1:3:($1-$2):($1+$2):($3-$4):($3+$4) w xyerrorbars lw 1 lt 1 t "adjust, 0.125 {/Symbol p}",\
+RUN4 u 1:3:($1-$2):($1+$2):($3-$4):($3+$4) w xyerrorbars lw 1 lt 2 t "adjust,     1.0 {/Symbol p}"
+
+ pause -1
+
+
+set key right top box width -10 spacing 1.0 font "Times-Roman,20"
+plot RUN1 u 1:3:($1-$2):($1+$2):($3-$4):($3+$4) w xyerrorbars lw 1 lt 1 t "adjust, cos term ignored, 0.125 {/Symbol p}",\
+RUN3 u 1:3:($1-$2):($1+$2):($3-$4):($3+$4) w xyerrorbars lw 1 lt 2 t "adjust, 0.125 {/Symbol p}"
+
+ pause -1
+
+set key right top box width -10 spacing 1.0 font "Times-Roman,20"
+plot RUN2 u 1:3:($1-$2):($1+$2):($3-$4):($3+$4) w xyerrorbars lw 1 lt 1 t "adjust, cos term ignored, 1.0 {/Symbol p}",\
+RUN4 u 1:3:($1-$2):($1+$2):($3-$4):($3+$4) w xyerrorbars lw 1 lt 2 t "adjust, 1.0 {/Symbol p}"
+
+ pause -1
+
+
+set key right top box width -10 spacing 1.0 font "Times-Roman,20"
+f(x) = a * x**b
+fit f(x) RUN1 every ::0::2 u 1:3 via a,b
+fit g(x) RUN1 every ::2 u 1:3 via c,d
+p RUN1 u 1:3:($1-$2):($1+$2):($3-$4):($3+$4) w xyerrorbars lw 1 lt 1 t "adjust, cos term ignored, 0.125 {/Symbol p}",[1:10] f(x) t sprintf("%f * x^{%f}",a,b),[10:1000] g(x) t sprintf("%f * x^{%f}",c,d)
+
+pause -1
+
+
+set key right top box width -10 spacing 1.0 font "Times-Roman,20"
+f(x) = a * x**b
+fit f(x) RUN2 every ::0::1 u 1:3 via a,b
+fit g(x) RUN2 every ::1 u 1:3 via c,d
+p RUN2 u 1:3:($1-$2):($1+$2):($3-$4):($3+$4) w xyerrorbars lw 1 lt 1 t "adjust, cos term ignored, 1.0 {/Symbol p}",[1:3.5] f(x) t sprintf("%f * x^{%f}",a,b),[3.5:1000] g(x) t sprintf("%f * x^{%f}",c,d)
+
+pause -1
+
+
+set key right top box width -3 spacing 1.0 font "Times-Roman,20"
+f(x) = a * x**b
+fit f(x) RUN3 every ::0::1 u 1:3 via a,b
+fit g(x) RUN3 every ::1 u 1:3 via c,d
+p RUN3 u 1:3:($1-$2):($1+$2):($3-$4):($3+$4) w xyerrorbars lw 1 lt 1 t "adjust, 0.125 {/Symbol p}",[1:4] f(x) t sprintf("%f * x^{%f}",a,b),[4:1000] g(x) t sprintf("%f * x^{%f}",c,d)
+
+pause -1
+
+
+set key right top box width -3 spacing 1.0 font "Times-Roman,20"
+f(x) = a * x**b
+fit f(x) RUN4 every ::0::1 u 1:3 via a,b
+fit g(x) RUN4 every ::1 u 1:3 via c,d
+p RUN4 u 1:3:($1-$2):($1+$2):($3-$4):($3+$4) w xyerrorbars lw 1 lt 1 t "adjust, 1.0 {/Symbol p}",[1:3.5] f(x) t sprintf("%f * x^{%f}",a,b),[3.5:1000] g(x) t sprintf("%f * x^{%f}",c,d)
+
+pause
 
 
 
@@ -118,13 +188,101 @@ replot 1.0/(1.0 + x/1.23450477715) lw 3 dt 2 lc rgb "red" t "analytic hosei, {/S
 
 pause -1
 
-set key right top box width -7 spacing 1.0 font "Times-Roman,20"
+set key right top box width -9 spacing 1.0 font "Times-Roman,20"
 
 RUN1 = "./Nc1E2_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta0.125pi/rand%02d/Sigma_dep.dat"
 RUN2 = "./Nc2E2_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta0.125pi/rand%02d/Sigma_dep.dat"
 RUN3 = "./Nc5E2_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta0.125pi/rand%02d/Sigma_dep.dat"
 RUN4 = "./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta0.125pi/rand%02d/Sigma_dep.dat"
 RUN5 = "./Nc2E3_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta0.125pi/rand%02d/Sigma_dep.dat"
+
+plot 1.0/(1.0 + x/1.233830) lw 1 lc rgb "black" t "analytic, {/Symbol t} = 1.233830 yr"
+replot for [i=1:1] sprintf(RUN1,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 1 t "N_c = 100, cos term ignored, 0.125 {/Symbol p}"
+replot for [i=2:40] sprintf(RUN1,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 1 notitle
+pause -1
+
+plot 1.0/(1.0 + x/1.233830) lw 1 lc rgb "black" t "analytic, {/Symbol t} = 1.233830 yr"
+replot for [i=1:1] sprintf(RUN2,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 2 t "N_c = 200, cos term ignored, 0.125 {/Symbol p}"
+replot for [i=2:40] sprintf(RUN2,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 2 notitle
+pause -1
+
+plot 1.0/(1.0 + x/1.233830) lw 1 lc rgb "black" t "analytic, {/Symbol t} = 1.233830 yr"
+replot for [i=1:1] sprintf(RUN3,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 3 t "N_c = 500, cos term ignored, 0.125 {/Symbol p}"
+replot for [i=2:40] sprintf(RUN3,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 3 notitle
+pause -1
+
+plot 1.0/(1.0 + x/1.233830) lw 1 lc rgb "black" t "analytic, {/Symbol t} = 1.233830 yr"
+replot for [i=1:1] sprintf(RUN4,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 4 t "N_c = 1000, cos term ignored, 0.125 {/Symbol p}"
+replot for [i=2:40] sprintf(RUN4,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 4 notitle
+pause -1
+
+plot 1.0/(1.0 + x/1.233830) lw 1 lc rgb "black" t "analytic, {/Symbol t} = 1.233830 yr"
+replot for [i=1:1] sprintf(RUN5,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 5 t "N_c = 2000, cos term ignored, 0.125 {/Symbol p}"
+replot for [i=2:40] sprintf(RUN5,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 5 notitle
+
+pause -1
+
+
+
+RUN1 = "./Nc1E1_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta1.0pi/rand%02d/Sigma_dep.dat"
+RUN2 = "./Nc2E1_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta1.0pi/rand%02d/Sigma_dep.dat"
+RUN3 = "./Nc5E1_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta1.0pi/rand%02d/Sigma_dep.dat"
+RUN4 = "./Nc1E2_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta1.0pi/rand%02d/Sigma_dep.dat"
+RUN5 = "./Nc2E2_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta1.0pi/rand%02d/Sigma_dep.dat"
+RUN6 = "./Nc5E2_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta1.0pi/rand%02d/Sigma_dep.dat"
+RUN7 = "./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta1.0pi/rand%02d/Sigma_dep.dat"
+RUN8 = "./Nc2E3_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta1.0pi/rand%02d/Sigma_dep.dat"
+
+plot 1.0/(1.0 + x/1.233830) lw 1 lc rgb "black" t "analytic, {/Symbol t} = 1.233830 yr"
+replot for [i=1:1] sprintf(RUN1,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 1 t "N_c = 10, cos term ignored, 1.0 {/Symbol p}"
+replot for [i=2:40] sprintf(RUN1,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 1 notitle
+pause -1
+
+plot 1.0/(1.0 + x/1.233830) lw 1 lc rgb "black" t "analytic, {/Symbol t} = 1.233830 yr"
+replot for [i=1:1] sprintf(RUN2,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 2 t "N_c = 20, cos term ignored, 1.0 {/Symbol p}"
+replot for [i=2:40] sprintf(RUN2,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 2 notitle
+pause -1
+
+plot 1.0/(1.0 + x/1.233830) lw 1 lc rgb "black" t "analytic, {/Symbol t} = 1.233830 yr"
+replot for [i=1:1] sprintf(RUN3,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 3 t "N_c = 50, cos term ignored, 1.0 {/Symbol p}"
+replot for [i=2:40] sprintf(RUN3,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 3 notitle
+pause -1
+
+plot 1.0/(1.0 + x/1.233830) lw 1 lc rgb "black" t "analytic, {/Symbol t} = 1.233830 yr"
+replot for [i=1:1] sprintf(RUN4,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 1 t "N_c = 100, cos term ignored, 1.0 {/Symbol p}"
+replot for [i=2:40] sprintf(RUN4,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 1 notitle
+pause -1
+
+plot 1.0/(1.0 + x/1.233830) lw 1 lc rgb "black" t "analytic, {/Symbol t} = 1.233830 yr"
+replot for [i=1:1] sprintf(RUN5,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 2 t "N_c = 200, cos term ignored, 1.0 {/Symbol p}"
+replot for [i=2:40] sprintf(RUN5,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 2 notitle
+pause -1
+
+plot 1.0/(1.0 + x/1.233830) lw 1 lc rgb "black" t "analytic, {/Symbol t} = 1.233830 yr"
+replot for [i=1:1] sprintf(RUN6,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 3 t "N_c = 500, cos term ignored, 1.0 {/Symbol p}"
+replot for [i=2:40] sprintf(RUN6,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 3 notitle
+pause -1
+
+plot 1.0/(1.0 + x/1.233830) lw 1 lc rgb "black" t "analytic, {/Symbol t} = 1.233830 yr"
+replot for [i=1:1] sprintf(RUN7,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 4 t "N_c = 1000, cos term ignored, 1.0 {/Symbol p}"
+replot for [i=2:40] sprintf(RUN7,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 4 notitle
+pause -1
+
+plot 1.0/(1.0 + x/1.233830) lw 1 lc rgb "black" t "analytic, {/Symbol t} = 1.233830 yr"
+replot for [i=1:1] sprintf(RUN8,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 5 t "N_c = 2000, cos term ignored, 1.0 {/Symbol p}"
+replot for [i=2:40] sprintf(RUN8,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 5 notitle
+
+pause -1
+
+
+set key right top box width -7 spacing 1.0 font "Times-Roman,20"
+
+
+RUN1 = "./Nc1E2_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_frag_dr1E-2_dtheta0.125pi/rand%02d/Sigma_dep.dat"
+RUN2 = "./Nc2E2_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_frag_dr1E-2_dtheta0.125pi/rand%02d/Sigma_dep.dat"
+RUN3 = "./Nc5E2_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_frag_dr1E-2_dtheta0.125pi/rand%02d/Sigma_dep.dat"
+RUN4 = "./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_frag_dr1E-2_dtheta0.125pi/rand%02d/Sigma_dep.dat"
+RUN5 = "./Nc2E3_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_frag_dr1E-2_dtheta0.125pi/rand%02d/Sigma_dep.dat"
 
 plot 1.0/(1.0 + x/1.233830) lw 1 lc rgb "black" t "analytic, {/Symbol t} = 1.233830 yr"
 replot for [i=1:1] sprintf(RUN1,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 1 t "N_c = 100, 0.125 {/Symbol p}"
@@ -154,38 +312,56 @@ pause -1
 
 
 
-
-RUN1 = "./Nc1E2_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta1.0pi/rand%02d/Sigma_dep.dat"
-RUN2 = "./Nc2E2_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta1.0pi/rand%02d/Sigma_dep.dat"
-RUN3 = "./Nc5E2_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta1.0pi/rand%02d/Sigma_dep.dat"
-RUN4 = "./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta1.0pi/rand%02d/Sigma_dep.dat"
-RUN5 = "./Nc2E3_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta1.0pi/rand%02d/Sigma_dep.dat"
+RUN1 = "./Nc1E1_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_frag_dr1E-2_dtheta1.0pi/rand%02d/Sigma_dep.dat"
+RUN2 = "./Nc2E1_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_frag_dr1E-2_dtheta1.0pi/rand%02d/Sigma_dep.dat"
+RUN3 = "./Nc5E1_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_frag_dr1E-2_dtheta1.0pi/rand%02d/Sigma_dep.dat"
+RUN4 = "./Nc1E2_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_frag_dr1E-2_dtheta1.0pi/rand%02d/Sigma_dep.dat"
+RUN5 = "./Nc2E2_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_frag_dr1E-2_dtheta1.0pi/rand%02d/Sigma_dep.dat"
+RUN6 = "./Nc5E2_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_frag_dr1E-2_dtheta1.0pi/rand%02d/Sigma_dep.dat"
+RUN7 = "./Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_frag_dr1E-2_dtheta1.0pi/rand%02d/Sigma_dep.dat"
+RUN8 = "./Nc2E3_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_frag_dr1E-2_dtheta1.0pi/rand%02d/Sigma_dep.dat"
 
 plot 1.0/(1.0 + x/1.233830) lw 1 lc rgb "black" t "analytic, {/Symbol t} = 1.233830 yr"
-replot for [i=1:1] sprintf(RUN1,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 1 t "N_c = 100, 1.0 {/Symbol p}"
+replot for [i=1:1] sprintf(RUN1,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 1 t "N_c = 10, 1.0 {/Symbol p}"
 replot for [i=2:40] sprintf(RUN1,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 1 notitle
 pause -1
 
 plot 1.0/(1.0 + x/1.233830) lw 1 lc rgb "black" t "analytic, {/Symbol t} = 1.233830 yr"
-replot for [i=1:1] sprintf(RUN2,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 2 t "N_c = 200, 1.0 {/Symbol p}"
+replot for [i=1:1] sprintf(RUN2,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 2 t "N_c = 20, 1.0 {/Symbol p}"
 replot for [i=2:40] sprintf(RUN2,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 2 notitle
 pause -1
 
 plot 1.0/(1.0 + x/1.233830) lw 1 lc rgb "black" t "analytic, {/Symbol t} = 1.233830 yr"
-replot for [i=1:1] sprintf(RUN3,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 3 t "N_c = 500, 1.0 {/Symbol p}"
+replot for [i=1:1] sprintf(RUN3,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 3 t "N_c = 50, 1.0 {/Symbol p}"
 replot for [i=2:40] sprintf(RUN3,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 3 notitle
 pause -1
 
 plot 1.0/(1.0 + x/1.233830) lw 1 lc rgb "black" t "analytic, {/Symbol t} = 1.233830 yr"
-replot for [i=1:1] sprintf(RUN4,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 4 t "N_c = 1000, 1.0 {/Symbol p}"
-replot for [i=2:40] sprintf(RUN4,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 4 notitle
+replot for [i=1:1] sprintf(RUN4,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 1 t "N_c = 100, 1.0 {/Symbol p}"
+replot for [i=2:40] sprintf(RUN4,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 1 notitle
 pause -1
 
 plot 1.0/(1.0 + x/1.233830) lw 1 lc rgb "black" t "analytic, {/Symbol t} = 1.233830 yr"
-replot for [i=1:1] sprintf(RUN5,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 5 t "N_c = 2000, 1.0 {/Symbol p}"
-replot for [i=2:40] sprintf(RUN5,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 5 notitle
+replot for [i=1:1] sprintf(RUN5,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 2 t "N_c = 200, 1.0 {/Symbol p}"
+replot for [i=2:40] sprintf(RUN5,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 2 notitle
+pause -1
+
+plot 1.0/(1.0 + x/1.233830) lw 1 lc rgb "black" t "analytic, {/Symbol t} = 1.233830 yr"
+replot for [i=1:1] sprintf(RUN6,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 3 t "N_c = 500, 1.0 {/Symbol p}"
+replot for [i=2:40] sprintf(RUN6,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 3 notitle
+pause -1
+
+plot 1.0/(1.0 + x/1.233830) lw 1 lc rgb "black" t "analytic, {/Symbol t} = 1.233830 yr"
+replot for [i=1:1] sprintf(RUN7,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 4 t "N_c = 1000, 1.0 {/Symbol p}"
+replot for [i=2:40] sprintf(RUN7,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 4 notitle
+pause -1
+
+plot 1.0/(1.0 + x/1.233830) lw 1 lc rgb "black" t "analytic, {/Symbol t} = 1.233830 yr"
+replot for [i=1:1] sprintf(RUN8,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 5 t "N_c = 2000, 1.0 {/Symbol p}"
+replot for [i=2:40] sprintf(RUN8,i) u 1:(($4)/4.774648292756859e-05) w l lw 1 lt 5 notitle
 
 pause
+
 
 
 
