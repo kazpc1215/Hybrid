@@ -29,7 +29,7 @@
 #endif
 
 //#define DIRECTORY ../data/test/
-#define DIRECTORY ../data/Nc1E3_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta0.125pi/  //ディレクトリ.
+#define DIRECTORY ../data/Nc5E1_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta1.0pi/  //ディレクトリ.
 // #define SUBDIRECTORY dr  //子ディレクトリ1.
 // #define SUBDIRECTORY_2 dtheta  //子ディレクトリ2.
 #define SUBDIRECTORY rand  //子ディレクトリ. rand%02d
@@ -45,7 +45,7 @@
 
 
 //////////////////////////////////////////////////
-#define N_c 1000  //中心のトレーサーの数. これらの質量変化を追い面密度を計算.
+#define N_c 50  //中心のトレーサーの数. これらの質量変化を追い面密度を計算.
 #define N_tr (N_c*3)  //初期のトレーサーの数.
 #define N_p 0  //初期の原始惑星の数.
 #define ECC_RATIO 1.0  //ecc=0.01の何倍か. inc=ecc/2.

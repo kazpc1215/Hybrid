@@ -10,8 +10,7 @@ void NeighborSearch(int i,double t_dyn,CONST struct orbital_elements *ele_p,stru
   double theta[global_n+1];
   double S;
   double M;
-  double v;
-  //double v2;
+  double v2;
   double delta_theta;
 
 
@@ -62,14 +61,12 @@ void NeighborSearch(int i,double t_dyn,CONST struct orbital_elements *ele_p,stru
   }while(((frag_p+i)->neighbornumber)<1);
 
 
-  v = 0.0;
-  //v2 = 0.0;
+  v2 = 0.0;
 
   M = ((ele_p+i)->mass);  //ターゲットiの質量も含める.
   if(((frag_p+i)->neighbornumber)!=0){
     for(j=1;j<=((frag_p+i)->neighbornumber);j++){
-      v += RandomVelocity(i,((frag_p+i)->neighborlist[j]),ele_p);
-      //v2 += RandomVelocity(i,((frag_p+i)->neighborlist[j]),ele_p) * RandomVelocity(i,((frag_p+i)->neighborlist[j]),ele_p);
+      v2 += SquareRandomVelocity(i,((frag_p+i)->neighborlist[j]),ele_p);
 
       if(fabs(t_dyn)<1.0E-10){
 	M += ((ele_p+((frag_p+i)->neighborlist[j]))->mass);  //領域iの総質量. 初期の面密度計算用.
@@ -77,18 +74,18 @@ void NeighborSearch(int i,double t_dyn,CONST struct orbital_elements *ele_p,stru
 	M += MassDepletion(j,((ele_p+((frag_p+i)->neighborlist[j]))->mass),t_dyn,frag_p);  //領域iの総質量. 周りのトレーサーjの質量を予測してから足す.
       }
 
-      if(isnan(RandomVelocity(i,((frag_p+i)->neighborlist[j]),ele_p))){
+      if(isnan(SquareRandomVelocity(i,((frag_p+i)->neighborlist[j]),ele_p))){
 	fprintf(fplog,"i=%d,j=%d\tvij is nan.\n",i,((frag_p+i)->neighborlist[j]));
 	fprintf(fplog,"i=%d\taxis=%e\tecc=%e\tinc=%e\tu=%e\tOmega=%e\tomega=%e\n",i,((ele_p+i)->axis),((ele_p+i)->ecc),((ele_p+i)->inc),((ele_p+i)->u),((ele_p+i)->Omega),((ele_p+i)->omega));
 	fprintf(fplog,"j=%d\taxis=%e\tecc=%e\tinc=%e\tu=%e\tOmega=%e\tomega=%e\n",((frag_p+i)->neighborlist[j]),((ele_p+((frag_p+i)->neighborlist[j]))->axis),((ele_p+((frag_p+i)->neighborlist[j]))->ecc),((ele_p+((frag_p+i)->neighborlist[j]))->inc),((ele_p+((frag_p+i)->neighborlist[j]))->u),((ele_p+((frag_p+i)->neighborlist[j]))->Omega),((ele_p+((frag_p+i)->neighborlist[j]))->omega));
       }
 
     }
-    if(isnan(v)){
-      fprintf(fplog,"i=%d\tv_tot is nan.\n",i);
+    if(isnan(v2)){
+      fprintf(fplog,"i=%d\tv_tot_2 is nan.\n",i);
     }
-    ((frag_p+i)->v_ave) = v/(double)((frag_p+i)->neighbornumber);  //領域iの平均速度.
-    //((frag_p+i)->v_ave) = sqrt(v2/(double)((frag_p+i)->neighbornumber));  //領域iの平均速度(RMS).
+
+    ((frag_p+i)->v_ave) = sqrt(v2/(double)((frag_p+i)->neighbornumber));  //領域iの平均速度(RMS).
 
     //fprintf(fplog,"i=%d\tmass=%e\n",i,ele[i].mass);
     //fprintf(fplog,"i=%d\tM=%e\n",i,M);
@@ -109,7 +106,7 @@ void NeighborSearch(int i,double t_dyn,CONST struct orbital_elements *ele_p,stru
 
 #if N_tr != 0
 #if FRAGMENTATION
-double RandomVelocity(int i,int j,CONST struct orbital_elements *ele_p){
+double SquareRandomVelocity(int i,int j,CONST struct orbital_elements *ele_p){
   double eij2;
   double iij2;
 
@@ -118,9 +115,9 @@ double RandomVelocity(int i,int j,CONST struct orbital_elements *ele_p){
 
   iij2 = ((ele_p+i)->inc)*((ele_p+i)->inc) + ((ele_p+j)->inc)*((ele_p+j)->inc);
 #else
-  eij2 = fabs(((ele_p+i)->ecc)*((ele_p+i)->ecc) + ((ele_p+j)->ecc)*((ele_p+j)->ecc) - 2.0*((ele_p+i)->ecc)*((ele_p+j)->ecc)*cos(((ele_p+i)->omega) + ((ele_p+i)->Omega) - ((ele_p+j)->omega) - ((ele_p+j)->Omega)));
+  eij2 = ((ele_p+i)->ecc)*((ele_p+i)->ecc) + ((ele_p+j)->ecc)*((ele_p+j)->ecc) - 2.0*((ele_p+i)->ecc)*((ele_p+j)->ecc)*cos(((ele_p+i)->omega) + ((ele_p+i)->Omega) - ((ele_p+j)->omega) - ((ele_p+j)->Omega));
 
-  iij2 = fabs(((ele_p+i)->inc)*((ele_p+i)->inc) + ((ele_p+j)->inc)*((ele_p+j)->inc) - 2.0*((ele_p+i)->inc)*((ele_p+j)->inc)*cos(((ele_p+i)->Omega) - ((ele_p+j)->Omega)));
+  iij2 = ((ele_p+i)->inc)*((ele_p+i)->inc) + ((ele_p+j)->inc)*((ele_p+j)->inc) - 2.0*((ele_p+i)->inc)*((ele_p+j)->inc)*cos(((ele_p+i)->Omega) - ((ele_p+j)->Omega));
 #endif
 
   if(isnan((ele_p+i)->ecc)){
@@ -173,9 +170,9 @@ double RandomVelocity(int i,int j,CONST struct orbital_elements *ele_p){
 
 
 #if !defined(G) && !defined(M_0)
-  return sqrt((eij2 + iij2)/((ele_p+i)->axis));
+  return (eij2 + iij2)/((ele_p+i)->axis);
 #else
-  return sqrt((eij2 + iij2)*G*M_0/((ele_p+i)->axis));
+  return (eij2 + iij2)*G*M_0/((ele_p+i)->axis);
 #endif
 }
 #endif
