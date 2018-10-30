@@ -12,14 +12,15 @@ def hosei(da, Beta):
 # ## ecc 1E-2 ###
 
 
-# directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta0.125pi"
-# directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_OmegaZero_frag_dr1E-2_dtheta1.0pi"
-# directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_frag_dr1E-2_dtheta0.125pi"
-directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2_frag_dr1E-2_dtheta1.0pi"
+# directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2rms_OmegaZero_frag_dr1E-2_dtheta0.125pi"
+# directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2rms_OmegaZero_frag_dr1E-2_dtheta1.0pi"
+# directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2rms_frag_dr1E-2_dtheta0.125pi"
+directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2rms_frag_dr1E-2_dtheta1.0pi"
 
 outputfile = directory + "_sigma_error.dat"
 directory_list = ["Nc1E1_", "Nc2E1_", "Nc5E1_", "Nc1E2_", "Nc2E2_", "Nc5E2_", "Nc1E3_", "Nc2E3_"]
 # directory_list = ["Nc1E2_", "Nc2E2_", "Nc5E2_", "Nc1E3_", "Nc2E3_"]
+
 
 
 LINE = 26
@@ -37,6 +38,8 @@ for dirname in directory_list:
     n_neighbor_mean = np.empty(RAND+1, dtype=np.float)
     n_neighbor_error = np.empty(RAND+1, dtype=np.float)
     sigma_error = np.empty(([LINE, RAND+1]), dtype=np.float)
+    sigma_rand = np.empty([LINE, RAND+1], dtype=np.float)
+    sigma_mean = np.empty([LINE, 5], dtype=np.float)
 
     for rand in range(1, RAND+1):
 
@@ -56,10 +59,12 @@ for dirname in directory_list:
 
         ########################################
         arr3 = np.genfromtxt(dirname + directory + subdirectory + "Tau_dep.dat", dtype=np.float, delimiter="\t")
-        print(rand, arr3.shape, arr3, hosei(0.1, -0.75), arr3 * hosei(0.1, -0.75))
+        # print(rand, arr3.shape, arr3, hosei(0.1, 1.0), arr3 * hosei(0.1, 1.0))
 
-        # sigma_error[:, rand] = abs(arr2[:, 3] / arr2[0, 3] * (1.0 + arr2[:, 0] / arr3) - 1)
-        sigma_error[:, rand] = abs(arr2[:, 3] / arr2[0, 3] * (1.0 + arr2[:, 0] / (arr3 * hosei(0.1, -0.75))) - 1)
+        sigma_error[:, rand] = abs(arr2[:, 3] / arr2[0, 3] * (1.0 + arr2[:, 0] / arr3) - 1)
+        # sigma_error[:, rand] = abs(arr2[:, 3] / arr2[0, 3] * (1.0 + arr2[:, 0] / (arr3 * hosei(0.1, 1.0))) - 1)
+
+        sigma_rand[:, rand] = arr2[:, 3] / arr2[0, 3]
 
     # print(n_neighbor[:, 1:].mean(axis=0))
     # print(n_neighbor[:, 1:].std(axis=0, ddof=1))
@@ -76,5 +81,14 @@ for dirname in directory_list:
     # print(sigma_error[25, 1:5].min())
     # print(sigma_error[25, 1:5].max())
 
+    print(sigma_rand[25, 1:RAND+1])
+    sigma_mean[:, 0] = arr2[:, 0]
+    sigma_mean[:, 1] = sigma_rand[:, 1:RAND+1].mean(axis=1)
+    sigma_mean[:, 2] = sigma_rand[:, 1:RAND+1].min(axis=1)
+    sigma_mean[:, 3] = sigma_rand[:, 1:RAND+1].max(axis=1)
+    sigma_mean[:, 4] = sigma_rand[:, 1:RAND+1].std(axis=1, ddof=1)
+
     with open(outputfile, mode="a") as f:
         print(n_neighbor_mean[1:RAND+1].mean(axis=0), root_mean_square, sigma_error[25, 1:RAND+1].mean(axis=0), sigma_error[25, 1:RAND+1].std(axis=0, ddof=1), file=f, sep="\t")
+
+    np.savetxt(dirname + directory + "/Sigma_mean.dat", sigma_mean, fmt="%.15e", delimiter="\t", newline="\n", header="time\tsigma_mean\tsigma_min\tsigma_max\tsigma_std")
