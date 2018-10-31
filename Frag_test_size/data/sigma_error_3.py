@@ -3,10 +3,56 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy import integrate
 
+"""
 def hosei(da, Beta):
     Lambda = -2.0 * Beta - 1.5
     return (2.0+Lambda) / (2.0-Beta) / ((1.0+0.5*da)**(2.0+Lambda) - (1.0-0.5*da)**(2.0+Lambda)) * ((1.0+0.5*da)**(2.0-Beta) - (1.0-0.5*da)**(2.0-Beta))
+"""
+
+
+def integral(x, Beta, Tau, t):
+    Lambda = Beta + 1.5
+    return x / (x**(- Lambda) + Tau / t)
+
+def hosei(da, Beta, Tau, t):
+    if t == 0.0:
+        return 1.0
+    else:
+        return 2.0 * (1.0 + Tau / t) / ((1.0 + 0.5 * da)**2 - (1.0 - 0.5 * da)**2) * integrate.quad(integral, 1.0-0.5*da, 1.0+0.5*da, args=(Beta, Tau, t))[0]
+
+
+###
+t_list = np.linspace(0.0, 1000.0, 10001)
+data = np.empty([10001, 2], dtype=np.float)
+for i in range(10001):
+    data[i, 0] = t_list[i]
+    data[i, 1] = hosei(0.1, 1.0, 1.233830, t_list[i])
+
+np.savetxt("hosei_da0.1_Beta1.0_Tau1.233830_t.dat", data, fmt="%.15e", delimiter="\t", newline="\n", header="time\thosei")
+###
+
+###
+da_list = np.linspace(0.0, 1.0, 10001)
+data = np.empty([10001, 2], dtype=np.float)
+for i in range(10001):
+    data[i, 0] = da_list[i]
+    data[i, 1] = hosei(da_list[i], 1.0, 1.233830, 100.0)
+
+np.savetxt("hosei_Beta1.0_Tau1.233830_t100.0_da.dat", data, fmt="%.15e", delimiter="\t", newline="\n", header="da\thosei")
+###
+
+###
+Beta_list = np.linspace(-2.0, 2.0, 10001)
+data = np.empty([10001, 2], dtype=np.float)
+for i in range(10001):
+    data[i, 0] = Beta_list[i]
+    data[i, 1] = hosei(0.1, Beta_list[i], 1.233830, 100.0)
+
+np.savetxt("hosei_da0.1_Tau1.233830_t100.0_Beta.dat", data, fmt="%.15e", delimiter="\t", newline="\n", header="Beta\thosei")
+###
+
 
 ######################################################################
 # ## ecc 1E-2 ###
@@ -15,10 +61,10 @@ def hosei(da, Beta):
 # directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2rms_OmegaZero_frag_dr1E-2_dtheta0.125pi"
 # directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2rms_OmegaZero_frag_dr1E-2_dtheta1.0pi"
 # directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2rms_frag_dr1E-2_dtheta0.125pi"
-directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2rms_frag_dr1E-2_dtheta1.0pi"
+# directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2rms_frag_dr1E-2_dtheta1.0pi"
 
 outputfile = directory + "_sigma_error.dat"
-directory_list = ["Nc1E1_", "Nc2E1_", "Nc5E1_", "Nc1E2_", "Nc2E2_", "Nc5E2_", "Nc1E3_", "Nc2E3_"]
+# directory_list = ["Nc1E1_", "Nc2E1_", "Nc5E1_", "Nc1E2_", "Nc2E2_", "Nc5E2_", "Nc1E3_", "Nc2E3_"]
 # directory_list = ["Nc1E2_", "Nc2E2_", "Nc5E2_", "Nc1E3_", "Nc2E3_"]
 
 
