@@ -29,7 +29,7 @@
 #endif
 
 //#define DIRECTORY ../data/test/
-#define DIRECTORY ../data/Nc1E1_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2rms_OmegaZero_frag_dr1E-2_dtheta1.0pi/  //ディレクトリ.
+#define DIRECTORY ../data/Nc1E2_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_3over2rms_frag_dr1E-2_dtheta0.125pi/  //ディレクトリ.
 // #define SUBDIRECTORY dr  //子ディレクトリ1.
 // #define SUBDIRECTORY_2 dtheta  //子ディレクトリ2.
 #define SUBDIRECTORY rand  //子ディレクトリ. rand%02d
@@ -45,7 +45,7 @@
 
 
 //////////////////////////////////////////////////
-#define N_c 10  //中心のトレーサーの数. これらの質量変化を追い面密度を計算.
+#define N_c 100  //中心のトレーサーの数. これらの質量変化を追い面密度を計算.
 #define N_tr (N_c*3)  //初期のトレーサーの数.
 #define N_p 0  //初期の原始惑星の数.
 #define ECC_RATIO 1.0  //ecc=0.01の何倍か. inc=ecc/2.
@@ -62,7 +62,7 @@
 #endif
 
 #define RAYLEIGH_DISTRIBUTION false  //離心率や軌道傾斜角の分布 true : Rayleigh, false : v_relが軌道長半径によらず一定.
-#define OMEGA_EQUAL_ZERO true  //相対速度計算で近点経度の差を0にセット.
+#define OMEGA_EQUAL_ZERO false  //相対速度計算で近点経度の差を0にセット.
 
 EXTERN int global_n;  //グローバル変数.
 EXTERN int global_n_p;
@@ -100,7 +100,7 @@ EXTERN FILE *fplog;
 // #define G 1.0  //重力定数.
 // #define M_0 1.0  //主星の質量.
 // #define EPSILON 0.0  //ソフトニングパラメーター.
-#define ETA 1.0E-2  //刻み幅調整.
+#define ETA 3.0E-2  //刻み幅調整.
 #define ITE_MAX 2  //イテレーション回数（修正子計算の回数はITE_MAX+1）.
 //////////////////////////////////////////////////
 
@@ -151,8 +151,8 @@ Mean Longitude (deg)               100.46435
 
 #if FRAGMENTATION
 #define DELTA_R 0.01  //Hill 近傍粒子探索用.
-//#define DELTA_THETA 0.125*M_PI  //近傍粒子探索用. pi/8
-#define DELTA_THETA 1.0*M_PI  //近傍粒子探索用. pi/8
+#define DELTA_THETA 0.125*M_PI  //近傍粒子探索用. pi/8
+//#define DELTA_THETA 1.0*M_PI  //近傍粒子探索用. pi/8
 #define NEIGHBOR_MAX N_c  //近傍粒子リスト配列の最大値.
 #define RHO 3.0  // [g/cc]  微惑星の物質密度.
 #define EPSILON_FRAG 0.2
