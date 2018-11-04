@@ -14,13 +14,10 @@ def hosei(da, Beta):
 
 def integral(x, Beta, Tau, t):
     Lambda = Beta + 1.5
-    return x / (x**(- Lambda) + Tau / t)
+    return x / (1.0 + x**(- Lambda) * t / Tau)
 
 def hosei(da, Beta, Tau, t):
-    if t == 0.0:
-        return 1.0
-    else:
-        return 2.0 * (1.0 + Tau / t) / ((1.0 + 0.5 * da)**2 - (1.0 - 0.5 * da)**2) * integrate.quad(integral, 1.0-0.5*da, 1.0+0.5*da, args=(Beta, Tau, t))[0]
+    return 2.0 * (1.0 + t / Tau) / ((1.0 + 0.5 * da)**2 - (1.0 - 0.5 * da)**2) * integrate.quad(integral, 1.0-0.5*da, 1.0+0.5*da, args=(Beta, Tau, t))[0]
 
 
 ###
@@ -58,14 +55,14 @@ np.savetxt("hosei_da0.1_Tau1.233830_t100.0_Beta.dat", data, fmt="%.15e", delimit
 # ## ecc 1E-2 ###
 
 
-# directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2rms_OmegaZero_frag_dr1E-2_dtheta0.125pi"
-# directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2rms_OmegaZero_frag_dr1E-2_dtheta1.0pi"
-# directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2rms_frag_dr1E-2_dtheta0.125pi"
-# directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_adjust2rms_frag_dr1E-2_dtheta1.0pi"
+# directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_3over2rms_OmegaZero_frag_dr1E-2_dtheta0.125pi"
+# directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_3over2rms_OmegaZero_frag_dr1E-2_dtheta1.0pi"
+# directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_index1rms_frag_dr1E-2_dtheta0.125pi"
+directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_index1rms_frag_dr1E-2_dtheta1.0pi"
 
 outputfile = directory + "_sigma_error.dat"
-# directory_list = ["Nc1E1_", "Nc2E1_", "Nc5E1_", "Nc1E2_", "Nc2E2_", "Nc5E2_", "Nc1E3_", "Nc2E3_"]
-# directory_list = ["Nc1E2_", "Nc2E2_", "Nc5E2_", "Nc1E3_", "Nc2E3_"]
+directory_list = ["Nc1E1_", "Nc2E1_", "Nc5E1_", "Nc1E2_", "Nc2E2_", "Nc5E2_", "Nc1E3_", "Nc2E3_", "Nc5E3_"]
+# directory_list = ["Nc1E2_", "Nc2E2_", "Nc5E2_", "Nc1E3_", "Nc2E3_", "Nc5E3_"]
 
 
 
@@ -85,7 +82,7 @@ for dirname in directory_list:
     n_neighbor_error = np.empty(RAND+1, dtype=np.float)
     sigma_error = np.empty(([LINE, RAND+1]), dtype=np.float)
     sigma_rand = np.empty([LINE, RAND+1], dtype=np.float)
-    sigma_mean = np.empty([LINE, 5], dtype=np.float)
+    sigma_mean = np.empty([LINE, 6], dtype=np.float)
 
     for rand in range(1, RAND+1):
 
@@ -107,8 +104,9 @@ for dirname in directory_list:
         arr3 = np.genfromtxt(dirname + directory + subdirectory + "Tau_dep.dat", dtype=np.float, delimiter="\t")
         # print(rand, arr3.shape, arr3, hosei(0.1, 1.0), arr3 * hosei(0.1, 1.0))
 
-        sigma_error[:, rand] = abs(arr2[:, 3] / arr2[0, 3] * (1.0 + arr2[:, 0] / arr3) - 1)
-        # sigma_error[:, rand] = abs(arr2[:, 3] / arr2[0, 3] * (1.0 + arr2[:, 0] / (arr3 * hosei(0.1, 1.0))) - 1)
+        # sigma_error[:, rand] = abs(arr2[:, 3] / arr2[0, 3] * (1.0 + arr2[:, 0] / arr3) - 1)
+        for i in range(LINE):
+            sigma_error[i, rand] = abs(arr2[i, 3] / arr2[0, 3] / hosei(0.1, 1.0, arr3, arr2[i, 0]) * (1.0 + arr2[i, 0] / arr3) - 1)
 
         sigma_rand[:, rand] = arr2[:, 3] / arr2[0, 3]
 
@@ -122,19 +120,24 @@ for dirname in directory_list:
 
     # print(root_mean_square)
 
+
     print(sigma_error[25, 1:RAND+1])
     # print(sigma_error[25, 1:5].mean(axis=0))
     # print(sigma_error[25, 1:5].min())
     # print(sigma_error[25, 1:5].max())
 
     print(sigma_rand[25, 1:RAND+1])
+
     sigma_mean[:, 0] = arr2[:, 0]
     sigma_mean[:, 1] = sigma_rand[:, 1:RAND+1].mean(axis=1)
     sigma_mean[:, 2] = sigma_rand[:, 1:RAND+1].min(axis=1)
     sigma_mean[:, 3] = sigma_rand[:, 1:RAND+1].max(axis=1)
     sigma_mean[:, 4] = sigma_rand[:, 1:RAND+1].std(axis=1, ddof=1)
+    for i in range(LINE):
+        print("hosei at ", arr2[i, 0], " yr = ", hosei(0.1, 1.0, arr3, arr2[i, 0]))
+        sigma_mean[i, 5] = hosei(0.1, 1.0, arr3, arr2[i, 0]) / (1.0 + arr2[i, 0] / arr3)
 
     with open(outputfile, mode="a") as f:
         print(n_neighbor_mean[1:RAND+1].mean(axis=0), root_mean_square, sigma_error[25, 1:RAND+1].mean(axis=0), sigma_error[25, 1:RAND+1].std(axis=0, ddof=1), file=f, sep="\t")
 
-    np.savetxt(dirname + directory + "/Sigma_mean.dat", sigma_mean, fmt="%.15e", delimiter="\t", newline="\n", header="time\tsigma_mean\tsigma_min\tsigma_max\tsigma_std")
+    np.savetxt(dirname + directory + "/Sigma_mean.dat", sigma_mean, fmt="%.15e", delimiter="\t", newline="\n", header="time\tsigma_mean\tsigma_min\tsigma_max\tsigma_std\tanalytic")
