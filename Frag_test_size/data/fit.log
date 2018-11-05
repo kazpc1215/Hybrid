@@ -16335,3 +16335,128 @@ correlation matrix of the fit parameters:
                 a      b      
 a               1.000 
 b              -0.889  1.000 
+
+
+*******************************************************************************
+Tue Nov  6 01:18:11 2018
+
+
+FIT:    data read from "N_Exetime.dat"
+        format = z
+        x range restricted to [10.0000 : 10000.0]
+        #datapoints = 9
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a * x**b
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b            
+   0 5.0557356263e+09   0.00e+00  2.11e+04    1.000000e+00   1.000000e+00
+2322 5.4297587012e+05  -9.68e-01  2.11e+03    8.848278e-07   2.770279e+00
+
+After 2322 iterations the fit converged.
+final sum of squares of residuals : 542976
+rel. change during last iteration : -9.67895e-06
+
+degrees of freedom    (FIT_NDF)                        : 7
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 278.51
+variance of residuals (reduced chisquare) = WSSR/ndf   : 77568
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 8.84828e-07      +/- 3.787e-07    (42.8%)
+b               = 2.77028          +/- 0.04643      (1.676%)
+
+correlation matrix of the fit parameters:
+                a      b      
+a               1.000 
+b              -1.000  1.000 
+
+
+*******************************************************************************
+Tue Nov  6 01:21:00 2018
+
+
+FIT:    data read from "N_Exetime.dat"
+        format = z
+        x range restricted to [10.0000 : 10000.0]
+        #datapoints = 9
+        residuals are weighted equally (unit weight)
+
+function used for fitting: g(x)
+	g(x) = c * exp(d * x)
+fitted parameters initialized with current variable values
+
+
+Current data point
+=========================
+#               = 6 out of 9
+x               = 1              
+z               = 441.916        
+
+Current set of parameters
+=========================
+c               = 1              
+d               = 1              
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Tue Nov  6 01:21:31 2018
+
+
+FIT:    data read from "N_Exetime.dat"
+        format = z
+        x range restricted to [10.0000 : 10000.0]
+        #datapoints = 9
+        residuals are weighted equally (unit weight)
+
+function used for fitting: g(x)
+	g(x) = c * exp(d * (x-e))
+fitted parameters initialized with current variable values
+
+
+Current data point
+=========================
+#               = 6 out of 9
+x               = 1              
+z               = 441.916        
+
+Current set of parameters
+=========================
+c               = 1              
+d               = 1              
+e               = 1              
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Tue Nov  6 01:22:11 2018
+
+
+FIT:    data read from "N_Exetime.dat"
+        format = z
+        x range restricted to [10.0000 : 10000.0]
+        #datapoints = 9
+        residuals are weighted equally (unit weight)
+
+function used for fitting: g(x)
+	g(x) = c * exp(d * (x-e))
+fitted parameters initialized with current variable values
+
+Warning: Initial value of parameter 'e' is zero.
+
+Current data point
+=========================
+#               = 6 out of 9
+x               = 1              
+z               = 441.916        
+
+Current set of parameters
+=========================
+c               = 1              
+d               = 1              
+e               = 1e-30          
+
+BREAK: Function evaluation yields NaN ("not a number")
