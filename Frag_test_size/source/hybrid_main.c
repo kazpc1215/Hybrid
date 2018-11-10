@@ -578,6 +578,11 @@ int main(int argc, char **argv){
 	break;
       }
     }
+    if(tracerlistnumber < N_c){
+      fprintf(fplog,"tracer list number = %d < N_c = %d\n",tracerlistnumber,N_c);
+      fprintf(fplog,"N_tr is not enough. Ending this program.\n");
+      exit(-1);
+    }
 #endif
 
 
@@ -862,8 +867,8 @@ int main(int argc, char **argv){
 
     //orbital_r_min = PLANET_AXIS / MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
     //orbital_r_max = PLANET_AXIS * MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
-    orbital_r_min = 0.95;
-    orbital_r_max = 1.05;
+    orbital_r_min = 0.975;
+    orbital_r_max = 1.025;
 
     mass_tot_all = 0.0;
     mass_tot_center = 0.0;
@@ -1850,8 +1855,8 @@ int main(int argc, char **argv){
 
       //orbital_r_min = PLANET_AXIS / MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
       //orbital_r_max = PLANET_AXIS * MutualHillRadius_to_SemimajorAxis(0.5*DELTA_HILL);
-      orbital_r_min = 0.95;
-      orbital_r_max = 1.05;
+      orbital_r_min = 0.975;
+      orbital_r_max = 1.025;
 
       mass_tot_all = 0.0;
       mass_tot_center = 0.0;

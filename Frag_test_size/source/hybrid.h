@@ -29,7 +29,7 @@
 #endif
 
 //#define DIRECTORY ../data/test/
-#define DIRECTORY ../data/Nc1E2_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_3over2rms_frag_dr1E-2_dtheta0.125pi/  //ディレクトリ.
+#define DIRECTORY ../data/Nc5E1_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_da0.05index1rms_frag_dr1E-2_dtheta1.0pi/  //ディレクトリ.
 // #define SUBDIRECTORY dr  //子ディレクトリ1.
 // #define SUBDIRECTORY_2 dtheta  //子ディレクトリ2.
 #define SUBDIRECTORY rand  //子ディレクトリ. rand%02d
@@ -45,14 +45,14 @@
 
 
 //////////////////////////////////////////////////
-#define N_c 100  //中心のトレーサーの数. これらの質量変化を追い面密度を計算.
-#define N_tr (N_c*3)  //初期のトレーサーの数.
+#define N_c 50  //中心のトレーサーの数. これらの質量変化を追い面密度を計算.
+#define N_tr (N_c*5)  //初期のトレーサーの数.
 #define N_p 0  //初期の原始惑星の数.
 #define ECC_RATIO 1.0  //ecc=0.01の何倍か. inc=ecc/2.
 // #define RAND_SEED 1  //乱数の種.
 #define STEP_INTERVAL 1.0E6  //何ステップごとに標準出力するか.
 #define BREAK_TIME 14100.0  //4h = 14400sec, 12h = 43200sec.
-// #define BREAK_TIME 42900.0  //4h = 14400sec, 12h = 43200sec.
+//#define BREAK_TIME 42900.0  //4h = 14400sec, 12h = 43200sec.
 
 #define FRAGMENTATION true  //破壊 近傍粒子探索と質量フラックス計算.  <--
 #define COLLISION true  //衝突.
@@ -135,7 +135,7 @@ Mean Longitude (deg)               100.46435
 #if N_tr != 0
 //////////////////////////////////////////////////
 //#define M_TOT (3.0E-5*N_p)  //10M_E * N_p  //トレーサーの総質量.
-#define M_TOT (3.0E-5*3.0)  //トレーサーの総質量.
+#define M_TOT (3.0E-5*5.0)  //トレーサーの総質量.
 
 #if EJECTION
 #define PLANET_OF_EJECTION 1
@@ -151,9 +151,9 @@ Mean Longitude (deg)               100.46435
 
 #if FRAGMENTATION
 #define DELTA_R 0.01  //Hill 近傍粒子探索用.
-#define DELTA_THETA 0.125*M_PI  //近傍粒子探索用. pi/8
-//#define DELTA_THETA 1.0*M_PI  //近傍粒子探索用. pi/8
-#define NEIGHBOR_MAX N_c  //近傍粒子リスト配列の最大値.
+//#define DELTA_THETA 0.125*M_PI  //近傍粒子探索用. pi/8
+#define DELTA_THETA 1.0*M_PI  //近傍粒子探索用. pi/8
+#define NEIGHBOR_MAX (N_c*2)  //近傍粒子リスト配列の最大値.
 #define RHO 3.0  // [g/cc]  微惑星の物質密度.
 #define EPSILON_FRAG 0.2
 #define B_FRAG (5.0/3.0)

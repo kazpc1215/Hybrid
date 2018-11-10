@@ -53,12 +53,17 @@ void NeighborSearch(int i,double t_dyn,CONST struct orbital_elements *ele_p,stru
       }
     }
 
+    if(NEIGHBOR_MAX < l-1){
+      fprintf(fplog,"neighbornumber (%d) > NEIGHBOR_MAX (%d). Ending this program.\n",l-1,NEIGHBOR_MAX);
+      exit(-1);
+    }
+
     ((frag_p+i)->neighbornumber) = l-1;
 
     m++;
 
     //}while(((frag_p+i)->neighbornumber)<10);  //近傍粒子が10個未満なら、10個以上になるまでdelta_rをm倍に広げる.
-  }while(((frag_p+i)->neighbornumber)<1);
+  }while(((frag_p+i)->neighbornumber)<1 && m<10);  //近傍粒子が1個未満 かつdelta_r < 1.0なら、1個以上になるまでdelta_rをm倍に広げる.
 
 
   v2 = 0.0;
@@ -93,9 +98,10 @@ void NeighborSearch(int i,double t_dyn,CONST struct orbital_elements *ele_p,stru
     ((frag_p+i)->sigma) = M/S;  //領域iの表面密度.
     ((frag_p+i)->n_s) = ((frag_p+i)->neighbornumber)/S;  //領域iの個数密度.
   }else{
-    ((frag_p+i)->v_ave) = 0.0;
-    ((frag_p+i)->sigma) = 0.0;
-    ((frag_p+i)->n_s) = 0.0;
+    fprintf(fplog,"t_sys = %e [yr]\ti = %d\tneighbor number = %d\tv_ave, sigma, & n_s does NOT changes.\n",t_dyn/2.0/M_PI,i,((frag_p+i)->neighbornumber));
+    //((frag_p+i)->v_ave) = 0.0;
+    //((frag_p+i)->sigma) = 0.0;
+    //((frag_p+i)->n_s) = 0.0;
   }
 
   return;

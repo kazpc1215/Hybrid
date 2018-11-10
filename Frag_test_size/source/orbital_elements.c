@@ -57,8 +57,8 @@ void InitialOrbitalElements_Planet(int i,struct orbital_elements *ele_p){
 /*トレーサーの初期軌道要素*/
 void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements *ele_p,int tracerlist[],int *tracerlistnumber){
 
-  double orbital_r_min_center = 0.95;
-  double orbital_r_max_center = 1.05;
+  double orbital_r_min_center = 0.975;
+  double orbital_r_max_center = 1.025;
 
   //惑星の位置x_0[][4]はすでに求めてあることが前提.
 #if N_p == 3
@@ -76,7 +76,7 @@ void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements
   //double peri=0.0,apo=0.0;
   double radius=0.0;
 
-  double index = -2.5;  //f(x) = C x^{-p}.
+  //double index = -2.5;  //f(x) = C x^{-p}.
 
   //fprintf(fplog,"orbital_r_min=%.15e\torbital_r_max=%.15e\n",orbital_r_min,orbital_r_max);
 
@@ -86,8 +86,8 @@ void InitialOrbitalElements_Tracer(int i,double x_0[][4],struct orbital_elements
   do{
     flag = 0;
 
-    //(ele_p+i)->axis = rand_func()*(orbital_r_max - orbital_r_min) + orbital_r_min;  //面密度がa^{-1}に比例する分布. ==> 面数密度が一様.
-    (ele_p+i)->axis = pow((pow(orbital_r_max,1.0-index) - pow(orbital_r_min,1.0-index)) * rand_func() + pow(orbital_r_min,1.0-index), 1.0/(1.0-index));  //べき分布.
+    (ele_p+i)->axis = rand_func()*(orbital_r_max - orbital_r_min) + orbital_r_min;  //面密度がa^{-1}に比例する分布. ==> 面数密度が一様.
+    //(ele_p+i)->axis = pow((pow(orbital_r_max,1.0-index) - pow(orbital_r_min,1.0-index)) * rand_func() + pow(orbital_r_min,1.0-index), 1.0/(1.0-index));  //べき分布.
 
 #if RAYLEIGH_DISTRIBUTION
     (ele_p+i)->ecc = sqrt(-log(rand_func()))*ECC_RMS;  //離心率.  //Rayleigh分布.
