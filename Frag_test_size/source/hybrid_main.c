@@ -1936,7 +1936,7 @@ int main(int argc, char **argv){
     exetime.Fragmentation[2] += Cal_time(usage_start.ru_stime,usage_end.ru_stime);
 #endif
 
-#endif
+#endif  /*FRAGMENTATION*/
 
 
 #if POSI_VELO_ROT_FILE
