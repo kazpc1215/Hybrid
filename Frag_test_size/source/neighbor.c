@@ -98,7 +98,7 @@ void NeighborSearch(int i,double t_dyn,CONST struct orbital_elements *ele_p,stru
     ((frag_p+i)->sigma) = M/S;  //領域iの表面密度.
     ((frag_p+i)->n_s) = ((frag_p+i)->neighbornumber)/S;  //領域iの個数密度.
   }else{
-    fprintf(fplog,"t_sys = %e [yr]\ti = %d\tneighbor number = %d\tv_ave, sigma, & n_s does NOT changes.\n",t_dyn/2.0/M_PI,i,((frag_p+i)->neighbornumber));
+    fprintf(fplog,"t_sys = %e [yr]\ti = %d\tneighbor number = %d\tv_ave, sigma, & n_s does NOT change.\n",t_dyn/2.0/M_PI,i,((frag_p+i)->neighbornumber));
     //((frag_p+i)->v_ave) = 0.0;
     //((frag_p+i)->sigma) = 0.0;
     //((frag_p+i)->n_s) = 0.0;
