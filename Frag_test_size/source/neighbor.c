@@ -68,7 +68,7 @@ void NeighborSearch(int i,double t_dyn,CONST struct orbital_elements *ele_p,stru
 
   v2 = 0.0;
 
-  M = ((ele_p+i)->mass);  //ターゲットiの質量も含める.
+  M = MassDepletion(i,((ele_p+i)->mass),t_dyn,frag_p);  //ターゲットiの質量も含める. 予測もする.
   if(((frag_p+i)->neighbornumber)!=0){
     for(j=1;j<=((frag_p+i)->neighbornumber);j++){
       v2 += SquareRandomVelocity(i,((frag_p+i)->neighborlist[j]),ele_p);
