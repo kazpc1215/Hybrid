@@ -53,8 +53,8 @@ np.savetxt("hosei_da0.1_Tau1.233830_t100.0_Beta.dat", data, fmt="%.15e", delimit
 
 # directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_da0.05index1rms_OMEGAZERO_frag_dr1E-2_dtheta0.125pi"
 # directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_da0.05index1rms_OMEGAZERO_frag_dr1E-2_dtheta1.0pi"
-# directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_da0.05index1rms_frag_dr1E-2_dtheta0.125pi"
-directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_da0.05index1rms_frag_dr1E-2_dtheta1.0pi"
+# directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_da0.05index1rmsver2_frag_dr1E-2_dtheta0.125pi"
+directory = "t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_da0.05index1rmsver2_frag_dr1E-2_dtheta1.0pi"
 
 outputfile = directory + "_sigma_error.dat"
 # directory_list = ["Nc1E2_", "Nc2E2_", "Nc5E2_", "Nc1E3_", "Nc2E3_"]
@@ -99,7 +99,7 @@ for dirname in directory_list:
 
         ########################################
         arr3 = np.genfromtxt(dirname + directory + subdirectory + "Tau_dep.dat", dtype=np.float, delimiter="\t")
-        print(rand, arr3)
+        # print(rand, arr3)
 
         for i in range(LINE):
             sigma_error[i, rand] = abs(arr2[i, 3] / arr2[0, 3] / hosei(DELTA_AXIS, BETA, arr3, arr2[i, 0]) * (1.0 + arr2[i, 0] / arr3) - 1)
