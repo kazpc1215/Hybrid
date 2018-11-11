@@ -68,16 +68,12 @@ void NeighborSearch(int i,double t_dyn,CONST struct orbital_elements *ele_p,stru
 
   v2 = 0.0;
 
-  M = MassDepletion(i,((ele_p+i)->mass),t_dyn,frag_p);  //ターゲットiの質量も含める. 予測もする.
+  M = ((ele_p+i)->mass);  //ターゲットiの質量も含める. 近傍探索前に予測済み.
   if(((frag_p+i)->neighbornumber)!=0){
     for(j=1;j<=((frag_p+i)->neighbornumber);j++){
       v2 += SquareRandomVelocity(i,((frag_p+i)->neighborlist[j]),ele_p);
 
-      if(fabs(t_dyn)<1.0E-10){
-	M += ((ele_p+((frag_p+i)->neighborlist[j]))->mass);  //領域iの総質量. 初期の面密度計算用.
-      }else{
-	M += MassDepletion(((frag_p+i)->neighborlist[j]),((ele_p+((frag_p+i)->neighborlist[j]))->mass),t_dyn,frag_p);  //領域iの総質量. 周りのトレーサーjの質量を予測してから足す.
-      }
+      M += MassDepletion(((frag_p+i)->neighborlist[j]),((ele_p+((frag_p+i)->neighborlist[j]))->mass),t_dyn,frag_p);  //領域iの総質量. 周りのトレーサーjの質量を予測してから足す.
 
       if(isnan(SquareRandomVelocity(i,((frag_p+i)->neighborlist[j]),ele_p))){
 	fprintf(fplog,"i=%d,j=%d\tvij is nan.\n",i,((frag_p+i)->neighborlist[j]));

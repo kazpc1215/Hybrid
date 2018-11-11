@@ -28,8 +28,8 @@
 #define ALWAYS_INLINE
 #endif
 
-//#define DIRECTORY ../data/test/
-#define DIRECTORY ../data/Nc5E1_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_da0.05index1rms_frag_dr1E-2_dtheta1.0pi/  //ディレクトリ.
+#define DIRECTORY ../data/test/
+//#define DIRECTORY ../data/Nc5E1_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_da0.05index1rms_frag_dr1E-2_dtheta1.0pi/  //ディレクトリ.
 // #define SUBDIRECTORY dr  //子ディレクトリ1.
 // #define SUBDIRECTORY_2 dtheta  //子ディレクトリ2.
 #define SUBDIRECTORY rand  //子ディレクトリ. rand%02d

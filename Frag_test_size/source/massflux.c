@@ -42,7 +42,10 @@ double Depletion_Time(int i,CONST struct fragmentation *frag_p){
 double MassDepletion(int i,double mass,double t_dyn,CONST struct fragmentation *frag_p){
   double t_frag = ((frag_p+i)->t_frag);
   double tau_dep = - ((frag_p+i)->sigma)/((frag_p+i)->flux);
-  return mass / (1.0 + (t_dyn - t_frag) / tau_dep);
+  if(i > global_n_p && t_dyn > 1.0E-10){  //惑星でない かつ 初期でない.
+    return mass / (1.0 + (t_dyn - t_frag) / tau_dep);
+  }else
+    return mass;  //惑星の場合は変化させない.
 }
 #endif
 
