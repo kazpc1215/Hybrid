@@ -76,7 +76,7 @@ void NeighborSearch(int i,double t_dyn,CONST struct orbital_elements *ele_p,stru
       if(fabs(t_dyn)<1.0E-10){
 	M += ((ele_p+((frag_p+i)->neighborlist[j]))->mass);  //領域iの総質量. 初期の面密度計算用.
       }else{
-	M += MassDepletion(j,((ele_p+((frag_p+i)->neighborlist[j]))->mass),t_dyn,frag_p);  //領域iの総質量. 周りのトレーサーjの質量を予測してから足す.
+	M += MassDepletion(((frag_p+i)->neighborlist[j]),((ele_p+((frag_p+i)->neighborlist[j]))->mass),t_dyn,frag_p);  //領域iの総質量. 周りのトレーサーjの質量を予測してから足す.
       }
 
       if(isnan(SquareRandomVelocity(i,((frag_p+i)->neighborlist[j]),ele_p))){
