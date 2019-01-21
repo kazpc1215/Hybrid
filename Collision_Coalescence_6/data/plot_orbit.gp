@@ -1,6 +1,6 @@
 reset
 #set term postscript eps size 800,600 enhanced color font "Helvetica,30"
-set term pngcairo size 1200,1200 enhanced color font "Helvetica,50"
+set term pngcairo size 1200,1200 enhanced color font "Helvetica,35"
 
 set bmargin 4
 # set auto
@@ -26,14 +26,14 @@ set object circle fill solid fc rgb "red" at 0, 0
 n=0
 j=0
 
-dirname = "N15_t1E8yr_dt1E3yr_10RHM_3MMSN_Miso_ecc1E-2_inc5E-3_rand1"
+#dirname = "N15_t1E8yr_dt1E3yr_10RHM_3MMSN_Miso_ecc1E-2_inc5E-3_rand1"
 #dirname = "N16_t1E8yr_dt1E3yr_10RHM_2.5MMSN_Miso_ecc1E-2_inc5E-3_rand1"
-#dirname = "N18_t1E8yr_dt1E3yr_10RHM_2MMSN_Miso_ecc1E-2_inc5E-3_rand1"
+dirname = "N18_t1E8yr_dt1E3yr_10RHM_2MMSN_Miso_ecc1E-2_inc5E-3_rand1"
 #dirname = "N21_t1E8yr_dt1E3yr_10RHM_1.5MMSN_Miso_ecc1E-2_inc5E-3_rand1"
 #dirname = "N25_t1E8yr_dt1E3yr_10RHM_1MMSN_Miso_ecc1E-2_inc5E-3_rand1"
 
 
-N=15
+N=18
 
 while(n<=100000){
 
