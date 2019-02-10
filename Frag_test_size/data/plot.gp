@@ -156,6 +156,31 @@ set xr [0.1:100.0001]
 set yr [0.001:1]
 
 
+############ 数値計算と解析解の比較で一番綺麗に一致するもの
+# set key right top box width -1 spacing 1.0 font "Times-Roman,20"
+# plot RUN8 u 1:2 w l lw LW_DATA ps PS lt 1 t "numerical"
+# replot RUN8 u 1:6 w l lw LW_ANALYTIC lc rgb "black" dt DT t "analytic"
+
+RUN8 = "./old_2/Nc2E3_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_da0.05index1rms_OMEGAZERO_frag_dr1E-2_dtheta1.0pi/Sigma_mean.dat"
+
+set bar 0
+LW_DATA = 5
+LW_ANALYTIC = 3
+PS = 1.5
+DT = 2
+
+unset key
+plot RUN8 u 1:2 w p ps PS lt 1
+
+pause -1
+
+plot RUN8 u 1:2 w p ps PS lt 1
+replot RUN8 u 1:6 w l lw LW_ANALYTIC lc rgb "black" dt DT
+############
+
+
+
+
 RUN1 = "./Nc1E2_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_da0.05index1rms_frag_dr1E-2_dtheta0.125pi/Sigma_mean.dat"
 RUN2 = "./Nc2E2_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_da0.05index1rms_frag_dr1E-2_dtheta0.125pi/Sigma_mean.dat"
 RUN3 = "./Nc5E2_t1E2_dtlog_Mtot3E-5_Mmax5E-18_ecc1E-2_da0.05index1rms_frag_dr1E-2_dtheta0.125pi/Sigma_mean.dat"
@@ -350,10 +375,5 @@ replot RUN8 u 1:6 w l lw LW_ANALYTIC lc rgb "black" dt DT t "analytic (corrected
 pause -1
 
 
-############ 数値計算と解析解の比較で一番綺麗に一致するもの
-set key right top box width -1 spacing 1.0 font "Times-Roman,20"
-plot RUN8 u 1:2 w l lw LW_DATA ps PS lt 1 t "numerical"
-replot RUN8 u 1:6 w l lw LW_ANALYTIC lc rgb "black" dt DT t "analytic"
-############
 
 pause
